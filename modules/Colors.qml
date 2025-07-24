@@ -1,0 +1,1 @@
+/home/corecat/.cache/wal/colors-whisker.qml
