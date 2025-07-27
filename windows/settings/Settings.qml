@@ -47,6 +47,7 @@ Scope {
                         Repeater {
                             model: ListModel {
                                 ListElement { icon: "signal_wifi_4_bar"; label: "Wi-Fi" }
+                                ListElement { icon: "bluetooth"; label: "Bluetooth" }
                                 ListElement { icon: "info"; label: "About" }
                             }
 
@@ -101,6 +102,11 @@ Scope {
                             }
 
                         }
+
+                        Text {
+                            text: "! Everything here is TBA !"
+                            color: Colors.opacify(Colors.foreground, 0.5)
+                        }
                     }
                 }
 
@@ -119,7 +125,17 @@ Scope {
                             anchors.margins: 40
                         }
                     }
+                    
+                    Rectangle {
+                        color: "transparent"
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
 
+                        BluetoothMenu {
+                            anchors.fill: parent
+                            anchors.margins: 40
+                        }
+                    }
 
                     Rectangle {
                         color: "transparent"

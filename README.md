@@ -9,11 +9,13 @@
   Built on top of <a href="https://quickshell.org">Quickshell</a>.
 </p>
 
-> This shell works "perfectly" with CoreCat's Hyprland Dotfiles.
+> This shell works "perfectly" with CoreCat's Dotfiles.
 
 ## 🚧 Under Development
 
 **Whisker** is already usable now, but everything is still subject to change overtime.
+
+Also I'm still a Quickshell newbie, so most code in here might look messy / unorganized :')
 
 
 ## Previews

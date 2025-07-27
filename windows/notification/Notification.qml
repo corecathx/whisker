@@ -51,7 +51,7 @@ Scope {
                         }
                     }))
                     onDismiss: {
-                        modelData.popup = false // or:
+                        modelData.popup = false
                         NotifServer.removeById(modelData.notification.id)
                     }
                 }
