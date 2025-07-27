@@ -1,12 +1,12 @@
-import Quickshell
-import QtQuick.Layouts
 import QtQuick
-import Quickshell.Io
+import QtQuick.Layouts
 import qs.components
 import qs.modules
+import qs.services
+
 Item {
     id: root
-    property string icon
+    property string icon: Bluetooth.icon
     implicitWidth: container.implicitWidth
     implicitHeight: container.implicitHeight
 
@@ -24,19 +24,4 @@ Item {
         }
     }
 
-    Process {
-        id: dateProc
-        command: ["sh", "-c", "~/.config/quickshell/scripts/bluetooth.sh"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: root.icon = this.text.trim()
-        }
-    }
-
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: dateProc.running = true
-    }
 }
