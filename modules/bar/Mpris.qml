@@ -9,7 +9,7 @@ Item {
     id: root
     property string status: "stopped"
     property string title: ""
-    property string icon: status === "Playing" ? "pause" : "play_arrow"
+    property string icon: status !== "Playing" ? "pause" : "play_arrow"
 
     implicitWidth: contentRow.implicitWidth
     implicitHeight: contentRow.implicitHeight
