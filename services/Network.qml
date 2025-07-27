@@ -3,15 +3,14 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import QtQml
-import qs.modules
 
 Singleton {
     id: net
 
+    property bool ethernetConnected: false
+
     readonly property string icon: ethernetConnected ? "settings_ethernet"
                                : (wifi.enabled ? wifi.icon : "signal_wifi_off")
-
-    property bool ethernetConnected: false
 
     property QtObject wifi: QtObject {
         id: wifi
@@ -21,10 +20,10 @@ Singleton {
         property int strength: 0
         property string icon: "signal_wifi_off"
 
-        property var fullList: [] // ex: [{ name: "SSID", strength: 80 }]
-        property var list: [] // ssid only
+        property var fullList: []
+        property var list: []
+        property var knownList: []
 
-        // strength based sorting
         readonly property var sortedList: fullList.slice().sort((a, b) => b.strength - a.strength)
 
         function updateIcon() {
@@ -41,44 +40,82 @@ Singleton {
         }
 
         function toggle() {
-            ProcessLauncher.run(["nmcli", "radio", "wifi", enabled ? "off" : "on"])
+            Quickshell.execDetached({
+                command: ["nmcli", "radio", "wifi", enabled ? "off" : "on"]
+            })
         }
 
-        function connectTo(ssid) {
-            ProcessLauncher.run(["nmcli", "dev", "wifi", "connect", ssid])
+        function isSecured(ssid) {
+            return fullList.find(e => e.name === ssid)?.secured ?? false
+        }
+
+        function isKnown(ssid) {
+            return knownList.includes(ssid)
+        }
+
+        function connectTo(ssid, password = "") {
+            if (isSecured(ssid) && password === "")
+                return console.log("Password required for secured network")
+
+            let cmd = ["nmcli", "dev", "wifi", "connect", ssid]
+            if (password) cmd.push("password", password)
+            Quickshell.execDetached({ command: cmd })
         }
 
         function disconnect() {
-            ProcessLauncher.run(["nmcli", "con", "down", "id", currentName])
-        }
-
-        function getStrength(ssid) {
-            for (let i = 0; i < fullList.length; i++) {
-                if (fullList[i].name === ssid)
-                    return fullList[i].strength
-            }
-            return 0
+            Quickshell.execDetached({
+                command: ["nmcli", "con", "down", "id", currentName]
+            })
         }
 
         function refresh() {
-            wifiStatus.running = true
-            wifiSSID.running = true
-            wifiStrength.running = true
-            ethStatus.running = true
-            wifiScan.running = true
+            wifiFetch.running = true
+            knownFetch.running = true
+            ethernetFetch.running = true
         }
     }
 
-    Timer {
-        interval: 2000
-        running: true
-        repeat: true
-        onTriggered: wifi.refresh()
+    Process {
+        id: wifiFetch
+        command: ["sh", "-c", "nmcli -t -f IN-USE,SSID,SIGNAL,SECURITY dev wifi"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let lines = text.trim().split("\n")
+                let list = []
+                let ssids = []
+                let current = ""
+                let signal = 0
+
+                for (let line of lines) {
+                    let [inUse, name, strength, sec] = line.split(":")
+                    if (!name || name === "--") continue
+                    let entry = {
+                        name,
+                        strength: parseInt(strength) || 0,
+                        secured: sec !== ""
+                    }
+                    if (inUse === "*") {
+                        wifi.currentName = name
+                        wifi.strength = entry.strength
+                        current = name
+                        signal = entry.strength
+                    }
+                    list.push(entry)
+                    ssids.push(name)
+                }
+
+                wifi.fullList = list
+                wifi.list = ssids
+                wifi.updateIcon()
+
+                wifiStatus.running = true
+            }
+        }
     }
 
     Process {
         id: wifiStatus
-        command: ["sh", "-c", "nmcli radio wifi"]
+        command: ["nmcli", "radio", "wifi"]
         running: true
         stdout: StdioCollector {
             onStreamFinished: wifi.enabled = text.trim() === "enabled"
@@ -86,28 +123,16 @@ Singleton {
     }
 
     Process {
-        id: wifiSSID
-        command: ["sh", "-c", "nmcli -t -f ACTIVE,SSID dev wifi | grep '^yes' | cut -d: -f2"]
+        id: knownFetch
+        command: ["sh", "-c", "nmcli -t -f NAME connection show"]
         running: true
         stdout: StdioCollector {
-            onStreamFinished: wifi.currentName = text.trim()
+            onStreamFinished: wifi.knownList = text.trim().split("\n").filter(Boolean)
         }
     }
 
     Process {
-        id: wifiStrength
-        command: ["sh", "-c", "nmcli -t -f IN-USE,SIGNAL dev wifi | grep '^*' | cut -d: -f2"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                wifi.strength = Number(text.trim()) || 0
-                wifi.updateIcon()
-            }
-        }
-    }
-
-    Process {
-        id: ethStatus
+        id: ethernetFetch
         command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE dev | grep 'ethernet:connected'"]
         running: true
         stdout: StdioCollector {
@@ -115,29 +140,10 @@ Singleton {
         }
     }
 
-    Process {
-        id: wifiScan
-        command: ["sh", "-c", "nmcli -t -f SSID,SIGNAL dev wifi | grep -v '^--:' | sort -u"]
+    Timer {
+        interval: 1000
         running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const lines = text.trim().split("\n")
-                let parsed = []
-                let ssidList = []
-
-                for (let i = 0; i < lines.length; i++) {
-                    const parts = lines[i].split(":")
-                    if (parts.length >= 2 && parts[0].trim() !== "") {
-                        const name = parts[0].trim()
-                        const strength = parseInt(parts[1].trim()) || 0
-                        parsed.push({ name: name, strength: strength })
-                        ssidList.push(name)
-                    }
-                }
-
-                wifi.fullList = parsed
-                wifi.list = ssidList
-            }
-        }
+        repeat: true
+        onTriggered: wifi.refresh()
     }
 }
