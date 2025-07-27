@@ -1,4 +1,3 @@
-// Bar.qml
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Io
@@ -25,7 +24,7 @@ Scope {
               right: true
             }
 
-            implicitHeight: 55
+            implicitHeight: 50
 
             Item {
                 anchors.fill: parent

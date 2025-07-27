@@ -28,7 +28,7 @@ RowLayout {
 
             Mpris {}
             Audio {}
-            Network {}
+            NetworkTray {}
             Bluetooth {}
             Battery {}
         }

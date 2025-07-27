@@ -33,7 +33,7 @@ Scope {
 
 	Timer {
 		id: hideTimer
-		interval: 1000
+		interval: 3000
 		onTriggered: root.shouldShowOsd = false
 	}
 
@@ -79,8 +79,8 @@ Scope {
 
 					ColumnLayout {
 						Layout.fillWidth: true
-						implicitHeight: 20
-						spacing: 5
+						implicitHeight: 40
+						spacing: 10
 						
 						Text {
 							color: Colors.foreground

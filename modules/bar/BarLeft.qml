@@ -30,7 +30,6 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 10
                 spacing: 30
-                // removed anchors.centerIn, it’s not needed
 
                 TimeLabel {
                     Layout.alignment: Qt.AlignVCenter

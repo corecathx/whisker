@@ -19,7 +19,7 @@ PanelWindow {
     color: "transparent"
 
     mask: Region {}
-    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.layer: WlrLayer.Background
     Corners {
         cornerType: "inverted"
         cornerHeight: 20

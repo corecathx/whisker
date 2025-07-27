@@ -1,60 +1,32 @@
-import Quickshell.Hyprland
 import QtQuick
 import QtQml.Models
 import QtQuick.Layouts
 import qs.modules
-import Quickshell.Hyprland
-import QtQuick
-import QtQml.Models
-import QtQuick.Layouts
-import qs.modules
-
+import qs.services
 Item {
     id: root
     width: 400
     height: 30
-    property string countshit: ""
+    property int shown: 3
+    readonly property int groupOffset: Math.floor((Hyprland.activeWsId - 1) / shown) * shown
     Row {
         id: pillRow
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         spacing: 10
-        Text {
-            color: Colors.foreground
-            text: root.countshit
-        }
+
         Repeater {
-            model: {
-                var workspaces = Hyprland.workspaces.values;
-                var count = workspaces.length;
+            model: Hyprland.workspaces
 
-                // Ensure at least 3 workspaces
-                if (count < 3) {
-                    for (i in workspaces) {
-                        root.countshit = i.id
-                    }
-                    for (var i = 3-count; i <= 3; i++) {
-                        workspaces.push({ focused: false }); // Add placeholder workspaces
-                    }
-                }
-                return workspaces;
-            }
-
-            Rectangle {
-                required property HyprlandWorkspace modelData
+            delegate: Rectangle {
 
                 id: pill
                 width: modelData.focused ? 20 : 10
-                height: 20
+                height: 10
                 radius: 100
                 anchors.verticalCenter: parent.verticalCenter
 
                 color: modelData.focused ? Colors.foreground : Colors.opacify(Colors.darken(Colors.foreground, 0.5), 0.9)
-                Text {
-                    
-                    anchors.centerIn: parent
-                    text: modelData.id
-                }
                 Behavior on width {
                     NumberAnimation {
                         duration: 250
@@ -72,6 +44,17 @@ Item {
                         easing.type: Easing.OutQuad
                     }
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        const wsId = index + root.groupOffset + 1;
+                        if (Hyprland.activeWsId !== wsId)
+                            Hyprland.dispatch(`workspace ${wsId}`);
+                    }
+                }
+
             }
         }
     }

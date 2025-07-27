@@ -10,7 +10,7 @@ Item {
     id: root
     width: 80
     height: 25
-
+    property string remainingTime: "N/A"
     property var low_battery_level: 15
     function isLowBattery() {
         return parseFloat(root.battery) < root.low_battery_level;
@@ -112,22 +112,24 @@ Item {
         }
     }
 
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: batteryProc.running = true
-    }
-
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: iconProc.running = true
-    }
-
     Process {
-        id: clickProc
-        command: ["sh", "-c", "notify-send 'wawa battery " + battery + "'"]
+        id: timeProc
+        command: ["sh", "-c", "~/.config/quickshell/scripts/battery.sh time"]
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: root.remainingTime = this.text.trim()
+        }
+    }
+
+
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            batteryProc.running = true
+            iconProc.running = true
+            timeProc.running = true
+        }
     }
 }

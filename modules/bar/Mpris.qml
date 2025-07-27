@@ -49,7 +49,6 @@ Item {
         }
     }
 
-    // Get status and metadata
     Process {
         id: statusProc
         command: ["sh", "-c", "playerctl metadata --format '{{status}}|{{title}}'"]
@@ -67,7 +66,6 @@ Item {
         }
     }
 
-    // Toggle play/pause
     Process {
         id: toggleProc
         command: ["playerctl", "play-pause"]

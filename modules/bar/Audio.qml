@@ -1,4 +1,3 @@
-// TimeLabel.qml
 import Quickshell
 import QtQuick.Layouts
 import QtQuick

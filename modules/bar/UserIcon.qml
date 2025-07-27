@@ -4,15 +4,14 @@ import Quickshell
 import qs.modules
 Rectangle {
     id: root
-    property string profileImage: "/home/" + Quickshell.env("USER") + "/.face"
     clip: true
-    implicitWidth: hovered ? userName.width + avatarClip.width + 30 : 30
+    implicitWidth: hovered | Globals.visible_quickPanel ? userName.width + avatarClip.width + 30 : 30
     height: 30
     color: "transparent"
     radius: 30
     property bool hovered: false
     border {
-        width: hovered ? 2 : 0
+        width: hovered | Globals.visible_quickPanel ? 2 : 0
         color: Colors.foreground
 
         Behavior on width {
@@ -47,7 +46,7 @@ Rectangle {
             
             visible: parent.width > 41
             anchors.leftMargin: 8
-            text: "CoreCat"
+            text: Quickshell.env('USER')
             color: Colors.foreground
             font.bold: true
             
@@ -66,7 +65,7 @@ Rectangle {
 
         IconImage {
             anchors.fill: parent
-            source: "file://"+root.profileImage
+            source: Appearance.profileImage
         }
 
         MouseArea {
@@ -74,6 +73,7 @@ Rectangle {
             hoverEnabled: true
             onEntered: root.hovered = true
             onExited: root.hovered = false
+            onClicked: Globals.toggle_quickPanel()
         }
     }
 
