@@ -141,7 +141,7 @@ Singleton {
     }
 
     Timer {
-        interval: 1000
+        interval: 10000
         running: true
         repeat: true
         onTriggered: wifi.refresh()

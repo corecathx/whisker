@@ -19,7 +19,7 @@ Item {
     Layout.preferredHeight: visible ? implicitHeight : 0
 
     Timer {
-        interval: 1000
+        interval: 10000
         repeat: true
         running: true
         onTriggered: statusProc.running = true

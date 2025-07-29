@@ -55,13 +55,13 @@ Item {
         }
     }
     Timer {
-        interval: 1000
+        interval: 60000
         running: true
         repeat: true
         onTriggered: timeProc.running = true
     }
     Timer {
-        interval: 1000
+        interval: 60000
         running: true
         repeat: true
         onTriggered: dateProc.running = true
