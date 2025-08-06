@@ -19,32 +19,28 @@ Item {
             model: Hyprland.workspaces
 
             delegate: Rectangle {
-
                 id: pill
                 width: modelData.focused ? 20 : 10
                 height: 10
-                radius: 100
+                radius: 20
                 anchors.verticalCenter: parent.verticalCenter
-
-                color: modelData.focused ? Colors.foreground : Colors.opacify(Colors.darken(Colors.foreground, 0.5), 0.9)
+                border {
+                    width: modelData.focused ? 0 : 2
+                    color: Colors.opacify(Colors.foreground, 0.6)
+                }
+                color: modelData.focused ? Colors.foreground : "transparent"
                 Behavior on width {
                     NumberAnimation {
-                        duration: 250
-                        easing.type: Easing.OutQuad
+                        duration: 500
+                        easing.type: Easing.OutBack
                     }
                 }
-                
                 Behavior on color {
-                    ColorAnimation { duration: 250 }
-                }
-
-                Behavior on x {
-                    NumberAnimation {
-                        duration: 250
-                        easing.type: Easing.OutQuad
+                    ColorAnimation {
+                        duration: 500
+                        easing.type: Easing.OutBack
                     }
                 }
-
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor

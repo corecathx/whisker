@@ -8,6 +8,7 @@ import qs.modules
 
 Item {
     implicitHeight: 60
+    property bool inLockScreen: false
 
     RowLayout {
         id: childContent
@@ -15,6 +16,7 @@ Item {
         spacing: 10
 
         UserIcon {
+            visible: !inLockScreen 
             Layout.alignment: Qt.AlignVCenter
         }
 
@@ -23,18 +25,20 @@ Item {
             radius: 40
             color: "transparent"
             Layout.preferredHeight: parent.height
-            Layout.preferredWidth: contentRow.implicitWidth + 25
+            Layout.preferredWidth: contentRow.implicitWidth + (!inLockScreen ? 25 : 0)
 
             RowLayout {
                 id: contentRow
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: (!inLockScreen ? 10 : 0)
                 spacing: 30
 
                 TimeLabel {
+                    visible: !inLockScreen 
                     Layout.alignment: Qt.AlignVCenter
                 }
                 Tray {
+                    visible: !inLockScreen 
                     Layout.alignment: Qt.AlignVCenter
                 }
                 Stats {

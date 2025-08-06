@@ -13,9 +13,19 @@ Rectangle {
 
     property bool hovered: false
 
-    color: !Bluetooth.enabled
-        ? Colors.darken(Colors.accent, hovered ? 0 : 0.1)
-        : Colors.lighten(Colors.accent, hovered ? 0.1 : 0.05)
+    color: {
+        if (!Bluetooth.defaultAdapter.enabled) // bt disabled
+            return Colors.opacify(Colors.darken(Colors.accent, 0.15), hovered ? 1 : 0.4)
+        if (Bluetooth.activeDevice) // connected
+            return hovered ? Colors.accent : Colors.opacify(Colors.accent, 0.5)
+
+        return hovered ? Colors.accent : Colors.opacify(Colors.accent, 0.5) // not connected but bt is active
+    }
+
+    border {
+        width: 1
+        color: Colors.accent
+    }
 
     Behavior on color {
         ColorAnimation {
@@ -35,10 +45,18 @@ Rectangle {
         }
 
         Text {
-            text: Bluetooth.label.length > 10
-                ? Bluetooth.label.slice(0, 10) + "..."
-                : Bluetooth.label
-            font.pixelSize: 16
+            text: {
+                if (Bluetooth.activeDevice) {
+                    if (Bluetooth.activeDevice.deviceName.length > 12) {
+                        return Bluetooth.activeDevice.deviceName.slice(0, 12) + "..."
+                    } else {
+                        return Bluetooth.activeDevice.deviceName
+                    }
+                } else {
+                    return "Bluetooth"
+                }
+            }
+            font.pixelSize: 14
             color: Colors.foreground
         }
 
@@ -49,13 +67,6 @@ Rectangle {
         hoverEnabled: true
         onEntered: hovered = true
         onExited: hovered = false
-        onClicked: Bluetooth.toggle()
-    }
-
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: Bluetooth.refresh()
+        onClicked: Bluetooth.defaultAdapter.enabled = !Bluetooth.defaultAdapter.enabled
     }
 }

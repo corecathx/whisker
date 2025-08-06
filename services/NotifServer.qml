@@ -67,7 +67,7 @@ Singleton {
 
         readonly property Timer timer: Timer {
             running: true
-            interval: notif.notification.expireTimeout > 0 ? notif.notification.expireTimeout : 20000
+            interval: notif.notification.expireTimeout > 0 ? notif.notification.expireTimeout : 5000
             onTriggered: {
                 if (true)
                     notif.popup = false;

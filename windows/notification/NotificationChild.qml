@@ -18,8 +18,8 @@ Rectangle {
 
     Layout.fillWidth: true
     radius: 20
-    color: Colors.background
-    border.color: "#444"
+    color: Appearance.panel_color
+    border.color: Colors.accent
     border.width: 1
     implicitHeight: Math.max(content.implicitHeight + 40, 80)
 

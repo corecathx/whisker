@@ -6,7 +6,8 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
 import qs.modules
-
+import qs.modules.overlays
+import qs.preferences
 
 PanelWindow {
     anchors {
@@ -19,7 +20,8 @@ PanelWindow {
     color: "transparent"
 
     mask: Region {}
-    WlrLayershell.layer: WlrLayer.Background
+    WlrLayershell.layer: WlrLayer.Top
+    exclusionMode: Preferences.smallBar ? ExclusionMode.Ignore : ExclusionMode.Normal
     Corners {
         cornerType: "inverted"
         cornerHeight: 20
