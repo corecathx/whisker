@@ -15,7 +15,7 @@ Scope {
 	}
 
 	Connections {
-		target: Pipewire.defaultAudioSink?.audio
+		target: Pipewire.defaultAudioSink?.audio ?? null
 
 		function onVolumeChanged() {
 			root.shouldShowOsd = true;
@@ -41,11 +41,11 @@ Scope {
 		active: root.shouldShowOsd
 
 		PanelWindow {
-			anchors.top: ShellLayout.bar_position === 'top'
-			margins.top: ShellLayout.bar_position === 'top' ? 10 : 0
+			anchors.top: Preferences.barPosition === 'top'
+			margins.top: Preferences.barPosition === 'top' ? 10 : 0
 
-            anchors.bottom: ShellLayout.bar_position === 'bottom'
-			margins.bottom: ShellLayout.bar_position === 'bottom' ? 10 : 0
+            anchors.bottom: Preferences.barPosition === 'bottom'
+			margins.bottom: Preferences.barPosition === 'bottom' ? 10 : 0
 			
 			anchors.right: true
 			margins.right: 10
@@ -113,7 +113,7 @@ Scope {
 									Behavior on width {
 										NumberAnimation {
 											duration: 100
-											easing: Easing.OutQuad
+											easing.type: Easing.OutCubic
 										}
 									}
 								}

@@ -18,7 +18,7 @@ Scope {
             visible: true
             title: "Whisker Settings"
 
-            color: Colors.background
+            color: Appearance.panel_color
             onClosing: {
                 Globals.visible_settingsMenu = false;
             }
@@ -48,6 +48,7 @@ Scope {
                             model: ListModel {
                                 ListElement { icon: "signal_wifi_4_bar"; label: "Wi-Fi" }
                                 ListElement { icon: "bluetooth"; label: "Bluetooth" }
+                                ListElement { icon: "desktop_windows"; label: "System" }
                                 ListElement { icon: "info"; label: "About" }
                             }
 
@@ -132,6 +133,17 @@ Scope {
                         Layout.fillHeight: true
 
                         BluetoothMenu {
+                            anchors.fill: parent
+                            anchors.margins: 40
+                        }
+                    }
+
+                    Rectangle {
+                        color: "transparent"
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        SystemMenu {
                             anchors.fill: parent
                             anchors.margins: 40
                         }

@@ -3,6 +3,7 @@ import QtQuick.Window
 import Quickshell
 import Quickshell.Wayland
 import qs.modules
+import QtMultimedia
 PanelWindow {
     id: wallpaper
     anchors {
@@ -30,4 +31,12 @@ PanelWindow {
         smooth: true
         cache: true
     }
+
+    // Video {
+    //     anchors.fill: parent
+    //     autoPlay: true
+    //     smooth: false
+    //     loops: 9999
+    //     source: "file:///home/corecat/Downloads/output2.mp4"
+    // }
 }

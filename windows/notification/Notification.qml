@@ -13,7 +13,7 @@ Scope {
 
     PanelWindow {
         id: window
-        width: 540
+        implicitWidth: 540
         visible: true
         anchors.top: true
         anchors.bottom: true

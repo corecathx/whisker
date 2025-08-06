@@ -9,11 +9,11 @@ import qs.modules
 RowLayout {
     id: childContent
     anchors.fill: parent
-
+    property bool inLockScreen: false
+    
     Item {
         Layout.fillWidth: true
     }
-
 
     Rectangle {
         radius: 40
@@ -26,10 +26,15 @@ RowLayout {
             anchors.centerIn: parent
             spacing: 10
 
-            Mpris {}
+            Item {
+                visible: !inLockScreen
+                implicitWidth: mprisTray.width
+                implicitHeight: mprisTray.height
+                MprisTray { id:mprisTray }
+            }
             Audio {}
             NetworkTray {}
-            Bluetooth {}
+            BluetoothTray {}
             Battery {}
         }
     }

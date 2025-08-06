@@ -15,10 +15,13 @@ Rectangle {
 
     property real value: 50
 
-    property color barColor: Colors.darken(Colors.accent, 0.1)
-    property color backgroundColor: "transparent"
+    property color barColor: Colors.accent
+    property color backgroundColor: Colors.opacify(Colors.accent, 0.2)
     readonly property string labelText: value.toFixed(0) + "%"
-
+    border {
+        width: 1
+        color: Colors.darken(Colors.accent, 0)
+    }
     function updateVolume() {
         const val = Math.round(value)
         Qt.callLater(() => {
@@ -64,8 +67,7 @@ Rectangle {
             MaterialSymbol {
                 icon: {
                     if (root.value === 0) return "volume_off"
-                    else if (root.value <= 30) return "volume_mute"
-                    else if (root.value <= 70) return "volume_down"
+                    else if (root.value <= 50) return "volume_down"
                     else return "volume_up"
                 }
                 font.pixelSize: 24
@@ -92,7 +94,7 @@ Rectangle {
                 enabled: !root.dragging
                 NumberAnimation {
                     duration: 200
-                    easing.type: Easing.InOutQuad
+                    easing.type: Easing.OutCubic
                 }
             }
 

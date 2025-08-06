@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Io
 import QtQuick
@@ -6,6 +7,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import qs.modules
 import qs.preferences
+import QtQuick.Effects
 
 Scope {
     id: root
@@ -13,44 +15,23 @@ Scope {
         model: Quickshell.screens
 
         PanelWindow {
-            id:root
             property var modelData
             screen: modelData
+            WlrLayershell.layer: WlrLayer.Top
+            color: "transparent"
 
             anchors {
-              top: ShellLayout.bar_position === 'top'
-              bottom: ShellLayout.bar_position === 'bottom'
-              left: true
-              right: true
+                top: Preferences.barPosition === 'top'
+                bottom: Preferences.barPosition === 'bottom'
+                left: true
+                right: true
             }
 
-            implicitHeight: 50
+            implicitHeight: item.implicitHeight
 
-            Item {
-                anchors.fill: parent
-
-                BarLeft {
-                    anchors.left: parent.left
-                    
-                    anchors.verticalCenter: parent.verticalCenter
-                    
-                    anchors.leftMargin: 40
-                }
-
-                BarRight {
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.rightMargin: 40
-                }
-
-                BarMiddle {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                }
+            BarContainer {
+                id: item
             }
-
-
-          color: Appearance.panel_color
         }
     }
 }

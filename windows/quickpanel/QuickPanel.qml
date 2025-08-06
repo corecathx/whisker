@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Pipewire
+import Quickshell.Services.UPower
 import Quickshell.Widgets
 import qs.modules
 import qs.components
@@ -20,16 +21,16 @@ Scope {
 
         PanelWindow {
             id: window
-            anchors.top: ShellLayout.bar_position === 'top'
-            margins.top: ShellLayout.bar_position === 'top' ? 10 : 0
+            anchors.top: Preferences.barPosition === 'top'
+            margins.top: Preferences.barPosition === 'top' ? 10 : 0
 
-            anchors.bottom: ShellLayout.bar_position === 'bottom'
-            margins.bottom: ShellLayout.bar_position === 'bottom' ? 10 : 0
+            anchors.bottom: Preferences.barPosition === 'bottom'
+            margins.bottom: Preferences.barPosition === 'bottom' ? 10 : 0
 
             anchors.left: true
-            margins.left: 10
+            margins.left: Preferences.smallBar ? 200 + 10 : 10
 
-            WlrLayershell.layer: WlrLayer.Overlay
+            WlrLayershell.layer: WlrLayer.Top
 
             implicitWidth: 450
             implicitHeight: 600
@@ -38,6 +39,7 @@ Scope {
             Rectangle {
                 anchors.fill: parent
                 color: Appearance.panel_color
+                border.color: Colors.accent
                 radius: 20
             }
 
@@ -95,11 +97,37 @@ Scope {
                         }
 
                         RowLayout {
+                            visible: UPower.displayDevice.isLaptopBattery
+
                             Battery {
                                 id: battery
                             }
                             Text {
-                                text: "- " + battery.remainingTime + " left"
+                                text: {
+                                    function formatSeconds(s: int, fallback: string): string {
+                                        const day = Math.floor(s / 86400);
+                                        const hr = Math.floor(s / 3600) % 60;
+                                        const min = Math.floor(s / 60) % 60;
+
+                                        let comps = [];
+                                        if (day > 0)
+                                            comps.push(`${day}d`);
+                                        if (hr > 0)
+                                            comps.push(`${hr}h`);
+                                        if (min > 0)
+                                            comps.push(`${min}m`);
+
+                                        return comps.join(" ") || fallback;
+                                    }
+
+                                    let output = "- ";
+                                    if (UPower.onBattery)
+                                        output += formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating...")
+                                    else
+                                        output += formatSeconds(UPower.displayDevice.timeToFull, "Fully charged")
+
+                                    return output
+                                }
                                 font.pixelSize: 14
                                 color: Colors.foreground
                             }

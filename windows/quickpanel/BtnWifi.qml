@@ -14,8 +14,8 @@ Rectangle {
     property bool hovered: false
 
     color: !Network.wifi.enabled
-        ? Colors.darken(Colors.accent, hovered ? 0 : 0.1)
-        : Colors.lighten(Colors.accent, hovered ? 0.1 : 0.05)
+        ? Colors.opacify(Colors.accent, hovered ? 0.6 : 0.5)
+        : Colors.lighten(Colors.accent, hovered ? 0.1 : -0.1)
 
     Behavior on color {
         ColorAnimation {

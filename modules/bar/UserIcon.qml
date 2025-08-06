@@ -17,7 +17,7 @@ Rectangle {
         Behavior on width {
             NumberAnimation {
                 duration: 250
-                easing.type: Easing.OutQuad
+                easing.type: Easing.OutCubic
             }
         }
     }
@@ -25,7 +25,7 @@ Rectangle {
     Behavior on implicitWidth {
         NumberAnimation {
             duration: 250
-            easing.type: Easing.OutQuad
+            easing.type: Easing.OutCubic
         }
     }
 

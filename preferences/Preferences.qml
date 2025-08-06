@@ -1,0 +1,31 @@
+pragma Singleton
+import QtQuick
+
+/**
+ * Whisker's Configuration file.
+ * Valid values are defined by @value keyword.
+ */
+QtObject {
+    /**
+     * Whether to use top / bottom bar layout, other UI elements might follow this rule.
+     * @values "top", "bottom"
+     */
+    property string barPosition: 'top'
+    /**
+     * Duration it takes for Process objects to execute it's command in miliseconds.
+     * @values real: 1000, 2000
+     */
+    property real processUpdateTime: 1000
+    
+    /**
+     * Whether to use small bar layout.
+     * @values bool: true, false
+     */
+    property bool smallBar: true
+
+    /**
+     * Padding for bars (e.g., panel content).
+     * @values int (pixels)
+     */
+    property int barPadding: 200
+}

@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import QtQml
+import qs.preferences
 
 Singleton {
     id: net
