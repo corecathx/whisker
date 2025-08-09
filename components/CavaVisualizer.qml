@@ -9,11 +9,13 @@ Item {
     width: 400
     height: 200
     property real multiplier: 1
+    property real spacing: 10
+    property string position: "bottom"
     Row {
         id: visualizerLayout
         anchors.fill: parent
         anchors.margins: 0
-        spacing: 10
+        spacing: root.spacing
 
         Repeater {
             model: Cava.values.length
@@ -21,8 +23,9 @@ Item {
             Rectangle {
                 width: (visualizerLayout.width - ((Cava.values.length - 1) * visualizerLayout.spacing)) / Cava.values.length
                 height: Math.max(1, Cava.values[index]) * multiplier
-                color: Colors.opacify(Colors.foreground, 0.1)
-                anchors.bottom: parent.bottom
+                color: Colors.opacify(Appearance.colors.m3on_background, 0.3)
+                anchors.bottom: position === "bottom" ? parent.bottom : undefined
+                anchors.top: position === "top" ? parent.top : undefined
             }
         }
     }

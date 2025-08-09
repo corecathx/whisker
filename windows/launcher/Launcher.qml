@@ -67,7 +67,6 @@ Scope {
             Rectangle {
                 anchors.fill: parent
                 color: Appearance.panel_color
-                border.color: Colors.accent
                 radius: 20
             }
 
@@ -123,10 +122,9 @@ Scope {
                                 anchors.fill: parent
                                 radius: 20
                                 color: hovered
-                                    ? Colors.opacify(Colors.accent, 0.5)
-                                    : Colors.opacify(Colors.background, 0.5)
-                                border.color: Colors.opacify(Colors.accent, 0.5)
-                                border.width: 1
+                                    ? Colors.opacify(Appearance.colors.m3on_surface, 0.08)
+                                    : Appearance.colors.m3surface_variant
+
 
                                 Behavior on color {
                                     ColorAnimation { duration: 200; easing.type: Easing.OutCubic }
@@ -161,11 +159,11 @@ Scope {
                                         sourceSize.height: 30
                                     }
 
-                                    MaterialSymbol {
+                                    MaterialIcon {
                                         visible: appicon.source == ""
                                         icon: "terminal"
                                         font.pixelSize: 30
-                                        color: Colors.foreground
+                                        color: Appearance.colors.m3on_surface
                                     }
 
                                     ColumnLayout {
@@ -174,7 +172,7 @@ Scope {
                                             text: modelData.name
                                             font.pixelSize: 16
                                             font.bold: true
-                                            color: Colors.foreground
+                                            color: Appearance.colors.m3on_surface
                                             Layout.fillWidth: true
                                         }
                                         Text {
@@ -188,7 +186,7 @@ Scope {
                                             font.family: text.startsWith(">")
                                                 ? "monospace"
                                                 : Qt.application.font.family
-                                            color: Colors.opacify(Colors.foreground, 0.5)
+                                            color: Appearance.colors.m3on_surface_variant
                                             Layout.fillWidth: true
                                         }
                                     }

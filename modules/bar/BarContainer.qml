@@ -27,6 +27,13 @@ Item {
         id: barContainer
         implicitHeight: root.implicitHeight
         width: Preferences.smallBar ? screen?.width - Preferences.barPadding * 2 : parent?.width ?? 0
+        clip: true
+        Behavior on width {
+            NumberAnimation {
+                duration: Appearance.anim_medium
+                easing.type: Easing.OutCubic
+            }
+        }
         anchors {
             horizontalCenter: parent.horizontalCenter
             //fill: !Preferences.smallBar ? parent : undefined
@@ -38,6 +45,8 @@ Item {
             color: !inLockScreen ? Appearance.panel_color : "transparent"
         }
         CavaVisualizer {
+            spacing: 8
+            position: Preferences.barPosition
             multiplier: 0.25
             visible: Mpris.active && !inLockScreen
             anchors.fill: parent

@@ -30,7 +30,7 @@ Scope {
                     radius: 20
                     Layout.fillHeight: true
                     width: 300
-                    color: Colors.opacify(Colors.accent, 0.2)
+                    color: Colors.opacify(Appearance.colors.m3primary, 0.2)
 
                     Column {
                         anchors.fill: parent
@@ -39,7 +39,7 @@ Scope {
 
                         Text {
                             text: "Settings"
-                            color: Colors.foreground
+                            color: Appearance.colors.m3on_background
                             font.bold: true
                             font.pixelSize: 30
                         }
@@ -62,11 +62,11 @@ Scope {
                                     anchors.fill: parent
 
                                     color: root.selectedIndex === index
-                                        ? Colors.opacify(Colors.accent, 0.5)
+                                        ? Colors.opacify(Appearance.colors.m3primary, 0.5)
                                         : (pressed
-                                            ? Colors.opacify(Colors.accent, 0)
+                                            ? Colors.opacify(Appearance.colors.m3primary, 0)
                                             : (containsMouse
-                                                ? Colors.opacify(Colors.accent, 0.3)
+                                                ? Colors.opacify(Appearance.colors.m3primary, 0.3)
                                                 : "transparent"))
 
                                     Behavior on color{
@@ -81,16 +81,16 @@ Scope {
                                         anchors.margins: 10
                                         spacing: 10
 
-                                        MaterialSymbol {
+                                        MaterialIcon {
                                             icon: model.icon
                                             font.pixelSize: 24
-                                            color: Colors.foreground
+                                            color: Appearance.colors.m3on_background
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
 
                                         Text {
                                             text: model.label
-                                            color: Colors.foreground
+                                            color: Appearance.colors.m3on_background
                                             font.pixelSize: 16
                                         }
                                     }
@@ -106,7 +106,7 @@ Scope {
 
                         Text {
                             text: "! Everything here is TBA !"
-                            color: Colors.opacify(Colors.foreground, 0.5)
+                            color: Colors.opacify(Appearance.colors.m3on_background, 0.5)
                         }
                     }
                 }

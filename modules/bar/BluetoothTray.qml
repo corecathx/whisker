@@ -16,11 +16,11 @@ Item {
 
     RowLayout {
         id: container
-        MaterialSymbol {
+        MaterialIcon {
             id: iconLabel
             font.pixelSize: 20
             icon: root.icon
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
         }
     }
 

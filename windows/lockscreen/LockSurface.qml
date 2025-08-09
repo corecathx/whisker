@@ -50,7 +50,7 @@ WlSessionLockSurface {
 		Rectangle {
 			id: overlayRect
 			anchors.fill: parent
-			color: Colors.background
+			color: Appearance.colors.m3surface
 			opacity: root.startAnim ? 0.5 : 0
 			Behavior on opacity {
 				NumberAnimation { duration: animation_time; easing.type: easingType }
@@ -65,7 +65,7 @@ WlSessionLockSurface {
             left: parent.left
             right: parent.right
         }
-        color: Colors.background
+        color: Appearance.colors.m3surface
         height: root.startAnim ? 50 : 0
 
         Behavior on height {
@@ -81,7 +81,7 @@ WlSessionLockSurface {
 
         cornerType: "inverted"
         cornerHeight: 20
-        color: Colors.background
+        color: Appearance.colors.m3surface
         corners: [0,1]
     }
 
@@ -95,7 +95,8 @@ WlSessionLockSurface {
 		anchors {
 			left: parent.left
 			right: parent.right
-			top: topBar.bottom
+			top: Preferences.barPosition === "top" ? topBar.bottom : undefined
+			bottom: Preferences.barPosition === "bottom" ? bottomBar.top : undefined
 			fill: null;
 		}
 	}
@@ -106,15 +107,17 @@ WlSessionLockSurface {
         }
 		spacing: 10
 		anchors {
+			top: Preferences.barPosition === "top" ? topBar.bottom : undefined
+			bottom: Preferences.barPosition === "bottom" ? bottomBar.top : undefined
 			topMargin: 20
-			top: topBar.bottom
+			bottomMargin: 20
 			horizontalCenter: parent.horizontalCenter
 		}
 
-		MaterialSymbol {
+		MaterialIcon {
 			icon: "lock"
 			font.pixelSize: 26
-			color: Colors.foreground
+			color: Appearance.colors.m3on_background
 			Layout.alignment: Qt.AlignHCenter
 		}
 
@@ -122,7 +125,7 @@ WlSessionLockSurface {
 			id: weatherLabel
 			text:"bro doesn't have internet"
 			font.pixelSize: 16
-			color: Colors.foreground
+			color: Appearance.colors.m3on_background
 			Layout.alignment: Qt.AlignHCenter
 
 			Process {
@@ -143,7 +146,7 @@ WlSessionLockSurface {
             right: parent.right
             bottom: parent.bottom
         }
-        color: Colors.background
+        color: Appearance.colors.m3surface
         height: root.startAnim ? 50 : 0
 
         Behavior on height {
@@ -159,14 +162,16 @@ WlSessionLockSurface {
 		spacing: 10
 		anchors {
 			bottomMargin: 20
-			bottom: bottomBar.top
+			topMargin: 20
+			top: Preferences.barPosition === "bottom" ? topBar.bottom : undefined
+			bottom: Preferences.barPosition === "top" ? bottomBar.top : undefined
 			horizontalCenter: parent.horizontalCenter
 		}
 		Text {
 			visible: Mpris.active
 			text: Mpris.active?.trackTitle + " / " + Mpris.active?.trackArtist ?? ""
 			font.pixelSize: 16
-			color: Colors.foreground
+			color: Appearance.colors.m3on_background
 		}
 	}
 	CavaVisualizer {
@@ -175,10 +180,11 @@ WlSessionLockSurface {
             NumberAnimation { duration: animation_time; easing.type: easingType }
         }
 		visible: Mpris.active
-
+		position: Preferences.barPosition === "top" ? "bottom" : "top" // lmfao
 		width: screen?.width ?? 800
 		anchors {
-			bottom: bottomBar.top
+			top: Preferences.barPosition === "bottom" ? topBar.bottom : undefined
+			bottom: Preferences.barPosition === "top" ? bottomBar.top : undefined
 			horizontalCenter: parent.horizontalCenter
 		}
 	}
@@ -191,20 +197,22 @@ WlSessionLockSurface {
 		spacing: -5
 		anchors {
 			bottomMargin: 20
-			bottom: bottomBar.top
-			left: bottomBar.left
+			topMargin: 20
+			top: Preferences.barPosition === "bottom" ? topBar.bottom : undefined
+			bottom: Preferences.barPosition === "top" ? bottomBar.top : undefined
+			left: Preferences.barPosition === "bottom" ? topBar.left : bottomBar.left
 			leftMargin: 40 + (Preferences.smallBar ? Preferences.barPadding : 0)
 		}
 		Text {
 			id: timeLabel
 			font.pixelSize: 46
 			font.bold: true
-			color: Colors.foreground
+			color: Appearance.colors.m3on_background
 		}
 		Text {
 			id: dateLabel
 			font.pixelSize: 24
-			color: Colors.foreground
+			color: Appearance.colors.m3on_background
 		}
 		Process {
 			id: timeProc
@@ -242,7 +250,7 @@ WlSessionLockSurface {
 
         cornerType: "inverted"
         cornerHeight: 20
-        color: Colors.background
+        color: Appearance.colors.m3surface
         corners: [2,3]
     }
     ColumnLayout {
@@ -287,7 +295,7 @@ WlSessionLockSurface {
 			id: userLabel
 			text: Quickshell.env("USER")
 			font.bold: true
-			color: Colors.foreground
+			color: Appearance.colors.m3on_background
 			font.pixelSize: 32
 			horizontalAlignment: Text.AlignHCenter
 			Layout.alignment: Qt.AlignHCenter

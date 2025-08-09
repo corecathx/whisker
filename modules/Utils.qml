@@ -5,6 +5,6 @@ import Quickshell
 // think of this like a shared properties across qmls
 QtObject {
     function getPath(key) {
-        return Quickshell.shellRoot + '/' + key
+        return Quickshell.shellDir + '/' + key
     }
 }

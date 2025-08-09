@@ -39,7 +39,7 @@ Scope {
             Rectangle {
                 anchors.fill: parent
                 color: Appearance.panel_color
-                border.color: Colors.accent
+                //border.color: Appearance.colors.m3primary
                 radius: 20
             }
 
@@ -93,7 +93,7 @@ Scope {
                             font.pixelSize: 30
                             font.bold: true
                             font.letterSpacing: 2
-                            color: Colors.foreground
+                            color: Appearance.colors.m3on_background
                         }
 
                         RowLayout {
@@ -129,7 +129,7 @@ Scope {
                                     return output
                                 }
                                 font.pixelSize: 14
-                                color: Colors.foreground
+                                color: Appearance.colors.m3on_background
                             }
                         }
                     }
@@ -137,10 +137,10 @@ Scope {
                         Layout.fillWidth: true
                     }
 
-                    MaterialSymbol {
+                    MaterialIcon {
                         icon: "settings"
                         font.pixelSize: 26
-                        color: Colors.foreground
+                        color: Appearance.colors.m3on_background
                         anchors.verticalCenter: parent.verticalCenter
                         MouseArea {
                             anchors.fill: parent
@@ -162,6 +162,25 @@ Scope {
                     spacing: 20
                     BtnWifi {}
                     BtnBluetooth {}
+                }
+
+                RowLayout {
+                    height: 40
+                    Layout.leftMargin: 20
+                    Layout.rightMargin: 20
+                    spacing: 20
+                    StyledSlider {
+                        id: vlmSlider
+                        property real volume: Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume * 100
+
+                        value: volume / 100
+                        
+                        function onVolumeChanged() {
+                            if (vlmSlider.value === 0) return "volume_off";
+                            else if (vlmSlider.value <= 0.5) return "volume_down";
+                            else return "volume_up";
+                        }
+                    }
                 }
 
                 RowLayout {

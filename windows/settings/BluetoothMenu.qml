@@ -20,7 +20,7 @@ Rectangle {
             text: "Bluetooth"
             font.pixelSize: 24
             font.bold: true
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
         }
 
         Column {
@@ -33,14 +33,14 @@ Rectangle {
                         : "Not connected")
                     : "Bluetooth is turned off"
                 font.pixelSize: 16
-                color: Colors.foreground
+                color: Appearance.colors.m3on_background
                 Layout.fillWidth: true
             }
         }
 
         Rectangle {
             height: 1
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
             opacity: 0.2
             Layout.fillWidth: true
             visible: Bluetooth.enabled
@@ -59,32 +59,32 @@ Rectangle {
                     height: 40
                     radius: 20
                     color: modelData.mac === Bluetooth.connectedName
-                        ? Colors.opacify(Colors.accent, 0.7)
-                        : Colors.opacify(Colors.foreground, 0.05)
+                        ? Colors.opacify(Appearance.colors.m3primary, 0.7)
+                        : Colors.opacify(Appearance.colors.m3on_background, 0.05)
 
                     RowLayout {
                         anchors.fill: parent
                         anchors.margins: 10
                         spacing: 10
 
-                        MaterialSymbol {
+                        MaterialIcon {
                             icon: "bluetooth"
                             font.pixelSize: 18
-                            color: Colors.foreground
+                            color: Appearance.colors.m3on_background
                         }
 
                         Text {
                             text: modelData.name
                             font.pixelSize: 14
-                            color: Colors.foreground
+                            color: Appearance.colors.m3on_background
                             Layout.fillWidth: true
                         }
 
-                        /*MaterialSymbol {
+                        /*MaterialIcon {
                             visible: Bluetooth.pairedDevices.find(d => d.mac === modelData.mac) !== undefined
                             icon: "lock"
                             font.pixelSize: 16
-                            color: Colors.foreground
+                            color: Appearance.colors.m3on_background
                         }*/
                     }
 
@@ -115,7 +115,7 @@ Rectangle {
         height: 180
         padding: 16
         background: Rectangle {
-            color: Colors.background
+            color: Appearance.colors.m3surface
             radius: 10
         }
 
@@ -134,14 +134,14 @@ Rectangle {
             Text {
                 text: "Pair with: " + device.name
                 font.pixelSize: 16
-                color: Colors.foreground
+                color: Appearance.colors.m3on_background
                 wrapMode: Text.Wrap
             }
 
             Text {
                 text: device.mac
                 font.pixelSize: 14
-                color: Colors.foreground
+                color: Appearance.colors.m3on_background
             }
 
             Button {

@@ -20,7 +20,7 @@ Rectangle {
             text: "Wi-Fi"
             font.pixelSize: 24
             font.bold: true
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
         }
 
         Column {
@@ -33,7 +33,7 @@ Rectangle {
                         : "Not connected")
                     : "Wi-Fi is turned off"
                 font.pixelSize: 16
-                color: Colors.foreground
+                color: Appearance.colors.m3on_background
                 Layout.fillWidth: true
             }
 
@@ -42,23 +42,23 @@ Rectangle {
                 Layout.fillWidth: true
                 visible: Network.wifi.enabled && Network.wifi.currentName.length > 0
 
-                MaterialSymbol {
+                MaterialIcon {
                     icon: Network.wifi.icon
                     font.pixelSize: 20
-                    color: Colors.foreground
+                    color: Appearance.colors.m3on_background
                 }
 
                 Text {
                     text: Network.wifi.strength + "%"
                     font.pixelSize: 14
-                    color: Colors.foreground
+                    color: Appearance.colors.m3on_background
                 }
             }
         }
 
         Rectangle {
             height: 1
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
             opacity: 0.2
             Layout.fillWidth: true
             visible: Network.wifi.enabled
@@ -77,34 +77,34 @@ Rectangle {
                     height: 40
                     radius: 20
                     color: modelData === Network.wifi.currentName
-                        ? Colors.opacify(Colors.accent, 0.7)
-                        : Colors.opacify(Colors.foreground, 0.05)
+                        ? Colors.opacify(Appearance.colors.m3primary, 0.7)
+                        : Colors.opacify(Appearance.colors.m3on_background, 0.05)
 
                     RowLayout {
                         anchors.fill: parent
                         anchors.margins: 10
                         spacing: 10
 
-                        MaterialSymbol {
+                        MaterialIcon {
                             icon: modelData === Network.wifi.currentName
                                 ? Network.wifi.icon
                                 : "network_wifi"
                             font.pixelSize: 18
-                            color: Colors.foreground
+                            color: Appearance.colors.m3on_background
                         }
 
                         Text {
                             text: modelData
                             font.pixelSize: 14
-                            color: Colors.foreground
+                            color: Appearance.colors.m3on_background
                             Layout.fillWidth: true
                         }
 
-                        MaterialSymbol {
+                        MaterialIcon {
                             visible: Network.wifi.isSecured(modelData)
                             icon: "lock"
                             font.pixelSize: 16
-                            color: Colors.foreground
+                            color: Appearance.colors.m3on_background
                         }
                     }
 
@@ -138,7 +138,7 @@ Rectangle {
         height: 180
         padding: 16
         background: Rectangle {
-            color: Colors.background
+            color: Appearance.colors.m3surface
             radius: 10
         }
 
@@ -158,7 +158,7 @@ Rectangle {
             Text {
                 text: "Enter password for: " + ssid
                 font.pixelSize: 16
-                color: Colors.foreground
+                color: Appearance.colors.m3on_background
                 wrapMode: Text.Wrap
             }
 

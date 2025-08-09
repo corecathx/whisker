@@ -24,12 +24,12 @@ Item {
 
     RowLayout {
         id: container
-        MaterialSymbol {
+        MaterialIcon {
             id: icon
             font.pixelSize: 20
             property real volume: Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume*100
             icon: volume > 50 ? "volume_up" : volume > 0 ? "volume_down" : 'volume_off' 
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
         }
     }
 }

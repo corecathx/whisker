@@ -12,7 +12,7 @@ Rectangle {
     property bool hovered: false
     border {
         width: hovered | Globals.visible_quickPanel ? 2 : 0
-        color: Colors.foreground
+        color: Appearance.colors.m3on_background
 
         Behavior on width {
             NumberAnimation {
@@ -47,7 +47,7 @@ Rectangle {
             visible: parent.width > 41
             anchors.leftMargin: 8
             text: Quickshell.env('USER')
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
             font.bold: true
             
         }

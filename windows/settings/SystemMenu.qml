@@ -12,7 +12,6 @@ Rectangle {
     id: root
     color: "transparent"
 
-    // ==== PROPERTIES ====
     property string systemUserHost: "Loading..."
 
     ColumnLayout {
@@ -20,7 +19,6 @@ Rectangle {
         spacing: 16
         anchors.margins: 20
 
-        // HEADER
         RowLayout {
             spacing: 20
             Layout.alignment: Qt.AlignHCenter
@@ -44,12 +42,12 @@ Rectangle {
                     text: root.systemUserHost
                     font.pixelSize: 22
                     font.bold: true
-                    color: Colors.foreground
+                    color: Appearance.colors.m3on_background
                 }
                 Text {
                     text: root.systemDevice
                     font.pixelSize: 14
-                    color: Colors.opacify(Colors.foreground, 0.7)
+                    color: Colors.opacify(Appearance.colors.m3on_background, 0.7)
                 }
             }
         }
