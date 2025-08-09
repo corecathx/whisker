@@ -26,9 +26,9 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 border {
                     width: modelData.focused ? 0 : 2
-                    color: Colors.opacify(Colors.foreground, 0.6)
+                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
                 }
-                color: modelData.focused ? Colors.foreground : "transparent"
+                color: modelData.focused ? Appearance.colors.m3on_background : "transparent"
                 Behavior on width {
                     NumberAnimation {
                         duration: 500

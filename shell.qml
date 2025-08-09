@@ -1,3 +1,4 @@
+//@ pragma Env QT_SCALE_FACTOR=1
 import "modules/bar/"
 import qs.modules.overlays
 import "modules/corners/"
@@ -15,13 +16,12 @@ import qs.services
 
 ShellRoot {
     Wallpaper {}
-    ScreenCorners{}
+    ScreenCorners {}
     VolumeOSD {}
     Bar {}
     QuickPanel {}
     Notification {}
     Settings {}
     Launcher {}
-
     Lockscreen {}
 }

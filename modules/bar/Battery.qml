@@ -32,6 +32,7 @@ Item {
                 return;
 
             if (pct <= 5 && notifiedLevel > 5) {
+
                 notifiedLevel = 5
                 Quickshell.execDetached({
                     command: ['notify-send', 'Battery critically low', 'Emergency shutdown imminent unless plugged in.']
@@ -43,6 +44,7 @@ Item {
                 })
             } else if (pct <= 20 && notifiedLevel > 20) {
                 notifiedLevel = 20
+                console.log('wowah')
                 Quickshell.execDetached({
                     command: ['notify-send', 'Low battery', 'Consider plugging in your charger.']
                 })
@@ -76,7 +78,7 @@ Item {
         id: background
         anchors.fill: parent
         radius: 100
-        color: root.isLowBattery() && UPower.onBattery ? "#350000" : Colors.opacify(Colors.background, 0.4)
+        color: root.isLowBattery() && UPower.onBattery ? "#350000" : Colors.opacify(Appearance.colors.m3surface, 0.4)
         /*border {
             width: 1
             color: 'white'
@@ -86,18 +88,18 @@ Item {
             anchors.centerIn: parent
             spacing: 4
 
-            MaterialSymbol {
+            MaterialIcon {
                 icon: "bolt"
                 visible: root.icon === "bolt"
                 font.pixelSize: 16
-                color: root.isLowBattery() && UPower.onBattery ? "red" : Colors.foreground
+                color: root.isLowBattery() && UPower.onBattery ? "red" : Appearance.colors.m3on_background
             }
 
             Text {
                 id: batteryText
                 text: root.battery
                 font.pixelSize: 12
-                color: root.isLowBattery() && UPower.onBattery ? "red" : Colors.foreground
+                color: root.isLowBattery() && UPower.onBattery ? "red" : Appearance.colors.m3on_background
                 font {
                     bold: root.isLowBattery()
                 }
@@ -111,7 +113,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             width: root.width * Math.min(Math.max(parseFloat(battery), 0), 100) / 100
-            color: root.isLowBattery() && UPower.onBattery ? "#FF0000" : Colors.foreground
+            color: root.isLowBattery() && UPower.onBattery ? "#FF0000" : Appearance.colors.m3on_background
 
             Behavior on width {
                 NumberAnimation {
@@ -126,7 +128,7 @@ Item {
                 y: (root.height - height) / 2
                 spacing: 4
 
-                MaterialSymbol {
+                MaterialIcon {
                     icon: "bolt"
                     visible: root.icon === "bolt"
                     font.pixelSize: 16

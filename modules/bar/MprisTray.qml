@@ -35,16 +35,16 @@ Item {
             }
         }
 
-        MaterialSymbol {
+        MaterialIcon {
             Layout.alignment: Qt.AlignVCenter
             icon: root.icon
             font.pixelSize: 20
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
         }
 
         Text {
             Layout.alignment: Qt.AlignVCenter
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
             font.pixelSize: 14
             text: root.title.length > 25 ? root.title.slice(0, 15) + "..." : root.title
         }

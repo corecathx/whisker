@@ -70,11 +70,11 @@ Scope {
 						rightMargin: 15
 					}
 
-					MaterialSymbol {
+					MaterialIcon {
 						property real volume: Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume*100
 						icon: volume > 50 ? "volume_up" : volume > 0 ? "volume_down" : 'volume_off' 
 						font.pixelSize: 30;
-						color: Colors.foreground
+						color: Appearance.colors.m3on_background
 					}
 
 					ColumnLayout {
@@ -83,7 +83,7 @@ Scope {
 						spacing: 10
 						
 						Text {
-							color: Colors.foreground
+							color: Appearance.colors.m3on_background
 							text: Pipewire.defaultAudioSink?.description + " - " + (Pipewire.defaultAudioSink?.audio.muted ? 'Muted' : Math.floor(Pipewire.defaultAudioSink?.audio.volume*100) + '%')
 							font.pixelSize: 16
 						}
@@ -98,7 +98,7 @@ Scope {
 								width: parent.width
 								height: 10
 								radius: 20
-								color: Colors.opacify(Colors.darken(Colors.foreground, 0.5), 0.4)
+								color: Colors.opacify(Colors.darken(Appearance.colors.m3on_background, 0.5), 0.4)
 								
 								Rectangle {
 									property real volume: Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume
@@ -108,7 +108,7 @@ Scope {
 									width: parent.width * (volume || 0)
 									height: parent.height+10
 									radius: parent.radius
-									color: Colors.foreground
+									color: Appearance.colors.m3on_background
 
 									Behavior on width {
 										NumberAnimation {

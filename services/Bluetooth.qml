@@ -11,7 +11,7 @@ Singleton {
     readonly property BluetoothDevice activeDevice: devices.find(d => d.connected) ?? null
     readonly property string icon: {
         if (!defaultAdapter?.enabled)
-            return ""
+            return "bluetooth_disabled"
 
         if (activeDevice)
             return "bluetooth_connected"

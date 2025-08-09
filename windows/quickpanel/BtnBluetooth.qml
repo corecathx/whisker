@@ -15,16 +15,13 @@ Rectangle {
 
     color: {
         if (!Bluetooth.defaultAdapter.enabled) // bt disabled
-            return Colors.opacify(Colors.darken(Colors.accent, 0.15), hovered ? 1 : 0.4)
+            return Colors.opacify(Appearance.colors.m3surface_variant, hovered ? 0.8 : 0.4)
+
         if (Bluetooth.activeDevice) // connected
-            return hovered ? Colors.accent : Colors.opacify(Colors.accent, 0.5)
+            return hovered ? Appearance.colors.m3primary_container : Appearance.colors.m3primary_container
 
-        return hovered ? Colors.accent : Colors.opacify(Colors.accent, 0.5) // not connected but bt is active
-    }
-
-    border {
-        width: 1
-        color: Colors.accent
+        // bt active but not connected
+        return hovered ? Appearance.colors.m3secondary : Appearance.colors.m3secondary
     }
 
     Behavior on color {
@@ -38,10 +35,16 @@ Rectangle {
         spacing: 10
         anchors.centerIn: parent
 
-        MaterialSymbol {
+        MaterialIcon {
             icon: Bluetooth.icon
             font.pixelSize: 24
-            color: Colors.foreground
+            color: {
+                if (!Bluetooth.defaultAdapter.enabled)
+                    return Appearance.colors.m3on_surface_variant
+                if (Bluetooth.activeDevice)
+                    return Appearance.colors.m3on_primary_container
+                return Appearance.colors.m3on_secondary
+            }
         }
 
         Text {
@@ -57,7 +60,13 @@ Rectangle {
                 }
             }
             font.pixelSize: 14
-            color: Colors.foreground
+            color: {
+                if (!Bluetooth.defaultAdapter.enabled)
+                    return Appearance.colors.m3on_surface_variant
+                if (Bluetooth.activeDevice)
+                    return Appearance.colors.m3on_primary_container
+                return Appearance.colors.m3on_secondary
+            }
         }
 
     }

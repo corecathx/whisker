@@ -13,15 +13,9 @@ PanelWindow {
         right: true
     }
 
-    color: "transparent"
+    color: Colors.darken(Appearance.colors.m3surface, 0.2);
     WlrLayershell.layer: WlrLayer.Background
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
-
-    Rectangle {
-        anchors.fill: parent
-        color: Colors.darken(Colors.background, 0.2);
-        visible: bgImage.source === ""
-    }
 
     Image {
         id: bgImage

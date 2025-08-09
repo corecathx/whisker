@@ -7,20 +7,27 @@ import qs.modules
 
 Rectangle {
     id: root
-    signal dismiss()
+    property bool startAnim: false
 
     property string title: "WawaApp"
     property string body: "No content"
+    property bool tracked: false
     property string image: ""
     property var buttons: [
         { label: "Okay!", onClick: () => console.log("Okay") }
     ]
 
+    opacity: tracked ? 1 : (startAnim ? 1 : 0)
+    Behavior on opacity {
+        NumberAnimation {
+            duration: Appearance.anim_medium
+            easing.type: Easing.OutCubic
+        }
+    }
+
     Layout.fillWidth: true
     radius: 20
-    color: Appearance.panel_color
-    border.color: Colors.accent
-    border.width: 1
+    color: Appearance.colors.m3surface
     implicitHeight: Math.max(content.implicitHeight + 40, 80)
 
     RowLayout {
@@ -30,7 +37,7 @@ Rectangle {
         spacing: 20
 
         ClippingRectangle {
-            visible: !!root.image
+            visible: root.image
             width: 60
             height: 60
             radius: 20
@@ -45,19 +52,20 @@ Rectangle {
         }
 
         ColumnLayout {
-            Layout.fillWidth: true
-
             Text {
                 text: root.title
                 font.bold: true
                 font.pixelSize: 20
-                color: Colors.lighten(Colors.foreground, 0.25)
+                wrapMode: Text.Wrap
+                color: Appearance.colors.m3on_surface
+                Layout.fillWidth: true
             }
 
             Text {
                 text: root.body
+                visible: root.body.length > 0
                 font.pixelSize: 14
-                color: Colors.foreground
+                color: Appearance.colors.m3on_surface_variant
                 wrapMode: Text.Wrap
                 Layout.fillWidth: true
             }
@@ -65,32 +73,27 @@ Rectangle {
             RowLayout {
                 visible: root.buttons.length > 0
                 Layout.topMargin: 5
-                Layout.preferredHeight: 25
+                Layout.preferredHeight: 40
                 Layout.fillWidth: true
                 spacing: 20
 
                 Repeater {
-                    model: (buttons.length > 0
-                        ? buttons
-                        : [ { label: "Dismiss", onClick: () => console.log("Dismissed") } ])
-                            .map(b => ({
-                                label: (b.label && b.label.trim()) || "Dismiss",
-                                onClick: b.onClick || (() => console.log("Dismiss clicked"))
-                            }))
-
+                    model: buttons
 
                     Rectangle {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         radius: 20
                         color: index === 0
-                            ? Colors.accent
-                            : Colors.darken(Colors.accent, 0.1)
+                            ? Appearance.colors.m3primary
+                            : Appearance.colors.m3secondary_container
 
                         Text {
                             anchors.centerIn: parent
                             text: modelData.label
-                            color: Colors.lighten(Colors.foreground, 0.25)
+                            color: index === 0
+                                ? Appearance.colors.m3on_primary
+                                : Appearance.colors.m3on_secondary_container
                             font.pixelSize: 14
                         }
 
@@ -98,11 +101,15 @@ Rectangle {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: b.onClick || (() => root.dismiss())
+                            onClicked: modelData.onClick()
                         }
                     }
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+        startAnim = true
     }
 }

@@ -9,13 +9,11 @@ import qs.modules
 Item {
     anchors.fill: parent
     
-    // Preload all cat sounds
     SoundEffect { id: cat0; source: Utils.getPath("audios/mc-cat0.wav"); volume: 0.8 }
     SoundEffect { id: cat1; source: Utils.getPath("audios/mc-cat1.wav"); volume: 0.8 }
     SoundEffect { id: cat2; source: Utils.getPath("audios/mc-cat2.wav"); volume: 0.8 }
     SoundEffect { id: cat3; source: Utils.getPath("audios/mc-cat3.wav"); volume: 0.8 }
 
-    // Array of sound references
     property var meowSounds: [cat0, cat1, cat2, cat3]
 
     ColumnLayout {
@@ -64,7 +62,7 @@ Item {
                     text: "Whisker Shell v0.1"
                     font.pixelSize: 20
                     font.bold: true
-                    color: Colors.foreground
+                    color: Appearance.colors.m3on_background
                     horizontalAlignment: Text.AlignHCenter
                     Layout.preferredWidth: 320
                 }
@@ -73,7 +71,7 @@ Item {
                     text: "A simple shell focusing on usability."
                     font.pixelSize: 14
                     wrapMode: Text.Wrap
-                    color: Colors.foreground
+                    color: Appearance.colors.m3on_background
                     horizontalAlignment: Text.AlignHCenter
                     Layout.preferredWidth: 320
                 }
@@ -81,7 +79,7 @@ Item {
                 Text {
                     text: "Cat sounds from Minecraft"
                     font.pixelSize: 10
-                    color: Colors.opacify(Colors.foreground, 0.5)
+                    color: Colors.opacify(Appearance.colors.m3on_background, 0.5)
                     horizontalAlignment: Text.AlignHCenter
                     Layout.preferredWidth: 320
                 }

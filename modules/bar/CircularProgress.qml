@@ -6,8 +6,8 @@ import qs.components
 Item {
     property real progress: 0
     property string icon: ""
-    property color progressColor: Colors.foreground
-    property color backgroundColor: Colors.opacify(Colors.background, 0.4)
+    property color progressColor: Appearance.colors.m3on_background
+    property color backgroundColor: Colors.opacify(Appearance.colors.m3surface, 0.4)
     property real strokeWidth: 3
     
     Behavior on progress {
@@ -45,12 +45,12 @@ Item {
             ctx.stroke()
         }
     }
-    MaterialSymbol {
+    MaterialIcon {
         id: iconMaterial
         anchors.centerIn: parent
         font.pixelSize: 16
         icon: parent.icon
-        color: Colors.foreground
+        color: Appearance.colors.m3on_background
         opacity: 1
         Behavior on opacity { NumberAnimation { duration: 150 } }
     }
@@ -59,7 +59,7 @@ Item {
         id: textLabel
         anchors.centerIn: parent
         text: Math.round(parent.progress) + "%"
-        color: Colors.foreground
+        color: Appearance.colors.m3on_background
         font.pixelSize: 10
         font.bold: true
         opacity: 0

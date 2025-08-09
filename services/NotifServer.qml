@@ -9,8 +9,8 @@ import QtQuick
 Singleton {
     id: root
 
-    readonly property list<Notif> list: []
-    readonly property list<Notif> popups: list.filter(n => n.popup)
+    property list<Notif> data: []
+    property list<Notif> popups: data.filter(n => n.popup)
 
     NotificationServer {
         id: server
@@ -25,16 +25,17 @@ Singleton {
         onNotification: notif => {
             notif.tracked = true;
 
-            root.list.push(notifComp.createObject(root, {
+            root.data.push(notifComp.createObject(root, {
                 popup: true,
-                notification: notif
+                notification: notif,
+                shown: false
             }));
         }
     }
     function removeById(id) {
-        const i = list.findIndex(n => n.notification.id === id);
+        const i = data.findIndex(n => n.notification.id === id);
         if (i >= 0) {
-            list.splice(i, 1);
+            data.splice(i, 1);
         }
     }
 
@@ -56,6 +57,7 @@ Singleton {
             return `${h}h`;
         }
 
+        property bool shown: false
         required property Notification notification
         readonly property string summary: notification.summary
         readonly property string body: notification.body
@@ -66,7 +68,7 @@ Singleton {
         readonly property list<NotificationAction> actions: notification.actions
 
         readonly property Timer timer: Timer {
-            running: true
+            running: notif.actions.length === 0
             interval: notif.notification.expireTimeout > 0 ? notif.notification.expireTimeout : 5000
             onTriggered: {
                 if (true)
@@ -78,7 +80,7 @@ Singleton {
             target: notif.notification.Retainable
 
             function onDropped(): void {
-                root.list.splice(root.list.indexOf(notif), 1);
+                root.data.splice(root.data.indexOf(notif), 1);
             }
 
             function onAboutToDestroy(): void {

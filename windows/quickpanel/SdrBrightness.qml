@@ -15,12 +15,12 @@ Rectangle {
 
     property real value: 50
 
-    property color barColor: Colors.accent
-    property color backgroundColor: Colors.opacify(Colors.accent, 0.2)
+    property color barColor: Appearance.colors.m3primary
+    property color backgroundColor: Colors.opacify(Appearance.colors.m3primary, 0.2)
     readonly property string labelText: value.toFixed(0) + "%"
     border {
         width: 1
-        color: Colors.darken(Colors.accent, 0)
+        color: Colors.darken(Appearance.colors.m3primary, 0)
     }
     function updateBrightness() {
         const val = Math.round(value)
@@ -64,16 +64,16 @@ Rectangle {
         RowLayout {
             anchors.centerIn: parent
             spacing: 10
-            MaterialSymbol {
+            MaterialIcon {
                 icon: "brightness_5"
                 font.pixelSize: 24
-                color: Colors.foreground
+                color: Appearance.colors.m3on_background
             }
 
             Text {
                 text: root.labelText
                 font.pixelSize: 14
-                color: Colors.foreground
+                color: Appearance.colors.m3on_background
             }
         }
 
@@ -98,16 +98,16 @@ Rectangle {
                 x: (root.width - width) / 2
                 y: (root.height - height) / 2
                 spacing: 10
-                MaterialSymbol {
+                MaterialIcon {
                     icon: "brightness_7"
                     font.pixelSize: 24
-                    color: Colors.foreground
+                    color: Appearance.colors.m3on_background
                 }
 
                 Text {
                     text: root.labelText
                     font.pixelSize: 14
-                    color: Colors.foreground
+                    color: Appearance.colors.m3on_background
                 }
             }
         }

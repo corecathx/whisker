@@ -15,13 +15,10 @@ Rectangle {
 
     property real value: 50
 
-    property color barColor: Colors.accent
-    property color backgroundColor: Colors.opacify(Colors.accent, 0.2)
+    property color barColor: Appearance.colors.m3primary
+    property color backgroundColor: Colors.opacify(Appearance.colors.m3primary, 0.2)
     readonly property string labelText: value.toFixed(0) + "%"
-    border {
-        width: 1
-        color: Colors.darken(Colors.accent, 0)
-    }
+
     function updateVolume() {
         const val = Math.round(value)
         Qt.callLater(() => {
@@ -55,39 +52,29 @@ Rectangle {
         }
     }
 
-    ClippingRectangle {
+    Rectangle {
+        height: 10
+        color: root.backgroundColor
+        anchors.verticalCenter: parent.verticalCenter
+        radius: 20
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: parent.height*0.5
+        anchors.rightMargin: parent.height*0.5
+    }
+    Rectangle {
         id: background
         anchors.fill: parent
         radius: 100
-        color: root.backgroundColor
-
-        RowLayout {
-            anchors.centerIn: parent
-            spacing: 10
-            MaterialSymbol {
-                icon: {
-                    if (root.value === 0) return "volume_off"
-                    else if (root.value <= 50) return "volume_down"
-                    else return "volume_up"
-                }
-                font.pixelSize: 24
-                color: Colors.foreground
-            }
-
-            Text {
-                text: root.labelText
-                font.pixelSize: 14
-                color: Colors.foreground
-            }
-        }
+        color: "transparent"
 
         Rectangle {
             id: bar
-            clip: true
+            radius: 20
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            width: root.width * Math.min(Math.max(value, 0), 100) / 100
+            width: root.height + (root.width - root.height) * Math.min(Math.max(value, 0), 100) / 100
             color: root.barColor
 
             Behavior on width {
@@ -97,26 +84,19 @@ Rectangle {
                     easing.type: Easing.OutCubic
                 }
             }
-
-            RowLayout {
-                x: (root.width - width) / 2
-                y: (root.height - height) / 2
-                spacing: 10
-                MaterialSymbol {
-                    icon: {
-                        if (root.value === 0) return "volume_off"
-                        else if (root.value <= 50) return "volume_down"
-                        else return "volume_up"
-                    }
-                    font.pixelSize: 24
-                    color: Colors.foreground
+            MaterialIcon {
+                icon: {
+                    if (root.value === 0) return "volume_off"
+                    else if (root.value <= 50) return "volume_down"
+                    else return "volume_up"
                 }
-
-                Text {
-                    text: root.labelText
-                    font.pixelSize: 14
-                    color: Colors.foreground
-                }
+                font.pixelSize: 24
+                color: Appearance.colors.m3on_primary
+                anchors.right: parent.width > parent.height ? parent.right : undefined
+                anchors.left: parent.width > parent.height ? undefined : parent.left
+                anchors.centerIn: parent.width > parent.height ? undefined : parent
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.rightMargin: parent.width > parent.height ? 10 : 0
             }
         }
     }

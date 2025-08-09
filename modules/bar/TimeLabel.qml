@@ -18,7 +18,7 @@ Item {
         Text {
             id: label
             text: root.time
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
             font.pixelSize: 20
             font.bold: true
             lineHeight: 0.1
@@ -27,7 +27,7 @@ Item {
         Text {
             id: date
             text: root.date
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
             font.pixelSize: 14
             lineHeight: 0.1
             fontSizeMode: Text.Fit;

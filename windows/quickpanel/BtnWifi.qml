@@ -14,8 +14,8 @@ Rectangle {
     property bool hovered: false
 
     color: !Network.wifi.enabled
-        ? Colors.opacify(Colors.accent, hovered ? 0.6 : 0.5)
-        : Colors.lighten(Colors.accent, hovered ? 0.1 : -0.1)
+        ? Colors.opacify(Appearance.colors.m3primary, hovered ? 0.6 : 0.5)
+        : Colors.lighten(Appearance.colors.m3primary, hovered ? 0.1 : -0.1)
 
     Behavior on color {
         ColorAnimation {
@@ -28,10 +28,10 @@ Rectangle {
         spacing: 10
         anchors.centerIn: parent
 
-        MaterialSymbol {
+        MaterialIcon {
             icon: Network.wifi.icon
             font.pixelSize: 24
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
         }
 
         Text {
@@ -42,7 +42,7 @@ Rectangle {
                 return name.length > 15 ? name.slice(0, 15) + "..." : (name || "Wi-Fi")
             }
             font.pixelSize: 16
-            color: Colors.foreground
+            color: Appearance.colors.m3on_background
         }
     }
 
