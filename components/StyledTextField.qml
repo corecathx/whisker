@@ -11,9 +11,7 @@ TextField {
     property string placeholder: "Type here..."
     property real iconSize: icon === "" ? 0 : 25
     property real radius: 20
-    property color backgroundColor: Colors.opacify(Appearance.colors.m3surface, 0.7)
-    property color borderActive: Colors.opacify(Appearance.colors.m3on_surface, 0.7)
-    property color borderInactive: Colors.opacify(Appearance.colors.m3on_surface, 0.25)
+    property color backgroundColor: Appearance.colors.m3surface_container
 
     width: parent ? parent.width - 40 : 300
     placeholderText: placeholder
@@ -39,12 +37,11 @@ TextField {
         id: bg
         radius: control.radius
         color: control.backgroundColor
-        border.color: control.activeFocus ? control.borderActive : control.borderInactive
-        border.width: 1
+        border.width: 0
 
-        Behavior on border.color { ColorAnimation { duration: 180 } }
         Behavior on color { ColorAnimation { duration: 180 } }
     }
+
 
     MaterialIcon {
         icon: control.icon

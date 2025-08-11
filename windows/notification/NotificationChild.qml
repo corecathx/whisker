@@ -62,7 +62,7 @@ Rectangle {
             }
 
             Text {
-                text: root.body
+                text: root.body.length > 123 ? root.body.substr(0, 120) + "..." : root.body
                 visible: root.body.length > 0
                 font.pixelSize: 14
                 color: Appearance.colors.m3on_surface_variant
@@ -71,7 +71,7 @@ Rectangle {
             }
 
             RowLayout {
-                visible: root.buttons.length > 0
+                visible: root.buttons.length > 1
                 Layout.topMargin: 5
                 Layout.preferredHeight: 40
                 Layout.fillWidth: true
@@ -108,7 +108,16 @@ Rectangle {
             }
         }
     }
-
+    MouseArea {
+        anchors.fill: parent
+        visible: root.buttons.length === 1
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            // invoke the only button's onClick
+            root.buttons[0].onClick()
+        }
+    }
     Component.onCompleted: {
         startAnim = true
     }

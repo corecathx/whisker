@@ -46,14 +46,13 @@ Item {
         }
         CavaVisualizer {
             spacing: 8
-            position: Preferences.barPosition
+            position: Preferences.barPosition === "bottom" ? "bottom" : ""
             multiplier: 0.25
             visible: Mpris.active && !inLockScreen
-            anchors.fill: parent
             anchors {
+                fill: parent
                 leftMargin: !Preferences.smallBar ? 40 : 0
                 rightMargin: !Preferences.smallBar ? 40 : 0
-                bottom: panelBackground.bottom
                 horizontalCenter: parent.horizontalCenter
             }
         }

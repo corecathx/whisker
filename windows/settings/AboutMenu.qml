@@ -59,7 +59,7 @@ Item {
                 Layout.alignment: Qt.AlignHCenter
 
                 Text {
-                    text: "Whisker Shell v0.1"
+                    text: "Whisker"
                     font.pixelSize: 20
                     font.bold: true
                     color: Appearance.colors.m3on_background

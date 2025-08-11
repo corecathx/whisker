@@ -345,7 +345,6 @@ WlSessionLockSurface {
 		target: context
 		function onUnlocked() {
 			startAnim = false
-			Cava.close()
 		}
 	}
 	Component.onCompleted: {

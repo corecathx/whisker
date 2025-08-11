@@ -1,5 +1,6 @@
 {
     "barPosition": "top",
     "smallBar": true,
-    "barPadding": 200
+    "barPadding": 250,
+    "cavaEnabled": false
 }

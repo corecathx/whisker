@@ -122,8 +122,8 @@ Scope {
                                 anchors.fill: parent
                                 radius: 20
                                 color: hovered
-                                    ? Colors.opacify(Appearance.colors.m3on_surface, 0.08)
-                                    : Appearance.colors.m3surface_variant
+                                    ? Appearance.colors.m3surface_container_high
+                                    : Appearance.colors.m3surface_container_low
 
 
                                 Behavior on color {

@@ -14,7 +14,6 @@ Item {
     Row {
         id: visualizerLayout
         anchors.fill: parent
-        anchors.margins: 0
         spacing: root.spacing
 
         Repeater {

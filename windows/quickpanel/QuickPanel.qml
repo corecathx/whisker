@@ -1,11 +1,13 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Services.Pipewire
 import Quickshell.Services.UPower
 import Quickshell.Widgets
 import qs.modules
+import qs.services
 import qs.components
 import qs.preferences
 import qs.modules.bar
@@ -15,7 +17,9 @@ import QtQuick.Controls
 Scope {
     id: root
     property bool opened: false
-
+    PwObjectTracker {
+        objects: [ Pipewire.defaultAudioSink ]
+    }
     LazyLoader {
         active: Globals.visible_quickPanel
 
@@ -28,7 +32,7 @@ Scope {
             margins.bottom: Preferences.barPosition === 'bottom' ? 10 : 0
 
             anchors.left: true
-            margins.left: Preferences.smallBar ? 200 + 10 : 10
+            margins.left: Preferences.smallBar ? Preferences.barPadding + 10 : 10
 
             WlrLayershell.layer: WlrLayer.Top
 
@@ -171,32 +175,55 @@ Scope {
                     spacing: 20
                     StyledSlider {
                         id: vlmSlider
-                        property real volume: Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume * 100
-
-                        value: volume / 100
+                        value: Audio.volume * 100
                         
-                        function onVolumeChanged() {
-                            if (vlmSlider.value === 0) return "volume_off";
-                            else if (vlmSlider.value <= 0.5) return "volume_down";
-                            else return "volume_up";
+                        onValueChanged: {
+                            Audio.setVolume(value/100)
+                            if (value === 0) vlmSlider.icon = "volume_off";
+                            else if (value <= 50) vlmSlider.icon = "volume_down";
+                            else vlmSlider.icon = "volume_up";
                         }
                     }
                 }
-
                 RowLayout {
                     height: 40
                     Layout.leftMargin: 20
                     Layout.rightMargin: 20
                     spacing: 20
-                    SdrVolume {}
-                }
+                    StyledSlider {
+                        id: briSlider
+                        
+                        onValueChanged: {
+                            Quickshell.execDetached(["sh", "-c", `brightnessctl set ${value}%`]);
 
-                RowLayout {
-                    height: 40
-                    Layout.leftMargin: 20
-                    Layout.rightMargin: 20
-                    spacing: 20
-                    SdrBrightness {}
+                            const icons = ["brightness_empty", "brightness_5", "brightness_6", "brightness_7"];
+                            if (value <= 0) {
+                                briSlider.icon = icons[0];
+                            } else {
+                                const index = Math.min(icons.length - 1, Math.ceil(value / (100 / (icons.length - 1))));
+                                briSlider.icon = icons[index];
+                            }
+                        }
+
+                        Process {
+                            id: brightnessReadProc
+                            command: ["sh", "-c", "brightnessctl get && brightnessctl max"]
+                            running: true
+                            stdout: StdioCollector {
+                                onStreamFinished: {
+                                    const lines = text.trim().split('\n');
+                                    if (lines.length >= 2) {
+                                        const current = parseInt(lines[0])
+                                        const maximum = parseInt(lines[1])
+                                        if (!isNaN(current) && !isNaN(maximum) && maximum > 0) {
+                                            const percent = (current / maximum) * 100
+                                            briSlider.value = percent
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

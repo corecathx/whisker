@@ -18,7 +18,7 @@ Scope {
             visible: true
             title: "Whisker Settings"
 
-            color: Appearance.panel_color
+            color: Appearance.colors.m3background
             onClosing: {
                 Globals.visible_settingsMenu = false;
             }
@@ -27,10 +27,9 @@ Scope {
                 anchors.fill: parent
 
                 Rectangle {
-                    radius: 20
                     Layout.fillHeight: true
                     width: 300
-                    color: Colors.opacify(Appearance.colors.m3primary, 0.2)
+                    color: Appearance.colors.m3surface_container_low
 
                     Column {
                         anchors.fill: parent
@@ -39,9 +38,9 @@ Scope {
 
                         Text {
                             text: "Settings"
-                            color: Appearance.colors.m3on_background
+                            color: Appearance.colors.m3on_surface
                             font.bold: true
-                            font.pixelSize: 30
+                            font.pixelSize: 28
                         }
 
                         Repeater {
@@ -54,7 +53,7 @@ Scope {
 
                             delegate: MouseArea {
                                 width: parent.width
-                                height: 40
+                                height: 44
                                 hoverEnabled: true
 
                                 Rectangle {
@@ -62,16 +61,14 @@ Scope {
                                     anchors.fill: parent
 
                                     color: root.selectedIndex === index
-                                        ? Colors.opacify(Appearance.colors.m3primary, 0.5)
-                                        : (pressed
-                                            ? Colors.opacify(Appearance.colors.m3primary, 0)
-                                            : (containsMouse
-                                                ? Colors.opacify(Appearance.colors.m3primary, 0.3)
-                                                : "transparent"))
+                                        ? Appearance.colors.m3primary_container
+                                        : (containsMouse
+                                            ? Colors.opacify(Appearance.colors.m3primary, 0.08)
+                                            : "transparent")
 
-                                    Behavior on color{
+                                    Behavior on color {
                                         ColorAnimation {
-                                            duration: 200
+                                            duration: 180
                                             easing.type: Easing.OutQuad
                                         }
                                     }
@@ -79,19 +76,24 @@ Scope {
                                     Row {
                                         anchors.fill: parent
                                         anchors.margins: 10
-                                        spacing: 10
+                                        spacing: 14
 
                                         MaterialIcon {
                                             icon: model.icon
                                             font.pixelSize: 24
-                                            color: Appearance.colors.m3on_background
+                                            color: root.selectedIndex === index
+                                                ? Appearance.colors.m3on_primary_container
+                                                : Appearance.colors.m3on_surface_variant
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
 
                                         Text {
                                             text: model.label
-                                            color: Appearance.colors.m3on_background
                                             font.pixelSize: 16
+                                            color: root.selectedIndex === index
+                                                ? Appearance.colors.m3on_primary_container
+                                                : Appearance.colors.m3on_surface_variant
+                                            anchors.verticalCenter: parent.verticalCenter
                                         }
                                     }
                                 }
@@ -101,12 +103,12 @@ Scope {
                                     root.selectedIndex = index
                                 }
                             }
-
                         }
 
                         Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
                             text: "! Everything here is TBA !"
-                            color: Colors.opacify(Appearance.colors.m3on_background, 0.5)
+                            color: Colors.opacify(Appearance.colors.m3on_surface_variant, 0.6)
                         }
                     }
                 }
@@ -160,4 +162,3 @@ Scope {
         }
     }
 }
-

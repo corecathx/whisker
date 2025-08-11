@@ -12,7 +12,6 @@ ShellRoot {
         function lock() {
 			if (lock.locked) 
 				return;
-			Cava.open();
             lock.locked = true
         }
     }

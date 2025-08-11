@@ -44,11 +44,6 @@ Rectangle {
                     font.bold: true
                     color: Appearance.colors.m3on_background
                 }
-                Text {
-                    text: root.systemDevice
-                    font.pixelSize: 14
-                    color: Colors.opacify(Appearance.colors.m3on_background, 0.7)
-                }
             }
         }
 

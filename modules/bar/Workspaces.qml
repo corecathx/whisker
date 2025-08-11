@@ -24,19 +24,16 @@ Item {
                 height: 10
                 radius: 20
                 anchors.verticalCenter: parent.verticalCenter
-                border {
-                    width: modelData.focused ? 0 : 2
-                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
-                }
-                color: modelData.focused ? Appearance.colors.m3on_background : "transparent"
+                opacity: modelData.focused ? 1 : 0.5
+                color: modelData.focused ? Appearance.colors.m3on_background : Appearance.colors.m3on_background
                 Behavior on width {
                     NumberAnimation {
                         duration: 500
                         easing.type: Easing.OutBack
                     }
                 }
-                Behavior on color {
-                    ColorAnimation {
+                Behavior on opacity {
+                    NumberAnimation {
                         duration: 500
                         easing.type: Easing.OutBack
                     }

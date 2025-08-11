@@ -48,7 +48,8 @@ Scope {
 			margins.bottom: Preferences.barPosition === 'bottom' ? 10 : 0
 			
 			anchors.right: true
-			margins.right: 10
+			margins.right: Preferences.smallBar ? Preferences.barPadding + 10 : 10
+
 
 			implicitWidth: 400
 			implicitHeight: 70

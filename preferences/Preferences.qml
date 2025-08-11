@@ -32,6 +32,13 @@ Singleton {
      */
     property int barPadding: 200
 
+    /**
+     * Whether to display visualizer on the Shell.
+     * Setting this to `false` would disable every visualizer on the shell.
+     * @values bool: true, false
+     */
+    property bool cavaEnabled: false
+
     function load(content) { 
         const parsed = JSON.parse(content);
 

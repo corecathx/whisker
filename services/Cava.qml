@@ -3,6 +3,7 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import qs.preferences
 
 Singleton {
     id: root
@@ -18,8 +19,6 @@ Singleton {
     
     Process {
         id: cavaProc
-
-        running: true
         command: ["sh", "-c", `printf '[general]\nframerate=18\nbars=${root.barCount}\nsleep_timer=3\n[output]\nchannels=mono\nmethod=raw\nraw_target=/dev/stdout\ndata_format=ascii\nascii_max_range=100\n[smoothing]\nnoise_reduction=10' | cava -p /dev/stdin`]
         stdout: SplitParser {
             onRead: data => {
@@ -29,11 +28,24 @@ Singleton {
     }
 
     function open() {
+
         console.log("Cava opened");
-        //cavaProc.running = true;
+        cavaProc.running = true;
     }
     function close() {
         console.log("Cava closed");
-        //cavaProc.running = false;
+        cavaProc.running = false;
+    }
+
+    Connections {
+        target: Preferences
+
+        function onCavaEnabledChanged() {
+            console.log("Preferences changed!")
+            if (Preferences.cavaEnabled)
+                root.open()
+            else
+                root.close()
+        }
     }
 }

@@ -68,7 +68,7 @@ Singleton {
         readonly property list<NotificationAction> actions: notification.actions
 
         readonly property Timer timer: Timer {
-            running: notif.actions.length === 0
+            running: notif.actions.length >= 0
             interval: notif.notification.expireTimeout > 0 ? notif.notification.expireTimeout : 5000
             onTriggered: {
                 if (true)
