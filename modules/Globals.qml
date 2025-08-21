@@ -1,5 +1,5 @@
 pragma Singleton
-import QtQuick 2.15
+import QtQuick
 
 // think of this like a shared properties across qmls
 QtObject {

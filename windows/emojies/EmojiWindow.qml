@@ -19,7 +19,7 @@ Scope {
             right: true
             bottom:true
         }
-        visible: true
+        visible: false
         color: "transparent"
 
         property int columns: Math.max(1, Math.floor((width - root.margin * 2 + spacing) / (emojiSize + spacing)))

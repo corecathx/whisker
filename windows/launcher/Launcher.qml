@@ -1,5 +1,6 @@
 import QtQuick.Layouts
 import QtQuick
+import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
@@ -20,15 +21,12 @@ Scope {
     }
 
     function fuzzyMatch(needle, haystack) {
-        needle = needle.toLowerCase()
-        haystack = haystack.toLowerCase()
-        let i = 0, j = 0
-        while (i < needle.length && j < haystack.length) {
-            if (needle[i] === haystack[j]) i++
-            j++
-        }
-        return i === needle.length
+        return substringMatch(needle, haystack)
     }
+    function substringMatch(needle, haystack) {
+        return haystack.toLowerCase().includes(needle.toLowerCase());
+    }
+
 
     LazyLoader {
         active: root.opened
@@ -83,6 +81,7 @@ Scope {
             }
 
             Flickable {
+                id: listFlick
                 anchors {
                     left: parent.left
                     right: parent.right
@@ -100,6 +99,7 @@ Scope {
                     spacing: 10
 
                     Repeater {
+                        id: appRepeater
                         model: {
                             let appsArray = DesktopEntries.applications.values
                             appsArray = appsArray.slice().sort(
@@ -113,9 +113,9 @@ Scope {
                             height: visible ? 60 : 0
                             visible: searchField.text.trim() === "" ||
                                 fuzzyMatch(searchField.text,
-                                           modelData.name + " " +
-                                           modelData.comment + " " +
-                                           modelData.execString)
+                                        modelData.name + " " +
+                                        modelData.comment + " " +
+                                        modelData.execString)
 
                             Rectangle {
                                 id: appItem
@@ -124,7 +124,6 @@ Scope {
                                 color: hovered
                                     ? Appearance.colors.m3surface_container_high
                                     : Appearance.colors.m3surface_container_low
-
 
                                 Behavior on color {
                                     ColorAnimation { duration: 200; easing.type: Easing.OutCubic }
@@ -157,6 +156,7 @@ Scope {
                                         smooth: true
                                         sourceSize.width: 30
                                         sourceSize.height: 30
+                                        Layout.alignment: Qt.AlignVCenter
                                     }
 
                                     MaterialIcon {
@@ -164,10 +164,13 @@ Scope {
                                         icon: "terminal"
                                         font.pixelSize: 30
                                         color: Appearance.colors.m3on_surface
+                                        Layout.alignment: Qt.AlignVCenter
                                     }
 
                                     ColumnLayout {
                                         spacing: 0
+                                        Layout.fillWidth: true
+
                                         Text {
                                             text: modelData.name
                                             font.pixelSize: 16
@@ -195,7 +198,50 @@ Scope {
                         }
                     }
                 }
+
+                Item {
+                    id: emptyOverlay
+                    anchors.fill: parent
+                    z: 1
+                    visible: {
+                        if (searchField.text.trim() === "") return false
+                        for (let i = 0; i < appRepeater.count; i++) {
+                            const it = appRepeater.itemAt(i)
+                            if (it && it.visible) return false
+                        }
+                        return true
+                    }
+
+                    
+                    RowLayout {
+                        anchors.centerIn: parent
+                        spacing: 20
+                        height: parent.height
+                        Image {
+                            source: Utils.getPath("images/sad-cat.png")
+                            sourceSize: Qt.size(150,150)
+                            smooth: true
+                            Layout.alignment: Qt.AlignVCenter
+                            layer.enabled: true
+                            layer.effect: MultiEffect {
+                                colorization: 1.0
+                                colorizationColor: Appearance.colors.m3on_surface_variant
+                            }
+                        }
+
+                        Text {
+                            text: "Nothing found."
+                            font.pixelSize: 32
+                            font.bold: true
+                            color: Appearance.colors.m3on_surface_variant
+                            Layout.alignment: Qt.AlignVCenter
+                            horizontalAlignment: Text.AlignLeft
+                            wrapMode: Text.NoWrap
+                        }
+                    }
+                }
             }
+
         }
     }
 }

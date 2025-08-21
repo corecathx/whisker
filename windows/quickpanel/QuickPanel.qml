@@ -13,7 +13,7 @@ import qs.preferences
 import qs.modules.bar
 import Quickshell.Hyprland
 import QtQuick.Controls
-
+import qs.windows.notification
 Scope {
     id: root
     property bool opened: false
@@ -124,7 +124,7 @@ Scope {
                                         return comps.join(" ") || fallback;
                                     }
 
-                                    let output = "- ";
+                                    let output = "•  ";
                                     if (UPower.onBattery)
                                         output += formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating...")
                                     else
@@ -157,7 +157,7 @@ Scope {
                         }
                     }
                 }
-
+                
 
                 RowLayout {
                     height: 40
@@ -165,8 +165,35 @@ Scope {
                     Layout.rightMargin: 20
                     spacing: 20
                     BtnWifi {}
-                    BtnBluetooth {}
+                    
+                    // bluetooth
+                    StyledButton {
+                        Layout.fillWidth: true
+                        implicitWidth: 0
+                        icon: Bluetooth.icon
+                        base_bg: !Bluetooth.defaultAdapter.enabled
+                            ? Appearance.colors.m3secondary_container
+                            : Appearance.colors.m3primary
+
+                        base_fg: !Bluetooth.defaultAdapter.enabled
+                            ? Appearance.colors.m3on_secondary_container
+                            : Appearance.colors.m3on_primary
+                        text: {
+                            if (Bluetooth.activeDevice) {
+                                if (Bluetooth.activeDevice.deviceName.length > 12) {
+                                    return Bluetooth.activeDevice.deviceName.slice(0, 12) + "..."
+                                } else {
+                                    return Bluetooth.activeDevice.deviceName
+                                }
+                            } else {
+                                return "Bluetooth"
+                            }
+                        }
+                        onClicked: Bluetooth.defaultAdapter.enabled = !Bluetooth.defaultAdapter.enabled
+                    }
                 }
+
+                ExpPowerProfile {}
 
                 RowLayout {
                     height: 40

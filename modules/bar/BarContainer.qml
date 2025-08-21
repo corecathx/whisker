@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import Quickshell
 import qs.modules
 import qs.services
@@ -16,7 +17,13 @@ Item {
         anchors.left: barContainer.right
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
-        color: Appearance.panel_color
+        color: !inLockScreen && (Hyprland.focusedWorkspace.toplevels?.values.length) !== 0 ? Appearance.panel_color : "transparent"
+        Behavior on color {
+            ColorAnimation {
+                duration: Appearance.anim_medium
+                easing.type: Easing.OutCubic
+            }
+        }
         corners: [1]
         transform: Scale {
             yScale: Preferences.barPosition === 'top' ? 1 : -1
@@ -42,7 +49,13 @@ Item {
         Rectangle {
             id: panelBackground
             anchors.fill: parent
-            color: !inLockScreen ? Appearance.panel_color : "transparent"
+            color: !inLockScreen && (Hyprland.focusedWorkspace.toplevels?.values.length) !== 0 ? Appearance.panel_color : "transparent"
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.anim_medium
+                    easing.type: Easing.OutCubic
+                }
+            }
         }
         CavaVisualizer {
             spacing: 8
@@ -79,6 +92,14 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
             }
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: true
+                shadowOpacity: 1
+                shadowColor: Appearance.colors.m3shadow
+                shadowBlur: 2
+                shadowScale: 1
+            }
         }
     }
     Corners {
@@ -87,7 +108,13 @@ Item {
         anchors.right: barContainer.left
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
-        color: Appearance.panel_color
+                    color: !inLockScreen && (Hyprland.focusedWorkspace.toplevels?.values.length) !== 0 ? Appearance.panel_color : "transparent"
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.anim_medium
+                    easing.type: Easing.OutCubic
+                }
+            }
         corners: [0]
         transform: Scale {
             yScale: Preferences.barPosition === 'top' ? 1 : -1

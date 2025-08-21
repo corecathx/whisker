@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
 import qs.modules
+import qs.components
 
 Rectangle {
     id: root
@@ -27,7 +28,7 @@ Rectangle {
 
     Layout.fillWidth: true
     radius: 20
-    color: Appearance.colors.m3surface
+    color: Appearance.panel_color
     implicitHeight: Math.max(content.implicitHeight + 40, 80)
 
     RowLayout {
@@ -80,29 +81,18 @@ Rectangle {
                 Repeater {
                     model: buttons
 
-                    Rectangle {
+                    StyledButton {
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        radius: 20
-                        color: index === 0
-                            ? Appearance.colors.m3primary
-                            : Appearance.colors.m3secondary_container
+                        implicitWidth: 0
+                        text: modelData.label
+                        base_bg: index !== 0
+                            ? Appearance.colors.m3secondary_container
+                            : Appearance.colors.m3primary
 
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData.label
-                            color: index === 0
-                                ? Appearance.colors.m3on_primary
-                                : Appearance.colors.m3on_secondary_container
-                            font.pixelSize: 14
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: modelData.onClick()
-                        }
+                        base_fg: index !== 0
+                            ? Appearance.colors.m3on_secondary_container
+                            : Appearance.colors.m3on_primary
+                        onClicked: modelData.onClick()
                     }
                 }
             }
@@ -114,7 +104,6 @@ Rectangle {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: {
-            // invoke the only button's onClick
             root.buttons[0].onClick()
         }
     }

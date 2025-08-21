@@ -1,4 +1,5 @@
 pragma Singleton
+
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -9,13 +10,13 @@ Singleton {
      * Panel opacity, from 0 (fully transparent) to 1 (fully opaque).
      * @values real: 0.0 - 1.0
      */
-    property real panel_opacity: 1
+    property real panel_opacity: 0.9
 
     /**
      * The color of the panel, based on background and opacity.
      * @values color
      */
-    property color panel_color: Colors.opacify(Appearance.colors.m3surface, panel_opacity)
+    property color panel_color: Colors.opacify(Appearance.colors.m3background, panel_opacity)
 
     /**
      * URI to the current wallpaper.

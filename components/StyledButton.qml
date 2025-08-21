@@ -1,0 +1,100 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import qs.modules
+
+Control {
+  id: root
+  property alias text: label.text
+  property string icon: ""
+  property int icon_size: 20
+  property int radius: 20
+
+  property bool checkable: false
+  property bool checked: false
+  signal clicked
+  signal toggled(bool checked)
+
+  // --- state colors ---
+  property color base_bg: root.checkable && !root.checked
+    ? Appearance.colors.m3secondary_container
+    : Appearance.colors.m3primary
+
+  property color base_fg: root.checkable && !root.checked
+    ? Appearance.colors.m3on_secondary_container
+    : Appearance.colors.m3on_primary
+
+  property color hover_bg: Qt.lighter(base_bg, 1.1)
+  property color pressed_bg: Qt.darker(base_bg, 1.2)
+
+  property color background_color: mouse_area.pressed
+    ? pressed_bg
+    : mouse_area.containsMouse ? hover_bg : base_bg
+
+  property color text_color: base_fg
+
+  implicitWidth: row.implicitWidth + 40
+  implicitHeight: 40
+
+  contentItem: Item {
+    anchors.fill: parent
+
+    Row {
+      id: row
+      anchors.centerIn: parent
+      spacing: root.icon !== "" && label.text !== "" ? 6 : 0
+
+      MaterialIcon {
+        visible: root.icon !== ""
+        icon: root.icon
+        font.pixelSize: root.icon_size
+        color: root.text_color
+        anchors.verticalCenter: parent.verticalCenter
+        Behavior on color {
+          ColorAnimation {
+            duration: Appearance.anim_fast / 2
+            easing.type: Easing.OutCubic
+          }
+        }
+      }
+
+      Text {
+        id: label
+        font.pixelSize: 14
+        color: root.text_color
+        anchors.verticalCenter: parent.verticalCenter
+        elide: Text.ElideRight
+        Behavior on color {
+          ColorAnimation {
+            duration: Appearance.anim_fast / 2
+            easing.type: Easing.OutCubic
+          }
+        }
+      }
+    }
+  }
+
+  background: Rectangle {
+    radius: root.radius
+    color: root.background_color
+    Behavior on color {
+      ColorAnimation {
+        duration: Appearance.anim_fast / 2
+        easing.type: Easing.OutCubic
+      }
+    }
+  }
+
+  MouseArea {
+    id: mouse_area
+    anchors.fill: parent
+    hoverEnabled: true
+    onClicked: {
+      root.clicked()
+      if (root.checkable) {
+        root.checked = !root.checked
+        root.toggled(root.checked)
+      }
+    }
+  }
+}

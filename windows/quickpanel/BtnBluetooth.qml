@@ -37,7 +37,7 @@ Rectangle {
 
         MaterialIcon {
             icon: Bluetooth.icon
-            font.pixelSize: 24
+            font.pixelSize: 20
             color: {
                 if (!Bluetooth.defaultAdapter.enabled)
                     return Appearance.colors.m3on_surface_variant

@@ -79,10 +79,6 @@ Item {
         anchors.fill: parent
         radius: 100
         color: root.isLowBattery() && UPower.onBattery ? "#350000" : Colors.opacify(Appearance.colors.m3surface, 0.4)
-        /*border {
-            width: 1
-            color: 'white'
-        }*/
         RowLayout {
             id: textLayer
             anchors.centerIn: parent

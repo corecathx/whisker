@@ -5,6 +5,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Widgets
 import qs.modules
+import qs.services
 
 Item {
     implicitHeight: 60
@@ -31,19 +32,21 @@ Item {
                 id: contentRow
                 anchors.fill: parent
                 anchors.margins: (!inLockScreen ? 10 : 0)
-                spacing: 30
+                spacing: 20
 
                 TimeLabel {
-                    visible: !inLockScreen 
+                    visible: !inLockScreen
+                    Layout.alignment: Qt.AlignVCenter
+                    showLabel: Hyprland.focusedWorkspace.toplevels?.values.length !== 0
+                }
+                Stats {
                     Layout.alignment: Qt.AlignVCenter
                 }
                 Tray {
                     visible: !inLockScreen 
                     Layout.alignment: Qt.AlignVCenter
                 }
-                Stats {
-                    Layout.alignment: Qt.AlignVCenter
-                }
+
             }
         }
     }

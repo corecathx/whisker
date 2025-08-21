@@ -13,6 +13,7 @@ import qs.windows.notification
 import qs.windows.launcher
 import qs.windows.lockscreen
 import qs.windows.emojies
+import qs.windows.dev
 import qs.services
 
 ShellRoot {
@@ -27,4 +28,6 @@ ShellRoot {
     Lockscreen {}
 
     EmojiWindow {}
+
+//    DevWindow {}
 }
