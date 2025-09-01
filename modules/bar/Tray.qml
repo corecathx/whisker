@@ -38,7 +38,7 @@ Item {
                     if (event.button === Qt.LeftButton)
                         modelData.activate();
                     else
-                        modelData.secondaryActivate();
+                        modelData.display(null, x, y);
                 }
 
                 IconImage {

@@ -73,7 +73,9 @@ Scope {
 
 					MaterialIcon {
 						property real volume: Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume*100
-						icon: volume > 50 ? "volume_up" : volume > 0 ? "volume_down" : 'volume_off' 
+													icon: {
+								return volume > 50 ? "volume_up" : volume > 0 ? "volume_down" : 'volume_off'
+							}
 						font.pixelSize: 30;
 						color: Appearance.colors.m3on_background
 					}
@@ -81,7 +83,7 @@ Scope {
 					ColumnLayout {
 						Layout.fillWidth: true
 						implicitHeight: 40
-						spacing: 10
+						spacing: 5
 						
 						Text {
 							color: Appearance.colors.m3on_background
@@ -89,36 +91,10 @@ Scope {
 							font.pixelSize: 16
 						}
 						
-						Rectangle {
-							Layout.fillWidth: true
-							height: 20
-							color: 'transparent'
-							
-							Rectangle {
-								id: backgroundBar
-								width: parent.width
-								height: 10
-								radius: 20
-								color: Colors.opacify(Colors.darken(Appearance.colors.m3on_background, 0.5), 0.4)
-								
-								Rectangle {
-									property real volume: Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume
-
-									id: volumeBar
-									anchors.verticalCenter: parent.verticalCenter
-									width: parent.width * (volume || 0)
-									height: parent.height+10
-									radius: parent.radius
-									color: Appearance.colors.m3on_background
-
-									Behavior on width {
-										NumberAnimation {
-											duration: 100
-											easing.type: Easing.OutCubic
-										}
-									}
-								}
-							}
+						StyledSlider {
+							implicitHeight: 20
+							icon: ""
+							value: (Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume)*100
 						}
 					}
 				}

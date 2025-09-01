@@ -12,23 +12,22 @@ Singleton {
     /**
      * Whether to use top / bottom bar layout, other UI elements might follow this rule.
      * @values "top", "bottom"
+     * @default string: "top"
      */
     property string barPosition: "top"
-    /**
-     * Duration it takes for Process objects to execute it's command in miliseconds.
-     * @values real: 1000, 2000
-     */
-    property real processUpdateTime: 1000
     
     /**
      * Whether to use small bar layout.
      * @values bool: true, false
+     * @default bool: false
      */
     property bool smallBar: false
 
     /**
      * Padding for bars (e.g., panel content).
+     * This will only take effect if `smallBar` is `true`.
      * @values int (pixels)
+     * @default int: 200
      */
     property int barPadding: 200
 
@@ -36,8 +35,24 @@ Singleton {
      * Whether to display visualizer on the Shell.
      * Setting this to `false` would disable every visualizer on the shell.
      * @values bool: true, false
+     * @default bool: true
      */
-    property bool cavaEnabled: false
+    property bool cavaEnabled: true
+
+    /**
+     * Whether to use video wallpaper instead of static image.
+     * Settings this to `true` might impact performance.
+     * @values bool: true, false
+     * @default bool: false
+     */
+    property bool useVideoWallpaper: false
+
+    /**
+     * Whether to show wallpapers instead of solid color from your color scheme.
+     * @values bool: true, false
+     * @default bool: true
+     */
+    property bool useWallpaper: true
 
     function load(content) { 
         const parsed = JSON.parse(content);

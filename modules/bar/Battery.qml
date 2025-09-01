@@ -128,13 +128,13 @@ Item {
                     icon: "bolt"
                     visible: root.icon === "bolt"
                     font.pixelSize: 16
-                    color: "black"
+                    color: Appearance.colors.m3surface
                 }
 
                 Text {
                     text: root.battery
                     font.pixelSize: 12
-                    color: "black"
+                    color: Appearance.colors.m3surface
                 }
             }
         }

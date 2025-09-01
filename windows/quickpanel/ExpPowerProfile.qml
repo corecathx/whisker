@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell.Io
 import QtQuick.Controls
 import QtQuick.Layouts
 import qs.modules
@@ -23,6 +24,13 @@ RowLayout {
             btn_balanced.checked = false
             btn_perf.checked = false
             root.current_mode = "Power Saver"
+
+            ppcProc.command[2] = 'power-saver'
+            ppcProc.running = true
+
+            notifyProc.message = "Power profile has changed to: Power Saver"
+            notifyProc.running = true
+
             console.log("Current mode:", root.current_mode)
         }
     }
@@ -32,12 +40,18 @@ RowLayout {
         text: "Balanced"
         icon: "tune"
         checkable: true
-        checked: true
         Layout.fillWidth: true
         onToggled: if (checked) {
             btn_saver.checked = false
             btn_perf.checked = false
             root.current_mode = "Balanced"
+
+            ppcProc.command[2] = 'balanced'
+            ppcProc.running = true
+
+            notifyProc.message = "Power profile has changed to: Balanced"
+            notifyProc.running = true
+
             console.log("Current mode:", root.current_mode)
         }
     }
@@ -52,7 +66,43 @@ RowLayout {
             btn_saver.checked = false
             btn_balanced.checked = false
             root.current_mode = "Performance"
+
+            ppcProc.command[2] = 'performance'
+            ppcProc.running = true
+
+            notifyProc.message = "Power profile has changed to: Performance"
+            notifyProc.running = true
+
             console.log("Current mode:", root.current_mode)
         }
+    }
+
+    Process {
+        id: ppcProc
+        command: ['powerprofilesctl', 'set', 'performance']
+    }
+
+    Process {
+        id: notifyProc
+        property string message: ""
+        command: ["dunstify", "-i", "/home/corecat/.config/whisker/logo.png", "Whisker", message]
+        running: false
+    }
+
+    Process {
+        id: getProfileProc
+        command: ["powerprofilesctl", "get"]
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let output = this.text.trim()
+                root.current_mode = output
+                btn_saver.checked = (output === "power-saver")
+                btn_balanced.checked = (output === "balanced")
+                btn_perf.checked = (output === "performance")
+                console.log("Detected current mode:", output)
+            }
+        }
+
     }
 }

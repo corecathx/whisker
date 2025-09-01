@@ -17,7 +17,7 @@ Item {
         anchors.left: barContainer.right
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
-        color: !inLockScreen && (Hyprland.focusedWorkspace.toplevels?.values.length) !== 0 ? Appearance.panel_color : "transparent"
+        color: !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.anim_medium
@@ -49,7 +49,7 @@ Item {
         Rectangle {
             id: panelBackground
             anchors.fill: parent
-            color: !inLockScreen && (Hyprland.focusedWorkspace.toplevels?.values.length) !== 0 ? Appearance.panel_color : "transparent"
+            color: !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
             Behavior on color {
                 ColorAnimation {
                     duration: Appearance.anim_medium
@@ -61,7 +61,7 @@ Item {
             spacing: 8
             position: Preferences.barPosition === "bottom" ? "bottom" : ""
             multiplier: 0.25
-            visible: Mpris.active && !inLockScreen
+            visible: Players.active && (!inLockScreen && Hyprland.currentWorkspace.hasTilingWindow())
             anchors {
                 fill: parent
                 leftMargin: !Preferences.smallBar ? 40 : 0
@@ -108,7 +108,7 @@ Item {
         anchors.right: barContainer.left
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
-                    color: !inLockScreen && (Hyprland.focusedWorkspace.toplevels?.values.length) !== 0 ? Appearance.panel_color : "transparent"
+                    color: !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
             Behavior on color {
                 ColorAnimation {
                     duration: Appearance.anim_medium

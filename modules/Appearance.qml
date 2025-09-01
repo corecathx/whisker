@@ -22,7 +22,7 @@ Singleton {
      * URI to the current wallpaper.
      * @values string (file:// URI)
      */
-    property string wallpaper: "file://" + Colors.wallpaper
+    property string wallpaper: !!Colors.wallpaper && Colors.wallpaper !== "" ? "file://" + Colors.wallpaper : ""
 
     /**
      * URI to the user’s profile image, typically located at ~/.face.

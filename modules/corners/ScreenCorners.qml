@@ -25,7 +25,7 @@ PanelWindow {
     Corners {
         cornerType: "inverted"
         cornerHeight: 20
-        color: Appearance.panel_color
+        color: "black"
         corners: [0,1,2,3]
     }
 }

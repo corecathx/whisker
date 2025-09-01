@@ -1,6 +1,8 @@
 {
     "barPosition": "top",
     "smallBar": true,
-    "barPadding": 250,
-    "cavaEnabled": false
+    "barPadding": 300,
+    "cavaEnabled": false,
+    "useVideoWallpaper": false,
+    "useWallpaper": true
 }

@@ -37,7 +37,7 @@ Item {
                 TimeLabel {
                     visible: !inLockScreen
                     Layout.alignment: Qt.AlignVCenter
-                    showLabel: Hyprland.focusedWorkspace.toplevels?.values.length !== 0
+                    showLabel: Hyprland.currentWorkspace.hasWindow
                 }
                 Stats {
                     Layout.alignment: Qt.AlignVCenter

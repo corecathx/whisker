@@ -7,7 +7,7 @@ import qs.modules
 Slider {
     property string icon: 'adjust'
     Layout.fillWidth: true
-
+    property bool useAnim: true
     id: control
     from: 0
     to: 100
@@ -30,7 +30,7 @@ Slider {
         width: parent.height + control.visualPosition * (parent.width-parent.height)
         Behavior on width {
             NumberAnimation {
-                duration: Appearance.anim_fast * 0.5
+                duration: control.useAnim ? Appearance.anim_fast * 0.5 : 0
                 easing.type: Easing.OutCubic
             }
         }

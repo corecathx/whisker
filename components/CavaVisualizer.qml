@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import qs.services
+import qs.preferences
 import qs.modules
 
 Item {
@@ -12,6 +13,7 @@ Item {
     property real spacing: 10
     property string position: "bottom"
     Row {
+        visible: Preferences.cavaEnabled
         id: visualizerLayout
         anchors.fill: parent
         spacing: root.spacing

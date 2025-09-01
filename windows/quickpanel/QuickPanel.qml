@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
@@ -94,7 +95,7 @@ Scope {
 
                         Text {
                             text: Quickshell.env("USER")
-                            font.pixelSize: 30
+                            font.pixelSize: 28
                             font.bold: true
                             font.letterSpacing: 2
                             color: Appearance.colors.m3on_background

@@ -15,47 +15,47 @@ import qs.preferences
 import qs.modules.corners
 
 WlSessionLockSurface {
-    id: root
-    required property LockContext context
+	id: root
+	required property LockContext context
 	required property real animation_time
 	property var easingType: Easing.OutCubic
-    color: 'transparent'
-    property bool startAnim: false
+	color: 'transparent'
+	property bool startAnim: false
 
     ScreencopyView {
-        id: background
-        anchors.fill: parent
-        captureSource: root.screen
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            autoPaddingEnabled: false
-            blurEnabled: true
-        	blur: root.startAnim ? 1 : 0
-
-            blurMax: 64
-            blurMultiplier: 1
-
-			Behavior on blur {
-				NumberAnimation { duration: animation_time; easing.type: easingType }
-			}
-        }
-		scale: root.startAnim ? 1.05 : 1
-		Behavior on scale {
-			NumberAnimation { duration: animation_time; easing.type: easingType }
-		}
-		rotation: root.startAnim ? 0.5 : 0
-		Behavior on rotation {
-			NumberAnimation { duration: animation_time; easing.type: easingType }
-		}
-		Rectangle {
-			id: overlayRect
+			id: background
 			anchors.fill: parent
-			color: Appearance.colors.m3surface
-			opacity: root.startAnim ? 0.5 : 0
-			Behavior on opacity {
+			captureSource: root.screen
+			layer.enabled: true
+			layer.effect: MultiEffect {
+				autoPaddingEnabled: false
+				blurEnabled: true
+				blur: root.startAnim ? 1 : 0
+
+				blurMax: 64
+				blurMultiplier: 1
+
+				Behavior on blur {
+					NumberAnimation { duration: animation_time; easing.type: easingType }
+				}
+			}
+			scale: root.startAnim ? 1.05 : 1
+			Behavior on scale {
 				NumberAnimation { duration: animation_time; easing.type: easingType }
 			}
-		}
+			rotation: root.startAnim ? 0.5 : 0
+			Behavior on rotation {
+				NumberAnimation { duration: animation_time; easing.type: easingType }
+			}
+			Rectangle {
+				id: overlayRect
+				anchors.fill: parent
+				color: Appearance.colors.m3surface
+				opacity: root.startAnim ? 0.2 : 0
+				Behavior on opacity {
+					NumberAnimation { duration: animation_time; easing.type: easingType }
+				}
+			}
     }
 
 	// Top part of the lock screen
@@ -154,38 +154,52 @@ WlSessionLockSurface {
         }
     }
 
-	ColumnLayout {
-		opacity: root.startAnim ? 1 : 0
-		Behavior on opacity {
-            NumberAnimation { duration: animation_time; easing.type: easingType }
-        }
-		spacing: 10
-		anchors {
-			bottomMargin: 20
-			topMargin: 20
-			top: Preferences.barPosition === "bottom" ? topBar.bottom : undefined
-			bottom: Preferences.barPosition === "top" ? bottomBar.top : undefined
-			horizontalCenter: parent.horizontalCenter
-		}
-		Text {
-			visible: Mpris.active
-			text: Mpris.active?.trackTitle + " / " + Mpris.active?.trackArtist ?? ""
-			font.pixelSize: 16
-			color: Appearance.colors.m3on_background
-		}
-	}
+	// ColumnLayout {
+	// 	opacity: root.startAnim ? 1 : 0
+	// 	Behavior on opacity {
+  //           NumberAnimation { duration: animation_time; easing.type: easingType }
+  //       }
+	// 	spacing: 10
+	// 	anchors {
+	// 		bottomMargin: 20
+	// 		topMargin: 20
+	// 		top: Preferences.barPosition === "bottom" ? topBar.bottom : undefined
+	// 		bottom: Preferences.barPosition === "top" ? bottomBar.top : undefined
+	// 		horizontalCenter: parent.horizontalCenter
+	// 	}
+	// 	Text {
+	// 		visible: Players.active
+	// 		text: Players.active?.trackTitle + " / " + Players.active?.trackArtist ?? ""
+	// 		font.pixelSize: 16
+	// 		color: Appearance.colors.m3on_background
+	// 	}
+	// }
 	CavaVisualizer {
 		opacity: root.startAnim ? 1 : 0
 		Behavior on opacity {
             NumberAnimation { duration: animation_time; easing.type: easingType }
         }
-		visible: Mpris.active
+		visible: Players.active
 		position: Preferences.barPosition === "top" ? "bottom" : "top" // lmfao
 		width: screen?.width ?? 800
 		anchors {
 			top: Preferences.barPosition === "bottom" ? topBar.bottom : undefined
 			bottom: Preferences.barPosition === "top" ? bottomBar.top : undefined
 			horizontalCenter: parent.horizontalCenter
+		}
+	}
+	PlayerDisplay {
+				opacity: root.startAnim ? 1 : 0
+		Behavior on opacity {
+            NumberAnimation { duration: animation_time; easing.type: easingType }
+        }
+		visible: Players.active
+		anchors {
+			top: Preferences.barPosition === "bottom" ? topBar.bottom : undefined
+			bottom: Preferences.barPosition === "top" ? bottomBar.top : undefined
+			right: Preferences.barPosition === "top" ? bottomBar.right : topBar.right
+			rightMargin: 40 + (Preferences.smallBar ? Preferences.barPadding : 0)
+			bottomMargin: 20
 		}
 	}
 
