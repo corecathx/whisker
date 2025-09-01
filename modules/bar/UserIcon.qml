@@ -7,12 +7,12 @@ Rectangle {
     clip: true
     implicitWidth: hovered | Globals.visible_quickPanel ? userName.width + avatarClip.width + 30 : 30
     height: 30
-    color: "transparent"
-    radius: 30
+    color: Colors.opacify(Appearance.colors.m3surface, 0.7)
+    radius: 20
     property bool hovered: false
     border {
         width: hovered | Globals.visible_quickPanel ? 2 : 0
-        color: Appearance.colors.m3on_background
+        color: Appearance.colors.m3on_surface
 
         Behavior on width {
             NumberAnimation {

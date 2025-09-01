@@ -10,7 +10,7 @@ Singleton {
      * Panel opacity, from 0 (fully transparent) to 1 (fully opaque).
      * @values real: 0.0 - 1.0
      */
-    property real panel_opacity: 0.9
+    property real panel_opacity: 1
 
     /**
      * The color of the panel, based on background and opacity.

@@ -78,7 +78,11 @@ PanelWindow {
         source: "file:///home/corecat/Downloads/lucanimations_vaapi.mp4"
 
         function updatePlayback() {
-            if (!Preferences.useVideoWallpaper) return;
+            if (!Preferences.useVideoWallpaper) {
+                video.stop()
+                return;
+            }
+                
             const workspace = Hyprland.focusedWorkspace
             let hasNonFloatingWindows = Hyprland.currentWorkspace.hasTilingWindow()
 
