@@ -1,20 +1,17 @@
-// Originally CornerThingy mk2 by SealEgg
-// Modified by CoreCat so it only shows one corner instead of all fours.
-
 import QtQuick
 import QtQuick.Shapes
 
 Item {
     id: root
+    width: cornerWidth
+    height: cornerHeight
 
-    // "cubic", "rounded", or "inverted"
-    property string cornerType: "cubic"
+    // Corner configuration
+    property string cornerType: "cubic" // "cubic", "rounded", or "inverted"
     property int cornerHeight: 30
     property int cornerWidth: cornerHeight
     property color color: "#000000"
-
-    // either one of these 0 = top-right, 1 = top-left, 2 = bottom-left, 3 = bottom-right
-    property int corner: 0
+    property int corner: 0 // 0 = top-right, 1 = top-left, 2 = bottom-left, 3 = bottom-right
 
     // Cubic Corner
     Item {
@@ -27,8 +24,6 @@ Item {
             asynchronous: true
             preferredRendererType: Shape.CurveRenderer
             antialiasing: true
-
-            Component.onCompleted: setAnchors(this)
 
             ShapePath {
                 fillColor: root.color
@@ -44,6 +39,7 @@ Item {
                     relativeControl2X: root.corner % 2 === 0 ? root.cornerWidth / 2 : -root.cornerWidth / 2
                     relativeControl2Y: root.cornerHeight
                 }
+
                 PathLine {
                     x: root.corner % 2 === 0 ? root.cornerWidth : 0
                     y: 0
@@ -70,12 +66,11 @@ Item {
             preferredRendererType: Shape.CurveRenderer
             antialiasing: true
 
-            Component.onCompleted: setAnchors(this)
-
             ShapePath {
                 fillColor: root.color
-                strokeWidth: -1
-                startX: 0; startY: 0
+                strokeWidth: 0
+                startX: 0
+                startY: 0
 
                 PathLine { x: root.cornerWidth; y: 0 }
                 PathLine { x: root.cornerWidth; y: root.cornerHeight }
@@ -102,12 +97,11 @@ Item {
             preferredRendererType: Shape.CurveRenderer
             antialiasing: true
 
-            Component.onCompleted: setAnchors(this)
-
             ShapePath {
                 fillColor: root.color
-                strokeWidth: -1
-                startX: 0; startY: 0
+                strokeWidth: 0
+                startX: 0
+                startY: 0
 
                 PathArc  { x: root.cornerWidth; y: root.cornerHeight; radiusX: root.cornerWidth; radiusY: root.cornerHeight }
                 PathLine { x: root.cornerWidth; y: 0 }
@@ -119,12 +113,5 @@ Item {
                 angle: root.corner * -90
             }
         }
-    }
-
-    function setAnchors(item) {
-        item.anchors.right = (root.corner === 0 || root.corner === 3) ? root.right : undefined
-        item.anchors.left = (root.corner === 1 || root.corner === 2) ? root.left : undefined
-        item.anchors.top = (root.corner <= 1) ? root.top : undefined
-        item.anchors.bottom = (root.corner > 1) ? root.bottom : undefined
     }
 }
