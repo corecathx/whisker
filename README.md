@@ -19,11 +19,11 @@ Also I'm still a Quickshell newbie, so most code in here might look messy / unor
 
 
 ## Previews
-This is **Whisker**'s default layout:
-![Top bar preview](images/preview-topbar.png)
 
-**Whisker** also supports layouts like this! (mainly for our Windows friends ;))  
-![Bottom bar preview](images/preview-bottombar.png)
+| <p align="center"> Default Layout (Top Bar) </p> | <p align="center"> Alternative Layout (Bottom Bar) </p>  |
+|--------------------------|--------------------------------|
+| <p align="center"><img src="previews/preview0.png" alt="Top bar preview" width="300"/></p> | <p align="center"><img src="previews/preview1.png" alt="Bottom bar preview" width="300"/></p> |
+| **Whisker**'s default layout. | Perfect for our Windows friends ;) |
 
 ## Motivational Cat Gif
 Behold, the vibing cat.  
