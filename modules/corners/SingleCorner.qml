@@ -13,7 +13,7 @@ Item {
     property int cornerWidth: cornerHeight
     property color color: "#000000"
 
-    // 0 = top-right, 1 = top-left, 2 = bottom-left, 3 = bottom-right
+    // either one of these 0 = top-right, 1 = top-left, 2 = bottom-left, 3 = bottom-right
     property int corner: 0
 
     // Cubic Corner

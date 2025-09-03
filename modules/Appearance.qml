@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.preferences
 
 Singleton {
     id:root
@@ -22,7 +23,7 @@ Singleton {
      * URI to the current wallpaper.
      * @values string (file:// URI)
      */
-    property string wallpaper: !!Colors.wallpaper && Colors.wallpaper !== "" ? "file://" + Colors.wallpaper : ""
+    property string wallpaper: !!Preferences.wallpaper && Preferences.wallpaper !== "" ? "file://" + Preferences.wallpaper : ""
 
     /**
      * URI to the user’s profile image, typically located at ~/.face.

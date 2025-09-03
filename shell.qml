@@ -29,5 +29,9 @@ ShellRoot {
     Lockscreen {}
 
     EmojiWindow {}
-    // DevWindow {}
+
+    Component.onCompleted: {
+        Theme.init()
+    }
+    //DevWindow {}
 }
