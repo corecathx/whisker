@@ -9,13 +9,28 @@ import qs.modules
  */
 Singleton {
     id:root
+
+    /**
+     * Wallpaper that will be displayed by Whisker.
+     * @values string: <Local file path> "/home/corecat/Pictures/wallpaper.jpg"
+     * @default string: ""
+     */
+    property string wallpaper: ""
     /**
      * Whether to use top / bottom bar layout, other UI elements might follow this rule.
-     * @values "top", "bottom"
+     * @values string: "top", "bottom"
      * @default string: "top"
      */
     property string barPosition: "top"
-    
+
+    /**
+     * Whether to keep the bar opaque or not.
+     * If set to false, the bar will adjust it's transparency, such as on desktop, etc.
+     * @values bool: true, false
+     * @default bool: true
+     */
+    property bool keepBarOpaque: true
+
     /**
      * Whether to use small bar layout.
      * @values bool: true, false

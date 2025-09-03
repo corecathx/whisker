@@ -11,20 +11,19 @@ Item {
     property bool inLockScreen: false
     implicitHeight: 50
     anchors.fill: parent
-    Corners {
+    SingleCorner {
         visible: !root.inLockScreen
-        anchors.fill: undefined
         anchors.left: barContainer.right
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
-        color: !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
+        color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
         Behavior on color {
             ColorAnimation {
-                duration: Appearance.anim_medium
+                duration: Appearance.anim_fast
                 easing.type: Easing.OutCubic
             }
         }
-        corners: [1]
+        corner: 1
         transform: Scale {
             yScale: Preferences.barPosition === 'top' ? 1 : -1
             origin.y: Preferences.barPosition === 'top' ? 0 : height/2
@@ -37,7 +36,7 @@ Item {
         clip: true
         Behavior on width {
             NumberAnimation {
-                duration: Appearance.anim_medium
+                duration: Appearance.anim_fast
                 easing.type: Easing.OutCubic
             }
         }
@@ -49,10 +48,10 @@ Item {
         Rectangle {
             id: panelBackground
             anchors.fill: parent
-            color: !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
+            color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
             Behavior on color {
                 ColorAnimation {
-                    duration: Appearance.anim_medium
+                    duration: Appearance.anim_fast
                     easing.type: Easing.OutCubic
                 }
             }
@@ -102,20 +101,19 @@ Item {
             }
         }
     }
-    Corners {
+    SingleCorner {
         visible: !root.inLockScreen
-        anchors.fill: undefined
         anchors.right: barContainer.left
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
-                    color: !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
-            Behavior on color {
-                ColorAnimation {
-                    duration: Appearance.anim_medium
-                    easing.type: Easing.OutCubic
-                }
+        color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
+        Behavior on color {
+            ColorAnimation {
+                duration: Appearance.anim_fast
+                easing.type: Easing.OutCubic
             }
-        corners: [0]
+        }
+        corner: 0
         transform: Scale {
             yScale: Preferences.barPosition === 'top' ? 1 : -1
             origin.y: Preferences.barPosition === 'top' ? 0 : height/2

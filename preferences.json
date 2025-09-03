@@ -1,8 +1,11 @@
 {
-    "barPosition": "top",
-    "smallBar": true,
+    "wallpaper": "/home/corecat/Pictures/purp.jpg",
+
+    "barPosition": "bottom",
+    "smallBar": false,
+    "keepBarOpaque": true,
     "barPadding": 300,
-    "cavaEnabled": false,
+    "cavaEnabled": true,
     "useVideoWallpaper": false,
     "useWallpaper": true
 }
