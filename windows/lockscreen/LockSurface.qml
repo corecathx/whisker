@@ -180,11 +180,9 @@ WlSessionLockSurface {
             NumberAnimation { duration: animation_time; easing.type: easingType }
         }
 		visible: Players.active
-		position: Preferences.barPosition === "top" ? "bottom" : "top" // lmfao
 		width: screen?.width ?? 800
 		anchors {
-			top: Preferences.barPosition === "bottom" ? topBar.bottom : undefined
-			bottom: Preferences.barPosition === "top" ? bottomBar.top : undefined
+			bottom: bottomBar.top
 			horizontalCenter: parent.horizontalCenter
 		}
 	}
