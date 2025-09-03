@@ -17,7 +17,7 @@ Rectangle {
     visible: !!Players.active
     Layout.alignment: Qt.AlignHCenter
     radius: 80
-    color: Colors.opacify(Appearance.colors.m3background, 0.8)
+    color: Appearance.colors.m3background
     implicitHeight: child.implicitHeight + 20
     Layout.minimumWidth: 300
     implicitWidth: child.implicitWidth + 20
