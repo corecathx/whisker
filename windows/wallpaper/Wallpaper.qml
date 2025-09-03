@@ -117,6 +117,14 @@ PanelWindow {
 
         Component.onCompleted: video.updatePlayback()
     }
+    
+    CavaVisualizer {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: (Preferences.barPosition === 'bottom' && !Preferences.smallBar ? 50 : 0)
+        visible: !Hyprland.currentWorkspace.hasTilingWindow()
+    }
 
     ColumnLayout {
         //anchors.horizontalCenter: parent.horizontalCenter
@@ -150,11 +158,5 @@ PanelWindow {
             shadowColor: Appearance.colors.m3shadow
             shadowBlur: 1
         }
-    }
-    CavaVisualizer {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        visible: !Hyprland.currentWorkspace.hasTilingWindow()
     }
 }
