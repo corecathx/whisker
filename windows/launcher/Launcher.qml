@@ -4,14 +4,72 @@ import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
+import Quickshell.Hyprland as Hypr
 import Quickshell.Widgets
 import qs.modules
+import qs.modules.corners
 import qs.components
-
+import qs.preferences
+import qs.services
 Scope {
     id: root
     property bool opened: false
+
+    property var customCommands: [
+        {
+            name: "Calculator",
+            trigger: "=",
+            comment: "Perform quick math calculations",
+            icon: "calculate",
+            exec: function(input) {
+                try {
+                    return eval(input.substring(1));
+                } catch(e) {
+                    return "Invalid syntax.";
+                }
+            }
+        },
+        {
+            name: "Hello",
+            trigger: "!",
+            comment: "Say hello to Whisker!",
+            icon: "pets",
+            autoRun: false,
+            exec: function(input) {
+                Quickshell.execDetached({
+                    command: [
+                        "dunstify",
+                        "-i", "/home/corecat/.config/whisker/logo.png",
+                        "Whisker",
+                        "Hello, " + Quickshell.env("USER") + "!"
+                    ]
+                })
+            }
+        },
+        {
+            name: "Web Search",
+            trigger: "?",
+            comment: "Search the web",
+            icon: "globe",
+            autoRun: false,
+            exec: function(input) {
+                Quickshell.execDetached({
+                    command: [
+                        "xdg-open",
+                        "https://www.google.com/search?q=" + encodeURIComponent(input.substring(1))
+                    ]
+                })
+            }
+        }
+    ]
+
+    function getMatchedCommands(query) {
+        let matches = [];
+        for (let cmd of customCommands)
+            if (query.startsWith(cmd.trigger))
+                matches.push(cmd);
+        return matches;
+    }
 
     IpcHandler {
         target: "launcher"
@@ -24,7 +82,7 @@ Scope {
         return substringMatch(needle, haystack)
     }
     function substringMatch(needle, haystack) {
-        return haystack.toLowerCase().includes(needle.toLowerCase());
+        return haystack.toLowerCase().includes(needle.toLowerCase()); 
     }
 
 
@@ -32,15 +90,16 @@ Scope {
         active: root.opened
         PanelWindow {
             id: window
-            margins.bottom: 10
-            implicitWidth: screen.width * 0.4
-            implicitHeight: screen.height * 0.5
+            property bool barIsOpaque: ((Preferences.barPosition === "bottom" && Hyprland.currentWorkspace.hasTilingWindow()) || Preferences.keepBarOpaque) || (Preferences.barPosition === "top")    
+            implicitWidth: (screen.width * 0.4) + 20
+            implicitHeight: (screen.height * 0.6) + 20
+
             anchors.bottom: true
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusionMode: ExclusionMode.Normal
             color: "transparent"
 
-            HyprlandFocusGrab {
+            Hypr.HyprlandFocusGrab {
                 id: grab
                 windows: [ window ]
             }
@@ -56,141 +115,218 @@ Scope {
             Connections {
                 target: grab
                 function onActiveChanged() {
-                    if (!grab.active) {
+                    if (!grab.active)
                         root.opened = false
+                }
+            }
+
+            Item {
+                anchors.fill: parent
+                anchors.topMargin: 20
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
+                anchors.bottomMargin: !barIsOpaque ? 10 : 0
+                Behavior on anchors.bottomMargin {
+                    NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                }
+
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: true
+                    shadowOpacity: 1
+                    shadowColor: Appearance.colors.m3shadow
+                    shadowBlur: 1
+                    shadowScale: 1
+                }
+
+                Rectangle {
+                    id: bgRectangle
+                    anchors.fill: parent
+                    color: Appearance.panel_color
+                    topLeftRadius: 20
+                    topRightRadius: 20
+                    bottomLeftRadius: !barIsOpaque ? 20 : 0
+                    bottomRightRadius: !barIsOpaque ? 20 : 0
+
+                    Behavior on bottomLeftRadius {
+                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                    }
+                    Behavior on bottomRightRadius {
+                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                    }
+                    // LEFT CORNER
+                    SingleCorner {
+                        visible: barIsOpaque
+                        cornerType: "inverted"
+                        cornerHeight: 20
+                        cornerWidth: 20
+                        color: Appearance.panel_color
+                        corner: 3
+                        anchors.right: bgRectangle.left
+                        anchors.bottom: bgRectangle.bottom
+                    }
+
+                    // RIGHT CORNER
+                    SingleCorner {
+                        visible: barIsOpaque
+                        cornerType: "inverted"
+                        cornerHeight: 20
+                        cornerWidth: 20
+                        color: Appearance.panel_color
+                        corner: 2
+                        anchors.left: bgRectangle.right
+                        anchors.bottom: bgRectangle.bottom
                     }
                 }
-            }
 
-            Rectangle {
-                anchors.fill: parent
-                color: Appearance.panel_color
-                radius: 20
-            }
+                Flickable {
+                    id: listFlick
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        top: parent.top
+                        bottom: searchField.top
+                        leftMargin: 20
+                        topMargin: 20
+                        rightMargin: 20
+                        //margins: 0
+                    }
+                    contentWidth: width
+                    contentHeight: column.implicitHeight
+                    clip: true
 
-            StyledTextField {
-                id: searchField
-                icon: "search"
-                placeholder: "Search"
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: parent.top
-                    margins: 20
-                }
-            }
+                    Column {
+                        id: column
+                        width: parent.width
+                        spacing: 10
 
-            Flickable {
-                id: listFlick
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: searchField.bottom
-                    bottom: parent.bottom
-                    margins: 20
-                }
-                contentWidth: width
-                contentHeight: column.implicitHeight
-                clip: true
+                        Repeater {
+                            id: appRepeater
+                            model: {
+                                let query = searchField.text.trim();
+                                let appsArray = DesktopEntries.applications.values.slice().sort(
+                                    (a, b) => a.name.localeCompare(b.name, Qt.locale().name)
+                                );
 
-                Column {
-                    id: column
-                    width: parent.width
-                    spacing: 10
-
-                    Repeater {
-                        id: appRepeater
-                        model: {
-                            let appsArray = DesktopEntries.applications.values
-                            appsArray = appsArray.slice().sort(
-                                (a, b) => a.name.localeCompare(b.name, Qt.locale().name)
-                            )
-                            return appsArray
-                        }
-
-                        delegate: Item {
-                            width: parent.width
-                            height: visible ? 60 : 0
-                            visible: searchField.text.trim() === "" ||
-                                fuzzyMatch(searchField.text,
-                                        modelData.name + " " +
-                                        modelData.comment + " " +
-                                        modelData.execString)
-
-                            Rectangle {
-                                id: appItem
-                                anchors.fill: parent
-                                radius: 20
-                                color: hovered
-                                    ? Appearance.colors.m3surface_container_high
-                                    : Appearance.colors.m3surface_container_low
-
-                                Behavior on color {
-                                    ColorAnimation { duration: 200; easing.type: Easing.OutCubic }
-                                }
-
-                                MouseArea {
-                                    id: mouseArea
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    onClicked: {
-                                        modelData.execute()
-                                        root.opened = false
+                                if (query !== "") {
+                                    let commands = getMatchedCommands(query);
+                                    for (let cmd of commands) {
+                                        let result = cmd.comment
+                                        if (cmd.autoRun ?? true)
+                                            result = cmd.exec(query) ?? cmd.comment;
+                                        appsArray.unshift({
+                                            name: cmd.name,
+                                            comment: String(result),
+                                            execString: query,
+                                            execute: function() {
+                                                if (!cmd.autoRun) {
+                                                    cmd.exec(query)
+                                                }
+                                                root.opened = false;
+                                            },
+                                            icon: "whisker:" + cmd.icon
+                                        });
                                     }
                                 }
-                                property bool hovered: mouseArea.containsMouse
 
-                                RowLayout {
+                                return appsArray;
+                            }
+
+
+
+                            delegate: Item {
+                                width: parent.width
+                                height: visible ? 60 : 0
+                                visible: searchField.text.trim() === "" ||
+                                    fuzzyMatch(searchField.text,
+                                            modelData.name + " " +
+                                            modelData.comment + " " +
+                                            modelData.execString)
+
+                                Rectangle {
+                                    id: appItem
                                     anchors.fill: parent
-                                    anchors.margins: 10
-                                    anchors.leftMargin: 20
-                                    spacing: 20
+                                    radius: 20
+                                    color: hovered
+                                        ? Appearance.colors.m3surface_container_low
+                                        : Appearance.colors.m3surface
 
-                                    Image {
-                                        id: appicon
-                                        asynchronous: true
-                                        cache: true
-                                        source: Quickshell.iconPath(modelData.icon, true)
-                                        visible: source != ""
-                                        fillMode: Image.PreserveAspectCrop
-                                        smooth: true
-                                        sourceSize.width: 30
-                                        sourceSize.height: 30
-                                        Layout.alignment: Qt.AlignVCenter
+                                    Behavior on color {
+                                        ColorAnimation { duration: 200; easing.type: Easing.OutCubic }
                                     }
 
-                                    MaterialIcon {
-                                        visible: appicon.source == ""
-                                        icon: "terminal"
-                                        font.pixelSize: 30
-                                        color: Appearance.colors.m3on_surface
-                                        Layout.alignment: Qt.AlignVCenter
-                                    }
-
-                                    ColumnLayout {
-                                        spacing: 0
-                                        Layout.fillWidth: true
-
-                                        Text {
-                                            text: modelData.name
-                                            font.pixelSize: 16
-                                            font.bold: true
-                                            color: Appearance.colors.m3on_surface
-                                            Layout.fillWidth: true
+                                    MouseArea {
+                                        id: mouseArea
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onClicked: {
+                                            modelData.execute()
+                                            root.opened = false
                                         }
-                                        Text {
-                                            visible: text !== ""
-                                            text: {
-                                                if (modelData.comment === "")
-                                                    return "> " + modelData.execString
-                                                return modelData.comment
+                                    }
+                                    property bool hovered: mouseArea.containsMouse
+
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        anchors.margins: 10
+                                        anchors.leftMargin: 20
+                                        spacing: 20
+
+                                        Image {
+                                            id: appicon
+                                            asynchronous: true
+                                            cache: true
+                                            source: {
+                                                if (modelData.icon.startsWith("whisker:"))
+                                                    return ""
+                                                return Quickshell.iconPath(modelData.icon, true)
+                                                
                                             }
-                                            font.pixelSize: 12
-                                            font.family: text.startsWith(">")
-                                                ? "monospace"
-                                                : Qt.application.font.family
-                                            color: Appearance.colors.m3on_surface_variant
+                                            visible: source != ""
+                                            fillMode: Image.PreserveAspectCrop
+                                            smooth: true
+                                            sourceSize.width: 30
+                                            sourceSize.height: 30
+                                            Layout.alignment: Qt.AlignVCenter
+                                        }
+
+                                        MaterialIcon {
+                                            visible: appicon.source == ""
+                                            icon: {
+                                                if (modelData.icon.startsWith("whisker:"))
+                                                    return modelData.icon.replace("whisker:", "")
+                                                return "terminal"
+                                            }
+                                            font.pixelSize: 30
+                                            color: Appearance.colors.m3on_surface
+                                            Layout.alignment: Qt.AlignVCenter
+                                        }
+
+                                        ColumnLayout {
+                                            spacing: 0
                                             Layout.fillWidth: true
+
+                                            Text {
+                                                text: modelData.name
+                                                font.pixelSize: 16
+                                                font.bold: true
+                                                color: Appearance.colors.m3on_surface
+                                                Layout.fillWidth: true
+                                            }
+                                            Text {
+                                                visible: text !== ""
+                                                text: {
+                                                    if (modelData.comment === "")
+                                                        return "> " + modelData.execString
+                                                    return modelData.comment
+                                                }
+                                                font.pixelSize: 12
+                                                font.family: text.startsWith(">")
+                                                    ? "monospace"
+                                                    : Qt.application.font.family
+                                                color: Appearance.colors.m3on_surface_variant
+                                                Layout.fillWidth: true
+                                            }
                                         }
                                     }
                                 }
@@ -215,8 +351,8 @@ Scope {
                     
                     RowLayout {
                         anchors.centerIn: parent
+                        Layout.bottomMargin: 50
                         spacing: 20
-                        height: parent.height
                         Image {
                             source: Utils.getPath("images/sad-cat.png")
                             sourceSize: Qt.size(150,150)
@@ -240,8 +376,18 @@ Scope {
                         }
                     }
                 }
+                StyledTextField {
+                    id: searchField
+                    icon: "search"
+                    placeholder: "Search"
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                        margins: 20
+                    }
+                }
             }
-
         }
     }
 }

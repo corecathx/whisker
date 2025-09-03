@@ -17,7 +17,7 @@ Item {
     property color color: "#000000"
     property var corners: [0] // 0 is top right, 1 is top left, 2 is bottom left, 3 is bottom right
 
-    Repeater{
+    Repeater {
         model: root.cornerType === "cubic" ? root.corners : 0
         delegate: Shape {
             id: cubicShape
