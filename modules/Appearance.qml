@@ -69,9 +69,9 @@ Singleton {
 
     property M3Palette colors: M3Palette {}
     function load(data: string): void {
-        const scheme = JSON.parse(data);
+        const scheme = JSON.parse(data.split("\n")[0]);
 
-        for (const [name, color] of Object.entries(scheme.colors.dark)) {
+        for (const [name, color] of (Preferences.darkMode ? Object.entries(scheme.colors.dark) : Object.entries(scheme.colors.light))) {
             const propName = `m3${name}`;
             if (root.colors.hasOwnProperty(propName))
                 root.colors[propName] = color;

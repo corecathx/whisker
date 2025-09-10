@@ -1,13 +1,15 @@
 pragma Singleton
 
+import QtQuick
 import Quickshell
 import Quickshell.Hyprland
-import QtQuick
 
 Singleton {
     id: root
     signal workspaceUpdated()
+    signal rawEvent(var event)
 
+    // this is really just a helper object for `focusedWorkspace` lmfaoo
     readonly property QtObject currentWorkspace: QtObject {
         property bool hasWindow: root.focusedWorkspace.toplevels?.values.length !== 0
 
@@ -42,6 +44,7 @@ Singleton {
         target: Hyprland
 
         function onRawEvent(event: HyprlandEvent): void {
+            root.rawEvent(event);
             const n = event.name;
             if (!n.endsWith("v2")) {
                 if (["workspace", "moveworkspace", "activespecial", "focusedmon"].includes(n)) {

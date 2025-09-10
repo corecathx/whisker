@@ -15,12 +15,14 @@ import qs.windows.launcher
 import qs.windows.lockscreen
 import qs.windows.emojies
 import qs.windows.dev
+import qs.windows.osdpanel
 import qs.services
 
 ShellRoot {
     Wallpaper {}
     ScreenCorners {}
-    VolumeOSD {}
+    //VolumeOSD {}
+    OsdPanel {}
     Bar {}
     QuickPanel {}
     Notification {}
@@ -28,10 +30,10 @@ ShellRoot {
     Launcher {}
     Lockscreen {}
 
-    EmojiWindow {}
+    // EmojiWindow {}
 
     Component.onCompleted: {
         Theme.init()
     }
-    //DevWindow {}
+    DevWindow {}
 }

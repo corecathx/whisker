@@ -270,9 +270,9 @@ WlSessionLockSurface {
         layer.effect: MultiEffect {
             shadowEnabled: true
         	shadowOpacity: root.startAnim ? 1 : 0
-
-            shadowBlur: 32
-            shadowScale: 2
+            shadowColor: Appearance.colors.m3shadow
+            shadowBlur: 2
+            shadowScale: 1
 
 			Behavior on shadowOpacity {
 				NumberAnimation { duration: animation_time; easing.type: easingType }

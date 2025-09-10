@@ -1,11 +1,12 @@
 {
-    "wallpaper": "/home/corecat/Pictures/purp.jpg",
-
-    "barPosition": "bottom",
-    "smallBar": false,
-    "keepBarOpaque": true,
-    "barPadding": 300,
-    "cavaEnabled": true,
-    "useVideoWallpaper": false,
-    "useWallpaper": true
+	"smallBar": false,
+	"useVideoWallpaper": false,
+	"darkMode": true,
+	"useWallpaper": true,
+	"barPosition": "top",
+	"barPadding": 300,
+	"colorScheme": "content",
+	"cavaEnabled": false,
+	"wallpaper": "/home/corecat/Pictures/wallpapers/mera.png",
+	"keepBarOpaque": true
 }

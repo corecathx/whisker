@@ -11,7 +11,7 @@ Scope {
     id: root
     PanelWindow {
         id: window
-        implicitWidth: 450 + 40
+        implicitWidth: 400 + 40
         Behavior on implicitHeight {
             NumberAnimation {
                 duration: Appearance.anim_fast;

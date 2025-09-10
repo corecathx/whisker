@@ -6,13 +6,13 @@ import qs.components
 Item {
     property real progress: 0
     property string icon: ""
-    property color progressColor: Appearance.colors.m3on_background
-    property color backgroundColor: Colors.opacify(Appearance.colors.m3surface, 0.4)
-    property real strokeWidth: 3
+    property color progressColor: Appearance.colors.m3primary
+    property color backgroundColor: Appearance.colors.m3secondary_container
+    property real strokeWidth: 2
     
     Behavior on progress {
         NumberAnimation {
-            duration: 500
+            duration: Appearance.anim_fast
             easing.type: Easing.OutCubic
         }
     }
@@ -50,7 +50,7 @@ Item {
         anchors.centerIn: parent
         font.pixelSize: 16
         icon: parent.icon
-        color: Appearance.colors.m3on_background
+        color: Appearance.colors.m3primary
         opacity: 1
         Behavior on opacity { NumberAnimation { duration: 150 } }
     }
@@ -59,9 +59,8 @@ Item {
         id: textLabel
         anchors.centerIn: parent
         text: Math.round(parent.progress) + "%"
-        color: Appearance.colors.m3on_background
+        color: Appearance.colors.m3primary
         font.pixelSize: 10
-        font.bold: true
         opacity: 0
         Behavior on opacity { NumberAnimation { duration: 150 } }
     }

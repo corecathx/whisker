@@ -69,6 +69,20 @@ Singleton {
      */
     property bool useWallpaper: true
 
+    /**
+     * Whether to use dark mode colors.
+     * @values bool: true, false
+     * @default bool: true
+     */
+    property bool darkMode: true
+
+    /**
+     * Set how `Matugen` generates colors.
+     * @values string: content, expressive, fidelity, fruit-salad, monochrome, neutral, rainbow, tonal-spot
+     * @default string: tonal-spot
+     */
+    property string colorScheme: "tonal-spot"
+
     function load(content) { 
         const parsed = JSON.parse(content);
 

@@ -15,12 +15,11 @@ Rectangle {
     id: musicPlayer
     clip: true
     visible: !!Players.active
-    Layout.alignment: Qt.AlignHCenter
     radius: 80
     color: Appearance.colors.m3background
     implicitHeight: child.implicitHeight + 20
     Layout.minimumWidth: 300
-    implicitWidth: child.implicitWidth + 20
+    implicitWidth: child.implicitWidth + 40
     ColumnLayout {
         id: child
         anchors.fill: parent
@@ -140,6 +139,7 @@ Rectangle {
                         }
                     }
                     Layout.fillWidth: true
+                    Layout.rightMargin: 20
                     onMoved: {
                         const active = Players.active;
                         if (active?.canSeek && active?.positionSupported)

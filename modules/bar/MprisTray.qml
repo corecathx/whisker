@@ -38,15 +38,17 @@ Item {
         MaterialIcon {
             Layout.alignment: Qt.AlignVCenter
             icon: root.icon
-            font.pixelSize: 20
+            font.pixelSize: 18
             color: Appearance.colors.m3on_background
         }
 
         Text {
             Layout.alignment: Qt.AlignVCenter
             color: Appearance.colors.m3on_background
-            font.pixelSize: 14
-            text: root.title.length > 25 ? root.title.slice(0, 15) + "..." : root.title
+            font.pixelSize: 12
+            text: {
+                return root.title.length > 15 ? root.title.slice(0, 15) + "..." : root.title
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ import QtQuick
 QtObject {
     property bool visible_quickPanel: false
     property bool visible_settingsMenu: false
+    property bool visible_volumeOSD: false
 
     signal _toggleQuickPanel()
     signal _toggleSettingsMenu()
@@ -17,6 +18,10 @@ QtObject {
 
     function toggle_settingsPanel() {
         visible_settingsMenu = !visible_settingsMenu
+        _toggleSettingsMenu()
+    }
+    function toggle_volumeOsd() {
+        visible_volumeOSD = !visible_volumeOSD
         _toggleSettingsMenu()
     }
 }

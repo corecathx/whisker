@@ -11,21 +11,21 @@ import qs.components
 import QtQuick.Layouts
 import QtQuick.Effects
 import QtMultimedia
+
 PanelWindow {
     id: wallpaper
     anchors {
-        top: true
         left: true
         bottom: true
+        top: true
         right: true
     }
-
-    color: Appearance.colors.m3surface;
+    color: Appearance.colors.m3surface
     WlrLayershell.layer: WlrLayer.Background
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
     Image {
-        id: bgImage
+        id: oldWallpaper
         anchors.fill: parent
         source: Appearance.wallpaper
         fillMode: Image.PreserveAspectCrop
@@ -33,41 +33,59 @@ PanelWindow {
         cache: true
         visible: Preferences.useWallpaper && !Preferences.useVideoWallpaper
     }
-    
-    RowLayout {
+
+    ClippingRectangle {
+        id: animClip
         anchors.centerIn: parent
-        visible: Preferences.useWallpaper && Appearance.wallpaper === ""
-        spacing: 20
-        Image {
-            source: Utils.getPath("images/sad-cat.png")
-            sourceSize: Qt.size(100,100)
-            smooth: true
-            Layout.alignment: Qt.AlignVCenter
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                colorization: 1.0
-                colorizationColor: Appearance.colors.m3on_surface_variant
-            }
-        }
-        ColumnLayout {
-            Text {
-                text: "You got no default wallpaper set!"
-                color: Appearance.colors.m3on_background
-                font.bold: true
-                font.pixelSize: 20
-                //Layout.alignment: Qt.AlignHCenter
-            }
-            Text {
-                text: "Set your wallpaper by pressing SUPER + SHIFT + W!"
-                color: Appearance.colors.m3on_background
-                font.pixelSize: 14
-                //Layout.alignment: Qt.AlignHCenter
+        width: 0
+        height: width
+        radius: width
+        color: "transparent"
+        layer.smooth: true
+
+        NumberAnimation {
+            id: revealAnim
+            target: animClip
+            property: "width"
+            duration: Appearance.anim_slow*2
+            easing.type: Easing.OutCubic
+            from: 0
+            to: Math.max(wallpaper.width, wallpaper.height) * 1.2
+            onStopped: {
+                oldWallpaper.source = newWallpaper.source
+                newWallpaper.source = ""
+                animClip.width = 0
             }
         }
 
+        Image {
+            id: newWallpaper
+            anchors.centerIn: parent
+            width: wallpaper.width
+            height: wallpaper.height
+            source: ""
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+            cache: true
+        }
     }
 
+    Connections {
+        target: Appearance
+        function onWallpaperChanged() {
+            newWallpaper.source = Appearance.wallpaper
+            delayTimer.start()
+        }
+    }
 
+    Timer {
+        id: delayTimer
+        interval: 500
+        repeat: false
+        onTriggered: revealAnim.start()
+    }
+
+    // The rest of your video wallpaper and UI stays the same
     Video {
         id: video
         anchors.fill: parent
@@ -76,87 +94,79 @@ PanelWindow {
         loops: 9999
         muted: true
         source: "file:///home/corecat/Downloads/lucanimations_vaapi.mp4"
+        visible: Preferences.useVideoWallpaper
 
         function updatePlayback() {
             if (!Preferences.useVideoWallpaper) {
                 video.stop()
                 return;
             }
-                
+
             const workspace = Hyprland.focusedWorkspace
             let hasNonFloatingWindows = Hyprland.currentWorkspace.hasTilingWindow()
 
             if (hasNonFloatingWindows) {
                 if (video.playbackState === MediaPlayer.PlayingState) {
                     video.pause()
-                    console.log("Paused video: non-floating window exists")
                 }
             } else {
                 if (video.playbackState !== MediaPlayer.PlayingState) {
                     video.play()
-                    console.log("Resumed video: all windows floating or none")
                 }
             }
         }
 
         Connections {
             target: Hyprland
-            function onWorkspaceUpdated() {
-                video.updatePlayback()
-            }
+            function onWorkspaceUpdated() { video.updatePlayback() }
         }
-
         Connections {
             target: Preferences
-
-            function onUseVideoWallpaperChanged() {
-                console.log("Preferences 'useVideoWallpaper' changed!")
-                video.updatePlayback()
-            }
+            function onUseVideoWallpaperChanged() { video.updatePlayback() }
         }
 
         Component.onCompleted: video.updatePlayback()
     }
-    
-    CavaVisualizer {
+
+    CavaVisualizer { 
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.bottomMargin: (Preferences.barPosition === 'bottom' && !Preferences.smallBar ? 50 : 0)
         visible: !Hyprland.currentWorkspace.hasTilingWindow()
-    }
-
-    ColumnLayout {
-        //anchors.horizontalCenter: parent.horizontalCenter
+    } 
+    
+    ColumnLayout { 
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.leftMargin: 40
-        anchors.bottomMargin: 40 + (Preferences.barPosition === 'bottom' ? 50 : 0)
-        //anchors.topMargin: 300
-        spacing: -10
-        Text {
+        anchors.bottomMargin: 40 + (Preferences.barPosition === 'bottom' ? 50 : 0) 
+        //anchors.topMargin: 300 
+        spacing: -10 
+        Text { 
             text: Qt.formatDateTime(Time.date, "HH:mm")
             color: Appearance.colors.m3on_background
             font.pixelSize: 72
-            font.bold: true
-            //Layout.alignment: Qt.AlignHCenter
-        }
-        Text {
+            font.bold: true 
+            //Layout.alignment: Qt.AlignHCenter 
+        } 
+        Text { 
             text: Qt.formatDateTime(Time.date, "dddd, dd/MM")
             color: Appearance.colors.m3on_background
-            font.pixelSize: 32
-            //Layout.alignment: Qt.AlignHCenter
-        }
-        PlayerDisplay {
-            Layout.topMargin: 20
-            Layout.minimumWidth: 400
+            font.pixelSize: 32 
+            //Layout.alignment: Qt.AlignHCenter 
+        } 
+        PlayerDisplay { 
+            Layout.topMargin: 20 
+            Layout.minimumWidth: 400 
         }
         layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true 
+        layer.effect: MultiEffect { 
+            shadowEnabled: true
             shadowOpacity: 1
             shadowColor: Appearance.colors.m3shadow
             shadowBlur: 1
-        }
+        } 
     }
 }

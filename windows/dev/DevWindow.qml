@@ -7,7 +7,7 @@ import QtQuick.Controls
 import QtQuick.Window
 import qs.modules
 import qs.components
-
+import Qt.labs.platform
 Scope {
     Window {
         id: win
@@ -21,48 +21,11 @@ Scope {
             anchors.fill: parent
             anchors.margins: 20
             spacing: 10
-
-TabBar {
-    id: tabBar
-    Layout.fillWidth: true
-    height: 40
-    currentIndex: stack.currentIndex
-
-    background: Rectangle {
-        color: "#1e1e1e" // dark background
-    }
-
-    TabButton {
-        
-        text: "Notifications"
-        Layout.fillWidth: true
-        implicitHeight: 40
-
-        background: Rectangle {
-            anchors.fill: parent
-            color: checked ? "#2d89ef" : "#333"
-            radius: 6
-        }
-
-        contentItem: Text {
-            text: parent.text
-            anchors.centerIn: parent
-            color: checked ? "#fff" : "#ccc"
-            font.pixelSize: 14
-        }
-
-        indicator: null // Disable the default indicator
-    }
-}
-
-
-
             // --- Content Area ---
             StackLayout {
                 id: stack
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                currentIndex: tabBar.currentIndex
 
                 // --- Tab 1: Notifications ---
                 Flickable {
@@ -116,17 +79,47 @@ TabBar {
                                         ]
                                     }
                                 }
+                                StyledButton {
+                                    text: "Notif without icons"
+                                    onClicked: notifProc4.running = true
 
+                                    Process {
+                                        id: notifProc4
+                                        command: [
+                                            "dunstify",
+                                            "Whisker",
+                                            "DevMode: Notification test."
+                                        ]
+                                    }
+                                }
                                 StyledButton {
                                     text: "Toggleable button"
                                     icon: "check"
                                     checkable: true
                                     onToggled: (state) => console.log("checked:", state)
+                                    StyledToolTip {
+                                        id: myTooltip
+                                        text: 'pussy'
+                                    }
                                 }
         StyledSwitch {
                 id: customSwitch
                 onToggled: console.log("Switch:", checked)
             }
+
+
+
+    FileDialog {
+        id: fileDialog
+        folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+    }
+
+
+    StyledButton {
+        text: "Open File Picker"
+        anchors.centerIn: parent
+        onClicked: fileDialog.open()
+    }
 
                             }
                         }

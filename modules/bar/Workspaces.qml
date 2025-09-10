@@ -2,13 +2,20 @@ import QtQuick
 import QtQml.Models
 import QtQuick.Layouts
 import qs.modules
+import qs.preferences
 import qs.services
 
 Item {
     id: root
-    width: 400
-    height: 30
+    height: 25
+    width: pills.implicitWidth + 20
 
+    Behavior on width {
+        NumberAnimation {
+            duration: Appearance.anim_fast;
+            easing.type: Easing.OutCubic
+        }
+    }
     property int minWorkspaces: 4
     property int currentWorkspace: Hyprland.activeWsId
 
@@ -33,21 +40,27 @@ Item {
         if (wsModel.count !== data.length) {
             wsModel.clear();
             data.forEach(item => wsModel.append(item));
-        } else {
-            for (let i = 0; i < data.length; i++)
-                wsModel.set(i, data[i]);
-        }
+        } else for (let i = 0; i < data.length; i++)
+            wsModel.set(i, data[i]);
     }
 
     Component.onCompleted: refreshWorkspaces()
 
     Connections {
         target: Hyprland
-        function onActiveWsIdChanged() {
-            currentWorkspace = Hyprland.activeWsId;
-            refreshWorkspaces();
-        }
+        function onActiveWsIdChanged() { refreshWorkspaces(); }
         function onWorkspacesChanged() { refreshWorkspaces(); }
+    }
+
+
+    Rectangle {
+        id: bgRect
+        opacity: !Preferences.keepBarOpaque && !Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
+        Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
+
+        anchors.fill: parent
+        color: Appearance.colors.m3surface_container
+        radius: 20
     }
 
     Row {
@@ -65,11 +78,12 @@ Item {
                 radius: 20
                 anchors.verticalCenter: parent.verticalCenter
                 opacity: focused ? 1.0 : 0.4
-                color: Appearance.colors.m3on_background
+                color: focused ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
                                
 
                 Behavior on width { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
                 Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
+                Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
 
                 MouseArea {
                     anchors.fill: parent

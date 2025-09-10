@@ -88,15 +88,13 @@ Item {
 
             BarMiddle {
                 visible: !root.inLockScreen
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
             }
             layer.enabled: true
             layer.effect: MultiEffect {
                 shadowEnabled: true
-                shadowOpacity: 1
+                shadowOpacity: !Preferences.keepBarOpaque && !Hyprland.currentWorkspace.hasTilingWindow()
                 shadowColor: Appearance.colors.m3shadow
-                shadowBlur: 2
+                shadowBlur: 1
                 shadowScale: 1
             }
         }

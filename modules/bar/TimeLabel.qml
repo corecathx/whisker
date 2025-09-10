@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick
 import Quickshell.Io
 import qs.modules
+import qs.services
 
 Item {
     id: root
@@ -17,20 +18,20 @@ Item {
     opacity: showLabel ? 1 : 0
 
     Column {
-        spacing: -6
+        spacing: -5
         id: container
         Text {
             id: label
-            text: root.time
-            color: Appearance.colors.m3on_background
-            font.pixelSize: 20
+            text: Qt.formatDateTime(Time.date, "HH:mm")
+            color: Appearance.colors.m3on_surface
+            font.pixelSize: 18
             font.bold: true
             lineHeight: 0.1
         }
         Text {
             id: date
-            text: root.date
-            color: Appearance.colors.m3on_background
+            text: Qt.formatDateTime(Time.date, "ddd, dd/MM")
+            color: Appearance.colors.m3on_surface
             font.pixelSize: 14
             lineHeight: 0.1
         }
@@ -42,34 +43,5 @@ Item {
 
     Behavior on opacity {
         NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
-    }
-
-    Process {
-        id: timeProc
-        command: ["date", "+%H:%M"]
-        running: true
-
-        stdout: StdioCollector {
-            onStreamFinished: root.time = this.text.trim()
-        }
-    }
-    Process {
-        id: dateProc
-        command: ["date", "+%A, %d/%m"]
-        running: true
-
-        stdout: StdioCollector {
-            onStreamFinished: root.date = this.text.trim()
-        }
-    }
-
-    Timer {
-        interval: 60000
-        running: true
-        repeat: true
-        onTriggered: {
-            timeProc.running = true
-            dateProc.running = true
-        }
     }
 }

@@ -1,10 +1,12 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
 import Quickshell.Wayland
 import qs.modules
+import qs.modules.corners
 import qs.services
 
 // to whoever reading this i'm so sorry that you have to witness this abomination :pensive: :pray:
@@ -14,10 +16,12 @@ Scope {
 
     PanelWindow {
         id: window
-        implicitWidth: 540
+        implicitWidth: 540 + 20
         visible: true
-        anchors.top: true
-        anchors.bottom: true
+        anchors{
+            top: true
+            bottom: true
+        }
         color: "transparent"
 
         WlrLayershell.layer: WlrLayer.Overlay
@@ -39,10 +43,59 @@ Scope {
 
         Item {
             id: notificationList
-            anchors.margins: 10
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
+            Rectangle {
+                id: bgRectangle
+                                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: true
+                    shadowOpacity: 1
+                    shadowColor: Appearance.colors.m3shadow
+                    shadowBlur: 1
+                    shadowScale: 1
+                }
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
+                anchors.right: parent.right
+                height: window.mask.height > 0 ? window.mask.height + 30 : 0
+                color: Appearance.panel_color
+                bottomLeftRadius: 20
+                bottomRightRadius: 20
+                Behavior on height {
+                    NumberAnimation {
+                        duration: Appearance.anim_fast
+                        easing.type: Easing.OutCubic
+                    }
+                }
+                // LEFT CORNER
+                SingleCorner {
+                    cornerType: "inverted"
+                    cornerHeight: Math.min(bgRectangle.height, 20)
+
+                    cornerWidth: 20
+                    color: Appearance.panel_color
+                    corner: 0
+                    anchors.right: bgRectangle.left
+                    anchors.top: bgRectangle.top
+                }
+
+                // RIGHT CORNER
+                SingleCorner {
+                    cornerType: "inverted"
+                    cornerHeight: Math.min(bgRectangle.height, 20)
+                    cornerWidth: 20
+                    color: Appearance.panel_color
+                    corner: 1
+                    anchors.left: bgRectangle.right
+                    anchors.top: bgRectangle.top
+                }
+            }
 
             Repeater {
                 id: rep
@@ -50,8 +103,8 @@ Scope {
 
                 delegate: NotificationChild {
                     id: child
-                    width: window.width - 20
-                    x: 10
+                    width: bgRectangle.width - 40
+                    x: 40
 
                     y: {
                         var pos = 0
@@ -60,7 +113,7 @@ Scope {
                             if (prev)
                                 pos += prev.height + root.innerSpacing
                         }
-                        return pos - (tracked ? 0 : 20)
+                        return pos - (tracked ? 0 : 20) + 10
                     }
 
                     Component.onCompleted: {
@@ -69,7 +122,7 @@ Scope {
 
                     Behavior on y {
                         NumberAnimation {
-                            duration: Appearance.anim_medium
+                            duration: Appearance.anim_fast
                             easing.type: Easing.OutCubic
                         }
                     }
@@ -77,6 +130,7 @@ Scope {
                     title: modelData.summary
                     body: modelData.body
                     image: modelData.image || modelData.appIcon
+                    rawNotif: modelData
                     tracked: {
                         // this is terrible, but eh, whatever
                         if (!modelData.shown) {

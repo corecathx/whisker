@@ -9,22 +9,18 @@ import qs.modules
 Item {
     anchors.fill: parent
 
-    Rectangle {
-        radius: 40
-        color: "transparent"
-        height: parent.height
-        width: contentRow.implicitWidth
-        anchors.verticalCenter: parent.verticalCenter
+    Item {
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        width:workspace.width
+        height:workspace.height
+        Workspaces {
+            id: workspace
 
-        RowLayout {
-            id: contentRow
-            anchors.centerIn: parent
-            spacing: 10
-
-            Workspaces {}
         }
     }
+
+
 }
 
 
