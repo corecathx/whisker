@@ -5,33 +5,38 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Widgets
 import qs.modules
+import qs.modules.bar
 import qs.services
+import qs.preferences
 
 Item {
-    implicitHeight: 60
+    implicitWidth: childContent.implicitWidth
     property bool inLockScreen: false
 
-    RowLayout {
+    ColumnLayout {
         id: childContent
         anchors.fill: parent
-        spacing: 20
+        spacing: 10
 
         UserIcon {
             visible: !inLockScreen 
-            Layout.alignment: Qt.AlignVCenter
+            verticalMode: Preferences.verticalBar()
+
         }
+
         TimeLabel {
             visible: !inLockScreen
-            Layout.alignment: Qt.AlignVCenter
             showLabel: Hyprland.currentWorkspace.hasTilingWindow()
+            verticalMode: Preferences.verticalBar()
         }
+
         Stats {
-            anchors.verticalCenter: parent.verticalCenter
-            Layout.alignment: Qt.AlignVCenter
+            verticalMode: Preferences.verticalBar()
         }
+        
         Tray {
             visible: !inLockScreen 
-            Layout.alignment: Qt.AlignVCenter
+            verticalMode: Preferences.verticalBar()
         }
 
     }

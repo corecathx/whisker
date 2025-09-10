@@ -16,6 +16,12 @@ Item {
             easing.type: Easing.OutCubic
         }
     }
+    property bool verticalMode: false
+    transform: Rotation {
+        origin.x: width / 2
+        origin.y: height / 2
+        angle: verticalMode ? 90 : 0
+    }
     property int minWorkspaces: 4
     property int currentWorkspace: Hyprland.activeWsId
 

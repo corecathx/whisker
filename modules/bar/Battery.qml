@@ -10,8 +10,8 @@ import Quickshell.Services.UPower
 
 Item {
     id: root
-    width: 80
-    height: 25
+    implicitWidth: 80
+    implicitHeight: 25
     visible: UPower.displayDevice.isLaptopBattery
 
     property var low_battery_level: 15

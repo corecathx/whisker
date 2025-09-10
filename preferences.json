@@ -3,7 +3,7 @@
 	"useVideoWallpaper": false,
 	"darkMode": true,
 	"useWallpaper": true,
-	"barPosition": "top",
+	"barPosition": "left",
 	"barPadding": 300,
 	"colorScheme": "content",
 	"cavaEnabled": false,

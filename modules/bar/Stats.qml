@@ -10,39 +10,74 @@ Item {
     id: root
     property real memoryValue: 0
     property real cpuValue: 0
+    property bool verticalMode: false
 
-    Layout.preferredWidth: container.implicitWidth
-    Layout.preferredHeight: container.implicitHeight
-    implicitWidth: container.implicitWidth
-    implicitHeight: container.implicitHeight
+    Layout.preferredWidth: layoutLoader.item ? layoutLoader.item.implicitWidth : 0
+    Layout.preferredHeight: layoutLoader.item ? layoutLoader.item.implicitHeight : 0
+    implicitWidth: layoutLoader.item ? layoutLoader.item.implicitWidth : 0
+    implicitHeight: layoutLoader.item ? layoutLoader.item.implicitHeight : 0
 
-    RowLayout {
-        id: container
-        spacing: 10
+    Loader {
+        id: layoutLoader
+        anchors.fill: parent
+        active: true
+        sourceComponent: verticalMode ? columnLayoutComponent : rowLayoutComponent
+    }
 
-        Item {
-            id: cpuIndicator
-            implicitWidth: 30
-            implicitHeight: 30
-            
-            CircularProgress {
-                anchors.fill: parent
-                progress: root.cpuValue
-                icon: "memory"
-                strokeWidth: 2
+    Component {
+        id: rowLayoutComponent
+        RowLayout {
+            spacing: 10
+
+            Item {
+                implicitWidth: 30
+                implicitHeight: 30
+                CircularProgress {
+                    anchors.fill: parent
+                    progress: root.cpuValue
+                    icon: "memory"
+                    strokeWidth: 2
+                }
+            }
+
+            Item {
+                implicitWidth: 30
+                implicitHeight: 30
+                CircularProgress {
+                    anchors.fill: parent
+                    progress: root.memoryValue
+                    icon: "memory_alt"
+                    strokeWidth: 2
+                }
             }
         }
+    }
 
-        Item {
-            id: memIndicator
-            implicitWidth: 30
-            implicitHeight: 30
-            
-            CircularProgress {
-                anchors.fill: parent
-                progress: root.memoryValue
-                icon: "memory_alt"
-                strokeWidth: 2
+    Component {
+        id: columnLayoutComponent
+        ColumnLayout {
+            spacing: 10
+
+            Item {
+                implicitWidth: 30
+                implicitHeight: 30
+                CircularProgress {
+                    anchors.fill: parent
+                    progress: root.cpuValue
+                    icon: "memory"
+                    strokeWidth: 2
+                }
+            }
+
+            Item {
+                implicitWidth: 30
+                implicitHeight: 30
+                CircularProgress {
+                    anchors.fill: parent
+                    progress: root.memoryValue
+                    icon: "memory_alt"
+                    strokeWidth: 2
+                }
             }
         }
     }
@@ -51,9 +86,7 @@ Item {
         id: memoryProc
         command: ["sh", "-c", "free | awk '/Mem:/ {printf(\"%.0f\", $3/$2 * 100)}'"]
         running: true
-        stdout: StdioCollector {
-            onStreamFinished: root.memoryValue = parseFloat(this.text.trim())
-        }
+        stdout: StdioCollector { onStreamFinished: root.memoryValue = parseFloat(this.text.trim()) }
     }
 
     Process {
@@ -66,9 +99,7 @@ Item {
             DIFF_TOTAL=$((CURR_TOTAL - PREV_TOTAL)); DIFF_IDLE=$((CURR_IDLE - PREV_IDLE)); \
             echo $(( (100 * (DIFF_TOTAL - DIFF_IDLE) / DIFF_TOTAL) ))"]
         running: true
-        stdout: StdioCollector {
-            onStreamFinished: root.cpuValue = parseFloat(this.text.trim())
-        }
+        stdout: StdioCollector { onStreamFinished: root.cpuValue = parseFloat(this.text.trim()) }
     }
 
     Timer {

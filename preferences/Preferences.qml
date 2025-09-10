@@ -97,4 +97,11 @@ Singleton {
         onFileChanged: reload()
         onLoaded: root.load(text())
     }
+
+    function verticalBar() {
+        return root.barPosition === "left" || root.barPosition === "right";
+    }
+    function horizontalBar() {
+        return root.barPosition === "top" || root.barPosition === "bottom";
+    }
 }
