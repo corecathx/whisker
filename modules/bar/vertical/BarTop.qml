@@ -38,6 +38,5 @@ Item {
             visible: !inLockScreen 
             verticalMode: Preferences.verticalBar()
         }
-
     }
 }

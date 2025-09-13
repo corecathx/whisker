@@ -85,7 +85,6 @@ PanelWindow {
         onTriggered: revealAnim.start()
     }
 
-    // The rest of your video wallpaper and UI stays the same
     Video {
         id: video
         anchors.fill: parent
@@ -140,8 +139,20 @@ PanelWindow {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        anchors.leftMargin: 40
+        anchors.leftMargin: 40 + (Preferences.barPosition === 'left' ? 60 : 0)
         anchors.bottomMargin: 40 + (Preferences.barPosition === 'bottom' ? 50 : 0) 
+        Behavior on anchors.leftMargin {
+            NumberAnimation {
+                duration: Appearance.anim_fast
+                easing.type: Easing.OutCubic
+            }
+        }
+        Behavior on anchors.bottomMargin {
+            NumberAnimation {
+                duration: Appearance.anim_fast
+                easing.type: Easing.OutCubic
+            }
+        }
         //anchors.topMargin: 300 
         spacing: -10 
         Text { 

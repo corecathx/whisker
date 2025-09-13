@@ -50,10 +50,10 @@ Item {
                 }
             }
             Item {
-                anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.bottomMargin: 40
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 110
                 
                 BarBottom {
                     id: btm

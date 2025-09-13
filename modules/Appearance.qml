@@ -68,20 +68,55 @@ Singleton {
     property bool smallBar: true
 
     property M3Palette colors: M3Palette {}
-    function load(data: string): void {
-        const scheme = JSON.parse(data.split("\n")[0]);
+    property string lastData: ''
 
-        for (const [name, color] of (Preferences.darkMode ? Object.entries(scheme.colors.dark) : Object.entries(scheme.colors.light))) {
+    function getScheme(scheme: string) {
+        if (root.lastData === '')
+            return null;
+
+        let schemeData = JSON.parse(root.lastData);
+        const selectedScheme = schemeData[scheme];
+        const mode = Preferences.darkMode ? "dark" : "light";
+        const colors = selectedScheme[mode];
+        return colors
+    }
+    function reloadScheme(data: string): void {
+        if (data !== '' && root.lastData !== data)
+            root.lastData = data;
+        if (root.lastData === '')
+            return
+        let schemeData;
+        try {
+            schemeData = JSON.parse(root.lastData);
+        } catch (e) {
+            console.error("Failed to parse JSON:", e);
+            return;
+        }
+
+        const selectedScheme = schemeData[Preferences.colorScheme];
+        if (!selectedScheme) {
+            return;
+        }
+
+        const mode = Preferences.darkMode ? "dark" : "light";
+        const colors = selectedScheme[mode];
+        if (!colors)
+            return;
+
+        for (const [name, color] of Object.entries(colors)) {
             const propName = `m3${name}`;
             if (root.colors.hasOwnProperty(propName))
                 root.colors[propName] = color;
         }
     }
+
+
     FileView {
-        path: Utils.getPath('colors.json')
+        id: schemesWatcher
+        path: Utils.getPath('schemes.json')
         watchChanges: true
         onFileChanged: reload()
-        onLoaded: root.load(text())
+        onLoaded: root.reloadScheme(text())
     }
     component M3Palette: QtObject {
         property color m3background: "#111318"

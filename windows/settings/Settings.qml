@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Io
 import Quickshell.Widgets
 import QtQuick
 import QtQuick.Layouts
@@ -8,13 +9,19 @@ import qs.modules
 import qs.components
 
 Scope {
+    IpcHandler {
+        target: "settings"
+        function open() {
+            Globals.visible_settingsMenu = true
+        }
+    }
     LazyLoader {
         active: Globals.visible_settingsMenu
         Window {
             id: root
             property int selectedIndex: 0
-            width: 900
-            height: 700
+            width: 1280
+            height: 720
             visible: true
             title: "Whisker Settings"
 
@@ -47,13 +54,14 @@ Scope {
                             model: ListModel {
                                 ListElement { icon: "signal_wifi_4_bar"; label: "Wi-Fi" }
                                 ListElement { icon: "bluetooth"; label: "Bluetooth" }
+                                ListElement { icon: "pets"; label: "Whisker" }
                                 ListElement { icon: "desktop_windows"; label: "System" }
                                 ListElement { icon: "info"; label: "About" }
                             }
 
                             delegate: MouseArea {
                                 width: parent.width
-                                height: 44
+                                height: 40
                                 hoverEnabled: true
 
                                 Rectangle {
@@ -118,38 +126,11 @@ Scope {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    Rectangle {
-                        color: "transparent"
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
 
-                        WifiMenu {
-                            anchors.fill: parent
-                            anchors.margins: 40
-                        }
-                    }
-                    
-                    Rectangle {
-                        color: "transparent"
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        BluetoothMenu {
-                            anchors.fill: parent
-                            anchors.margins: 40
-                        }
-                    }
-
-                    Rectangle {
-                        color: "transparent"
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        SystemMenu {
-                            anchors.fill: parent
-                            anchors.margins: 40
-                        }
-                    }
+                    WifiMenu {}
+                    BluetoothMenu {}
+                    WhiskerMenu {}
+                    SystemMenu {}
 
                     Rectangle {
                         color: "transparent"

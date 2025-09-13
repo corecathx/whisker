@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Widgets
+import Quickshell.Services.UPower
 import qs.modules
 import qs.services as Serv
 import qs.preferences
@@ -50,8 +51,23 @@ Item {
             }
         }
 
-        Battery {
-            anchors.horizontalCenter: parent.horizontalCenter
+        // sorry but making the battery object from horizontal bar is difficult for vertical :(
+        Item {
+            implicitHeight: 30
+            implicitWidth: implicitHeight
+            CircularProgress {
+                anchors.fill: parent
+                progress: UPower.displayDevice.percentage * 100
+                icon: {
+                    if (!UPower.onBattery) return "bolt";
+                    if (UPower.displayDevice.percentage < 0.2) return "battery_1_bar";
+                    if (UPower.displayDevice.percentage < 0.4) return "battery_2_bar";
+                    if (UPower.displayDevice.percentage < 0.6) return "battery_4_bar";
+                    if (UPower.displayDevice.percentage < 0.8) return "battery_5_bar";
+                    return "battery_full";
+                }
+                strokeWidth: 2
+            }
         }
     }
     

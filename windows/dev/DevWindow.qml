@@ -21,13 +21,11 @@ Scope {
             anchors.fill: parent
             anchors.margins: 20
             spacing: 10
-            // --- Content Area ---
             StackLayout {
                 id: stack
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                // --- Tab 1: Notifications ---
                 Flickable {
                     contentWidth: parent.width
                     contentHeight: column1.implicitHeight
@@ -97,15 +95,11 @@ Scope {
                                     icon: "check"
                                     checkable: true
                                     onToggled: (state) => console.log("checked:", state)
-                                    StyledToolTip {
-                                        id: myTooltip
-                                        text: 'pussy'
-                                    }
                                 }
-        StyledSwitch {
-                id: customSwitch
-                onToggled: console.log("Switch:", checked)
-            }
+                                StyledSwitch {
+                                    id: customSwitch
+                                    onToggled: console.log("Switch:", checked)
+                                }
 
 
 

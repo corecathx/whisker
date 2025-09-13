@@ -15,7 +15,6 @@ Item {
 
     implicitWidth: loader.item ? loader.item.implicitWidth : 0
     implicitHeight: loader.item ? loader.item.implicitHeight : 0
-    anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
 
     Loader {
         id: loader

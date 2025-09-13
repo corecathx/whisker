@@ -1,12 +1,12 @@
 {
-	"smallBar": false,
-	"useVideoWallpaper": false,
+	"colorScheme": "fidelity",
+	"cavaEnabled": false,
 	"darkMode": true,
+	"wallpaper": "/home/corecat/Pictures/wallpapers/mera.png",
 	"useWallpaper": true,
+	"smallBar": true,
 	"barPosition": "left",
 	"barPadding": 300,
-	"colorScheme": "content",
-	"cavaEnabled": false,
-	"wallpaper": "/home/corecat/Pictures/wallpapers/mera.png",
+	"useVideoWallpaper": false,
 	"keepBarOpaque": true
 }

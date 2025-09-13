@@ -11,39 +11,47 @@ Scope {
     id: root
     PanelWindow {
         id: window
-        implicitWidth: 400 + 40
-        Behavior on implicitHeight {
-            NumberAnimation {
-                duration: Appearance.anim_fast;
-                easing.type: Easing.OutCubic
-            }
-        }
+        implicitWidth: 440
+
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.namespace: "whisker:osdpanel"
         WlrLayershell.exclusionMode: ExclusionMode.Normal
         color: "transparent"
-        anchors.top: true
-        anchors.bottom: true
-
-        anchors.right: true
-        margins.right: Preferences.smallBar ? Preferences.barPadding + 20 : 0
 
         mask: Region {
             width: window.implicitWidth
             height: bgRectangle.height
         }
 
+        anchors.top: true
+        anchors.left: Preferences.barPosition === "right"
+        anchors.right: Preferences.barPosition !== "right"
+        anchors.bottom: true
+
         Item {
             id: container
-            implicitHeight: bgRectangle.implicitHeight
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: Preferences.barPosition === "top" ? parent.top : undefined
-            anchors.bottom: Preferences.barPosition === "bottom" ? parent.bottom : undefined
-            anchors.topMargin: Preferences.barPosition !== "top" ? 20 : 0
-            anchors.bottomMargin: Preferences.barPosition !== "bottom" ? 20 : 0
+            anchors.fill: parent
+
             Rectangle {
                 id: bgRectangle
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.left: parent.left
+                anchors.leftMargin: Preferences.barPosition === "right" ? 0 : 20
+                anchors.rightMargin: Preferences.barPosition === "right" ? 20 : 0
+                implicitHeight: contentWrapper.height > 0 ? contentWrapper.height + 20 : 0
+                color: Appearance.panel_color
+                radius: 0
+                bottomRightRadius: Preferences.barPosition === 'right' ? 20 : 0
+                bottomLeftRadius: Preferences.barPosition !== 'right' ? 20 : 0
+
+                Behavior on implicitHeight {
+                    NumberAnimation {
+                        duration: Appearance.anim_fast
+                        easing.type: Easing.OutCubic
+                    }
+                }
+
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled: true
@@ -52,67 +60,56 @@ Scope {
                     shadowBlur: 1
                     shadowScale: 1
                 }
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: Preferences.barPosition === 'top' ? parent.top : undefined
-                anchors.bottom: {
-                    console.log(Preferences.barPosition.toLowerCase() === 'bottom' ? "You should get bottom" : "you sould get undefined")
-                    return Preferences.barPosition.toLowerCase() === 'bottom' ? parent.bottom : undefined
-                }
-                anchors.leftMargin: 20
-                anchors.rightMargin: !Preferences.smallBar ? 0 : 20
-                topLeftRadius: Preferences.barPosition === "bottom" ? 20 : 0
-                topRightRadius: Preferences.barPosition === "bottom" && Preferences.smallBar ? 20 : 0
-                bottomLeftRadius: Preferences.barPosition === "bottom" ? 0 : 20
-                bottomRightRadius: Preferences.barPosition === "top" && Preferences.smallBar ? 20 : 0
-                color: Appearance.panel_color
-                implicitHeight: contentWrapper.height > 0 ? contentWrapper.height + 20 : 0
-                Behavior on implicitHeight {
-                    NumberAnimation {
-                        duration: Appearance.anim_fast;
-                        easing.type: Easing.OutCubic;
-                    }
-                }
+
                 SingleCorner {
+                    visible: Preferences.barPosition !== "right"
                     cornerType: "inverted"
                     cornerHeight: Math.min(bgRectangle.implicitHeight, 20)
                     cornerWidth: 20
                     color: Appearance.panel_color
-                    corner: Preferences.barPosition === "top" ? 0 : 3
+                    corner: 0
                     anchors.right: bgRectangle.left
-                    anchors.top: Preferences.barPosition === "top" ? bgRectangle.top : undefined
-                    anchors.bottom: Preferences.barPosition === "bottom" ? bgRectangle.bottom : undefined
+                    anchors.top: bgRectangle.top
                 }
+
                 SingleCorner {
-                    id: corner
+                    visible: Preferences.barPosition !== "right"
                     cornerType: "inverted"
                     cornerHeight: Math.min(bgRectangle.implicitHeight, 20)
                     cornerWidth: 20
                     color: Appearance.panel_color
-                    corner: Preferences.barPosition === "top"
-                            ? (Preferences.smallBar ? 1 : 0)
-                            : 2
-
-                    anchors.right: Preferences.barPosition === "top"
-                            ? (Preferences.smallBar ? undefined : bgRectangle.right)
-                            : (Preferences.smallBar ? undefined : bgRectangle.right)
-                    anchors.left: Preferences.barPosition === "top"
-                            ? (Preferences.smallBar ? bgRectangle.right : undefined)
-                            : bgRectangle.right
-                    anchors.bottom: Preferences.barPosition === "bottom"
-                            ? (Preferences.smallBar ? bgRectangle.bottom : bgRectangle.top)
-                            : undefined
-                    anchors.top: Preferences.barPosition === "top"
-                            ? (Preferences.smallBar ? bgRectangle.top : bgRectangle.bottom)
-                            : undefined
+                    corner: 0
+                    anchors.right: bgRectangle.right
+                    anchors.top: bgRectangle.bottom
                 }
 
-                // all osds
+                SingleCorner {
+                    visible: Preferences.barPosition === "right"
+                    cornerType: "inverted"
+                    cornerHeight: Math.min(bgRectangle.implicitHeight, 20)
+                    cornerWidth: 20
+                    color: Appearance.panel_color
+                    corner: 1
+                    anchors.left: bgRectangle.right
+                    anchors.top: bgRectangle.top
+                }
+
+                SingleCorner {
+                    visible: Preferences.barPosition === "right"
+                    cornerType: "inverted"
+                    cornerHeight: Math.min(bgRectangle.implicitHeight, 20)
+                    cornerWidth: 20
+                    color: Appearance.panel_color
+                    corner: 1
+                    anchors.left: bgRectangle.left
+                    anchors.top: bgRectangle.bottom
+                }
+
                 ColumnLayout {
                     id: contentWrapper
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
+                    anchors.top: bgRectangle.top
+                    anchors.left: bgRectangle.left
+                    anchors.right: bgRectangle.right
                     anchors.topMargin: 10
                     VolumeOsd {}
                 }
