@@ -9,27 +9,96 @@ BaseMenu {
     title: "Wi-Fi"
     description: "Manage Wi-Fi networks and connections."
 
-    ColumnLayout {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        spacing: 10
-        anchors.margins: 10
+    BaseCard {
+        BaseRowCard {
+            cardSpacing: 0
+            verticalPadding: Network.wifiEnabled ? 10 : 0
+            cardMargin: 0
+            Text {
+                text: powerSwitch.checked ? "Power: On" : "Power: Off"
+                font.pixelSize: 16
+                font.bold: true
+                color: Appearance.colors.m3on_background
+            }
+            Item { Layout.fillWidth: true }
+            StyledSwitch {
+                id: powerSwitch
+                checked: Network.wifiEnabled
+                onToggled: Network.enableWifi(checked)
+            }
+        }
 
+        BaseRowCard {
+            visible: Network.wifiEnabled
+            cardSpacing: 0
+            verticalPadding: 10
+            cardMargin: 0
+            ColumnLayout {
+                spacing: 2
+                Text {
+                    text: "Scanning"
+                    font.pixelSize: 16
+                    color: Appearance.colors.m3on_background
+                }
+                Text {
+                    text: "Search for nearby Wi-Fi networks."
+                    font.pixelSize: 12
+                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
+                }
+            }
+            Item { Layout.fillWidth: true }
+            StyledSwitch {
+                checked: Network.scanning
+                onToggled: {
+                    if (checked) Network.rescanWifi()
+                }
+            }
+        }
+    }
+
+    BaseCard {
+        visible: Network.active !== null
         Text {
-            text: "Work-In-Progress!"
+            text: "Connected Network"
             font.pixelSize: 18
             font.bold: true
             color: Appearance.colors.m3on_background
-            horizontalAlignment: Text.AlignHCenter
-            Layout.alignment: Qt.AlignHCenter
         }
 
+        WifiNetworkCard {
+            network: Network.active
+            isActive: true
+            showDisconnect: true
+        }
+    }
+
+    BaseCard {
+        visible: Network.wifiEnabled
         Text {
-            text: "This menu is still unfinished! I'm sorry :']"
-            font.pixelSize: 14
-            color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
-            horizontalAlignment: Text.AlignHCenter
-            Layout.alignment: Qt.AlignHCenter
+            text: "Available Networks"
+            font.pixelSize: 18
+            font.bold: true
+            color: Appearance.colors.m3on_background
+        }
+
+        Item {
+            visible: Network.networks.length === 0 && !Network.scanning
+            width: parent.width
+            height: 40
+            Text {
+                anchors.centerIn: parent
+                text: "No networks found"
+                font.pixelSize: 14
+                color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
+            }
+        }
+
+        Repeater {
+            model: Network.networks.filter(n => !n.active)
+            delegate: WifiNetworkCard {
+                network: modelData
+                showConnect: true
+            }
         }
     }
 }
