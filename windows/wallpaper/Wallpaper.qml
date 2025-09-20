@@ -157,15 +157,16 @@ PanelWindow {
         spacing: -10 
         Text { 
             text: Qt.formatDateTime(Time.date, "HH:mm")
+            font.family: "Outfit ExtraBold"
             color: Appearance.colors.m3on_background
             font.pixelSize: 72
-            font.bold: true 
             //Layout.alignment: Qt.AlignHCenter 
         } 
         Text { 
             text: Qt.formatDateTime(Time.date, "dddd, dd/MM")
             color: Appearance.colors.m3on_background
             font.pixelSize: 32 
+            font.bold: true
             //Layout.alignment: Qt.AlignHCenter 
         } 
         PlayerDisplay { 

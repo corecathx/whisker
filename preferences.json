@@ -1,12 +1,12 @@
 {
-	"colorScheme": "fidelity",
+	"colorScheme": "tonal-spot",
 	"cavaEnabled": false,
 	"darkMode": true,
-	"wallpaper": "/home/corecat/Pictures/wallpapers/mera.png",
+	"wallpaper": "/home/corecat/Pictures/wallpapers/luca.jpg",
 	"useWallpaper": true,
-	"smallBar": true,
+	"smallBar": false,
 	"barPosition": "left",
 	"barPadding": 300,
-	"useVideoWallpaper": false,
+	"useVideoWallpaper": true,
 	"keepBarOpaque": true
 }

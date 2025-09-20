@@ -61,12 +61,6 @@ Singleton {
      */
     property real anim_fast: 250 * anim_multiplier
 
-    /**
-     * Whether to use small bar layout.
-     * @values bool: true, false
-     */
-    property bool smallBar: true
-
     property M3Palette colors: M3Palette {}
     property string lastData: ''
 

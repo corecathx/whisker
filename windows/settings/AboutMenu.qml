@@ -36,8 +36,8 @@ Item {
 
                 Behavior on scale {
                     SpringAnimation {
-                        spring: 5
-                        damping: 0.15
+                        spring: 10
+                        damping: 0.05
                         mass: 0.5
                         epsilon: 0.01
                     }
@@ -67,8 +67,8 @@ Item {
 
                 Text {
                     text: "Whisker"
-                    font.pixelSize: 20
-                    font.bold: true
+                    font.pixelSize: 24
+                    font.family: "Outfit ExtraBold"
                     color: Appearance.colors.m3on_background
                     horizontalAlignment: Text.AlignHCenter
                     Layout.preferredWidth: 360

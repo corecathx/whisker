@@ -29,7 +29,7 @@ Item {
                 text: verticalMode ? Qt.formatDateTime(Time.date, "HH") : Qt.formatDateTime(Time.date, "HH:mm")
                 color: Appearance.colors.m3on_surface
                 font.pixelSize: 18
-                font.bold: true
+                font.family: "Outfit ExtraBold"
                 lineHeight: 0.1
                 anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
             }
@@ -39,6 +39,7 @@ Item {
                 text: Qt.formatDateTime(Time.date, "mm")
                 color: Appearance.colors.m3on_surface
                 font.pixelSize: 18
+                font.family: "Outfit ExtraBold"
                 font.bold: true
                 lineHeight: 0.1
                 anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined

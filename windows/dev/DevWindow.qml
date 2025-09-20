@@ -101,7 +101,17 @@ Scope {
                                     onToggled: console.log("Switch:", checked)
                                 }
 
+Text { text: "Hello"; 
+font.weight: Font.Black; 
+font.family: "Outfit Black"
+renderType: Text.NativeRendering
+font.pixelSize: 20
+color: 'white' 
+Component.onCompleted: {
+    console.log(fontInfo.family)
+}
 
+}
 
     FileDialog {
         id: fileDialog

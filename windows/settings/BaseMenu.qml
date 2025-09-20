@@ -36,6 +36,7 @@ Item {
                     text: baseMenu.title
                     font.pixelSize: 24
                     font.bold: true
+                    font.family: "Outfit SemiBold"
                     color: Appearance.colors.m3on_background
                 }
                 Text {

@@ -12,9 +12,11 @@ Item {
     implicitHeight: wpBG.implicitHeight
 
     default property alias content: contentArea.data
+    property alias color: wpBG.color
     property int cardMargin: 20
     property int cardSpacing: 10
     property int verticalPadding: 40
+    property bool useAnims: false
 
     Rectangle {
         id: wpBG
@@ -23,14 +25,14 @@ Item {
         implicitHeight: contentArea.implicitHeight + verticalPadding
         Behavior on implicitHeight {
             NumberAnimation {
-                duration: Appearance.anim_fast
+                duration: !useAnims ? 0 : Appearance.anim_fast
                 easing.type: Easing.OutCubic
             }
         }
         color: Appearance.colors.m3surface_container_low
         Behavior on color {
             ColorAnimation {
-                duration: Appearance.anim_fast
+                duration: !useAnims ? 0 : Appearance.anim_fast
                 easing.type: Easing.OutCubic
             }
         }
