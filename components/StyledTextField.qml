@@ -20,7 +20,7 @@ TextField {
     leftPadding: icon !== "" ? iconSize + 35 : 0
     color: Appearance.colors.m3on_surface
     placeholderTextColor: Colors.opacify(Appearance.colors.m3on_surface, 0.4)
-    cursorVisible: true
+    cursorVisible: control.focus
 
     cursorDelegate: Rectangle {
         width: 2

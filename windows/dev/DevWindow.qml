@@ -7,7 +7,7 @@ import QtQuick.Controls
 import QtQuick.Window
 import qs.modules
 import qs.components
-import Qt.labs.platform
+
 Scope {
     Window {
         id: win
@@ -17,167 +17,84 @@ Scope {
         title: "Whisker Settings"
         color: Appearance.panel_color
 
+        property int counter: 0
+
+        ListModel { id: myModel }
+
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 20
             spacing: 10
-            // --- Content Area ---
-            StackLayout {
-                id: stack
+
+            Button {
+                text: "Remove last item"
                 Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                // --- Tab 1: Notifications ---
-                Flickable {
-                    contentWidth: parent.width
-                    contentHeight: column1.implicitHeight
-                    clip: true
-
-                    ColumnLayout {
-                        id: column1
-                        width: parent.width
-                        spacing: 15
-
-                        GroupBox {
-                            title: "Notifications"
-                            Layout.fillWidth: true
-
-                            ColumnLayout {
-                                spacing: 10
-
-                                StyledButton {
-                                    text: "Test notification (requires dunstify)"
-                                    onClicked: notifProc.running = true
-
-                                    Process {
-                                        id: notifProc
-                                        command: [
-                                            "dunstify",
-                                            "-u", "normal",
-                                            "-i", "/home/corecat/.config/whisker/logo.png",
-                                            "-h", "string:x-dunst-stack-tag:test",
-                                            "-h", "int:value:50",
-                                            "-A", "yes,Alright!",
-                                            "-A", "no,Ehh...",
-                                            "Whisker",
-                                            "DevMode: Notification test."
-                                        ]
-                                    }
-                                }
-
-                                StyledButton {
-                                    text: "Notif without actions"
-                                    onClicked: notifProc2.running = true
-
-                                    Process {
-                                        id: notifProc2
-                                        command: [
-                                            "dunstify",
-                                            "-i", "/home/corecat/.config/whisker/logo.png",
-                                            "Whisker",
-                                            "DevMode: Notification test."
-                                        ]
-                                    }
-                                }
-                                StyledButton {
-                                    text: "Notif without icons"
-                                    onClicked: notifProc4.running = true
-
-                                    Process {
-                                        id: notifProc4
-                                        command: [
-                                            "dunstify",
-                                            "Whisker",
-                                            "DevMode: Notification test."
-                                        ]
-                                    }
-                                }
-                                StyledButton {
-                                    text: "Toggleable button"
-                                    icon: "check"
-                                    checkable: true
-                                    onToggled: (state) => console.log("checked:", state)
-                                    StyledToolTip {
-                                        id: myTooltip
-                                        text: 'pussy'
-                                    }
-                                }
-        StyledSwitch {
-                id: customSwitch
-                onToggled: console.log("Switch:", checked)
+                onClicked: {
+                    if (myModel.count > 0) win.removeLast()
+                }
             }
 
+            ListView {
+                id: listView
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                model: myModel
+                orientation: ListView.Vertical
+                boundsBehavior: Flickable.StopAtBounds
+                spacing: 5
+                interactive: false  // no scrolling needed
 
+                delegate: Rectangle {
+                    id: itemRect
+                    width: parent.width
+                    height: 40
+                    radius: 8
+                    color: "lightblue"
+                    opacity: 0.0  // start invisible for add animation
 
-    FileDialog {
-        id: fileDialog
-        folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
-    }
+                    Text {
+                        anchors.centerIn: parent
+                        text: model.name
+                        color: "black"
+                    }
 
+                    Behavior on height { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
+                    Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
 
-    StyledButton {
-        text: "Open File Picker"
-        anchors.centerIn: parent
-        onClicked: fileDialog.open()
-    }
-
-                            }
-                        }
+                    Component.onCompleted: {
+                        // Animate adding: fade in and grow
+                        itemRect.opacity = 1
+                        itemRect.height = 40
                     }
                 }
+            }
+        }
 
-                // --- Tab 2: Sliders ---
-                Flickable {
-                    contentWidth: parent.width
-                    contentHeight: column2.implicitHeight
-                    clip: true
+        Timer {
+            interval: 1000
+            running: true
+            repeat: true
+            onTriggered: {
+                win.counter += 1
+                myModel.append({ "name": "Item " + win.counter })
+            }
+        }
 
-                    ColumnLayout {
-                        id: column2
-                        width: parent.width
-                        spacing: 15
-
-                        GroupBox {
-                            title: "Slider Test"
-                            Layout.fillWidth: true
-
-                            ColumnLayout {
-                                spacing: 10
-                                StyledSlider {
-                                    Layout.fillWidth: true
-                                    from: 0
-                                    to: 100
-                                    stepSize: 1
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // --- Tab 3: About ---
-                Flickable {
-                    contentWidth: parent.width
-                    contentHeight: column3.implicitHeight
-                    clip: true
-
-                    ColumnLayout {
-                        id: column3
-                        width: parent.width
-                        spacing: 15
-
-                        GroupBox {
-                            title: "About"
-                            Layout.fillWidth: true
-
-                            ColumnLayout {
-                                spacing: 8
-                                Label { text: "Whisker Settings Panel"; font.pixelSize: 18 }
-                                Label { text: "Version: 1.0.0" }
-                                Label { text: "Author: CoreCat" }
-                            }
-                        }
-                    }
-                }
+        // Custom remove function with animation
+        function removeLast() {
+            if (myModel.count === 0) return
+            let index = myModel.count - 1
+            let item = listView.itemAtIndex(index)
+            if (item) {
+                // Animate shrink/fade
+                item.opacity = 0
+                item.height = 0
+                // Remove from model after animation duration
+                Qt.callLater(() => {
+                    myModel.remove(index)
+                })
+            } else {
+                myModel.remove(index)
             }
         }
     }

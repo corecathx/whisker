@@ -11,6 +11,9 @@
 
 > This shell works "perfectly" with CoreCat's Dotfiles.
 
+## `vertical` branch information
+vertical bar mode won't support small bar mode, for now
+
 ## 🚧 Under Development
 
 **Whisker** is already usable now, but everything is still subject to change overtime.

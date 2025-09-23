@@ -7,8 +7,9 @@ import Quickshell.Widgets
 import qs.modules
 
 Item {
+    id:root
     anchors.fill: parent
-
+    property bool verticalMode: false
     Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -16,6 +17,7 @@ Item {
         height:workspace.height
         Workspaces {
             id: workspace
+            verticalMode: root.verticalMode
 
         }
     }

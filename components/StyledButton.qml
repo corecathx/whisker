@@ -11,18 +11,21 @@ Control {
   property int radius: 20
 
   property bool checkable: false
-  property bool checked: false
+  property bool checked: true
+  property bool secondary: false
   signal clicked
   signal toggled(bool checked)
 
   // --- state colors ---
-  property color base_bg: root.checkable && !root.checked
-    ? Appearance.colors.m3secondary_container
-    : Appearance.colors.m3primary
+  property bool usePrimary: secondary ? false : checked
 
-  property color base_fg: root.checkable && !root.checked
-    ? Appearance.colors.m3on_secondary_container
-    : Appearance.colors.m3on_primary
+  property color base_bg: usePrimary
+    ? Appearance.colors.m3primary
+    : Appearance.colors.m3secondary_container
+
+  property color base_fg: usePrimary
+    ? Appearance.colors.m3on_primary
+    : Appearance.colors.m3on_secondary_container
 
   property color hover_bg: Qt.lighter(base_bg, 1.1)
   property color pressed_bg: Qt.darker(base_bg, 1.2)
@@ -33,7 +36,10 @@ Control {
 
   property color text_color: base_fg
 
-  implicitWidth: row.implicitWidth + 40
+  // With this:
+  implicitWidth: (label.text === "" && icon !== "") 
+      ? implicitHeight   // square if only icon
+      : row.implicitWidth + 40
   implicitHeight: 40
 
   contentItem: Item {
@@ -51,10 +57,7 @@ Control {
         color: root.text_color
         anchors.verticalCenter: parent.verticalCenter
         Behavior on color {
-          ColorAnimation {
-            duration: Appearance.anim_fast / 2
-            easing.type: Easing.OutCubic
-          }
+          ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutCubic }
         }
       }
 
@@ -65,10 +68,7 @@ Control {
         anchors.verticalCenter: parent.verticalCenter
         elide: Text.ElideRight
         Behavior on color {
-          ColorAnimation {
-            duration: Appearance.anim_fast / 2
-            easing.type: Easing.OutCubic
-          }
+          ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutCubic }
         }
       }
     }
@@ -78,10 +78,7 @@ Control {
     radius: root.radius
     color: root.background_color
     Behavior on color {
-      ColorAnimation {
-        duration: Appearance.anim_fast / 2
-        easing.type: Easing.OutCubic
-      }
+      ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutCubic }
     }
   }
 

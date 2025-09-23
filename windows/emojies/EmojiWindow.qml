@@ -17,7 +17,6 @@ Scope {
     property real mouseX: 0
     property real mouseY: 0
 
-    // Track the mouse globally
     MouseArea {
         id: mouseTracker
         anchors.fill: parent
@@ -29,7 +28,6 @@ Scope {
         }
     }
 
-    // Change PanelWindow -> Window so we can use x/y properly
     Window {
         id: emojiPanel
         width: 450 + root.margin * 2
@@ -38,7 +36,6 @@ Scope {
         visible: true
         color: "transparent"
 
-        // Follow mouse position
         x: root.mouseX + 20
         y: root.mouseY + 20
 

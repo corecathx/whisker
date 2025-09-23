@@ -17,7 +17,7 @@ Singleton {
      */
     property string wallpaper: ""
     /**
-     * Whether to use top / bottom bar layout, other UI elements might follow this rule.
+     * Position the bar however you like, other UI elements might follow this rule.
      * @values string: "top", "bottom"
      * @default string: "top"
      */
@@ -96,5 +96,12 @@ Singleton {
         watchChanges: true
         onFileChanged: reload()
         onLoaded: root.load(text())
+    }
+
+    function verticalBar() {
+        return root.barPosition === "left" || root.barPosition === "right";
+    }
+    function horizontalBar() {
+        return root.barPosition === "top" || root.barPosition === "bottom";
     }
 }

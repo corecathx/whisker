@@ -1,181 +1,140 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
-import qs.modules
+import qs.preferences
 import qs.components
+import qs.modules
 import qs.services
-import QtQuick.Controls
-Rectangle {
-    color: "transparent"
 
-    ColumnLayout {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
+BaseMenu {
+    title: "Wi-Fi"
+    description: "Manage Wi-Fi networks and connections."
 
-        spacing: 20
+    BaseCard {
+        BaseRowCard {
+            cardSpacing: 0
+            verticalPadding: Network.wifiEnabled ? 10 : 0
+            cardMargin: 0
+            Text {
+                text: powerSwitch.checked ? "Power: On" : "Power: Off"
+                font.pixelSize: 16
+                font.bold: true
+                color: Appearance.colors.m3on_background
+            }
+            Item { Layout.fillWidth: true }
+            StyledSwitch {
+                id: powerSwitch
+                checked: Network.wifiEnabled
+                onToggled: Network.enableWifi(checked)
+            }
+        }
 
+        BaseRowCard {
+            visible: Network.wifiEnabled
+            cardSpacing: 0
+            verticalPadding: 10
+            cardMargin: 0
+            ColumnLayout {
+                spacing: 2
+                Text {
+                    text: "Scanning"
+                    font.pixelSize: 16
+                    color: Appearance.colors.m3on_background
+                }
+                Text {
+                    text: "Search for nearby Wi-Fi networks."
+                    font.pixelSize: 12
+                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
+                }
+            }
+            Item { Layout.fillWidth: true }
+            StyledSwitch {
+                checked: Network.scanning
+                onToggled: {
+                    if (checked) Network.rescanWifi()
+                }
+            }
+        }
+    }
+    InfoCard {
+        visible: Network.message !== "" && Network.message !== "ok"
+        icon: "error"
+        backgroundColor: Appearance.colors.m3error
+        contentColor: Appearance.colors.m3on_error
+        title: "Failed to connect to " + Network.lastNetworkAttempt
+        description: Network.message
+    }
+    BaseCard {
+        visible: Network.active !== null
         Text {
-            text: "Wi-Fi"
-            font.pixelSize: 24
+            text: "Connected Network"
+            font.pixelSize: 18
             font.bold: true
             color: Appearance.colors.m3on_background
         }
 
-        Column {
-            spacing: 6
-
-            Text {
-                text: Network.wifi.enabled
-                    ? (Network.wifi.currentName.length > 0
-                        ? "Connected to: " + Network.wifi.currentName
-                        : "Not connected")
-                    : "Wi-Fi is turned off"
-                font.pixelSize: 16
-                color: Appearance.colors.m3on_background
-                Layout.fillWidth: true
-            }
-
-            RowLayout {
-                spacing: 10
-                Layout.fillWidth: true
-                visible: Network.wifi.enabled && Network.wifi.currentName.length > 0
-
-                MaterialIcon {
-                    icon: Network.wifi.icon
-                    font.pixelSize: 20
-                    color: Appearance.colors.m3on_background
-                }
-
-                Text {
-                    text: Network.wifi.strength + "%"
-                    font.pixelSize: 14
-                    color: Appearance.colors.m3on_background
-                }
-            }
-        }
-
-        Rectangle {
-            height: 1
-            color: Appearance.colors.m3on_background
-            opacity: 0.2
-            Layout.fillWidth: true
-            visible: Network.wifi.enabled
-        }
-
-        ColumnLayout {
-            id: list
-            spacing: 10
-            visible: Network.wifi.enabled && Network.wifi.list.length > 0
-
-            Repeater {
-                model: Network.wifi.list
-
-                delegate: Rectangle {
-                    Layout.fillWidth: true
-                    height: 40
-                    radius: 20
-                    color: modelData === Network.wifi.currentName
-                        ? Colors.opacify(Appearance.colors.m3primary, 0.7)
-                        : Colors.opacify(Appearance.colors.m3on_background, 0.05)
-
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        spacing: 10
-
-                        MaterialIcon {
-                            icon: modelData === Network.wifi.currentName
-                                ? Network.wifi.icon
-                                : "network_wifi"
-                            font.pixelSize: 18
-                            color: Appearance.colors.m3on_background
-                        }
-
-                        Text {
-                            text: modelData
-                            font.pixelSize: 14
-                            color: Appearance.colors.m3on_background
-                            Layout.fillWidth: true
-                        }
-
-                        MaterialIcon {
-                            visible: Network.wifi.isSecured(modelData)
-                            icon: "lock"
-                            font.pixelSize: 16
-                            color: Appearance.colors.m3on_background
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            let ssid = modelData
-                            if (Network.wifi.currentName === ssid) {
-                                Network.wifi.disconnect()
-                            } else if (Network.wifi.isKnown(ssid)) {
-                                Network.wifi.connectTo(ssid)
-                            } else if (Network.wifi.isSecured(ssid)) {
-                                passwordDialog.openFor(ssid)
-                            } else {
-                                Network.wifi.connectTo(ssid)
-                            }
-                        }
-                    }
-                }
-
-            }
+        WifiNetworkCard {
+            network: Network.active
+            isActive: true
+            showDisconnect: true
         }
     }
 
-    Popup {
-        id: passwordDialog
-        modal: true
-        focus: true
-        width: 300
-        height: 180
-        padding: 16
-        background: Rectangle {
-            color: Appearance.colors.m3surface
-            radius: 10
+    BaseCard {
+        visible: Network.wifiEnabled
+        Text {
+            text: "Available Networks"
+            font.pixelSize: 18
+            font.bold: true
+            color: Appearance.colors.m3on_background
         }
 
-        property string ssid: ""
-        signal openFor(string ssid)
-
-        onOpenFor: {
-            ssid = arguments[0]
-            passwordField.text = ""
-            open()
-        }
-
-        ColumnLayout {
-            spacing: 10
-            anchors.fill: parent
-
+        Item {
+            visible: Network.networks.length === 0 && !Network.scanning
+            width: parent.width
+            height: 40
             Text {
-                text: "Enter password for: " + ssid
-                font.pixelSize: 16
-                color: Appearance.colors.m3on_background
-                wrapMode: Text.Wrap
-            }
-
-            TextField {
-                id: passwordField
-                echoMode: TextInput.Password
-                placeholderText: "Password"
+                anchors.centerIn: parent
+                text: "No networks found"
                 font.pixelSize: 14
-                Layout.fillWidth: true
+                color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
             }
+        }
 
-            Button {
-                text: "Connect"
-                onClicked: {
-                    Network.wifi.connectTo(ssid, passwordField.text)
-                    passwordDialog.close()
-                }
+        Repeater {
+            model: Network.networks.filter(n => !n.active)
+            delegate: WifiNetworkCard {
+                network: modelData
+                showConnect: true
+            }
+        }
+    }
+    BaseCard {
+        visible: Network.savedNetworks.length > 0
+        Text {
+            text: "Remembered Networks"
+            font.pixelSize: 18
+            font.bold: true
+            color: Appearance.colors.m3on_background
+        }
+
+        Item {
+            visible: Network.savedNetworks.length === 0
+            width: parent.width
+            height: 40
+            Text {
+                anchors.centerIn: parent
+                text: "No remembered networks"
+                font.pixelSize: 14
+                color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
+            }
+        }
+
+        Repeater {
+            model: Network.networks.filter(n => n.saved)
+            delegate: WifiNetworkCard {
+                network: modelData
+                showConnect: false
+                showDisconnect: false 
             }
         }
     }

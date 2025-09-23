@@ -27,7 +27,7 @@ Scope {
 
         PanelWindow {
             id: window
-            anchors.top: Preferences.barPosition === 'top'
+            anchors.top: Preferences.barPosition === 'top' || Preferences.barPosition === 'left'
             anchors.bottom: Preferences.barPosition === 'bottom'
 
             anchors.left: true
@@ -55,13 +55,13 @@ Scope {
                     anchors.fill: parent
                     anchors.leftMargin: Preferences.smallBar ? 20 : 0
                     anchors.rightMargin: 20
-                    anchors.topMargin: Preferences.barPosition !== "top" ? 20 : 0
+                    anchors.topMargin: Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 0 : 20) : 0
                     anchors.bottomMargin: Preferences.barPosition !== "bottom" ? 20 : 0
 
                     color: Appearance.panel_color
                     //border.color: Appearance.colors.m3primary
                     topLeftRadius: Preferences.smallBar && !Preferences.barPosition === "top" ? 20 : 0
-                    topRightRadius: Preferences.barPosition !== "top" ? 20 : 0
+                    topRightRadius: Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 0 : 20) : 0
                     bottomLeftRadius: Preferences.barPosition === "top" && Preferences.smallBar ? 20 : 0
                     bottomRightRadius: Preferences.barPosition === "top" ? 20 : 0
 
@@ -71,7 +71,7 @@ Scope {
                         cornerHeight: 20
                         cornerWidth: 20
                         color: Appearance.panel_color
-                        corner: Preferences.smallBar ? (Preferences.barPosition !== "top" ? 3 : 0) : (Preferences.barPosition !== "top" ? 2 : 1)
+                        corner: Preferences.smallBar ? (Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 2 : 3) : 0) : (Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 1 : 2) : 1)
                         anchors.right: Preferences.smallBar ? bgRectangle.left : undefined
                         anchors.left: Preferences.smallBar ? undefined : bgRectangle.left
                         anchors.bottom: Preferences.barPosition === "bottom" ? (Preferences.smallBar ? bgRectangle.bottom : bgRectangle.top) : undefined
@@ -83,7 +83,7 @@ Scope {
                         cornerHeight: 20
                         cornerWidth: 20
                         color: Appearance.panel_color
-                        corner: Preferences.barPosition !== "top" ? 2 : 1
+                        corner: Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 1 : 2) : 1
                         anchors.left: bgRectangle.right
                         anchors.bottom: Preferences.barPosition === "bottom" ? bgRectangle.bottom : undefined
                         anchors.top: Preferences.barPosition === "bottom" ? undefined : bgRectangle.top

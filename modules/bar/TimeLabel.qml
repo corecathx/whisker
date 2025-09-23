@@ -7,40 +7,61 @@ import qs.services
 
 Item {
     id: root
-    property string time
-    property string date
-    property bool showLabel: true  // control visibility
+    property bool showLabel: true 
+    property bool verticalMode: false 
 
-    Layout.preferredWidth: showLabel ? container.implicitWidth : 0
-    Layout.preferredHeight: container.implicitHeight
+    Layout.preferredWidth: verticalMode ? container.implicitWidth : showLabel ? container.implicitWidth : 0
+    Layout.preferredHeight: verticalMode ? (showLabel ? container.implicitHeight : 0) : container.implicitHeight
     width: container.implicitWidth
     height: container.implicitHeight
     opacity: showLabel ? 1 : 0
 
     Column {
-        spacing: -5
+        spacing: verticalMode ? -2 : -5
         id: container
-        Text {
-            id: label
-            text: Qt.formatDateTime(Time.date, "HH:mm")
-            color: Appearance.colors.m3on_surface
-            font.pixelSize: 18
-            font.bold: true
-            lineHeight: 0.1
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        Column {
+            spacing: -2
+            anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
+
+            Text {
+                text: verticalMode ? Qt.formatDateTime(Time.date, "HH") : Qt.formatDateTime(Time.date, "HH:mm")
+                color: Appearance.colors.m3on_surface
+                font.pixelSize: 18
+                font.family: "Outfit ExtraBold"
+                lineHeight: 0.1
+                anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
+            }
+
+            Text {
+                visible: verticalMode
+                text: Qt.formatDateTime(Time.date, "mm")
+                color: Appearance.colors.m3on_surface
+                font.pixelSize: 18
+                font.family: "Outfit ExtraBold"
+                font.bold: true
+                lineHeight: 0.1
+                anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
+            }
         }
+
         Text {
-            id: date
-            text: Qt.formatDateTime(Time.date, "ddd, dd/MM")
+            text: verticalMode ? Qt.formatDateTime(Time.date, "dd/MM") : Qt.formatDateTime(Time.date, "ddd, dd/MM")
             color: Appearance.colors.m3on_surface
-            font.pixelSize: 14
+            font.pixelSize: 12
             lineHeight: 0.1
+            anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
+
         }
     }
 
     Behavior on Layout.preferredWidth {
         NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
     }
-
+    Behavior on Layout.preferredHeight {
+        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+    }
     Behavior on opacity {
         NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
     }

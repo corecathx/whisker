@@ -1,12 +1,1 @@
-{
-	"smallBar": false,
-	"useVideoWallpaper": false,
-	"darkMode": true,
-	"useWallpaper": true,
-	"barPosition": "top",
-	"barPadding": 300,
-	"colorScheme": "content",
-	"cavaEnabled": false,
-	"wallpaper": "/home/corecat/Pictures/wallpapers/mera.png",
-	"keepBarOpaque": true
-}
+{"cavaEnabled":false,"colorScheme":"tonal-spot","darkMode":true,"wallpaper":"/home/corecat/Pictures/wallpapers/cropped.jpg","useWallpaper":true,"smallBar":false,"barPosition":"left","useVideoWallpaper":false,"barPadding":300,"keepBarOpaque":true}

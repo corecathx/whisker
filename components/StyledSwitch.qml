@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
-import qs.modules        // Appearance.colors
-import qs.components     // MaterialIcon
+import qs.modules
+import qs.components
 
 Item {
     id: root
@@ -11,16 +11,14 @@ Item {
     property bool checked: false
     signal toggled(bool checked)
 
-    // Keep original property names, but pull colors from Appearance.colors
     property color trackOn: Appearance.colors.m3primary
     property color trackOff: Appearance.colors.m3surface_variant
     property color thumbColorOn: Appearance.colors.m3on_primary
     property color thumbColorOff: Appearance.colors.m3on_surface_variant
     property color iconColor: Appearance.colors.m3primary
 
-    // Geometry
     property int trackRadius: height / 2
-    property int thumbSize: height - (checked ? 12 : 18) // Padding inside track
+    property int thumbSize: height - (checked ? 12 : 18)
     Behavior on thumbSize { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
 
     Rectangle {

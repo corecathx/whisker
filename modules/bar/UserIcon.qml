@@ -2,57 +2,50 @@ import QtQuick
 import Quickshell.Widgets
 import Quickshell
 import qs.modules
+
 Rectangle {
     id: root
     clip: true
-    implicitWidth: hovered | Globals.visible_quickPanel ? userName.width + avatarClip.width + 30 : 30
-    height: 30
+    property bool hovered: false
+    property bool verticalMode: false
+
+    implicitWidth: verticalMode ? 30 : (hovered || Globals.visible_quickPanel ? userName.width + avatarClip.width + 30 : 30)
+    implicitHeight: verticalMode ? (hovered || Globals.visible_quickPanel ? userName.width + avatarClip.height + 30 : 30) : 30
+
     color: Colors.opacify(Appearance.colors.m3surface, 0.7)
     radius: 20
-    property bool hovered: false
+
     border {
-        width: hovered | Globals.visible_quickPanel ? 2 : 0
+        width: hovered || Globals.visible_quickPanel ? 2 : 0
         color: Appearance.colors.m3on_surface
-
-        Behavior on width {
-            NumberAnimation {
-                duration: 250
-                easing.type: Easing.OutCubic
-            }
-        }
+        Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
     }
 
-    Behavior on implicitWidth {
-        NumberAnimation {
-            duration: 250
-            easing.type: Easing.OutCubic
-        }
-    }
+    Behavior on implicitWidth { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
+    Behavior on implicitHeight { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
 
     ClippingRectangle {
         id: textClip
         anchors.fill: parent
         radius: 30
         color: "transparent"
-        width: userName.width
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+
         Text {
             id: userName
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-            anchors.verticalCenter: parent.verticalCenter
-            
-            visible: parent.width > 41
-            anchors.leftMargin: 8
             text: Quickshell.env('USER')
             color: Appearance.colors.m3on_background
             font.bold: true
-            
-        }
-        Item {
-            implicitWidth: 20
+            visible: hovered || Globals.visible_quickPanel
+
+            transform: Rotation {
+                id: rot
+                origin.x: userName.width / 2
+                origin.y: userName.height / 2
+                angle: verticalMode ? -90 : 0
+            }
+
+            x: verticalMode ? -12 : 40
+            y: verticalMode ? parent.height - userName.width - 5 : parent.height / 2 - userName.height / 2
         }
     }
 
@@ -63,10 +56,7 @@ Rectangle {
         radius: 30
         color: "transparent"
 
-        IconImage {
-            anchors.fill: parent
-            source: Appearance.profileImage
-        }
+        IconImage { anchors.fill: parent; source: Appearance.profileImage }
 
         MouseArea {
             anchors.fill: parent
@@ -76,5 +66,4 @@ Rectangle {
             onClicked: Globals.toggle_quickPanel()
         }
     }
-
 }

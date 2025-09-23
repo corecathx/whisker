@@ -5,6 +5,7 @@ import QtMultimedia
 import Quickshell
 import Quickshell.Widgets
 import qs.modules
+import qs.components
 
 Item {
     anchors.fill: parent
@@ -34,8 +35,14 @@ Item {
                 scale: 1.0
 
                 Behavior on scale {
-                    NumberAnimation { duration: 100; easing.type: Easing.OutCubic }
+                    SpringAnimation {
+                        spring: 10
+                        damping: 0.05
+                        mass: 0.5
+                        epsilon: 0.01
+                    }
                 }
+
 
                 MouseArea {
                     anchors.fill: parent
@@ -60,20 +67,20 @@ Item {
 
                 Text {
                     text: "Whisker"
-                    font.pixelSize: 20
-                    font.bold: true
+                    font.pixelSize: 24
+                    font.family: "Outfit ExtraBold"
                     color: Appearance.colors.m3on_background
                     horizontalAlignment: Text.AlignHCenter
-                    Layout.preferredWidth: 320
+                    Layout.preferredWidth: 360
                 }
 
                 Text {
-                    text: "A simple shell focusing on usability."
+                    text: "A simple shell focusing on usability and customization."
                     font.pixelSize: 14
                     wrapMode: Text.Wrap
                     color: Appearance.colors.m3on_background
                     horizontalAlignment: Text.AlignHCenter
-                    Layout.preferredWidth: 320
+                    Layout.preferredWidth: 360
                 }
 
                 Text {
@@ -81,9 +88,27 @@ Item {
                     font.pixelSize: 10
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.5)
                     horizontalAlignment: Text.AlignHCenter
-                    Layout.preferredWidth: 320
+                    Layout.preferredWidth: 360
                 }
             }
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter
+                spacing: 10
+
+                StyledButton {
+                    text: "View on GitHub"
+                    icon: 'code'
+                    onClicked: Qt.openUrlExternally("https://github.com/corecathx/whisker")
+                }
+                StyledButton {
+                    text: "Report Issue"
+                    icon: "bug_report"
+                    secondary: true
+                    onClicked: Qt.openUrlExternally("https://github.com/corecathx/whisker/issues")
+                }
+
+            }
+
         }
     }
 }
