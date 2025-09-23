@@ -142,21 +142,30 @@ PanelWindow {
                 colorizationColor: Appearance.colors.m3on_surface_variant
             }
         }
-        ColumnLayout {
+        RowLayout {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.leftMargin: 80
-
-            Text {
-                text: "You got no default wallpaper set!"
-                color: Appearance.colors.m3on_background
-                font.family: "Outfit SemiBold"
-                font.pixelSize: 32
+            anchors.leftMargin: 60
+            spacing: 20
+            Rectangle {
+                Layout.fillHeight: true
+                width: 10
+                radius: 20
+                color: Appearance.colors.m3on_surface
             }
-            Text {
-                text: "Set your wallpaper by pressing SUPER + SHIFT + W!"
-                color: Appearance.colors.m3on_background
-                font.pixelSize: 24
+            ColumnLayout {
+
+                Text {
+                    text: "You got no default wallpaper set!"
+                    color: Appearance.colors.m3on_background
+                    font.family: "Outfit SemiBold"
+                    font.pixelSize: 32
+                }
+                Text {
+                    text: "Set your wallpaper by pressing SUPER + SHIFT + W!"
+                    color: Appearance.colors.m3on_background
+                    font.pixelSize: 24
+                }
             }
         }
     }

@@ -42,5 +42,5 @@ ShellRoot {
         Theme.init()
         Audio.init()
     }
-    DevWindow {}
+    // DevWindow {}
 }
