@@ -6,6 +6,10 @@ QtObject {
     function getPath(key) {
         return Quickshell.shellDir + '/' + key
     }
+
+    function getConfigRelativePath(key) {
+        return Quickshell.env("HOME") + "/.config/whisker/" + key
+    }
     
     function formatSeconds(s: int) {
         const day = Math.floor(s / 86400);

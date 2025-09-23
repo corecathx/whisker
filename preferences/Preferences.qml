@@ -92,7 +92,7 @@ Singleton {
         }
     }
     FileView {
-        path: Utils.getPath('preferences.json')
+        path: Utils.getConfigRelativePath('preferences.json')
         watchChanges: true
         onFileChanged: reload()
         onLoaded: root.load(text())
