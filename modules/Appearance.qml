@@ -107,7 +107,7 @@ Singleton {
 
     FileView {
         id: schemesWatcher
-        path: Utils.getPath('schemes.json')
+        path: Utils.getConfigRelativePath('schemes.json')
         watchChanges: true
         onFileChanged: reload()
         onLoaded: root.reloadScheme(text())
