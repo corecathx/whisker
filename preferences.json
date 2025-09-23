@@ -1,12 +1,1 @@
-{
-	"cavaEnabled": false,
-	"colorScheme": "tonal-spot",
-	"darkMode": true,
-	"wallpaper": "/home/corecat/Pictures/wallpapers/luca.jpg",
-	"useWallpaper": true,
-	"smallBar": false,
-	"barPosition": "left",
-	"useVideoWallpaper": true,
-	"barPadding": 300,
-	"keepBarOpaque": true
-}
+{"cavaEnabled":false,"colorScheme":"tonal-spot","darkMode":true,"wallpaper":"/home/corecat/Pictures/wallpapers/cropped.jpg","useWallpaper":true,"smallBar":false,"barPosition":"left","useVideoWallpaper":false,"barPadding":300,"keepBarOpaque":true}

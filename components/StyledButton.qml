@@ -36,7 +36,10 @@ Control {
 
   property color text_color: base_fg
 
-  implicitWidth: row.implicitWidth + 40
+  // With this:
+  implicitWidth: (label.text === "" && icon !== "") 
+      ? implicitHeight   // square if only icon
+      : row.implicitWidth + 40
   implicitHeight: 40
 
   contentItem: Item {

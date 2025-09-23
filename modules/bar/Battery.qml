@@ -10,28 +10,28 @@ import Quickshell.Services.UPower
 
 Item {
     id: root
-    implicitWidth: 80
-    implicitHeight: 25
+    property bool verticalMode: false
+    width: verticalMode ? 28 : 50
+    height: verticalMode ? 50 : 25
     visible: UPower.displayDevice.isLaptopBattery
 
     property var low_battery_level: 15
     property int notifiedLevel: -1
     property string battery: UPower.displayDevice.isLaptopBattery 
-        ? (Math.round(UPower.displayDevice.percentage * 1000) / 10) + "%" 
+        ? (Math.round(UPower.displayDevice.percentage * 100).toFixed(1)) + "" 
         : "0%"
 
-    // Battery color based on state
     property color batteryColor: {
         if (!UPower.onBattery) {
-            return Appearance.colors.m3primary;  // Charging → primary
+            return Appearance.colors.m3primary;
         }
         if (UPower.displayDevice.percentage < 0.2) {
-            return Appearance.colors.m3error;    // Low battery → error
+            return Appearance.colors.m3error;
         }
         if (UPower.displayDevice.percentage < 0.5) {
-            return Appearance.colors.m3secondary; // Medium → secondary
+            return Appearance.colors.m3secondary;
         }
-        return Appearance.colors.m3primary;       // Healthy → primary
+        return Appearance.colors.m3primary;
     }
 
     function isLowBattery() {
@@ -68,32 +68,21 @@ Item {
         }
     }
 
-    // Battery icon based on level
     property string icon: {
         if (!UPower.onBattery) return "bolt";
-        if (UPower.displayDevice.percentage < 0.2) return "battery_1_bar";
-        if (UPower.displayDevice.percentage < 0.4) return "battery_2_bar";
-        if (UPower.displayDevice.percentage < 0.6) return "battery_4_bar";
-        if (UPower.displayDevice.percentage < 0.8) return "battery_5_bar";
-        return "battery_full";
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
-        onClicked: clickProc.running = true
+        return "";
     }
 
     ClippingRectangle {
         id: background
         anchors.fill: parent
         radius: 100
-        color: Colors.opacify(batteryColor, 0.2) // faint background tint
+        color: Colors.opacify(batteryColor, 0.2)
 
         RowLayout {
             id: textLayer
             anchors.centerIn: parent
-            spacing: 4
+            spacing: 0
 
             MaterialIcon {
                 icon: root.icon
@@ -113,10 +102,12 @@ Item {
         Rectangle {
             id: bar
             clip: true
-            anchors.top: parent.top
+            anchors.top: verticalMode ? undefined : parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            width: root.width * Math.min(Math.max(parseFloat(battery), 0), 100) / 100
+            anchors.right: verticalMode ? parent.right : undefined
+            width: verticalMode ? root.width : root.width * Math.min(Math.max(parseFloat(battery), 0), 100) / 100
+            height: verticalMode ? root.height * Math.min(Math.max(parseFloat(battery), 0), 100) / 100 : root.height
             color: batteryColor
 
             Behavior on width {
@@ -127,7 +118,7 @@ Item {
                 id: textLayer2
                 x: (root.width - width) / 2
                 y: (root.height - height) / 2
-                spacing: 4
+                spacing: 0
 
                 MaterialIcon {
                     icon: root.icon

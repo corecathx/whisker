@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.modules
-import qs.components
 import qs.preferences
 
 Item {
@@ -12,6 +11,7 @@ Item {
     implicitHeight: wpBG.implicitHeight
 
     default property alias content: contentArea.data
+    property alias color: wpBG.color
 
     property int cardMargin: 20
     property int cardSpacing: 10

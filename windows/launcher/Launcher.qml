@@ -458,8 +458,8 @@ Scope {
                                     Layout.bottomMargin: 50
                                     spacing: 20
                                     Image {
-                                        source: Utils.getPath("images/sad-cat.png")
-                                        sourceSize: Qt.size(100,100)
+                                        source: Utils.getPath("images/nothing-found.png")
+                                        sourceSize: Qt.size(200,200)
                                         smooth: true
                                         Layout.alignment: Qt.AlignVCenter
                                         layer.enabled: true
@@ -469,14 +469,16 @@ Scope {
                                         }
                                     }
 
-                                    Text {
-                                        text: "Nothing found."
-                                        font.pixelSize: 24
-                                        font.bold: true
-                                        color: Appearance.colors.m3on_surface_variant
-                                        Layout.alignment: Qt.AlignVCenter
-                                        horizontalAlignment: Text.AlignLeft
-                                        wrapMode: Text.NoWrap
+                                    ColumnLayout {
+                                        Text {
+                                            text: "Nothing found."
+                                            font.pixelSize: 32
+                                            font.bold: true
+                                            color: Appearance.colors.m3on_surface_variant
+                                            Layout.alignment: Qt.AlignVCenter
+                                            horizontalAlignment: Text.AlignLeft
+                                            wrapMode: Text.NoWrap
+                                        }
                                     }
                                 }
                             }

@@ -30,14 +30,39 @@ Scope {
             onClosing: Globals.visible_settingsMenu = false
 
             property var menuModel: {
+                // var raw = [
+                //     { header: true, label: "Connections" },
+                //     { icon: "signal_wifi_4_bar", label: "Wi-Fi" },
+                //     { icon: "bluetooth", label: "Bluetooth" },
+                //     { icon: "vpn_key", label: "VPN" },
+                //     { header: true, label: "System" },
+                //     { icon: "volume_up", label: "Sounds" },
+                //     { icon: "battery_full", label: "Battery" },
+                //     { icon: "memory", label: "Performance" },
+                //     { icon: "lock", label: "Security" },
+                //     { icon: "schedule", label: "Date & Time" },
+                //     { header: true, label: "Customization" },
+                //     { icon: "wallpaper", label: "Wallpaper" },
+                //     { icon: "palette", label: "Colors" },
+                //     { icon: "widgets", label: "Bar" },
+                //     { icon: "contrast", label: "Dark Mode" },
+                //     { header: true, label: "About" },
+                //     { icon: "info", label: "About" },
+                //     { icon: "update", label: "System Updates" }
+                // ];
+
                 var raw = [
                     { header: true, label: "Connections" },
                     { icon: "signal_wifi_4_bar", label: "Wi-Fi" },
                     { icon: "bluetooth", label: "Bluetooth" },
+                    { icon: "vpn_key", label: "VPN" },
+                    { header: true, label: "System" },
+                    { icon: "volume_up", label: "Sounds" },
+                    { icon: "power", label: "Power" },
                     { header: true, label: "Customization" },
                     { icon: "wallpaper", label: "Wallpaper" },
-                    { header: true, label: "System" },
-                    { icon: "desktop_windows", label: "System Settings" },
+                    { icon: "palette", label: "Colors" },
+                    { icon: "widgets", label: "Bar" },
                     { header: true, label: "About" },
                     { icon: "info", label: "About" }
                 ];
@@ -53,6 +78,7 @@ Scope {
                 anchors.fill: parent
 
                 Rectangle {
+                    id: sidebarBG
                     Layout.fillHeight: true
                     width: 350
                     color: Appearance.colors.m3surface_container_low
@@ -212,21 +238,25 @@ Scope {
                     }
                 }
 
-                // Stack pages
                 StackLayout {
                     id: settingsStack
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    anchors.left: sidebarBG.right
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
 
+                    // Connections
                     WifiMenu {}
                     BluetoothMenu {}
-                    WhiskerMenu {}
-                    SystemMenu {}
-                    Rectangle {
-                        color: "transparent"
-                        anchors.fill: parent
-                        AboutMenu {}
-                    }
+                    VPNMenu {}
+                    // System
+                    SoundsMenu {}
+                    PowerMenu {}
+                    // Customization
+                    WallpaperMenu {}
+                    ColorsMenu {}
+                    BarMenu {}
+                    AboutMenu {}
                 }
             }
         }

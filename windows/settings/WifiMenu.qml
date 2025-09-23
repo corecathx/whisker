@@ -55,7 +55,14 @@ BaseMenu {
             }
         }
     }
-
+    InfoCard {
+        visible: Network.message !== "" && Network.message !== "ok"
+        icon: "error"
+        backgroundColor: Appearance.colors.m3error
+        contentColor: Appearance.colors.m3on_error
+        title: "Failed to connect to " + Network.lastNetworkAttempt
+        description: Network.message
+    }
     BaseCard {
         visible: Network.active !== null
         Text {
@@ -101,4 +108,35 @@ BaseMenu {
             }
         }
     }
+    BaseCard {
+        visible: Network.savedNetworks.length > 0
+        Text {
+            text: "Remembered Networks"
+            font.pixelSize: 18
+            font.bold: true
+            color: Appearance.colors.m3on_background
+        }
+
+        Item {
+            visible: Network.savedNetworks.length === 0
+            width: parent.width
+            height: 40
+            Text {
+                anchors.centerIn: parent
+                text: "No remembered networks"
+                font.pixelSize: 14
+                color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
+            }
+        }
+
+        Repeater {
+            model: Network.networks.filter(n => n.saved)
+            delegate: WifiNetworkCard {
+                network: modelData
+                showConnect: false
+                showDisconnect: false 
+            }
+        }
+    }
+
 }

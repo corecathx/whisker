@@ -62,28 +62,33 @@ Item {
         id: mainScroll
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.topMargin: 20
-        anchors.leftMargin: 40
-        anchors.rightMargin: 40
         anchors.top: headerArea.bottom
         anchors.bottom: parent.bottom
+        anchors.leftMargin: 40
+        anchors.rightMargin: 40
+        anchors.topMargin: 20
         clip: true
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
         flickableDirection: Flickable.VerticalFlick
 
-        contentWidth: mainContent.width
         contentHeight: mainContent.childrenRect.height + 20
+        contentWidth: width
 
         Item {
             id: mainContent
             width: mainScroll.width
+            height: mainContent.childrenRect.height
 
             Column {
                 id: stackedSections
-                width: parent.width
+                width: Math.min(mainScroll.width, 1000)
+                x: (mainContent.width - width) / 2
                 spacing: 20
             }
         }
     }
+
+
+
 }

@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.modules
-import qs.components
 import qs.preferences
 
 Item {
@@ -13,6 +12,7 @@ Item {
 
     default property alias content: contentArea.data
     property alias color: wpBG.color
+    property alias radius: wpBG.radius
     property int cardMargin: 20
     property int cardSpacing: 10
     property int verticalPadding: 40

@@ -30,10 +30,17 @@ ShellRoot {
     Launcher {}
     Lockscreen {}
 
+    LazyLoader {
+        active: false
+
+        StatsWindow {}
+    }
+
     // EmojiWindow {}
 
     Component.onCompleted: {
         Theme.init()
+        Audio.init()
     }
     DevWindow {}
 }

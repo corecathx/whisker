@@ -26,7 +26,8 @@ PanelWindow {
 
     Image {
         id: oldWallpaper
-        anchors.fill: parent
+        sourceSize: Qt.size(wallpaper.width, wallpaper.height)
+        anchors.centerIn: parent
         source: Appearance.wallpaper
         fillMode: Image.PreserveAspectCrop
         smooth: true
@@ -61,8 +62,8 @@ PanelWindow {
         Image {
             id: newWallpaper
             anchors.centerIn: parent
-            width: wallpaper.width
-            height: wallpaper.height
+        sourceSize: Qt.size(wallpaper.width, wallpaper.height)
+            
             source: ""
             fillMode: Image.PreserveAspectCrop
             smooth: true
@@ -125,6 +126,39 @@ PanelWindow {
         }
 
         Component.onCompleted: video.updatePlayback()
+    }
+
+    Item {
+        visible: Preferences.useWallpaper && Appearance.wallpaper === ""
+        anchors.fill: parent
+        anchors.centerIn: parent
+        Image {
+            anchors.centerIn: parent
+            source: Utils.getPath("images/fallback-wallpaper-overlay.png")
+            smooth: true
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                colorization: 1.0
+                colorizationColor: Appearance.colors.m3on_surface_variant
+            }
+        }
+        ColumnLayout {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 80
+
+            Text {
+                text: "You got no default wallpaper set!"
+                color: Appearance.colors.m3on_background
+                font.family: "Outfit SemiBold"
+                font.pixelSize: 32
+            }
+            Text {
+                text: "Set your wallpaper by pressing SUPER + SHIFT + W!"
+                color: Appearance.colors.m3on_background
+                font.pixelSize: 24
+            }
+        }
     }
 
     CavaVisualizer { 
