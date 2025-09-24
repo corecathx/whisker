@@ -30,27 +30,6 @@ Scope {
             onClosing: Globals.visible_settingsMenu = false
 
             property var menuModel: {
-                // var raw = [
-                //     { header: true, label: "Connections" },
-                //     { icon: "signal_wifi_4_bar", label: "Wi-Fi" },
-                //     { icon: "bluetooth", label: "Bluetooth" },
-                //     { icon: "vpn_key", label: "VPN" },
-                //     { header: true, label: "System" },
-                //     { icon: "volume_up", label: "Sounds" },
-                //     { icon: "battery_full", label: "Battery" },
-                //     { icon: "memory", label: "Performance" },
-                //     { icon: "lock", label: "Security" },
-                //     { icon: "schedule", label: "Date & Time" },
-                //     { header: true, label: "Customization" },
-                //     { icon: "wallpaper", label: "Wallpaper" },
-                //     { icon: "palette", label: "Colors" },
-                //     { icon: "widgets", label: "Bar" },
-                //     { icon: "contrast", label: "Dark Mode" },
-                //     { header: true, label: "About" },
-                //     { icon: "info", label: "About" },
-                //     { icon: "update", label: "System Updates" }
-                // ];
-
                 var raw = [
                     { header: true, label: "Connections" },
                     { icon: "signal_wifi_4_bar", label: "Wi-Fi" },
@@ -63,6 +42,7 @@ Scope {
                     { icon: "wallpaper", label: "Wallpaper" },
                     { icon: "palette", label: "Colors" },
                     { icon: "widgets", label: "Bar" },
+                    { icon: "extension", label: "Misc" },
                     { header: true, label: "About" },
                     { icon: "info", label: "About" }
                 ];
@@ -83,7 +63,7 @@ Scope {
                     width: 350
                     color: Appearance.colors.m3surface_container_low
 
-                    Column {
+                    ColumnLayout {
                         anchors.fill: parent
                         anchors.margins: 40
                         spacing: 5
@@ -94,6 +74,7 @@ Scope {
                             font.family: "Outfit ExtraBold"
                             font.pixelSize: 28
                         }
+
                         BaseCard {
                             id: userCard
                             cardMargin: 10
@@ -152,18 +133,21 @@ Scope {
                             MouseArea {
                                 id: mouseArea
                                 anchors.fill: parent
-                                hoverEnabled: true   // <-- important
+                                hoverEnabled: true 
                                 onClicked: userCard.opened = !userCard.opened
                             }
                         }
 
-                        Repeater {
+                        ListView {
+                            id: sidebarList
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            clip: true
                             model: root.menuModel
-
+                            spacing: 5
+                            boundsBehavior: Flickable.StopAtBounds
                             delegate: Item {
-                                id: itemParent
-                                anchors.left: parent.left
-                                anchors.right: parent.right
+                                width: sidebarList.width
                                 height: modelData.header ? 30 : 40
 
                                 property bool hovered: mouseArea.containsMouse
@@ -171,7 +155,7 @@ Scope {
 
                                 Text {
                                     anchors.left: parent.left
-                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.leftMargin: 10
                                     visible: modelData.header ?? false
                                     text: modelData.label
                                     font.pixelSize: 14
@@ -197,6 +181,7 @@ Scope {
                                     anchors.top: parent.top
                                     anchors.topMargin: (parent.height - height) * 0.5 // lol
                                     anchors.leftMargin: 10
+                                    anchors.rightMargin: 10
                                     spacing: 10
                                     visible: !modelData.header
 
@@ -256,6 +241,8 @@ Scope {
                     WallpaperMenu {}
                     ColorsMenu {}
                     BarMenu {}
+                    MiscMenu {}
+                    // About
                     AboutMenu {}
                 }
             }

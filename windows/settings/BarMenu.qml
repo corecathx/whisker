@@ -95,6 +95,38 @@ BaseMenu {
                 }
             }
         }
+        RowLayout {
+            visible: Preferences.smallBar
+            ColumnLayout {
+                Text {
+                    text: "Bar Padding"
+                    font.pixelSize: 16
+                    color: Appearance.colors.m3on_background
+                }
+                Text {
+                    text: "Padding for bars.\nThis will only take effect if `smallBar` is `true`."
+                    font.pixelSize: 12
+                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
+                }
+            }
+            Item {
+                Layout.fillWidth: true
+            }
+            StyledTextField {
+                text: Preferences.barPadding
+                padding: 10
+                leftPadding: undefined
+                implicitWidth: 200
+                inputMethodHints: Qt.ImhDigitsOnly
+                onTextChanged: {
+                    let num = Math.max(0, Math.min(parseInt(this.text.replace(/[^0-9.]/g, "")) || 0, Screen.width));
+
+                    Quickshell.execDetached({
+                        command: ['whisker', 'prefs', 'set', 'barPadding', num.toString()]
+                    });
+                }
+            }
+        }
     } 
 }
 
