@@ -1,5 +1,6 @@
 import qs.modules
 import qs.components
+import qs.preferences
 
 import QtQuick
 import QtQuick.Layouts
@@ -27,7 +28,7 @@ BaseMenu {
                 Layout.fillWidth: true
             }
             StyledSwitch {
-                checked: Preferences.smallBar
+                checked: Preferences.cavaEnabled
                 onToggled: {
                     Quickshell.execDetached({
                         command: ['whisker', 'prefs', 'set', 'cavaEnabled', checked]

@@ -16,6 +16,17 @@ Singleton {
     property string lastNetworkAttempt: ""
     property string lastErrorMessage: ""
     property string message: ""
+    property string icon: {
+        if (!active) return "signal_wifi_off";
+
+        let icon = "";
+        if (active.strength >= 75) icon = "network_wifi";
+        else if (active.strength >= 50) icon = "network_wifi_3_bar";
+        else if (active.strength >= 25) icon = "network_wifi_2_bar";
+        else if (active.strength > 0)   icon = "network_wifi_1_bar";
+        else                            icon = "network_wifi_1_bar";
+        return icon;
+    }
 
     function enableWifi(enabled: bool): void {
         const cmd = enabled ? "on" : "off";

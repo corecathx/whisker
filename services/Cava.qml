@@ -8,7 +8,7 @@ import qs.preferences
 Singleton {
     id: root
 
-    property int barCount: 80
+    property int barCount: 100
     property list<int> values: Array(barCount)
 
     function onBarCountChanged() {

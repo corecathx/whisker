@@ -10,6 +10,7 @@ import qs.components
 PanelWindow {
     id: win
     visible: true
+    width: wawa.width+40
     color: "transparent"
     anchors {
         top: true
@@ -20,12 +21,13 @@ PanelWindow {
         return a + (b - a) * t;
     }
 
-    // FPS tracker data
     property var frameTimes: []
     property int fps: 0
     property real displayedFps: 0.0
 
     ColumnLayout {
+        id: wawa
+        spacing: 0
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.leftMargin: 20
@@ -50,6 +52,14 @@ PanelWindow {
                 font.bold: true
                 anchors.bottom: fpsInt.bottom
             }
+        }
+        Text {
+            id: bottomTxt
+            color: Appearance.colors.m3on_surface
+            text: "Whisker (DevMode)"
+            font.pixelSize: 14
+            font.family: "JetBrainsMono Nerd Font"
+            anchors.bottom: fpsInt.bottom
         }
     }
 

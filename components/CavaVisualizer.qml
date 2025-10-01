@@ -9,8 +9,8 @@ Item {
     id: root
     width: 400
     height: 200
-    property real multiplier: 1
-    property real spacing: 10
+    property real multiplier: 1.2
+    property real spacing: 8
     property string position: "bottom"
     Row {
         visible: Preferences.cavaEnabled
@@ -22,8 +22,8 @@ Item {
             model: Cava.values.length
 
             Rectangle {
-                width: (visualizerLayout.width - ((Cava.values.length - 1) * visualizerLayout.spacing)) / Cava.values.length
-                height: Math.max(1, Cava.values[index]) * multiplier
+                width: Math.max(1,(visualizerLayout.width - ((Cava.values.length - 1) * visualizerLayout.spacing)) / Cava.values.length)
+                height: Math.max(1, Cava.values[index] * multiplier)
                 color: Colors.opacify(Appearance.colors.m3on_background, 0.3)
                 anchors.bottom: position === "bottom" ? parent.bottom : undefined
                 anchors.top: position === "top" ? parent.top : undefined

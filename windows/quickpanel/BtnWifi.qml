@@ -13,9 +13,16 @@ Rectangle {
 
     property bool hovered: false
 
-    color: !Network.wifi.enabled
-        ? Colors.opacify(Appearance.colors.m3primary, hovered ? 0.6 : 0.5)
-        : Colors.lighten(Appearance.colors.m3primary, hovered ? 0.1 : -0.1)
+    color: {
+        if (!Network.wifiEnabled) 
+            return Colors.opacify(Appearance.colors.m3surface_variant, hovered ? 0.8 : 0.4)
+
+        if (Network.active)
+            return Colors.lighten(Appearance.colors.m3primary, hovered ? 0.1 : 0)
+
+        // wifi enabled but not connected
+        return Colors.lighten(Appearance.colors.m3secondary, hovered ? 0.1 : 0)
+    }
 
     Behavior on color {
         ColorAnimation {
@@ -29,28 +36,45 @@ Rectangle {
         anchors.centerIn: parent
 
         MaterialIcon {
-            icon: Network.wifi.icon
-            font.pixelSize: 24
-            color: Appearance.colors.m3on_background
+            icon: Network.icon
+            font.pixelSize: 20
+            color: {
+                if (!Network.wifiEnabled)
+                    return Appearance.colors.m3on_surface_variant
+                if (Network.active)
+                    return Appearance.colors.m3on_primary
+                return Appearance.colors.m3on_secondary
+            }
         }
 
         Text {
             text: {
-                if (!Network.wifi.enabled)
+                if (Network.active) {
+                    if (Network.active.ssid.length > 12) {
+                        return Network.active.ssid.slice(0, 12) + "..."
+                    } else {
+                        return Network.active.ssid
+                    }
+                } else {
                     return "Wi-Fi"
-                const name = Network.wifi.currentName
-                return name.length > 15 ? name.slice(0, 15) + "..." : (name || "Wi-Fi")
+                }
             }
-            font.pixelSize: 16
-            color: Appearance.colors.m3on_background
+            font.pixelSize: 14
+            color: {
+                if (!Network.wifiEnabled)
+                    return Appearance.colors.m3on_surface_variant
+                if (Network.active)
+                    return Appearance.colors.m3on_primary
+                return Appearance.colors.m3on_secondary
+            }
         }
     }
 
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: root.hovered = true
-        onExited: root.hovered = false
-        onClicked: Network.wifi.toggle()
+        onEntered: hovered = true
+        onExited: hovered = false
+        onClicked: Network.toggleWifi()
     }
 }

@@ -85,7 +85,7 @@ RowLayout {
     Process {
         id: notifyProc
         property string message: ""
-        command: ["dunstify", "-i", "/home/corecat/.config/whisker/logo.png", "Whisker", message]
+        command: ["dunstify", "-i", Utils.getPath('logo.png'), "Whisker", message]
         running: false
     }
 
