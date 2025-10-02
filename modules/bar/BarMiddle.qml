@@ -8,21 +8,16 @@ import qs.modules
 
 Item {
     id:root
-    anchors.fill: parent
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.verticalCenter: parent.verticalCenter
     property bool verticalMode: false
-    Item {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        width:workspace.width
-        height:workspace.height
-        Workspaces {
-            id: workspace
-            verticalMode: root.verticalMode
+    width:workspace.width
+    height:workspace.height
+    Workspaces {
+        id: workspace
+        verticalMode: root.verticalMode
 
-        }
     }
-
-
 }
 
 

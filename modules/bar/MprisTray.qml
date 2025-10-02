@@ -1,10 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
+import Quickshell.Services.Mpris
 import Quickshell.Io
 import qs.components
 import qs.modules
-import qs.preferences
 import qs.services
 
 Item {
@@ -34,21 +33,40 @@ Item {
                 Players.active.isPlaying = !Players.active.isPlaying
             }
         }
+        Item {
+            implicitWidth: 30
+            implicitHeight: 30
+            CircularProgress {
+                id: progCirc
+                anchors.fill: parent
+                icon: root.icon
+                strokeWidth: 2
+                useAnim: false
+                allowViewingPercentage: false
+                Connections {
+                    target: Players.active
+                    function onPositionChanged() {
+                        progCirc.progress = (Players.active.position / Players.active.length) * 100
+                        //console.log(barSlider.value)
+                    }
 
-        MaterialIcon {
-            Layout.alignment: Qt.AlignVCenter
-            icon: root.icon
-            font.pixelSize: 18
-            color: Appearance.colors.m3on_background
+                    function onPostTrackChanged() {
+                        progCirc.progress = 0
+                        Players.active.position = 0 // BRUH
+                    }
+                }
+                FrameAnimation {
+                    running: Players.active?.playbackState == MprisPlaybackState.Playing
+                    onTriggered: Players.active?.positionChanged()
+                }
+            }
         }
 
         Text {
             Layout.alignment: Qt.AlignVCenter
             color: Appearance.colors.m3on_background
             font.pixelSize: 12
-            text: {
-                return root.title.length > 15 ? root.title.slice(0, 15) + "..." : root.title
-            }
+            text: Utils.truncateText(root.title, 20)
         }
     }
 }

@@ -10,7 +10,20 @@ QtObject {
     function getConfigRelativePath(key) {
         return Quickshell.env("HOME") + "/.config/whisker/" + key
     }
-    
+
+    function truncateText(text: string, maxLength: int): string {
+        if (text.length <= maxLength)
+            return text;
+        return text.slice(0, maxLength - 3) + "...";
+    }
+
+    function getAppIcon(name: string, fallback: string): string {
+        const icon = DesktopEntries.heuristicLookup(name)?.icon;
+        if (fallback !== "undefined")
+            return Quickshell.iconPath(icon, fallback);
+        return Quickshell.iconPath(icon);
+    }
+
     function formatSeconds(s: int) {
         const day = Math.floor(s / 86400);
         const hr = Math.floor(s / 3600) % 60;

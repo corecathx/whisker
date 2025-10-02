@@ -1,8 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
 import qs.modules
-import qs.preferences
 
 Item {
     id: baseCard
@@ -22,17 +20,17 @@ Item {
         id: wpBG
         anchors.left: parent.left
         anchors.right: parent.right
-        implicitHeight: contentArea.implicitHeight + verticalPadding
+        implicitHeight: contentArea.implicitHeight + baseCard.verticalPadding
         Behavior on implicitHeight {
             NumberAnimation {
-                duration: !useAnims ? 0 : Appearance.anim_fast
+                duration: !baseCard.useAnims ? 0 : Appearance.anim_fast
                 easing.type: Easing.OutCubic
             }
         }
         color: Appearance.colors.m3surface_container_low
         Behavior on color {
             ColorAnimation {
-                duration: !useAnims ? 0 : Appearance.anim_fast
+                duration: !baseCard.useAnims ? 0 : Appearance.anim_fast
                 easing.type: Easing.OutCubic
             }
         }
@@ -44,7 +42,7 @@ Item {
         anchors.top: wpBG.top
         anchors.left: wpBG.left
         anchors.right: wpBG.right
-        anchors.margins: cardMargin
-        spacing: cardSpacing
+        anchors.margins: baseCard.cardMargin
+        spacing: baseCard.cardSpacing
     }
 }

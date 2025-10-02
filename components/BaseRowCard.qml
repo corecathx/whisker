@@ -1,8 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
 import qs.modules
-import qs.preferences
 
 Item {
     id: baseCard
@@ -21,7 +19,7 @@ Item {
         id: wpBG
         anchors.left: parent.left
         anchors.right: parent.right
-        implicitHeight: contentArea.implicitHeight + verticalPadding
+        implicitHeight: contentArea.implicitHeight + baseCard.verticalPadding
         Behavior on implicitHeight {
             NumberAnimation {
                 duration: Appearance.anim_fast
@@ -43,7 +41,7 @@ Item {
         anchors.top: wpBG.top
         anchors.left: wpBG.left
         anchors.right: wpBG.right
-        anchors.margins: cardMargin
-        spacing: cardSpacing
+        anchors.margins: baseCard.cardMargin
+        spacing: baseCard.cardSpacing
     }
 }

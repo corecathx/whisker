@@ -40,10 +40,7 @@ Item {
                 easing.type: Easing.OutCubic
             }
         }
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            //fill: !Preferences.smallBar ? parent : undefined
-        }
+        anchors.horizontalCenter: parent.horizontalCenter
 
         Rectangle {
             id: panelBackground
@@ -56,38 +53,25 @@ Item {
                 }
             }
         }
-        CavaVisualizer {
-            spacing: 8
-            position: Preferences.barPosition === "bottom" ? "bottom" : ""
-            multiplier: 0.25
-            visible: Players.active && (!inLockScreen && Hyprland.currentWorkspace.hasTilingWindow())
-            anchors {
-                fill: parent
-                leftMargin: !Preferences.smallBar ? 40 : 0
-                rightMargin: !Preferences.smallBar ? 40 : 0
-                horizontalCenter: parent.horizontalCenter
-            }
-        }
 
         Item {
             anchors.fill: parent
-
+            BarMiddle {
+                id:barMid
+                visible: !root.inLockScreen
+            }
             BarLeft {
                 inLockScreen: root.inLockScreen
                 anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
                 anchors.leftMargin: 40
+                anchors.verticalCenter: parent.verticalCenter
             }
 
             BarRight {
                 inLockScreen: root.inLockScreen
                 anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
                 anchors.rightMargin: 40
-            }
-
-            BarMiddle {
-                visible: !root.inLockScreen
+                anchors.verticalCenter: parent.verticalCenter
             }
             layer.enabled: true
             layer.effect: MultiEffect {

@@ -8,29 +8,42 @@ import qs.modules
 import qs.services
 
 Item {
-    implicitHeight: 60
+    id: root
     property bool inLockScreen: false
+    implicitHeight: childContent.height
+    implicitWidth: childContent.width
+    anchors.verticalCenter: parent.verticalCenter
 
     RowLayout {
+        anchors.verticalCenter: parent.verticalCenter
         id: childContent
-        anchors.fill: parent
         spacing: 20
-
-        UserIcon {
-            visible: !inLockScreen 
-            Layout.alignment: Qt.AlignVCenter
-        }
-        TimeLabel {
-            visible: !inLockScreen
-            Layout.alignment: Qt.AlignVCenter
-            showLabel: Hyprland.currentWorkspace.hasTilingWindow()
+        Item {
+            Layout.preferredWidth: userIcon.width + (Hyprland.currentWorkspace.hasTilingWindow() ? timeLabel.Layout.preferredWidth + 20 : timeLabel.Layout.preferredWidth)
+            Layout.preferredHeight: userIcon.height
+            UserIcon {
+                id: userIcon
+                visible: !root.inLockScreen 
+                Layout.alignment: Qt.AlignVCenter
+            }
+            TimeLabel {
+                id: timeLabel
+                anchors.top: userIcon.top
+                anchors.topMargin: (userIcon.height - timeLabel.height) * 0.5
+                anchors.left: userIcon.right
+                anchors.leftMargin: 20
+                visible: !root.inLockScreen
+                showLabel: Hyprland.currentWorkspace.hasTilingWindow()
+            }
         }
         Stats {
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
+        }
+        ActiveWindow {
             Layout.alignment: Qt.AlignVCenter
         }
         Tray {
-            visible: !inLockScreen 
+            visible: !root.inLockScreen 
             Layout.alignment: Qt.AlignVCenter
         }
 

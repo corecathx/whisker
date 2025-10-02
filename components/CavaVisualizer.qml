@@ -25,8 +25,8 @@ Item {
                 width: Math.max(1,(visualizerLayout.width - ((Cava.values.length - 1) * visualizerLayout.spacing)) / Cava.values.length)
                 height: Math.max(1, Cava.values[index] * multiplier)
                 color: Colors.opacify(Appearance.colors.m3on_background, 0.3)
-                anchors.bottom: position === "bottom" ? parent.bottom : undefined
-                anchors.top: position === "top" ? parent.top : undefined
+                anchors.bottom: root.position === "bottom" ? parent.bottom : undefined
+                anchors.top: root.position === "top" ? parent.top : undefined
             }
         }
     }

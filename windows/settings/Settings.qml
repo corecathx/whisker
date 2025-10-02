@@ -150,7 +150,7 @@ Scope {
                                 width: sidebarList.width
                                 height: modelData.header ? 30 : 40
 
-                                property bool hovered: mouseArea.containsMouse
+                                property bool hovered: mouseArea2.containsMouse
                                 property bool selected: root.selectedIndex === modelData.page && modelData.page !== -1
 
                                 Text {
@@ -201,7 +201,7 @@ Scope {
                                 }
 
                                 MouseArea {
-                                    id: mouseArea
+                                    id: mouseArea2
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     enabled: modelData.page !== -1

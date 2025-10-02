@@ -1,9 +1,5 @@
 //@ pragma Env QT_SCALE_FACTOR=1
-import "modules/bar/"
-import qs.modules.overlays
-import "modules/corners/"
 import QtQuick
-import QtQuick.Effects
 import Quickshell
 import qs.modules.bar
 import qs.modules.corners

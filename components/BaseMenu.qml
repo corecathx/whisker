@@ -1,11 +1,6 @@
 import QtQuick
-import Quickshell.Widgets
-import Quickshell
 import QtQuick.Layouts
-
 import qs.modules
-import qs.components
-import qs.preferences
 
 Item {
     id: baseMenu
@@ -50,7 +45,7 @@ Item {
                 id: hr
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: 1
+                implicitHeight: 1
                 color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
             }
         }

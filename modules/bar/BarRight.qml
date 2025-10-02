@@ -8,26 +8,16 @@ import qs.modules
 import qs.services as Serv
 import qs.preferences
 
-RowLayout {
-    id: childContent
-    anchors.fill: parent
+Item {
+    id: root
     property bool inLockScreen: false
-    
-    Item {
-        Layout.fillWidth: true
-    }
+    implicitHeight: childContent.height
+    implicitWidth: childContent.width
+    anchors.verticalCenter: parent.verticalCenter
 
-    Rectangle {
-        radius: 40
-        color: "transparent"
-        Layout.fillHeight: true
-        Layout.preferredWidth: contentRow.implicitWidth
-
-        Row {
-            id: contentRow
-            anchors.centerIn: parent
-            spacing: 10
-
+    RowLayout {
+        id: childContent
+        spacing: 20
             Item {
                 visible: !inLockScreen
                 implicitWidth: mprisTray.width
@@ -71,6 +61,6 @@ RowLayout {
             Battery {
                 anchors.verticalCenter: parent.verticalCenter
             }
-        }
+
     }
 }

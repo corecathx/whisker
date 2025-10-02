@@ -8,11 +8,13 @@ Item {
     property string icon: ""
     property color progressColor: Appearance.colors.m3primary
     property color backgroundColor: Appearance.colors.m3secondary_container
+    property bool useAnim: true
+    property bool allowViewingPercentage: true
     property real strokeWidth: 2
     
     Behavior on progress {
         NumberAnimation {
-            duration: Appearance.anim_fast
+            duration: useAnim ? Appearance.anim_fast : 0
             easing.type: Easing.OutCubic
         }
     }
@@ -69,10 +71,12 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: {
+            if (!parent.allowViewingPercentage) return;
             iconMaterial.opacity = 0
             textLabel.opacity = 1
         }
         onExited: {
+            if (!parent.allowViewingPercentage) return;
             iconMaterial.opacity = 1
             textLabel.opacity = 0
         }
