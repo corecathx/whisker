@@ -35,7 +35,7 @@ BaseCard {
                 day: d,
                 isCurrentMonth: true,
                 isToday: (d === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()),
-                isWeekend: (date.getDay() === 0 || date.getDay() === 6)
+                isWeekend: (date.getDay() === 0)
             })
         }
 
@@ -49,7 +49,7 @@ BaseCard {
                 day: nextDay,
                 isCurrentMonth: false,
                 isToday: false,
-                isWeekend: date.getDay()===0 || date.getDay()===6
+                isWeekend: date.getDay()===0 
             })
             nextDay++
         }
@@ -123,7 +123,7 @@ BaseCard {
                     verticalAlignment: Text.AlignVCenter
                     font.pixelSize: 12
                     text: modelData
-                    color: index >= 5 ? Appearance.colors.m3error : Appearance.colors.m3on_background
+                    color: index > 5 ? Appearance.colors.m3error : Appearance.colors.m3on_background
                 }
             }
         }

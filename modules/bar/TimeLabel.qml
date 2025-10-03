@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick
 import Quickshell.Io
 import qs.modules
+import qs.components
 import qs.services
 
 Item {
@@ -64,5 +65,15 @@ Item {
     }
     Behavior on opacity {
         NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+    }
+    MouseArea {
+        id: hover
+        anchors.fill: parent
+        hoverEnabled: true
+        StyledPopout {
+            hoverTarget:hover
+            interactable: true
+            Calendar {}
+        }
     }
 }

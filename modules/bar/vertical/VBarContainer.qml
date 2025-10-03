@@ -13,7 +13,7 @@ Item {
     id: root
     property bool inLockScreen: false
 
-    implicitWidth: 60
+    implicitWidth: 44
     implicitHeight: parent ? parent.height : 0
     anchors.fill: parent
 
