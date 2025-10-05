@@ -11,12 +11,17 @@
 
 > This shell works "perfectly" with CoreCat's Dotfiles.
 
-## `vertical` branch information
-vertical bar mode won't support small bar mode, for now
-
 ## 🚧 Under Development
 
 **Whisker** is already usable now, but everything is still subject to change overtime.
+
+**Whisker** is available on Arch Linux's AUR Repository!
+Simply run 
+```bash
+yay -S whisker-shell-git
+```
+... or with any other AUR helpers to get your hands on this shell :]
+
 
 Also I'm still a Quickshell newbie, so most code in here might look messy / unorganized :')
 
