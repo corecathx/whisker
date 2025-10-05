@@ -70,7 +70,7 @@ Scope {
                 Behavior on height {
                     NumberAnimation {
                         duration: Appearance.anim_fast
-                        easing.type: Easing.OutCubic
+                        easing.type: Easing.OutExpo
                     }
                 }
                 // LEFT CORNER
@@ -123,7 +123,7 @@ Scope {
                     Behavior on y {
                         NumberAnimation {
                             duration: Appearance.anim_fast
-                            easing.type: Easing.OutCubic
+                            easing.type: Easing.OutExpo
                         }
                     }
 

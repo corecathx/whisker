@@ -111,7 +111,7 @@ Item {
             color: batteryColor
 
             Behavior on width {
-                NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: 300; easing.type: Easing.OutExpo }
             }
 
             RowLayout {

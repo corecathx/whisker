@@ -145,7 +145,7 @@ BaseCard {
                            : modelData.isCurrentMonth && modelData.day === root.selectedDay ? Appearance.colors.m3secondary_container
                            : Appearance.colors.m3background
                     Behavior on color {
-                        ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                        ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
                     }
                     Label {
                         anchors.centerIn: parent

@@ -57,7 +57,7 @@ Control {
         color: root.text_color
         anchors.verticalCenter: parent.verticalCenter
         Behavior on color {
-          ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutCubic }
+          ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutExpo }
         }
       }
 
@@ -68,7 +68,7 @@ Control {
         anchors.verticalCenter: parent.verticalCenter
         elide: Text.ElideRight
         Behavior on color {
-          ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutCubic }
+          ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutExpo }
         }
       }
     }
@@ -78,7 +78,7 @@ Control {
     radius: root.radius
     color: root.background_color
     Behavior on color {
-      ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutCubic }
+      ColorAnimation { duration: Appearance.anim_fast / 2; easing.type: Easing.OutExpo }
     }
   }
 

@@ -98,8 +98,8 @@ Scope {
                                     Layout.preferredWidth: userCard.opened ? 60 : 40
                                     Layout.preferredHeight: userCard.opened ? 60 : 40
 
-                                    Behavior on Layout.preferredWidth { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
-                                    Behavior on Layout.preferredHeight { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
+                                    Behavior on Layout.preferredWidth { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+                                    Behavior on Layout.preferredHeight { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
 
                                     IconImage {
                                         anchors.fill: parent
@@ -173,7 +173,7 @@ Scope {
                                                ? Appearance.colors.m3surface_container_high
                                                : Appearance.colors.m3surface_container_low)
                                     radius: 20
-                                    Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }}
+                                    Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }}
                                 }
 
                                 RowLayout {
@@ -189,14 +189,14 @@ Scope {
                                         icon: modelData.icon ?? ""
                                         color: selected ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface
                                         font.pixelSize: 24
-                                        Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }}
+                                        Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }}
                                     }
 
                                     Text {
                                         text: modelData.label ?? ""
                                         font.pixelSize: 16
                                         color: selected ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface
-                                        Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }}
+                                        Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }}
                                     }
                                 }
 

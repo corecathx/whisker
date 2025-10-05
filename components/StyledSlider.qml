@@ -31,7 +31,7 @@ Slider {
         Behavior on width {
             NumberAnimation {
                 duration: control.useAnim ? Appearance.anim_fast * 0.5 : 0
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         height: parent.height
@@ -51,7 +51,7 @@ Slider {
         Behavior on x {
             NumberAnimation {
                 duration: Appearance.anim_fast * 0.5
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
     }

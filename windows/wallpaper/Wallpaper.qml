@@ -49,7 +49,7 @@ PanelWindow {
             target: animClip
             property: "width"
             duration: Appearance.anim_slow*2
-            easing.type: Easing.OutCubic
+            easing.type: Easing.OutExpo
             from: 0
             to: Math.max(wallpaper.width, wallpaper.height) * 1.2
             onStopped: {
@@ -187,13 +187,13 @@ PanelWindow {
         Behavior on anchors.leftMargin {
             NumberAnimation {
                 duration: Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         Behavior on anchors.bottomMargin {
             NumberAnimation {
                 duration: Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         //anchors.topMargin: 300 

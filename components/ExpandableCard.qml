@@ -65,7 +65,7 @@ BaseCard {
             anchors.right: parent.right
             opacity: root.expanded ? 1 : 0
             visible: opacity > 0.1
-            Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
+            Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
         }
     }
 }

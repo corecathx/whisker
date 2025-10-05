@@ -10,7 +10,7 @@ Singleton {
     id: root
 
     property list<Notif> data: []
-    property list<Notif> popups: data.filter(n => n.popup)
+    property list<Notif> popups: data.filter(n => n.popup && !n.tracked)
 
     NotificationServer {
         id: server
@@ -87,6 +87,14 @@ Singleton {
                 notif.destroy();
             }
         }
+        readonly property Connections conn2: Connections {
+            target: notif.notification
+
+            function onClosed(reason) {
+                root.data.splice(root.data.indexOf(notif), 1)
+            }
+        }
+
     }
 
     Component {

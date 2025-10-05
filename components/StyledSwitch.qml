@@ -19,7 +19,7 @@ Item {
 
     property int trackRadius: height / 2
     property int thumbSize: height - (checked ? 12 : 18)
-    Behavior on thumbSize { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
+    Behavior on thumbSize { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
 
     Rectangle {
         id: track
@@ -40,8 +40,8 @@ Item {
         x: root.checked ? parent.width - width - 6 : 9
         color: root.checked ? thumbColorOn : thumbColorOff
 
-        Behavior on x     { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
-        Behavior on color { ColorAnimation  { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
+        Behavior on x     { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+        Behavior on color { ColorAnimation  { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
     }
 
     MouseArea {

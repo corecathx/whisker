@@ -9,7 +9,7 @@ import qs.components
 Item {
     id: root
     property bool inLockScreen: false
-    implicitHeight: 50
+    implicitHeight: 44
     anchors.fill: parent
     SingleCorner {
         visible: !root.inLockScreen
@@ -20,7 +20,7 @@ Item {
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         corner: 1
@@ -37,7 +37,7 @@ Item {
         Behavior on width {
             NumberAnimation {
                 duration: Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         anchors.horizontalCenter: parent.horizontalCenter
@@ -49,7 +49,7 @@ Item {
             Behavior on color {
                 ColorAnimation {
                     duration: Appearance.anim_fast
-                    easing.type: Easing.OutCubic
+                    easing.type: Easing.OutExpo
                 }
             }
         }
@@ -92,7 +92,7 @@ Item {
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         corner: 0

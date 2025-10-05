@@ -41,7 +41,7 @@ Item {
                     Behavior on opacity {
                         NumberAnimation {
                             duration: Appearance.anim_fast
-                            easing.type: Easing.OutCubic
+                            easing.type: Easing.OutExpo
                         }
                     }
                 }
@@ -52,6 +52,7 @@ Item {
                     spacing: 10
                     anchors.verticalCenter: parent.verticalCenter
 
+                    NotifTray {}
                     Audio {}
                     NetworkTray {}
                     BluetoothTray {}

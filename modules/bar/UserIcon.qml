@@ -18,11 +18,11 @@ Rectangle {
     border {
         width: hovered || Globals.visible_quickPanel ? 2 : 0
         color: Appearance.colors.m3on_surface
-        Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
+        Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutExpo } }
     }
 
-    Behavior on implicitWidth { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
-    Behavior on implicitHeight { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
+    Behavior on implicitWidth { NumberAnimation { duration: 250; easing.type: Easing.OutExpo } }
+    Behavior on implicitHeight { NumberAnimation { duration: 250; easing.type: Easing.OutExpo } }
 
     ClippingRectangle {
         id: textClip

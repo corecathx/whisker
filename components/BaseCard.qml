@@ -24,14 +24,14 @@ Item {
         Behavior on implicitHeight {
             NumberAnimation {
                 duration: !baseCard.useAnims ? 0 : Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         color: Appearance.colors.m3surface_container_low
         Behavior on color {
             ColorAnimation {
                 duration: !baseCard.useAnims ? 0 : Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         radius: 20

@@ -13,7 +13,7 @@ Item {
     Behavior on width {
         NumberAnimation {
             duration: Appearance.anim_fast;
-            easing.type: Easing.OutCubic
+            easing.type: Easing.OutExpo
         }
     }
     property bool verticalMode: false
@@ -62,7 +62,7 @@ Item {
     Rectangle {
         id: bgRect
         opacity: !Preferences.keepBarOpaque && !Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
-        Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
+        Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
 
         anchors.fill: parent
         color: Appearance.colors.m3surface_container
@@ -87,9 +87,9 @@ Item {
                 color: focused ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
                                
 
-                Behavior on width { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
-                Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
-                Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic } }
+                Behavior on width { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+                Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+                Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
 
                 MouseArea {
                     anchors.fill: parent

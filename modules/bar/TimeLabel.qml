@@ -58,13 +58,13 @@ Item {
     }
 
     Behavior on Layout.preferredWidth {
-        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
     }
     Behavior on Layout.preferredHeight {
-        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
     }
     Behavior on opacity {
-        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
     }
     MouseArea {
         id: hover

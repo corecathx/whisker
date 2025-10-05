@@ -90,7 +90,7 @@ Rectangle {
                 enabled: !root.dragging
                 NumberAnimation {
                     duration: 200
-                    easing.type: Easing.OutCubic
+                    easing.type: Easing.OutExpo
                 }
             }
 

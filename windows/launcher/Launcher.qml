@@ -163,7 +163,7 @@ Scope {
                 anchors.rightMargin: 20
                 anchors.bottomMargin: !barIsOpaque ? 10 : 0
                 Behavior on anchors.bottomMargin {
-                    NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                    NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
                 }
 
                 layer.enabled: true
@@ -233,10 +233,10 @@ Scope {
                     bottomRightRadius: !barIsOpaque ? 20 : 0
 
                     Behavior on bottomLeftRadius {
-                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
                     }
                     Behavior on bottomRightRadius {
-                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
                     }
                     // LEFT CORNER
                     SingleCorner {
@@ -287,13 +287,13 @@ Scope {
                         contentWidth: width
                         contentHeight: column.implicitHeight
                         Behavior on contentY {
-                            NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                            NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
                         }
 
                         clip: true
                         height: Math.min(column.implicitHeight, window.implicitHeight - 140)
                         Behavior on height {
-                            NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+                            NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
                         }
                         Column {
                             id: column
@@ -353,7 +353,7 @@ Scope {
                                             : Appearance.colors.m3surface
 
                                         Behavior on color {
-                                            ColorAnimation { duration: 200; easing.type: Easing.OutCubic }
+                                            ColorAnimation { duration: 200; easing.type: Easing.OutExpo }
                                         }
 
                                         MouseArea {

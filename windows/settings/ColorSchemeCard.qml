@@ -33,7 +33,7 @@ Item {
             ? !hovered ? schemeColor.surface_container_high : schemeColor.surface_container_highest
             : !hovered ? schemeColor.surface_container : schemeColor.surface_container_high
         Behavior on color {
-            ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutCubic }
+            ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
         }
         border.width: Preferences.colorScheme === schemeName ? 3 : 1
         border.color: schemeColor.outline

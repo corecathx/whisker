@@ -23,7 +23,7 @@ Rectangle {
     Behavior on opacity {
         NumberAnimation {
             duration: Appearance.anim_fast
-            easing.type: Easing.OutCubic
+            easing.type: Easing.OutExpo
         }
     }
 
@@ -36,7 +36,7 @@ Rectangle {
     Behavior on color {
         ColorAnimation {
             duration: Appearance.anim_fast
-            easing.type: Easing.OutCubic
+            easing.type: Easing.OutExpo
         }
     }
     implicitHeight: Math.max(content.implicitHeight + 30, 80)
@@ -123,14 +123,15 @@ Rectangle {
         onClicked: {
             if (root.buttons.length === 1 && root.buttons[0].onClick) {
                 root.buttons[0].onClick()
-                rawNotif?.dismiss()
-            }
-            else if (root.buttons.length === 0) {
+                root.rawNotif?.notification.dismiss()
+            } else if (root.buttons.length === 0) {
                 console.log("[Notification] Dismissed a notification with no action.")
-                rawNotif.popup = false
-            }
-            else {
+                root.rawNotif.notification.tracked = false
+                root.rawNotif.popup = false
+                root.rawNotif?.notification.dismiss()
+            } else {
                 console.log("[Notification] Dismissed a notification with multiple actions.")
+                root.rawNotif?.notification.dismiss()
             }
         }
     }

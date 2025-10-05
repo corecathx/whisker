@@ -13,6 +13,7 @@ Item {
 
     property int cardMargin: 20
     property int cardSpacing: 10
+    property int radius: 20
     property int verticalPadding: 40
 
     Rectangle {
@@ -23,17 +24,17 @@ Item {
         Behavior on implicitHeight {
             NumberAnimation {
                 duration: Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
         color: Appearance.colors.m3surface_container_low
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.anim_fast
-                easing.type: Easing.OutCubic
+                easing.type: Easing.OutExpo
             }
         }
-        radius: 20
+        radius: baseCard.radius
     }
 
     RowLayout {

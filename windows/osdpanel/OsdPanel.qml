@@ -48,7 +48,7 @@ Scope {
                 Behavior on implicitHeight {
                     NumberAnimation {
                         duration: Appearance.anim_fast
-                        easing.type: Easing.OutCubic
+                        easing.type: Easing.OutExpo
                     }
                 }
 

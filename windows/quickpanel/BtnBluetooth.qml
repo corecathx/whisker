@@ -27,7 +27,7 @@ Rectangle {
     Behavior on color {
         ColorAnimation {
             duration: 100
-            easing.type: Easing.OutCubic
+            easing.type: Easing.OutExpo
         }
     }
 

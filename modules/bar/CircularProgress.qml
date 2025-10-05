@@ -15,7 +15,7 @@ Item {
     Behavior on progress {
         NumberAnimation {
             duration: useAnim ? Appearance.anim_fast : 0
-            easing.type: Easing.OutCubic
+            easing.type: Easing.OutExpo
         }
     }
     onProgressChanged: canvas.requestPaint()
