@@ -317,7 +317,7 @@ WlSessionLockSurface {
 					anchors.left: parent.left
 					anchors.leftMargin: 20
 					spacing: 20
-					NotifTray { Layout.alignment: Qt.AlignVCenter }
+					NotifTray { Layout.alignment: Qt.AlignVCenter; inLockScreen: true }
 					Audio { Layout.alignment: Qt.AlignVCenter }
 					NetworkTray { Layout.alignment: Qt.AlignVCenter }
 					BluetoothTray { Layout.alignment: Qt.AlignVCenter }

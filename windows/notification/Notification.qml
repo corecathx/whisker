@@ -6,6 +6,7 @@ import Quickshell.Widgets
 import Quickshell.Services.Notifications
 import Quickshell.Wayland
 import qs.modules
+import qs.components
 import qs.modules.corners
 import qs.services
 
@@ -44,13 +45,14 @@ Scope {
         Item {
             id: notificationList
             anchors.leftMargin: 20
+            anchors.topMargin: 10
             anchors.rightMargin: 20
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             Rectangle {
                 id: bgRectangle
-                                layer.enabled: true
+                layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled: true
                     shadowOpacity: 1
@@ -63,37 +65,14 @@ Scope {
                 anchors.leftMargin: 20
                 anchors.rightMargin: 20
                 anchors.right: parent.right
-                height: window.mask.height > 0 ? window.mask.height + 30 : 0
+                height: window.mask.height > 0 ? window.mask.height + 40 : 0
                 color: Appearance.panel_color
-                bottomLeftRadius: 20
-                bottomRightRadius: 20
+                radius: 20
                 Behavior on height {
                     NumberAnimation {
                         duration: Appearance.anim_fast
                         easing.type: Easing.OutExpo
                     }
-                }
-                // LEFT CORNER
-                SingleCorner {
-                    cornerType: "inverted"
-                    cornerHeight: Math.min(bgRectangle.height, 20)
-
-                    cornerWidth: 20
-                    color: Appearance.panel_color
-                    corner: 0
-                    anchors.right: bgRectangle.left
-                    anchors.top: bgRectangle.top
-                }
-
-                // RIGHT CORNER
-                SingleCorner {
-                    cornerType: "inverted"
-                    cornerHeight: Math.min(bgRectangle.height, 20)
-                    cornerWidth: 20
-                    color: Appearance.panel_color
-                    corner: 1
-                    anchors.left: bgRectangle.right
-                    anchors.top: bgRectangle.top
                 }
             }
 
@@ -113,7 +92,7 @@ Scope {
                             if (prev)
                                 pos += prev.height + root.innerSpacing
                         }
-                        return pos - (tracked ? 0 : 20) + 10
+                        return pos - (tracked ? 0 : 20) + 20
                     }
 
                     Component.onCompleted: {

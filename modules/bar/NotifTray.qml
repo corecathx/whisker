@@ -1,12 +1,15 @@
+import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import qs.components
 import qs.modules
 import qs.services
+import qs.preferences
 
 Item {
     id: root
-    property string icon: "notifications"
+    property string icon: Preferences.notificationEnabled ? "notifications" : "notifications_off"
+    property bool inLockScreen: false
     implicitWidth: container.implicitWidth
     implicitHeight: container.implicitHeight
     Behavior on implicitWidth { NumberAnimation { duration: Appearance.anim_medium; easing.type: Easing.OutExpo } }
@@ -23,7 +26,7 @@ Item {
             color: Appearance.colors.m3on_background
         }
         Rectangle {
-            visible: NotifServer.data.length > 0
+            visible: Preferences.notificationEnabled && NotifServer.data.length > 0
             implicitHeight: 14
             radius: 10
             width: this.implicitHeight
@@ -36,5 +39,15 @@ Item {
             }
         }
     }
-
+    
+    HoverHandler {
+        id: detect
+    }
+    
+    StyledPopout {
+        hoverTarget: !root.inLockScreen ? detect : null
+        interactable: true
+        
+        NotificationPanel {}
+    }
 }

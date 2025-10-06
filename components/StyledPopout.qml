@@ -6,9 +6,11 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
+
 LazyLoader {
     id: root
-    property Item hoverTarget
+    
+    property HoverHandler hoverTarget
     property real margin: 10
     default property list<Item> content
     property bool startAnim: false
@@ -16,11 +18,11 @@ LazyLoader {
     property bool keepAlive: false
     property bool interactable: false
     property bool hasHitbox: true
-
+    property bool followMouse: false
     property list<StyledPopout> childPopouts: []
 
     property bool hoverActive: {
-        let targetHovered = hoverTarget && hoverTarget.containsMouse
+        let targetHovered = hoverTarget && hoverTarget.hovered
         let containerHovered = interactable && root.item && root.item.containerHovered
         let childHovered = childPopouts.some(p => p.hoverActive)
         return targetHovered || containerHovered || childHovered
@@ -60,17 +62,38 @@ LazyLoader {
 
     component: PanelWindow {
         id: popupWindow
+        
         color: "transparent"
+        visible: root.isVisible
+        
         WlrLayershell.namespace: "whisker:popout"
         WlrLayershell.layer: WlrLayer.Overlay
         exclusionMode: ExclusionMode.Ignore
         exclusiveZone: 0
-        anchors.top: true
-        anchors.left: true
-        margins.left: hoverTarget ? hoverTarget.mapToGlobal(Qt.point(0, 0)).x - (Preferences.horizontalBar() ? 20 : -40) : 0
-        margins.top: hoverTarget ? hoverTarget.mapToGlobal(Qt.point(0, 0)).y + (Preferences.horizontalBar() ? hoverTarget.height : 0) : 0
-        implicitWidth: Math.max(500, container.implicitWidth+20)
-        implicitHeight: Math.max(screen.height, container.implicitHeight+20)
+        
+        anchors {
+            left: true
+            top: true
+            right: true
+            bottom: true
+        }
+        
+        implicitWidth: screen.width
+        implicitHeight: screen.height
+
+        property bool exceedingHalf: false
+        property var parentPopoutWindow: null
+        property point mousePos: Qt.point(0, 0)
+        property bool containerHovered: root.interactable && containerHoverHandler.hovered
+        
+        HoverHandler {
+            id: windowHover
+            onPointChanged: (point) => {
+                if (root.followMouse) {
+                    popupWindow.mousePos = point.position
+                }
+            }
+        }
 
         mask: Region {
             x: !root.hasHitbox ? 0 : container.x
@@ -79,20 +102,48 @@ LazyLoader {
             height: !root.hasHitbox ? 0 : container.implicitHeight
         }
 
-        visible: root.isVisible
-
-        property bool containerHovered: containerMouseArea.containsMouse
-
         Item {
             id: container
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.margins: root.margin
-            implicitWidth: contentArea.implicitWidth + root.margin*2
-            implicitHeight: contentArea.implicitHeight + root.margin*2
+            
+            implicitWidth: contentArea.implicitWidth + root.margin * 2
+            implicitHeight: contentArea.implicitHeight + root.margin * 2
+            
+            x: {
+                if (root.followMouse) return mousePos.x + 10
+                
+                let targetItem = hoverTarget?.parent
+                if (!targetItem) return 0
+                
+                let xPos = targetItem.mapToGlobal(Qt.point(0, 0)).x
+                if (parentPopoutWindow) xPos += parentPopoutWindow.x
+                xPos -= Preferences.horizontalBar() ? 20 : -40
+                
+                if (xPos + container.implicitWidth > screen.width) {
+                    exceedingHalf = true
+                    let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x
+                    if (parentPopoutWindow) baseX += parentPopoutWindow.x
+                    return baseX - container.implicitWidth
+                }
+                
+                exceedingHalf = false
+                return xPos
+            }
+            
+            y: {
+                if (root.followMouse) return mousePos.y + 10
+                
+                let targetItem = hoverTarget?.parent
+                if (!targetItem) return 0
+                
+                let yPos = targetItem.mapToGlobal(Qt.point(0, 0)).y
+                if (parentPopoutWindow) yPos += parentPopoutWindow.y
+                
+                return yPos + (Preferences.horizontalBar() ? targetItem.height : 0)
+            }
 
             opacity: root.startAnim ? 1 : 0
             scale: root.startAnim ? 1 : 0.9
+            
             layer.enabled: true
             layer.effect: MultiEffect {
                 shadowEnabled: true
@@ -101,10 +152,31 @@ LazyLoader {
                 shadowBlur: 1
                 shadowScale: 1
             }
-            Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-            Behavior on scale { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-            Behavior on implicitWidth { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-            Behavior on implicitHeight { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+            
+            Behavior on opacity { 
+                NumberAnimation { 
+                    duration: Appearance.anim_fast
+                    easing.type: Easing.OutExpo 
+                } 
+            }
+            Behavior on scale { 
+                NumberAnimation { 
+                    duration: Appearance.anim_fast
+                    easing.type: Easing.OutExpo 
+                } 
+            }
+            Behavior on implicitWidth { 
+                NumberAnimation { 
+                    duration: Appearance.anim_fast
+                    easing.type: Easing.OutExpo 
+                } 
+            }
+            Behavior on implicitHeight { 
+                NumberAnimation { 
+                    duration: Appearance.anim_fast
+                    easing.type: Easing.OutExpo 
+                } 
+            }
 
             ClippingRectangle {
                 id: popupBackground
@@ -119,12 +191,9 @@ LazyLoader {
                 }
             }
 
-            MouseArea {
-                id: containerMouseArea
-                anchors.fill: parent
-                hoverEnabled: root.interactable
-                propagateComposedEvents: true
-                acceptedButtons: Qt.NoButton
+            HoverHandler {
+                id: containerHoverHandler
+                enabled: root.interactable
             }
         }
 
@@ -137,8 +206,12 @@ LazyLoader {
             while (parentPopout && !parentPopout.childPopouts) {
                 parentPopout = parentPopout.parent
             }
+            
             if (parentPopout) {
                 parentPopout.childPopouts.push(root)
+                if (parentPopout.item) {
+                    popupWindow.parentPopoutWindow = parentPopout.item
+                }
             }
         }
     }

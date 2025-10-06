@@ -27,12 +27,16 @@ Scope {
 
         PanelWindow {
             id: window
-            anchors.top: Preferences.barPosition === 'top' || Preferences.barPosition === 'left'
+            anchors.top: Preferences.barPosition !== 'bottom'|| Preferences.verticalBar()
+            margins.top: -10
             anchors.bottom: Preferences.barPosition === 'bottom'
+            margins.bottom:  Preferences.barPosition === 'bottom' ? -10 : 0
 
-            anchors.left: true
-            margins.left: Preferences.smallBar ? Preferences.barPadding + 20 : 0
 
+            anchors.left: Preferences.barPosition === 'left' || Preferences.horizontalBar()
+            margins.left: Preferences.verticalBar() && Preferences.smallBar ? Preferences.barPadding + 20 : -10
+            anchors.right: Preferences.barPosition === 'right'
+            margins.right: -10
             WlrLayershell.layer: WlrLayer.Top
 
             implicitWidth: 450 + 20
@@ -53,41 +57,10 @@ Scope {
                 Rectangle {
                     id: bgRectangle
                     anchors.fill: parent
-                    anchors.leftMargin: Preferences.smallBar ? 20 : 0
-                    anchors.rightMargin: 20
-                    anchors.topMargin: Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 0 : 20) : 0
-                    anchors.bottomMargin: Preferences.barPosition !== "bottom" ? 20 : 0
 
                     color: Appearance.panel_color
-                    //border.color: Appearance.colors.m3primary
-                    topLeftRadius: Preferences.smallBar && !Preferences.barPosition === "top" ? 20 : 0
-                    topRightRadius: Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 0 : 20) : 0
-                    bottomLeftRadius: Preferences.barPosition === "top" && Preferences.smallBar ? 20 : 0
-                    bottomRightRadius: Preferences.barPosition === "top" ? 20 : 0
-
-                    // LEFT CORNER
-                    SingleCorner {
-                        cornerType: "inverted"
-                        cornerHeight: 20
-                        cornerWidth: 20
-                        color: Appearance.panel_color
-                        corner: Preferences.smallBar ? (Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 2 : 3) : 0) : (Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 1 : 2) : 1)
-                        anchors.right: Preferences.smallBar ? bgRectangle.left : undefined
-                        anchors.left: Preferences.smallBar ? undefined : bgRectangle.left
-                        anchors.bottom: Preferences.barPosition === "bottom" ? (Preferences.smallBar ? bgRectangle.bottom : bgRectangle.top) : undefined
-                        anchors.top: Preferences.barPosition === "bottom" ? undefined : (Preferences.smallBar ? bgRectangle.top : bgRectangle.bottom)
-                    }
-                    // RIGHT CORNER
-                    SingleCorner {
-                        cornerType: "inverted"
-                        cornerHeight: 20
-                        cornerWidth: 20
-                        color: Appearance.panel_color
-                        corner: Preferences.barPosition !== "top" ? (Preferences.barPosition === 'left' ? 1 : 2) : 1
-                        anchors.left: bgRectangle.right
-                        anchors.bottom: Preferences.barPosition === "bottom" ? bgRectangle.bottom : undefined
-                        anchors.top: Preferences.barPosition === "bottom" ? undefined : bgRectangle.top
-                    }
+                    radius: 20
+                    anchors.margins: 20
                 }
                 Item {
                     Layout.fillWidth: true

@@ -24,9 +24,16 @@ Scope {
         }
 
         anchors.top: true
+        margins.top: -10
+        
         anchors.left: Preferences.barPosition === "right"
+        margins.left: Preferences.barPosition === "right" ? -10 : 0
+
         anchors.right: Preferences.barPosition !== "right"
+        margins.right: Preferences.barPosition !== "right" ? -10 : 0
+
         anchors.bottom: true
+        margins.bottom: 10
 
         Item {
             id: container
@@ -37,13 +44,10 @@ Scope {
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.left: parent.left
-                anchors.leftMargin: Preferences.barPosition === "right" ? 0 : 20
-                anchors.rightMargin: Preferences.barPosition === "right" ? 20 : 0
+                anchors.margins: 20
                 implicitHeight: contentWrapper.height > 0 ? contentWrapper.height + 20 : 0
                 color: Appearance.panel_color
-                radius: 0
-                bottomRightRadius: Preferences.barPosition === 'right' ? 20 : 0
-                bottomLeftRadius: Preferences.barPosition !== 'right' ? 20 : 0
+                radius: 20
 
                 Behavior on implicitHeight {
                     NumberAnimation {
@@ -59,50 +63,6 @@ Scope {
                     shadowColor: Appearance.colors.m3shadow
                     shadowBlur: 1
                     shadowScale: 1
-                }
-
-                SingleCorner {
-                    visible: Preferences.barPosition !== "right"
-                    cornerType: "inverted"
-                    cornerHeight: Math.min(bgRectangle.implicitHeight, 20)
-                    cornerWidth: 20
-                    color: Appearance.panel_color
-                    corner: 0
-                    anchors.right: bgRectangle.left
-                    anchors.top: bgRectangle.top
-                }
-
-                SingleCorner {
-                    visible: Preferences.barPosition !== "right"
-                    cornerType: "inverted"
-                    cornerHeight: Math.min(bgRectangle.implicitHeight, 20)
-                    cornerWidth: 20
-                    color: Appearance.panel_color
-                    corner: 0
-                    anchors.right: bgRectangle.right
-                    anchors.top: bgRectangle.bottom
-                }
-
-                SingleCorner {
-                    visible: Preferences.barPosition === "right"
-                    cornerType: "inverted"
-                    cornerHeight: Math.min(bgRectangle.implicitHeight, 20)
-                    cornerWidth: 20
-                    color: Appearance.panel_color
-                    corner: 1
-                    anchors.left: bgRectangle.right
-                    anchors.top: bgRectangle.top
-                }
-
-                SingleCorner {
-                    visible: Preferences.barPosition === "right"
-                    cornerType: "inverted"
-                    cornerHeight: Math.min(bgRectangle.implicitHeight, 20)
-                    cornerWidth: 20
-                    color: Appearance.panel_color
-                    corner: 1
-                    anchors.left: bgRectangle.left
-                    anchors.top: bgRectangle.bottom
                 }
 
                 ColumnLayout {

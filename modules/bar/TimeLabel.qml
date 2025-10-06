@@ -66,14 +66,13 @@ Item {
     Behavior on opacity {
         NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
     }
-    MouseArea {
+    HoverHandler {
         id: hover
-        anchors.fill: parent
-        hoverEnabled: true
-        StyledPopout {
-            hoverTarget:hover
-            interactable: true
-            Calendar {}
-        }
+
+    }
+    StyledPopout {
+        hoverTarget:hover
+        interactable: true
+        Calendar {}
     }
 }

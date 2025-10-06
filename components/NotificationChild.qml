@@ -5,6 +5,7 @@ import Quickshell.Widgets
 import Quickshell.Wayland
 import qs.modules
 import qs.components
+import qs.preferences
 
 Rectangle {
     id: root

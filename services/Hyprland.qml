@@ -28,6 +28,10 @@ Singleton {
         }
     }
 
+    function monitorFor(screen: ShellScreen): HyprlandMonitor {
+        return Hyprland.monitorFor(screen);
+    }
+
     readonly property var toplevels: Hyprland.toplevels
     readonly property var workspaces: Hyprland.workspaces
     readonly property var monitors: Hyprland.monitors

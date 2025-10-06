@@ -103,8 +103,6 @@ BaseCard {
                 }
                 implicitHeight: 30
                 secondary: true
-
-
             }
         }
 

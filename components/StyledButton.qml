@@ -39,7 +39,7 @@ Control {
   // With this:
   implicitWidth: (label.text === "" && icon !== "") 
       ? implicitHeight   // square if only icon
-      : row.implicitWidth + 40
+      : row.implicitWidth + implicitHeight
   implicitHeight: 40
 
   contentItem: Item {
@@ -48,7 +48,7 @@ Control {
     Row {
       id: row
       anchors.centerIn: parent
-      spacing: root.icon !== "" && label.text !== "" ? 6 : 0
+      spacing: root.icon !== "" && label.text !== "" ? 5 : 0
 
       MaterialIcon {
         visible: root.icon !== ""

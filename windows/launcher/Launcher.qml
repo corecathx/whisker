@@ -39,7 +39,7 @@ Scope {
                 Quickshell.execDetached({
                     command: [
                         "dunstify",
-                        "-i", "/home/corecat/.config/whisker/logo.png",
+                        "-i", Utils.getPath("logo.png"),
                         "Whisker",
                         "Hello, " + Quickshell.env("USER") + "!"
                     ]
@@ -161,7 +161,7 @@ Scope {
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
                 anchors.rightMargin: 20
-                anchors.bottomMargin: !barIsOpaque ? 10 : 0
+                anchors.bottomMargin: 10
                 Behavior on anchors.bottomMargin {
                     NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
                 }
@@ -227,39 +227,13 @@ Scope {
                     anchors.right: parent.right
                     height: listFlick.height + searchField.height + 60
                     color: Appearance.panel_color
-                    topLeftRadius: 20
-                    topRightRadius: 20
-                    bottomLeftRadius: !barIsOpaque ? 20 : 0
-                    bottomRightRadius: !barIsOpaque ? 20 : 0
+                    radius: 20
 
                     Behavior on bottomLeftRadius {
                         NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
                     }
                     Behavior on bottomRightRadius {
                         NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
-                    }
-                    // LEFT CORNER
-                    SingleCorner {
-                        visible: barIsOpaque
-                        cornerType: "inverted"
-                        cornerHeight: 20
-                        cornerWidth: 20
-                        color: Appearance.panel_color
-                        corner: 3
-                        anchors.right: bgRectangle.left
-                        anchors.bottom: bgRectangle.bottom
-                    }
-
-                    // RIGHT CORNER
-                    SingleCorner {
-                        visible: barIsOpaque
-                        cornerType: "inverted"
-                        cornerHeight: 20
-                        cornerWidth: 20
-                        color: Appearance.panel_color
-                        corner: 2
-                        anchors.left: bgRectangle.right
-                        anchors.bottom: bgRectangle.bottom
                     }
                 }
 

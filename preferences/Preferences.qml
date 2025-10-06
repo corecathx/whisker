@@ -83,6 +83,13 @@ Singleton {
      */
     property string colorScheme: "tonal-spot"
 
+    /**
+     * Whether to enable notification popups.
+     * @values bool: true, false
+     * @default bool: true
+     */
+    property bool notificationEnabled: true
+
     function load(content) { 
         const parsed = JSON.parse(content);
 
