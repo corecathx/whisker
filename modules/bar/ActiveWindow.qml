@@ -66,74 +66,53 @@ Item {
     StyledPopout {
         hoverTarget: !Hyprland.currentWorkspace.hasWindow ? null : detect
         interactable: true
-        RowLayout {
-            spacing: 10
-            IconImage {
-                implicitWidth: 25
-                implicitHeight: 25
-                source: {
-                    return Utils.getAppIcon(Hyprland.activeToplevel?.lastIpcObject.class ?? "");
-                }
-            }
-            Text {
-                text: {
-                    return Utils.truncateText(Hyprland.activeToplevel?.lastIpcObject.title ?? "", 40);
-                }
-                font.pixelSize: 14
-                color: Appearance.colors.m3on_surface
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignLeft
-            }
-        }
-        ClippingRectangle {
-            implicitWidth: 400
-            implicitHeight: previewContainer.implicitHeight
-            radius: 10
-            color: Appearance.colors.m3surface_container
-
-            Item {
-                id: previewContainer
-                anchors.fill: parent
-                implicitWidth: 400
-                implicitHeight: {
-                    if (preview.sourceSize.width > 0 && preview.sourceSize.height > 0) {
-                        let calculatedHeight = 400 * preview.sourceSize.height / preview.sourceSize.width;
-                        return Math.min(calculatedHeight, 400);
+        Component {
+            RowLayout {
+                spacing: 10
+                IconImage {
+                    implicitWidth: 25
+                    implicitHeight: 25
+                    source: {
+                        return Utils.getAppIcon(Hyprland.activeToplevel?.lastIpcObject.class ?? "");
                     }
-                    return 400;
                 }
-
-                ScreencopyView {
-                    id: preview
-                    anchors.fill: parent
-                    anchors.margins: 2
-                    captureSource: ToplevelManager.activeToplevel
-                    live: true
+                Text {
+                    text: {
+                        return Utils.truncateText(Hyprland.activeToplevel?.lastIpcObject.title ?? "", 40);
+                    }
+                    font.pixelSize: 14
+                    color: Appearance.colors.m3on_surface
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignLeft
                 }
             }
         }
-        RowLayout {
-            Rectangle {
-                implicitWidth: 30
-                implicitHeight: implicitWidth
+
+        Component {
+            ClippingRectangle {
+                implicitWidth: 400
+                implicitHeight: previewContainer.implicitHeight
                 radius: 10
                 color: Appearance.colors.m3surface_container
 
-                MaterialIcon {
-                    icon: 'visibility'
-                    font.pixelSize: 20
-                    color: Appearance.colors.m3on_surface
-                    anchors.centerIn: parent
-                }
-                HoverHandler {
-                    id: hoverListener
-                }
-                StyledPopout {
-                    hoverTarget: hoverListener
+                Item {
+                    id: previewContainer
+                    anchors.fill: parent
+                    implicitWidth: 400
+                    implicitHeight: {
+                        if (preview.sourceSize.width > 0 && preview.sourceSize.height > 0) {
+                            let calculatedHeight = 400 * preview.sourceSize.height / preview.sourceSize.width;
+                            return Math.min(calculatedHeight, 400);
+                        }
+                        return 400;
+                    }
 
-                    Text {
-                        text: "Hidden: " + Hyprland.activeToplevel.lastIpcObject.visibility
-                        color: Appearance.colors.m3on_surface
+                    ScreencopyView {
+                        id: preview
+                        anchors.fill: parent
+                        anchors.margins: 2
+                        captureSource: ToplevelManager.activeToplevel
+                        live: true
                     }
                 }
             }

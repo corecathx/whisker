@@ -73,6 +73,8 @@ Item {
     StyledPopout {
         hoverTarget:hover
         interactable: true
-        Calendar {}
+        Component {
+            Calendar {}
+        }
     }
 }

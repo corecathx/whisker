@@ -12,21 +12,28 @@ LazyLoader {
     
     property HoverHandler hoverTarget
     property real margin: 10
-    default property list<Item> content
+    default property list<Component> content
     property bool startAnim: false
     property bool isVisible: false
     property bool keepAlive: false
     property bool interactable: false
     property bool hasHitbox: true
+    property bool hCenterOnItem: false
     property bool followMouse: false
     property list<StyledPopout> childPopouts: []
 
-    property bool hoverActive: {
-        let targetHovered = hoverTarget && hoverTarget.hovered
-        let containerHovered = interactable && root.item && root.item.containerHovered
-        let childHovered = childPopouts.some(p => p.hoverActive)
-        return targetHovered || containerHovered || childHovered
+    property bool targetHovered: hoverTarget && hoverTarget.hovered
+    property bool containerHovered: interactable && root.item && root.item.containerHovered
+    property bool selfHovered: targetHovered || containerHovered
+    
+    property bool childrenHovered: {
+        for (let i = 0; i < childPopouts.length; i++) {
+            if (childPopouts[i].selfHovered) return true
+        }
+        return false
     }
+
+    property bool hoverActive: selfHovered || childrenHovered
 
     property Timer hangTimer: Timer {
         interval: 200
@@ -109,26 +116,42 @@ LazyLoader {
             implicitHeight: contentArea.implicitHeight + root.margin * 2
             
             x: {
-                if (root.followMouse) return mousePos.x + 10
-                
+                if (root.followMouse)
+                    return mousePos.x + 10
+
                 let targetItem = hoverTarget?.parent
-                if (!targetItem) return 0
-                
-                let xPos = targetItem.mapToGlobal(Qt.point(0, 0)).x
-                if (parentPopoutWindow) xPos += parentPopoutWindow.x
-                xPos -= Preferences.horizontalBar() ? 20 : -40
-                
-                if (xPos + container.implicitWidth > screen.width) {
-                    exceedingHalf = true
-                    let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x
-                    if (parentPopoutWindow) baseX += parentPopoutWindow.x
-                    return baseX - (container.implicitWidth)
+                if (!targetItem)
+                    return 0
+
+                let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x
+                if (parentPopoutWindow)
+                    baseX += parentPopoutWindow.x
+
+                let targetWidth = targetItem.width
+                let popupWidth = container.implicitWidth
+
+                if (root.hCenterOnItem) {
+                    let centeredX = baseX + (targetWidth - popupWidth) / 2
+
+                    if (centeredX + popupWidth > screen.width)
+                        centeredX = screen.width - popupWidth - 10
+                    if (centeredX < 10)
+                        centeredX = 10
+
+                    return centeredX
                 }
-                
+
+                let xPos = baseX - (Preferences.horizontalBar() ? 20 : -40)
+
+                if (xPos + popupWidth > screen.width) {
+                    exceedingHalf = true
+                    return baseX - popupWidth
+                }
+
                 exceedingHalf = false
                 return xPos
             }
-            
+
             y: {
                 if (root.followMouse) return mousePos.y + 10
                 
@@ -199,19 +222,22 @@ LazyLoader {
 
         Component.onCompleted: {
             for (let i = 0; i < root.content.length; i++) {
-                root.content[i].parent = contentArea
+                const comp = root.content[i];
+                if (comp && comp.createObject) {
+                    comp.createObject(contentArea);
+                } else {
+                    console.warn("StyledPopout: Invalid content, expected Component:", comp);
+                }
             }
 
-            let parentPopout = root.parent
+            let parentPopout = root.parent;
             while (parentPopout && !parentPopout.childPopouts) {
-                parentPopout = parentPopout.parent
+                parentPopout = parentPopout.parent;
             }
-            
             if (parentPopout) {
-                parentPopout.childPopouts.push(root)
-                if (parentPopout.item) {
-                    popupWindow.parentPopoutWindow = parentPopout.item
-                }
+                parentPopout.childPopouts.push(root);
+                if (parentPopout.item)
+                    popupWindow.parentPopoutWindow = parentPopout.item;
             }
         }
     }

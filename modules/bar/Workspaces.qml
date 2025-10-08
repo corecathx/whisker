@@ -2,6 +2,7 @@ import QtQuick
 import QtQml.Models
 import QtQuick.Layouts
 import qs.modules
+import qs.components
 import qs.preferences
 import qs.services
 
@@ -22,42 +23,6 @@ Item {
         origin.y: height / 2
         angle: verticalMode ? 90 : 0
     }
-    property int minWorkspaces: 4
-    property int currentWorkspace: Hyprland.activeWsId
-
-    ListModel { id: wsModel }
-
-    function refreshWorkspaces() {
-        const real = Hyprland.workspaces?.values || [];
-        const sorted = real.slice().sort((a, b) => a.id - b.id);
-
-        const maxCount = Math.max(minWorkspaces, ...sorted.map(w => w.id));
-        const data = [];
-
-        for (let i = 1; i <= maxCount; i++) {
-            const ws = sorted.find(w => w.id === i);
-            data.push({
-                id: i,
-                focused: ws ? ws.focused : (currentWorkspace === i),
-                name: ws ? ws.name : ""
-            });
-        }
-
-        if (wsModel.count !== data.length) {
-            wsModel.clear();
-            data.forEach(item => wsModel.append(item));
-        } else for (let i = 0; i < data.length; i++)
-            wsModel.set(i, data[i]);
-    }
-
-    Component.onCompleted: refreshWorkspaces()
-
-    Connections {
-        target: Hyprland
-        function onActiveWsIdChanged() { refreshWorkspaces(); }
-        function onWorkspacesChanged() { refreshWorkspaces(); }
-    }
-
 
     Rectangle {
         id: bgRect
@@ -75,7 +40,7 @@ Item {
         spacing: 10
 
         Repeater {
-            model: wsModel
+            model: Hyprland.fullWorkspaces
 
             delegate: Rectangle {
                 id: pill
@@ -86,7 +51,6 @@ Item {
                 opacity: focused ? 1.0 : 0.4
                 color: focused ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
                                
-
                 Behavior on width { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
                 Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
                 Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
@@ -97,6 +61,19 @@ Item {
                     onClicked: if (Hyprland.activeWsId !== id) Hyprland.dispatch(`workspace ${id}`)
                 }
             }
+        }
+    }
+
+    HoverHandler {
+        id: hover
+    }
+
+    StyledPopout {
+        hoverTarget: hover
+        interactable: true
+        hCenterOnItem: true
+        Component {
+            WorkspacePreview {}
         }
     }
 }

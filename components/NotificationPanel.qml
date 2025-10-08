@@ -32,10 +32,12 @@ Item {
                 }
                 StyledPopout {
                     hoverTarget: hoverDnd
-                    Text {
-                        text: "If disabled, you won't get notification popups.\nYou can still see past notifications here."
-                        font.pixelSize: 14
-                        color: Appearance.colors.m3on_surface
+                    Component {
+                        Text {
+                            text: "If disabled, you won't get notification popups.\nYou can still see past notifications here."
+                            font.pixelSize: 14
+                            color: Appearance.colors.m3on_surface
+                        }
                     }
                 }
             }

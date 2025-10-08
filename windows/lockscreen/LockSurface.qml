@@ -48,7 +48,7 @@ WlSessionLockSurface {
 		}
 		scale: root.startAnim ? 1.1 : 1
 		Behavior on scale { NumberAnimation { duration: animation_time; easing.type: easingType } }
-		rotation: root.startAnim ? 1.25 : 0
+		rotation: root.startAnim ? 2: 0
 		Behavior on rotation {
 			NumberAnimation { duration: animation_time; easing.type: easingType }
 		}

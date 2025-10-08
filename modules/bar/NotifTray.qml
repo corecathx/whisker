@@ -48,6 +48,8 @@ Item {
         hoverTarget: !root.inLockScreen ? detect : null
         interactable: true
         
-        NotificationPanel {}
+        Component {
+            NotificationPanel {}
+        }
     }
 }
