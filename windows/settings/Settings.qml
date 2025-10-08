@@ -154,6 +154,8 @@ Scope {
                                 property bool selected: root.selectedIndex === modelData.page && modelData.page !== -1
 
                                 Text {
+                                    anchors.top: parent.top
+                                    anchors.topMargin: (parent.height - height) * 0.5 // lol
                                     anchors.left: parent.left
                                     anchors.leftMargin: 10
                                     visible: modelData.header ?? false

@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
@@ -35,10 +36,19 @@ WlSessionLockSurface {
 			Behavior on blur { NumberAnimation { duration: animation_time; easing.type: easingType } }
 			Behavior on contrast { NumberAnimation { duration: animation_time; easing.type: easingType } }
 			Behavior on saturation { NumberAnimation { duration: animation_time; easing.type: easingType } }
+			layer.enabled: true
+			layer.effect: MultiEffect {
+				autoPaddingEnabled: false
+				blurEnabled: true
+				blur: root.startAnim ? 1 : 0
+
+				blurMax: 32
+				Behavior on blur { NumberAnimation { duration: animation_time; easing.type: easingType } }
+			}
 		}
 		scale: root.startAnim ? 1.1 : 1
 		Behavior on scale { NumberAnimation { duration: animation_time; easing.type: easingType } }
-		rotation: root.startAnim ? 0.25 : 0
+		rotation: root.startAnim ? 1.25 : 0
 		Behavior on rotation {
 			NumberAnimation { duration: animation_time; easing.type: easingType }
 		}
@@ -56,9 +66,9 @@ WlSessionLockSurface {
 		anchors.bottom: parent.bottom
 		anchors.left: parent.left
 		anchors.right: parent.right
-		opacity: root.startAnim ? 1 : 0
 		height: 200
 		multiplier: 2
+		opacity: root.startAnim ? 1 : 0
 		Behavior on opacity { NumberAnimation { duration: animation_time; easing.type: easingType } }
 	}
 	Item {
@@ -80,7 +90,8 @@ WlSessionLockSurface {
 		Behavior on scale { NumberAnimation { duration: animation_time; easing.type: easingType } }
 		Behavior on opacity { NumberAnimation { duration: animation_time; easing.type: easingType } }
 
-		anchors.centerIn: parent
+		anchors.horizontalCenter: parent.horizontalCenter
+		anchors.verticalCenter: parent.verticalCenter
 		implicitWidth: centeredContainer.width + 40
 		implicitHeight: centeredContainer.height + 40
 		ColumnLayout {
@@ -108,6 +119,16 @@ WlSessionLockSurface {
 			}
 
 		}
+	}
+
+	Lyrics {
+		anchors.bottom: loginContainer.top
+		anchors.bottomMargin: 20
+		visible: Players.active && Players.active.trackTitle !== ""
+		color: "transparent"
+		opacity: root.startAnim ? 1 : 0
+		hideOnNoLyrics: true
+		Behavior on opacity { NumberAnimation { duration: animation_time; easing.type: easingType } }
 	}
 
 	PlayerDisplay {

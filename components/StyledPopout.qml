@@ -122,7 +122,7 @@ LazyLoader {
                     exceedingHalf = true
                     let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x
                     if (parentPopoutWindow) baseX += parentPopoutWindow.x
-                    return baseX - container.implicitWidth
+                    return baseX - (container.implicitWidth)
                 }
                 
                 exceedingHalf = false

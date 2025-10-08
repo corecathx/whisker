@@ -19,8 +19,6 @@ Scope {
 
         property int counter: 0
 
-        Calendar {
-            
-        }
+        Lyrics {}
     }
 }
