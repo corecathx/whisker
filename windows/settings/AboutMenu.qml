@@ -9,6 +9,15 @@ import qs.components
 
 Item {
     anchors.fill: parent
+    opacity: visible ? 1 : 0
+    scale: visible ? 1 : 0.95
+
+    Behavior on opacity {
+        NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+    }
+    Behavior on scale {
+        NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+    }
 
     SoundEffect { id: cat0; source: Utils.getPath("audios/mc-cat0.wav"); volume: 0.8 }
     SoundEffect { id: cat1; source: Utils.getPath("audios/mc-cat1.wav"); volume: 0.8 }
@@ -19,10 +28,9 @@ Item {
 
     ColumnLayout {
         anchors.centerIn: parent
-        spacing: 24
 
         ColumnLayout {
-            spacing: 12
+            spacing: 10
             Layout.alignment: Qt.AlignHCenter
 
             Image {
@@ -36,13 +44,12 @@ Item {
 
                 Behavior on scale {
                     SpringAnimation {
-                        spring: 10
-                        damping: 0.05
+                        spring: 5
+                        damping: 0.1
                         mass: 0.5
                         epsilon: 0.01
                     }
                 }
-
 
                 MouseArea {
                     anchors.fill: parent
@@ -75,18 +82,10 @@ Item {
                 }
 
                 StyledText {
-                    text: "A simple shell focusing on usability and customization."
+                    text: "A simple shell focusing on usability and customization (and cats)."
                     font.pixelSize: 14
                     wrapMode: Text.Wrap
                     color: Appearance.colors.m3on_background
-                    horizontalAlignment: Text.AlignHCenter
-                    Layout.preferredWidth: 360
-                }
-
-                StyledText {
-                    text: "Cat sounds from Minecraft"
-                    font.pixelSize: 10
-                    color: Colors.opacify(Appearance.colors.m3on_background, 0.5)
                     horizontalAlignment: Text.AlignHCenter
                     Layout.preferredWidth: 360
                 }
@@ -108,7 +107,27 @@ Item {
                 }
 
             }
-
         }
     }
+
+    StyledText {
+        text: "Cat sounds from Minecraft"
+        font.pixelSize: 12
+        color: Colors.opacify(Appearance.colors.m3on_background, 0.5)
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: 40;
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+    StyledText {
+        text: "Built on top of <a href='https://quickshell.org'>Quickshell</a>"
+        font.pixelSize: 12
+        color: Colors.opacify(Appearance.colors.m3on_background, 0.5)
+        textFormat: Text.RichText
+        horizontalAlignment: Text.AlignHCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 60
+        anchors.horizontalCenter: parent.horizontalCenter
+        onLinkActivated: Qt.openUrlExternally(link)
+    }
+
 }

@@ -138,7 +138,7 @@ Rectangle {
                     id: barSlider
                     implicitHeight: sliderHeight
                     icon: ""
-                    value: 0
+                    value: (Players.active.position / Players.active.length) * 100
                     Connections {
                         target: Players.active
                         function onPositionChanged() {

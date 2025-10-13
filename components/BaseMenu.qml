@@ -6,6 +6,16 @@ Item {
     id: baseMenu
     anchors.fill: parent
 
+    opacity: visible ? 1 : 0
+    scale: visible ? 1 : 0.95
+
+    Behavior on opacity {
+        NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+    }
+    Behavior on scale {
+        NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+    }
+
     property string title: "Settings"
     property string description: ""
     default property alias content: stackedSections.data

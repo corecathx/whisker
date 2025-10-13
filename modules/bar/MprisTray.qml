@@ -44,6 +44,7 @@ Item {
                 useAnim: false
                 allowViewingPercentage: false
                 property real lastTime: Date.now();
+                progress: (Players.active.position / Players.active.length) * 100
                 Connections {
                     target: Players.active
                     function onPositionChanged() {

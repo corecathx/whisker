@@ -38,7 +38,6 @@ Scope {
             color: Appearance.colors.m3background
             onClosing: Globals.visible_settingsMenu = false
 
-            // Expose menuModel at window level so IpcHandler can access it
             property var menuModel: {
                 var raw = [
                     { header: true, label: "Connections" },
@@ -54,6 +53,7 @@ Scope {
                     { icon: "widgets", label: "Bar" },
                     { icon: "extension", label: "Misc" },
                     { header: true, label: "About" },
+                    { icon: "desktop_windows", label: "System" },
                     { icon: "info", label: "About" }
                 ];
 
@@ -64,7 +64,6 @@ Scope {
                 });
             }
 
-            // Store reference to this window for IPC handler
             Component.onCompleted: {
                 settingsWindow = root
             }
@@ -261,6 +260,7 @@ Scope {
                     BarMenu {}
                     MiscMenu {}
                     // About
+                    SystemMenu {}
                     AboutMenu {}
                 }
             }

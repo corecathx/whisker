@@ -28,7 +28,7 @@ Scope {
         id: pam
 
         configDirectory: "pam"
-        config: "password.conf"
+        config: "passwd.conf"
 
         onMessageChanged: {
             if (message.startsWith("The account is locked")) {
