@@ -11,12 +11,12 @@ Singleton {
         target: Preferences
         function onWallpaperChanged(){
             regenColor()
-        } 
+        }
 
         function onColorSchemeChanged() {
             regenColor()
         }
-        
+
         function onDarkModeChanged() {
             regenColor()
         }

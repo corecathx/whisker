@@ -156,10 +156,16 @@ Rectangle {
                         if (active?.canSeek && active?.positionSupported)
                             active.position = (value/100) * active.length
                     }
-                    FrameAnimation {
+                    Timer {
+                        interval: 1000
                         running: Players.active?.playbackState == MprisPlaybackState.Playing
+                        repeat: true
                         onTriggered: Players.active?.positionChanged()
                     }
+                    // FrameAnimation {
+                    //     running:
+                    //
+                    // }
                 }
             }
         }

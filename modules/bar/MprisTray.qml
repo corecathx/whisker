@@ -43,10 +43,14 @@ Item {
                 strokeWidth: 2
                 useAnim: false
                 allowViewingPercentage: false
+                property real lastTime: Date.now();
                 Connections {
                     target: Players.active
                     function onPositionChanged() {
-                        progCirc.progress = (Players.active.position / Players.active.length) * 100
+                        if (Date.now() - progCirc.lastTime > 1000) {
+                            progCirc.lastTime = Date.now()
+                            progCirc.progress = (Players.active.position / Players.active.length) * 100
+                        }
                         //console.log(barSlider.value)
                     }
 
@@ -54,10 +58,6 @@ Item {
                         progCirc.progress = 0
                         Players.active.position = 0 // BRUH
                     }
-                }
-                FrameAnimation {
-                    running: Players.active?.playbackState == MprisPlaybackState.Playing
-                    onTriggered: Players.active?.positionChanged()
                 }
             }
         }
