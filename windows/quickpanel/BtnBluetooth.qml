@@ -27,7 +27,7 @@ Rectangle {
     Behavior on color {
         ColorAnimation {
             duration: 100
-            easing.type: Easing.OutExpo
+            easing.type: Appearance.animation.easing
         }
     }
 
@@ -47,7 +47,7 @@ Rectangle {
             }
         }
 
-        Text {
+        StyledText {
             text: {
                 if (Bluetooth.activeDevice) {
                     if (Bluetooth.activeDevice.deviceName.length > 12) {

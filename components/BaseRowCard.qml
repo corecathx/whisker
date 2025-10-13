@@ -23,15 +23,15 @@ Item {
         implicitHeight: contentArea.implicitHeight + baseCard.verticalPadding
         Behavior on implicitHeight {
             NumberAnimation {
-                duration: Appearance.anim_fast
-                easing.type: Easing.OutExpo
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
             }
         }
         color: Appearance.colors.m3surface_container_low
         Behavior on color {
             ColorAnimation {
-                duration: Appearance.anim_fast
-                easing.type: Easing.OutExpo
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
             }
         }
         radius: baseCard.radius

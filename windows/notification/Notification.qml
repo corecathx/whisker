@@ -70,8 +70,8 @@ Scope {
                 radius: 20
                 Behavior on height {
                     NumberAnimation {
-                        duration: Appearance.anim_fast
-                        easing.type: Easing.OutExpo
+                        duration: Appearance.animation.fast
+                        easing.type: Appearance.animation.easing
                     }
                 }
             }
@@ -101,8 +101,8 @@ Scope {
 
                     Behavior on y {
                         NumberAnimation {
-                            duration: Appearance.anim_fast
-                            easing.type: Easing.OutExpo
+                            duration: Appearance.animation.fast
+                            easing.type: Appearance.animation.easing
                         }
                     }
 

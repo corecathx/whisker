@@ -4,24 +4,16 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Services.Pipewire
-import Quickshell.Services.UPower
 import Quickshell.Widgets
 import qs.modules
 import qs.services
 import qs.components
 import qs.preferences
 import qs.modules.bar
-import qs.modules.corners
 import Quickshell.Hyprland
-import QtQuick.Controls
-import qs.windows.notification
 Scope {
     id: root
     property bool opened: false
-    PwObjectTracker {
-        objects: [ Pipewire.defaultAudioSink ]
-    }
     LazyLoader {
         active: Globals.visible_quickPanel
 
@@ -96,7 +88,7 @@ Scope {
                                 //anchors.verticalCenter: parent.verticalCenter
                                 Layout.fillWidth: true
 
-                                Text {
+                                StyledText {
                                     text: Quickshell.env("USER")
                                     font.pixelSize: 28
                                     font.bold: true
@@ -105,12 +97,12 @@ Scope {
                                 }
 
                                 RowLayout {
-                                    visible: UPower.displayDevice.isLaptopBattery
+                                    visible: Power.laptop
 
                                     Battery {
                                         id: battery
                                     }
-                                    Text {
+                                    StyledText {
                                         text: {
                                             function formatSeconds(s: int) {
                                                 const day = Math.floor(s / 86400);
@@ -129,10 +121,10 @@ Scope {
                                             }
 
                                             let output = "•  ";
-                                            if (UPower.onBattery)
-                                                output += formatSeconds(UPower.displayDevice.timeToEmpty) || "Calculating"
+                                            if (Power.onBattery)
+                                                output += formatSeconds(Power.displayDevice.timeToEmpty) || "Calculating"
                                             else
-                                                output += formatSeconds(UPower.displayDevice.timeToFull) || "Fully charged"
+                                                output += formatSeconds(Power.displayDevice.timeToFull) || "Fully charged"
 
                                             return output
                                         }
@@ -161,7 +153,7 @@ Scope {
                                 }
                             }
                         }
-                        
+
 
                         RowLayout {
                             height: 40
@@ -169,7 +161,7 @@ Scope {
                             Layout.rightMargin: 20
                             spacing: 20
                             BtnWifi {}
-                            
+
                             // bluetooth
                             StyledButton {
                                 Layout.fillWidth: true
@@ -207,7 +199,7 @@ Scope {
                             StyledSlider {
                                 id: vlmSlider
                                 value: Audio.volume * 100
-                                
+
                                 onValueChanged: {
                                     Audio.setVolume(value/100)
                                     if (value === 0) vlmSlider.icon = "volume_off";
@@ -223,7 +215,7 @@ Scope {
                             spacing: 20
                             StyledSlider {
                                 id: briSlider
-                                
+
                                 onValueChanged: {
                                     Quickshell.execDetached(["sh", "-c", `brightnessctl set ${value}%`]);
 
@@ -255,7 +247,7 @@ Scope {
                                     }
                                 }
                             }
-                        }       
+                        }
                     }
                 }
             }

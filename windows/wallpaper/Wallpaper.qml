@@ -48,8 +48,8 @@ PanelWindow {
             id: revealAnim
             target: animClip
             property: "width"
-            duration: Appearance.anim_slow*2
-            easing.type: Easing.OutExpo
+            duration: Appearance.animation.slow*2
+            easing.type: Appearance.animation.easing
             from: 0
             to: Math.max(wallpaper.width, wallpaper.height) * 1.2
             onStopped: {
@@ -63,7 +63,7 @@ PanelWindow {
             id: newWallpaper
             anchors.centerIn: parent
         sourceSize: Qt.size(wallpaper.width, wallpaper.height)
-            
+
             source: ""
             fillMode: Image.PreserveAspectCrop
             smooth: true
@@ -133,6 +133,9 @@ PanelWindow {
         anchors.fill: parent
         anchors.centerIn: parent
         Image {
+            anchors.fill: parent
+            fillMode: Image.PreserveAspectCrop
+
             anchors.centerIn: parent
             source: Utils.getPath("images/fallback-wallpaper-overlay.png")
             smooth: true
@@ -155,14 +158,14 @@ PanelWindow {
             }
             ColumnLayout {
 
-                Text {
+                StyledText {
                     text: "You got no default wallpaper set!"
                     color: Appearance.colors.m3on_background
                     font.family: "Outfit SemiBold"
                     font.pixelSize: 32
                 }
-                Text {
-                    text: "Set your wallpaper by pressing SUPER + SHIFT + W!"
+                StyledText {
+                    text: "Set your wallpaper by opening Whisker Settings!\n(SUPER + I)"
                     color: Appearance.colors.m3on_background
                     font.pixelSize: 24
                 }
@@ -170,58 +173,58 @@ PanelWindow {
         }
     }
 
-    CavaVisualizer { 
+    CavaVisualizer {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.bottomMargin: (Preferences.barPosition === 'bottom' && !Preferences.smallBar ? 50 : 0)
         visible: !Hyprland.currentWorkspace.hasTilingWindow()
-    } 
-    
-    ColumnLayout { 
+    }
+
+    ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.leftMargin: 40 + (Preferences.barPosition === 'left' ? 60 : 0)
-        anchors.bottomMargin: 40 + (Preferences.barPosition === 'bottom' ? 50 : 0) 
+        anchors.bottomMargin: 40 + (Preferences.barPosition === 'bottom' ? 50 : 0)
         Behavior on anchors.leftMargin {
             NumberAnimation {
-                duration: Appearance.anim_fast
-                easing.type: Easing.OutExpo
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
             }
         }
         Behavior on anchors.bottomMargin {
             NumberAnimation {
-                duration: Appearance.anim_fast
-                easing.type: Easing.OutExpo
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
             }
         }
-        //anchors.topMargin: 300 
-        spacing: -10 
-        Text { 
+        //anchors.topMargin: 300
+        spacing: -10
+        StyledText {
             text: Qt.formatDateTime(Time.date, "HH:mm")
             font.family: "Outfit ExtraBold"
             color: Appearance.colors.m3on_background
             font.pixelSize: 72
-            //Layout.alignment: Qt.AlignHCenter 
-        } 
-        Text { 
+            //Layout.alignment: Qt.AlignHCenter
+        }
+        StyledText {
             text: Qt.formatDateTime(Time.date, "dddd, dd/MM")
             color: Appearance.colors.m3on_background
-            font.pixelSize: 32 
+            font.pixelSize: 32
             font.bold: true
-            //Layout.alignment: Qt.AlignHCenter 
-        } 
-        PlayerDisplay { 
-            Layout.topMargin: 20 
-            Layout.minimumWidth: 400 
+            //Layout.alignment: Qt.AlignHCenter
+        }
+        PlayerDisplay {
+            Layout.topMargin: 20
+            Layout.minimumWidth: 400
         }
         layer.enabled: true
-        layer.effect: MultiEffect { 
+        layer.effect: MultiEffect {
             shadowEnabled: true
             shadowOpacity: 1
             shadowColor: Appearance.colors.m3shadow
             shadowBlur: 1
-        } 
+        }
     }
 }

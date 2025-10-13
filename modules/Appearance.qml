@@ -37,31 +37,9 @@ Singleton {
      */
     property string whiskerIcon: Utils.getPath("logo.png")
 
-    /**
-     * Multiplier for animation durations.
-     * @values real
-     */
-    property real anim_multiplier: 1
-
-    /**
-     * Duration for slow animations (in milliseconds).
-     * @values int
-     */
-    property real anim_slow: 1000 * anim_multiplier
-
-    /**
-     * Duration for medium animations (in milliseconds).
-     * @values int
-     */
-    property real anim_medium: 500 * anim_multiplier
-
-    /**
-     * Duration for fast animations (in milliseconds).
-     * @values int
-     */
-    property real anim_fast: 250 * anim_multiplier
-
+    property real barSize: 44
     property M3Palette colors: M3Palette {}
+    property AnimationStruct animation: AnimationStruct {}
     property string lastData: ''
 
     function getScheme(scheme: string) {
@@ -111,6 +89,15 @@ Singleton {
         watchChanges: true
         onFileChanged: reload()
         onLoaded: root.reloadScheme(text())
+    }
+    component AnimationStruct: QtObject {
+        property real multiplier: 1
+
+        property real fast: 250 * multiplier
+        property real medium: 500 * multiplier
+        property real slow: 1000 * multiplier
+
+        property var easing: Easing.OutExpo
     }
     component M3Palette: QtObject {
         property color m3background: "#111318"

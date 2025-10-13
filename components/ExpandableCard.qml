@@ -25,7 +25,7 @@ BaseCard {
             spacing: 10
             anchors.left: parent.left
             anchors.right: parent.right
-            
+
             MaterialIcon {
                 id: iconLabel
                 icon: "person"
@@ -35,13 +35,13 @@ BaseCard {
 
             ColumnLayout {
                 spacing: 0
-                Text {
+                StyledText {
                     text: root.title
                     font.pixelSize: 16
                     font.bold: true
                     color: Appearance.colors.m3on_surface
                 }
-                Text {
+                StyledText {
                     visible: description !== ""
                     text: root.description
                     font.pixelSize: 12
@@ -65,7 +65,7 @@ BaseCard {
             anchors.right: parent.right
             opacity: root.expanded ? 1 : 0
             visible: opacity > 0.1
-            Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+            Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
         }
     }
 }

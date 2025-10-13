@@ -35,7 +35,7 @@ PanelWindow {
 
         RowLayout {
             spacing: 0
-            Text {
+            StyledText {
                 id: fpsInt
                 color: win.displayedFps < 30 ? Appearance.colors.m3error : Appearance.colors.m3on_surface
                 text: Math.floor(win.displayedFps)  // integer part
@@ -43,7 +43,7 @@ PanelWindow {
                 font.family: "JetBrainsMono Nerd Font"
                 font.bold: true
             }
-            Text {
+            StyledText {
                 id: fpsDecimal
                 color: win.displayedFps < 30 ? Appearance.colors.m3error : Appearance.colors.m3on_surface
                 text: (win.displayedFps % 1).toFixed(1).substring(1) + " FPS" // decimal part + FPS
@@ -53,7 +53,7 @@ PanelWindow {
                 anchors.bottom: fpsInt.bottom
             }
         }
-        Text {
+        StyledText {
             id: bottomTxt
             color: Appearance.colors.m3on_surface
             text: "Whisker (DevMode)"

@@ -14,7 +14,7 @@ BaseCard {
     property color contentColor: Appearance.colors.m3on_primary
     property string text: "Primary"
     color: backgroundColor
-    Text {
+    StyledText {
         text: root.text
         font.pixelSize: 10
         color: root.contentColor

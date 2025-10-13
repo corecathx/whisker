@@ -13,11 +13,13 @@ Item {
 
     Behavior on width {
         NumberAnimation {
-            duration: Appearance.anim_fast;
-            easing.type: Easing.OutExpo
+            duration: Appearance.animation.fast;
+            easing.type: Appearance.animation.easing
         }
     }
+
     property bool verticalMode: false
+
     transform: Rotation {
         origin.x: width / 2
         origin.y: height / 2
@@ -27,7 +29,7 @@ Item {
     Rectangle {
         id: bgRect
         opacity: !Preferences.keepBarOpaque && !Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
-        Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+        Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
 
         anchors.fill: parent
         color: Appearance.colors.m3surface_container
@@ -50,10 +52,10 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 opacity: focused ? 1.0 : 0.4
                 color: focused ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
-                               
-                Behavior on width { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-                Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-                Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+
+                Behavior on width { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
 
                 MouseArea {
                     anchors.fill: parent
@@ -64,10 +66,37 @@ Item {
         }
     }
 
+    WheelHandler {
+        id: wheel
+        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+        target: root
+        property real accumulatedDelta: 0
+        property real threshold: 100
+
+        onWheel: (event) => {
+            const total = Hyprland.fullWorkspaces.count
+            const current = Hyprland.focusedWorkspace.id
+
+            accumulatedDelta += verticalMode ? event.angleDelta.x : event.angleDelta.y
+
+            if (Math.abs(accumulatedDelta) >= threshold) {
+                if (accumulatedDelta > 0) {
+                    if (current > 1)
+                        Hyprland.dispatch("workspace -1")
+                } else {
+                    if (current < total)
+                        Hyprland.dispatch("workspace +1")
+                }
+
+                accumulatedDelta = 0
+            }
+
+            event.accepted = true
+        }
+    }
     HoverHandler {
         id: hover
     }
-
     StyledPopout {
         hoverTarget: hover
         interactable: true

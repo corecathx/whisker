@@ -33,7 +33,7 @@ Item {
             ? !hovered ? schemeColor.surface_container_high : schemeColor.surface_container_highest
             : !hovered ? schemeColor.surface_container : schemeColor.surface_container_high
         Behavior on color {
-            ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+            ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
         }
         border.width: Preferences.colorScheme === schemeName ? 3 : 1
         border.color: schemeColor.outline
@@ -44,7 +44,7 @@ Item {
             anchors.right: parent.right
             anchors.margins: 10
             spacing: 10
-            Text {
+            StyledText {
                 text: schemeName
                 font.pixelSize: 14
                 color: schemeColor.on_surface || "#000000"

@@ -14,7 +14,7 @@ BaseMenu {
     description: "Adjust how the Bar panel behaves."
 
     BaseCard {
-        Text {
+        StyledText {
             text: "Bar"
             font.pixelSize: 20
             font.bold: true
@@ -22,7 +22,7 @@ BaseMenu {
         }
 
         ColumnLayout {
-            Text {
+            StyledText {
                 text: "Position"
                 font.pixelSize: 16
                 color: Appearance.colors.m3on_background
@@ -47,12 +47,12 @@ BaseMenu {
         }
         RowLayout {
             ColumnLayout {
-                Text {
+                StyledText {
                     text: "Keep bar opaque"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Whether to keep the bar opaque or not\nIf disabled, the bar will adjust it's transparency, such as on desktop, etc."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -72,12 +72,12 @@ BaseMenu {
         }
         RowLayout {
             ColumnLayout {
-                Text {
+                StyledText {
                     text: "Small bar"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Whether to use small bar layout.\nThis has no effect on Left and Right bar layout."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -98,12 +98,12 @@ BaseMenu {
         RowLayout {
             visible: Preferences.smallBar
             ColumnLayout {
-                Text {
+                StyledText {
                     text: "Bar Padding"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Padding for bars.\nThis will only take effect if `smallBar` is `true`."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -127,6 +127,5 @@ BaseMenu {
                 }
             }
         }
-    } 
+    }
 }
-

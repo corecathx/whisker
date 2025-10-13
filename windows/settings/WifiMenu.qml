@@ -14,7 +14,7 @@ BaseMenu {
             cardSpacing: 0
             verticalPadding: Network.wifiEnabled ? 10 : 0
             cardMargin: 0
-            Text {
+            StyledText {
                 text: powerSwitch.checked ? "Power: On" : "Power: Off"
                 font.pixelSize: 16
                 font.bold: true
@@ -35,12 +35,12 @@ BaseMenu {
             cardMargin: 0
             ColumnLayout {
                 spacing: 2
-                Text {
+                StyledText {
                     text: "Scanning"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Search for nearby Wi-Fi networks."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -65,7 +65,7 @@ BaseMenu {
     }
     BaseCard {
         visible: Network.active !== null
-        Text {
+        StyledText {
             text: "Connected Network"
             font.pixelSize: 18
             font.bold: true
@@ -81,7 +81,7 @@ BaseMenu {
 
     BaseCard {
         visible: Network.wifiEnabled
-        Text {
+        StyledText {
             text: "Available Networks"
             font.pixelSize: 18
             font.bold: true
@@ -92,7 +92,7 @@ BaseMenu {
             visible: Network.networks.length === 0 && !Network.scanning
             width: parent.width
             height: 40
-            Text {
+            StyledText {
                 anchors.centerIn: parent
                 text: "No networks found"
                 font.pixelSize: 14
@@ -110,7 +110,7 @@ BaseMenu {
     }
     BaseCard {
         visible: Network.savedNetworks.length > 0
-        Text {
+        StyledText {
             text: "Remembered Networks"
             font.pixelSize: 18
             font.bold: true
@@ -121,7 +121,7 @@ BaseMenu {
             visible: Network.savedNetworks.length === 0
             width: parent.width
             height: 40
-            Text {
+            StyledText {
                 anchors.centerIn: parent
                 text: "No remembered networks"
                 font.pixelSize: 14
@@ -134,7 +134,7 @@ BaseMenu {
             delegate: WifiNetworkCard {
                 network: modelData
                 showConnect: false
-                showDisconnect: false 
+                showDisconnect: false
             }
         }
     }

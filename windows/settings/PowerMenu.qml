@@ -14,9 +14,9 @@ BaseMenu {
     title: "Power"
     description: "View battery status and power options."
     property string current_mode: "Balanced"
-    
+
     BaseCard {
-        Text {
+        StyledText {
             text: "Batteries"
             font.pixelSize: 20
             font.bold: true
@@ -27,13 +27,13 @@ BaseMenu {
             delegate: BaseCard {
                 color: Appearance.colors.m3surface_container
                 RowLayout {
-                    Text {
+                    StyledText {
                         text: "Battery " + (index + 1)
                         font.pixelSize: 16
                         font.bold: true
                         color: Appearance.colors.m3on_background
                     }
-                    Text {
+                    StyledText {
                         text: modelData.model
                         font.pixelSize: 10
                         color: Colors.opacify(Appearance.colors.m3on_background, 0.7)
@@ -52,13 +52,13 @@ BaseMenu {
                     fill: modelData.percentage
                 }
                 RowLayout {
-                    Text {
+                    StyledText {
                         text: (modelData.percentage * 100) + "%"
                         font.pixelSize: 12
                         color: Appearance.colors.m3on_background
                     }
                     Item { Layout.fillWidth: true }
-                    Text {
+                    StyledText {
                         text: Power.onBattery
                             ? Utils.formatSeconds(modelData.timeToEmpty) || "Calculating"
                             : Utils.formatSeconds(modelData.timeToFull) || "Fully charged"
@@ -69,9 +69,9 @@ BaseMenu {
             }
         }
     }
-    
+
     BaseCard {
-        Text {
+        StyledText {
             text: "Power Profiles"
             font.pixelSize: 20
             font.bold: true

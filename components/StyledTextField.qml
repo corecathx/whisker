@@ -28,8 +28,8 @@ TextField {
         color: Appearance.colors.m3on_surface
         SequentialAnimation on opacity {
             loops: Animation.Infinite
-            NumberAnimation { from: 1; to: 0; duration: 2000; easing.type: Easing.OutExpo }
-            NumberAnimation { from: 0; to: 1; duration: 2000; easing.type: Easing.OutExpo }
+            NumberAnimation { from: 1; to: 0; duration: 2000; easing.type: Appearance.animation.easing }
+            NumberAnimation { from: 0; to: 1; duration: 2000; easing.type: Appearance.animation.easing }
         }
     }
 

@@ -27,14 +27,14 @@ Item {
             spacing: 10
 
             ColumnLayout {
-                Text {
+                StyledText {
                     text: baseMenu.title
                     font.pixelSize: 24
                     font.bold: true
                     font.family: "Outfit SemiBold"
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: baseMenu.description
                     font.pixelSize: 14
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)

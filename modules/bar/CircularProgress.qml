@@ -11,11 +11,11 @@ Item {
     property bool useAnim: true
     property bool allowViewingPercentage: true
     property real strokeWidth: 2
-    
+
     Behavior on progress {
         NumberAnimation {
-            duration: useAnim ? Appearance.anim_fast : 0
-            easing.type: Easing.OutExpo
+            duration: useAnim ? Appearance.animation.fast : 0
+            easing.type: Appearance.animation.easing
         }
     }
     onProgressChanged: canvas.requestPaint()
@@ -23,7 +23,7 @@ Item {
         id: canvas
         anchors.fill: parent
         rotation: -90
-        
+
         onPaint: {
             var ctx = getContext("2d")
             var centerX = width / 2
@@ -31,15 +31,15 @@ Item {
             var radius = Math.min(centerX, centerY) - strokeWidth / 2
             var startAngle = 0
             var endAngle = (Math.PI * 2) * (progress / 100)
-            
+
             ctx.reset()
-            
+
             ctx.beginPath()
             ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
             ctx.lineWidth = strokeWidth
             ctx.strokeStyle = backgroundColor
             ctx.stroke()
-            
+
             ctx.beginPath()
             ctx.arc(centerX, centerY, radius, startAngle, endAngle)
             ctx.lineWidth = strokeWidth
@@ -56,8 +56,8 @@ Item {
         opacity: 1
         Behavior on opacity { NumberAnimation { duration: 150 } }
     }
-    
-    Text {
+
+    StyledText {
         id: textLabel
         anchors.centerIn: parent
         text: Math.round(parent.progress) + "%"
@@ -66,7 +66,7 @@ Item {
         opacity: 0
         Behavior on opacity { NumberAnimation { duration: 150 } }
     }
-    
+
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true

@@ -100,7 +100,7 @@ Scope {
                             radius: 20
                             color: Appearance.colors.m3surface_container
 
-                            Text {
+                            StyledText {
                                 anchors.centerIn: parent
                                 text: modelData[0]
                                 font.pixelSize: emojiPanel.cellWidth * 0.6
@@ -120,7 +120,7 @@ Scope {
         }
     }
 
-    function load(content) { 
+    function load(content) {
         try {
             emojiModel = JSON.parse(content)
         } catch (e) {

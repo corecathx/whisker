@@ -45,7 +45,7 @@ LazyLoader {
     }
 
     property Timer cleanupTimer: Timer {
-        interval: Appearance.anim_fast
+        interval: Appearance.animation.fast
         repeat: false
         onTriggered: {
             root.isVisible = false
@@ -114,54 +114,62 @@ LazyLoader {
             
             implicitWidth: contentArea.implicitWidth + root.margin * 2
             implicitHeight: contentArea.implicitHeight + root.margin * 2
-            
             x: {
+                let xValue;
+
                 if (root.followMouse)
-                    return mousePos.x + 10
+                    xValue = mousePos.x + 10
+                else {
+                    let targetItem = hoverTarget?.parent
+                    if (!targetItem)
+                        xValue = 0
+                    else {
+                        let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x
+                        if (parentPopoutWindow)
+                            baseX += parentPopoutWindow.x
 
-                let targetItem = hoverTarget?.parent
-                if (!targetItem)
-                    return 0
+                        let targetWidth = targetItem.width
+                        let popupWidth = container.implicitWidth
 
-                let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x
-                if (parentPopoutWindow)
-                    baseX += parentPopoutWindow.x
-
-                let targetWidth = targetItem.width
-                let popupWidth = container.implicitWidth
-
-                if (root.hCenterOnItem) {
-                    let centeredX = baseX + (targetWidth - popupWidth) / 2
-
-                    if (centeredX + popupWidth > screen.width)
-                        centeredX = screen.width - popupWidth - 10
-                    if (centeredX < 10)
-                        centeredX = 10
-
-                    return centeredX
+                        if (root.hCenterOnItem) {
+                            let centeredX = baseX + (targetWidth - popupWidth) / 2
+                            if (centeredX + popupWidth > screen.width)
+                                centeredX = screen.width - popupWidth - 10
+                            if (centeredX < 10)
+                                centeredX = 10
+                            xValue = centeredX
+                        } else {
+                            let xPos = baseX - (Preferences.horizontalBar() ? 20 : -40)
+                            if (xPos + popupWidth > screen.width) {
+                                exceedingHalf = true
+                                xValue = baseX - popupWidth
+                            } else {
+                                exceedingHalf = false
+                                xValue = xPos
+                            }
+                        }
+                    }
                 }
 
-                let xPos = baseX - (Preferences.horizontalBar() ? 20 : -40)
-
-                if (xPos + popupWidth > screen.width) {
-                    exceedingHalf = true
-                    return baseX - popupWidth
-                }
-
-                exceedingHalf = false
-                return xPos
+                return root.cleanupTimer.running ? xValue : Math.round(xValue)
             }
 
             y: {
-                if (root.followMouse) return mousePos.y + 10
-                
-                let targetItem = hoverTarget?.parent
-                if (!targetItem) return 0
-                
-                let yPos = targetItem.mapToGlobal(Qt.point(0, 0)).y
-                if (parentPopoutWindow) yPos += parentPopoutWindow.y
-                
-                return yPos + (Preferences.horizontalBar() ? targetItem.height : 0)
+                let yValue;
+
+                if (root.followMouse)
+                    yValue = mousePos.y + 10
+                else {
+                    let targetItem = hoverTarget?.parent
+                    if (!targetItem) yValue = 0
+                    else {
+                        let yPos = targetItem.mapToGlobal(Qt.point(0, 0)).y
+                        if (parentPopoutWindow) yPos += parentPopoutWindow.y
+                        yValue = yPos + (Preferences.horizontalBar() ? targetItem.height : 0)
+                    }
+                }
+
+                return root.cleanupTimer.running ? yValue : Math.round(yValue)
             }
 
             opacity: root.startAnim ? 1 : 0
@@ -178,26 +186,26 @@ LazyLoader {
             
             Behavior on opacity { 
                 NumberAnimation { 
-                    duration: Appearance.anim_fast
-                    easing.type: Easing.OutExpo 
+                    duration: Appearance.animation.fast
+                    easing.type: Appearance.animation.easing 
                 } 
             }
             Behavior on scale { 
                 NumberAnimation { 
-                    duration: Appearance.anim_fast
-                    easing.type: Easing.OutExpo 
+                    duration: Appearance.animation.fast
+                    easing.type: Appearance.animation.easing 
                 } 
             }
             Behavior on implicitWidth { 
                 NumberAnimation { 
-                    duration: Appearance.anim_fast
-                    easing.type: Easing.OutExpo 
+                    duration: Appearance.animation.fast
+                    easing.type: Appearance.animation.easing 
                 } 
             }
             Behavior on implicitHeight { 
                 NumberAnimation { 
-                    duration: Appearance.anim_fast
-                    easing.type: Easing.OutExpo 
+                    duration: Appearance.animation.fast
+                    easing.type: Appearance.animation.easing 
                 } 
             }
 

@@ -30,8 +30,8 @@ Slider {
         width: parent.height + control.visualPosition * (parent.width-parent.height)
         Behavior on width {
             NumberAnimation {
-                duration: control.useAnim ? Appearance.anim_fast * 0.5 : 0
-                easing.type: Easing.OutExpo
+                duration: control.useAnim ? Appearance.animation.fast * 0.5 : 0
+                easing.type: Appearance.animation.easing
             }
         }
         height: parent.height
@@ -50,8 +50,8 @@ Slider {
         anchors.rightMargin: bar.width > bar.height ? 10 : 0
         Behavior on x {
             NumberAnimation {
-                duration: Appearance.anim_fast * 0.5
-                easing.type: Easing.OutExpo
+                duration: Appearance.animation.fast * 0.5
+                easing.type: Appearance.animation.easing
             }
         }
     }

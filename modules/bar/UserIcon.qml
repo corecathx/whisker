@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell.Widgets
 import Quickshell
 import qs.modules
+import qs.components
 
 Rectangle {
     id: root
@@ -18,11 +19,11 @@ Rectangle {
     border {
         width: hovered || Globals.visible_quickPanel ? 2 : 0
         color: Appearance.colors.m3on_surface
-        Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutExpo } }
+        Behavior on width { NumberAnimation { duration: 250; easing.type: Appearance.animation.easing } }
     }
 
-    Behavior on implicitWidth { NumberAnimation { duration: 250; easing.type: Easing.OutExpo } }
-    Behavior on implicitHeight { NumberAnimation { duration: 250; easing.type: Easing.OutExpo } }
+    Behavior on implicitWidth { NumberAnimation { duration: 250; easing.type: Appearance.animation.easing } }
+    Behavior on implicitHeight { NumberAnimation { duration: 250; easing.type: Appearance.animation.easing } }
 
     ClippingRectangle {
         id: textClip
@@ -30,7 +31,7 @@ Rectangle {
         radius: 30
         color: "transparent"
 
-        Text {
+        StyledText {
             id: userName
             text: Quickshell.env('USER')
             color: Appearance.colors.m3on_background

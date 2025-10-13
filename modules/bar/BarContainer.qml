@@ -9,7 +9,7 @@ import qs.components
 Item {
     id: root
     property bool inLockScreen: false
-    implicitHeight: 44
+    implicitHeight: Appearance.barSize
     anchors.fill: parent
     SingleCorner {
         visible: !root.inLockScreen
@@ -19,8 +19,8 @@ Item {
         color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
         Behavior on color {
             ColorAnimation {
-                duration: Appearance.anim_fast
-                easing.type: Easing.OutExpo
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
             }
         }
         corner: 1
@@ -36,8 +36,8 @@ Item {
         clip: true
         Behavior on width {
             NumberAnimation {
-                duration: Appearance.anim_fast
-                easing.type: Easing.OutExpo
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
             }
         }
         anchors.horizontalCenter: parent.horizontalCenter
@@ -48,8 +48,8 @@ Item {
             color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
             Behavior on color {
                 ColorAnimation {
-                    duration: Appearance.anim_fast
-                    easing.type: Easing.OutExpo
+                    duration: Appearance.animation.fast
+                    easing.type: Appearance.animation.easing
                 }
             }
         }
@@ -91,8 +91,8 @@ Item {
         color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
         Behavior on color {
             ColorAnimation {
-                duration: Appearance.anim_fast
-                easing.type: Easing.OutExpo
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
             }
         }
         corner: 0

@@ -26,14 +26,14 @@ BaseRowCard {
         anchors.left: infoIcon.right
         anchors.leftMargin: 20
 
-        Text {
+        StyledText {
             text: infoCard.title
             font.bold: true
             color: contentColor
             font.pixelSize: 14
         }
 
-        Text {
+        StyledText {
             text: infoCard.description
             color: contentColor
             font.pixelSize: 12

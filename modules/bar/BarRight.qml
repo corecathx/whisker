@@ -40,8 +40,8 @@ Item {
 
                     Behavior on opacity {
                         NumberAnimation {
-                            duration: Appearance.anim_fast
-                            easing.type: Easing.OutExpo
+                            duration: Appearance.animation.fast
+                            easing.type: Appearance.animation.easing
                         }
                     }
                 }

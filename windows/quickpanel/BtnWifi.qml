@@ -14,7 +14,7 @@ Rectangle {
     property bool hovered: false
 
     color: {
-        if (!Network.wifiEnabled) 
+        if (!Network.wifiEnabled)
             return Colors.opacify(Appearance.colors.m3surface_variant, hovered ? 0.8 : 0.4)
 
         if (Network.active)
@@ -27,7 +27,7 @@ Rectangle {
     Behavior on color {
         ColorAnimation {
             duration: 100
-            easing.type: Easing.OutExpo
+            easing.type: Appearance.animation.easing
         }
     }
 
@@ -47,7 +47,7 @@ Rectangle {
             }
         }
 
-        Text {
+        StyledText {
             text: {
                 if (Network.active) {
                     if (Network.active.ssid.length > 12) {

@@ -26,7 +26,7 @@ BaseMenu {
     }
 
     BaseCard {
-        Text {
+        StyledText {
             text: "VPN"
             font.pixelSize: 20
             font.bold: true
@@ -59,7 +59,7 @@ BaseMenu {
                         color: Appearance.colors.m3on_background
                         font.pixelSize: 32
                     }
-                    Text {
+                    StyledText {
                         text: modelData.name
                         color: Appearance.colors.m3on_background
                     }
@@ -74,8 +74,7 @@ BaseMenu {
                 }
             }
         }
-        
-    }
- 
-}
 
+    }
+
+}

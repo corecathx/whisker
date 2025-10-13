@@ -46,13 +46,13 @@ BaseRowCard {
     ColumnLayout {
         Layout.alignment: Qt.AlignVCenter
         spacing: 0
-        Text {
+        StyledText {
             text: device.name || device.address
             font.pixelSize: 16
             font.bold: true
             color: Appearance.colors.m3on_background
         }
-        Text {
+        StyledText {
             text: statusText
             font.pixelSize: 12
             color: usePrimary ? Appearance.colors.m3primary : Colors.opacify(Appearance.colors.m3on_background, 0.6)

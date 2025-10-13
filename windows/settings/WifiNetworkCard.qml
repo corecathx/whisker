@@ -46,13 +46,13 @@ BaseCard {
         ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             spacing: 0
-            Text {
+            StyledText {
                 text: network.ssid
                 font.pixelSize: 16
                 font.bold: true
                 color: Appearance.colors.m3on_background
             }
-            Text {
+            StyledText {
                 text: isActive ? "Connected" : (network.isSecure ? "Secured" : "Open")
                 font.pixelSize: 12
                 color: isActive ? Appearance.colors.m3primary : Colors.opacify(Appearance.colors.m3on_background, 0.6)

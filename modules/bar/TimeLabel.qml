@@ -8,8 +8,8 @@ import qs.services
 
 Item {
     id: root
-    property bool showLabel: true 
-    property bool verticalMode: false 
+    property bool showLabel: true
+    property bool verticalMode: false
 
     Layout.preferredWidth: verticalMode ? container.implicitWidth : showLabel ? container.implicitWidth : 0
     Layout.preferredHeight: verticalMode ? (showLabel ? container.implicitHeight : 0) : container.implicitHeight
@@ -26,7 +26,7 @@ Item {
             spacing: -2
             anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
 
-            Text {
+            StyledText {
                 text: verticalMode ? Qt.formatDateTime(Time.date, "HH") : Qt.formatDateTime(Time.date, "HH:mm")
                 color: Appearance.colors.m3on_surface
                 font.pixelSize: 18
@@ -35,7 +35,7 @@ Item {
                 anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
             }
 
-            Text {
+            StyledText {
                 visible: verticalMode
                 text: Qt.formatDateTime(Time.date, "mm")
                 color: Appearance.colors.m3on_surface
@@ -47,7 +47,7 @@ Item {
             }
         }
 
-        Text {
+        StyledText {
             text: verticalMode ? Qt.formatDateTime(Time.date, "dd/MM") : Qt.formatDateTime(Time.date, "ddd, dd/MM")
             color: Appearance.colors.m3on_surface
             font.pixelSize: 12
@@ -58,13 +58,13 @@ Item {
     }
 
     Behavior on Layout.preferredWidth {
-        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+        NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
     }
     Behavior on Layout.preferredHeight {
-        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+        NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
     }
     Behavior on opacity {
-        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+        NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
     }
     HoverHandler {
         id: hover

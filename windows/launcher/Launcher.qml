@@ -112,7 +112,7 @@ Scope {
         return substringMatch(needle, haystack)
     }
     function substringMatch(needle, haystack) {
-        return haystack.toLowerCase().includes(needle.toLowerCase()); 
+        return haystack.toLowerCase().includes(needle.toLowerCase());
     }
 
 
@@ -121,7 +121,7 @@ Scope {
         PanelWindow {
             id: window
             property int selectedIndex: -1  // Track selected item
-            property bool barIsOpaque: ((Preferences.barPosition === "bottom" && Hyprland.currentWorkspace.hasTilingWindow()) || Preferences.keepBarOpaque) || (Preferences.barPosition === "top")    
+            property bool barIsOpaque: ((Preferences.barPosition === "bottom" && Hyprland.currentWorkspace.hasTilingWindow()) || Preferences.keepBarOpaque) || (Preferences.barPosition === "top")
             implicitWidth: (screen.width * 0.4) + 20
             implicitHeight: (screen.height * 0.6) + 20
 
@@ -163,7 +163,7 @@ Scope {
                 anchors.rightMargin: 20
                 anchors.bottomMargin: 10
                 Behavior on anchors.bottomMargin {
-                    NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+                    NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                 }
 
                 layer.enabled: true
@@ -215,7 +215,7 @@ Scope {
                     const item = visibleItems[selectedIndex]
                     if (item) {
                         listFlick.contentY = item.y
-                        for (let i = 0; i < visibleItems.length; i++) 
+                        for (let i = 0; i < visibleItems.length; i++)
                             visibleItems[i].children[0].selected = (i === selectedIndex)
                     }
                 }
@@ -230,10 +230,10 @@ Scope {
                     radius: 20
 
                     Behavior on bottomLeftRadius {
-                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+                        NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                     }
                     Behavior on bottomRightRadius {
-                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+                        NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                     }
                 }
 
@@ -261,13 +261,13 @@ Scope {
                         contentWidth: width
                         contentHeight: column.implicitHeight
                         Behavior on contentY {
-                            NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+                            NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                         }
 
                         clip: true
                         height: Math.min(column.implicitHeight, window.implicitHeight - 140)
                         Behavior on height {
-                            NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+                            NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                         }
                         Column {
                             id: column
@@ -327,7 +327,7 @@ Scope {
                                             : Appearance.colors.m3surface
 
                                         Behavior on color {
-                                            ColorAnimation { duration: 200; easing.type: Easing.OutExpo }
+                                            ColorAnimation { duration: 200; easing.type: Appearance.animation.easing }
                                         }
 
                                         MouseArea {
@@ -356,7 +356,7 @@ Scope {
                                                     if (modelData.icon.startsWith("whisker:"))
                                                         return ""
                                                     return Quickshell.iconPath(modelData.icon, true)
-                                                    
+
                                                 }
                                                 visible: source != ""
                                                 fillMode: Image.PreserveAspectCrop
@@ -382,14 +382,14 @@ Scope {
                                                 spacing: 0
                                                 Layout.fillWidth: true
 
-                                                Text {
+                                                StyledText {
                                                     text: modelData.name
                                                     font.pixelSize: 16
                                                     font.bold: true
                                                     color: Appearance.colors.m3on_surface
                                                     Layout.fillWidth: true
                                                 }
-                                                Text {
+                                                StyledText {
                                                     visible: text !== ""
                                                     text: {
                                                         if (modelData.comment === "")
@@ -424,7 +424,7 @@ Scope {
                                     return true
                                 }
 
-                                
+
                                 RowLayout {
                                     id: emptyOverlayRow
                                     anchors.centerIn: parent
@@ -444,7 +444,7 @@ Scope {
                                     }
 
                                     ColumnLayout {
-                                        Text {
+                                        StyledText {
                                             text: "Nothing found."
                                             font.pixelSize: 32
                                             font.bold: true

@@ -39,12 +39,12 @@ BaseMenu {
 
         RowLayout {
             ColumnLayout {
-                Text {
+                StyledText {
                     text: "Dark mode"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Whether to use dark color schemes."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)

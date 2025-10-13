@@ -1,6 +1,6 @@
 import QtQuick
 
-Text {
+StyledText {
   id: root
   property real fill: 0
   property int grad: 0

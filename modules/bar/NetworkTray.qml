@@ -18,7 +18,33 @@ Item {
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked: clickProc.running = true
+        onClicked: {
+            Quickshell.execDetached({
+                command: ['whisker', 'ipc', 'settings', 'open', 'wi-fi']
+            })
+        }
+    }
+
+    HoverHandler {
+        id: hover
+    }
+
+    StyledPopout {
+        hoverTarget: hover
+        hCenterOnItem: true
+        Component {
+            StyledText {
+                text: {
+                    if (!Network.wifiEnabled)
+                        return "Wi-Fi is off"
+                    if (!Network.active)
+                        return "Not connected";
+                    return "Connected to \"" + Network.active.ssid + '"'
+                }
+                color: Appearance.colors.m3on_surface
+                font.pixelSize: 14
+            }
+        }
     }
 
     RowLayout {

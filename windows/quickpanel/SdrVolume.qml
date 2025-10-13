@@ -81,7 +81,7 @@ Rectangle {
                 enabled: !root.dragging
                 NumberAnimation {
                     duration: 200
-                    easing.type: Easing.OutExpo
+                    easing.type: Appearance.animation.easing
                 }
             }
             MaterialIcon {

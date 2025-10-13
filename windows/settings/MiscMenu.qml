@@ -13,12 +13,12 @@ BaseMenu {
     BaseCard {
         RowLayout {
             ColumnLayout {
-                Text {
+                StyledText {
                     text: "Visualizers"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Whether to display visualizer on the Shell.\nSetting this to `false` would disable every visualizer on the shell."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)

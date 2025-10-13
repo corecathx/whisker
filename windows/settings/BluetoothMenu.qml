@@ -15,7 +15,7 @@ BaseMenu {
             cardSpacing: 0
             verticalPadding: Bluetooth.defaultAdapter.enabled ? 10 : 0
             cardMargin: 0
-            Text {
+            StyledText {
                 text: powerSwitch.checked ? "Power: On" : "Power: Off"
                 font.pixelSize: 16
                 font.bold: true
@@ -35,12 +35,12 @@ BaseMenu {
             cardMargin: 0
             ColumnLayout {
                 spacing: 2
-                Text {
+                StyledText {
                     text: "Discoverable"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Allow other devices to find this computer."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -59,12 +59,12 @@ BaseMenu {
             cardMargin: 0
             ColumnLayout {
                 spacing: 2
-                Text {
+                StyledText {
                     text: "Scanning"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Search for nearby Bluetooth devices."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -81,7 +81,7 @@ BaseMenu {
 
     BaseCard {
         visible: connectedDevices.count > 0
-        Text {
+        StyledText {
             text: "Connected Devices"
             font.pixelSize: 18
             font.bold: true
@@ -105,7 +105,7 @@ BaseMenu {
 
     BaseCard {
         visible: Bluetooth.defaultAdapter?.enabled
-        Text {
+        StyledText {
             text: "Paired Devices"
             font.pixelSize: 18
             font.bold: true
@@ -116,7 +116,7 @@ BaseMenu {
             visible: pairedDevices.count === 0
             width: parent.width
             height: 40
-            Text {
+            StyledText {
                 anchors.centerIn: parent
                 text: "No paired devices"
                 font.pixelSize: 14
@@ -138,7 +138,7 @@ BaseMenu {
 
     BaseCard {
         visible: Bluetooth.defaultAdapter?.enabled
-        Text {
+        StyledText {
             text: "Available Devices"
             font.pixelSize: 18
             font.bold: true
@@ -149,7 +149,7 @@ BaseMenu {
             visible: discoveredDevices.count === 0 && !Bluetooth.defaultAdapter.discovering
             width: parent.width
             height: 40
-            Text {
+            StyledText {
                 anchors.centerIn: parent
                 text: "No new devices found"
                 font.pixelSize: 14

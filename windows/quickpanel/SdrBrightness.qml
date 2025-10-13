@@ -70,7 +70,7 @@ Rectangle {
                 color: Appearance.colors.m3on_background
             }
 
-            Text {
+            StyledText {
                 text: root.labelText
                 font.pixelSize: 14
                 color: Appearance.colors.m3on_background
@@ -90,7 +90,7 @@ Rectangle {
                 enabled: !root.dragging
                 NumberAnimation {
                     duration: 200
-                    easing.type: Easing.OutExpo
+                    easing.type: Appearance.animation.easing
                 }
             }
 
@@ -104,7 +104,7 @@ Rectangle {
                     color: Appearance.colors.m3on_background
                 }
 
-                Text {
+                StyledText {
                     text: root.labelText
                     font.pixelSize: 14
                     color: Appearance.colors.m3on_background

@@ -34,8 +34,8 @@ Item {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: Appearance.anim_fast
-                        easing.type: Easing.OutExpo
+                        duration: Appearance.animation.fast
+                        easing.type: Appearance.animation.easing
                     }
                 }
             }
@@ -50,12 +50,31 @@ Item {
                 BluetoothTray {}
             }
         }
-        Battery {
-            verticalMode: true
-        }
+        // Battery {
+        //     verticalMode: true
+        // }
+        
         // sorry but making the battery object from horizontal bar is difficult for vertical :(
+
+
+        Item {
+            implicitHeight: 30
+            implicitWidth: implicitHeight
+            CircularProgress {
+                anchors.fill: parent
+                progress: UPower.displayDevice.percentage * 100
+                icon: {
+                    if (!UPower.onBattery) return "bolt";
+                    if (UPower.displayDevice.percentage < 0.2) return "battery_1_bar";
+                    if (UPower.displayDevice.percentage < 0.4) return "battery_2_bar";
+                    if (UPower.displayDevice.percentage < 0.6) return "battery_4_bar";
+                    if (UPower.displayDevice.percentage < 0.8) return "battery_5_bar";
+                    return "battery_full";
+                }
+                strokeWidth: 2
+            }
+        }
     }
-    
     implicitWidth: contentCol.width
     implicitHeight: contentCol.height
 }

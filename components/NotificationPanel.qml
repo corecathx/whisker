@@ -33,7 +33,7 @@ Item {
                 StyledPopout {
                     hoverTarget: hoverDnd
                     Component {
-                        Text {
+                        StyledText {
                             text: "If disabled, you won't get notification popups.\nYou can still see past notifications here."
                             font.pixelSize: 14
                             color: Appearance.colors.m3on_surface
@@ -41,7 +41,7 @@ Item {
                     }
                 }
             }
-            Text {
+            StyledText {
                 text: "Notifications"
                 font.pixelSize: 16
                 font.family: "Outfit Medium"
@@ -64,7 +64,7 @@ Item {
             ColumnLayout {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                Text {
+                StyledText {
                     visible: NotifServer.data.length === 0
                     text: "You're all caught up!"
                     font.pixelSize: 14

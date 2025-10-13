@@ -66,7 +66,7 @@ Rectangle {
                         blur: coverParent.hovered ? 1 : 0
                         blurMax: 28
                         Behavior on blur {
-                            NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+                            NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                         }
                     }
                 }
@@ -75,7 +75,7 @@ Rectangle {
                     anchors.fill: parent
                     color: Colors.opacify(Appearance.colors.m3surface, coverParent.hovered ? 0.6 : 0)
                     Behavior on color {
-                        ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+                        ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                     }
                 }
 
@@ -87,7 +87,7 @@ Rectangle {
                     renderType: Text.NativeRendering
                     opacity: coverParent.hovered ? 1 : 0
                     Behavior on opacity {
-                        NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }
+                        NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                     }
                 }
 
@@ -111,7 +111,7 @@ Rectangle {
                 Layout.fillWidth: true
                 spacing: 5
 
-                Text {
+                StyledText {
                     text: {
                         const title = Players.active?.trackTitle ?? "Unknown Title"
                         return title.length > 30 ? title.substring(0, 30) + "..." : title
@@ -122,7 +122,7 @@ Rectangle {
                     elide: Text.ElideRight
                 }
 
-                Text {
+                StyledText {
                     text: {
                         const artist = Players.active?.trackArtist ?? "Unknown Artist"
                         return artist.length > 30 ? artist.substring(0, 30) + "..." : artist

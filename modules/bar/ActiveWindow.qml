@@ -31,7 +31,7 @@ Item {
         ColumnLayout {
             spacing: -4
 
-            Text {
+            StyledText {
                 text: {
                     if (!Hyprland.currentWorkspace.hasWindow) {
                         return "Desktop";
@@ -44,7 +44,7 @@ Item {
                 horizontalAlignment: Text.AlignLeft
             }
 
-            Text {
+            StyledText {
                 text: {
                     if (!Hyprland.currentWorkspace.hasWindow) {
                         return "Workspace " + Hyprland.activeWsId;
@@ -76,7 +76,7 @@ Item {
                         return Utils.getAppIcon(Hyprland.activeToplevel?.lastIpcObject.class ?? "");
                     }
                 }
-                Text {
+                StyledText {
                     text: {
                         return Utils.truncateText(Hyprland.activeToplevel?.lastIpcObject.title ?? "", 40);
                     }

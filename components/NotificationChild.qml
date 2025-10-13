@@ -23,8 +23,8 @@ Rectangle {
     opacity: tracked ? 1 : (startAnim ? 1 : 0)
     Behavior on opacity {
         NumberAnimation {
-            duration: Appearance.anim_fast
-            easing.type: Easing.OutExpo
+            duration: Appearance.animation.fast
+            easing.type: Appearance.animation.easing
         }
     }
 
@@ -36,8 +36,8 @@ Rectangle {
     color: hovered ? (clicked ? Appearance.colors.m3surface_container_high : Appearance.colors.m3surface_container_low) : Appearance.colors.m3surface
     Behavior on color {
         ColorAnimation {
-            duration: Appearance.anim_fast
-            easing.type: Easing.OutExpo
+            duration: Appearance.animation.fast
+            easing.type: Appearance.animation.easing
         }
     }
     implicitHeight: Math.max(content.implicitHeight + 30, 80)
@@ -70,7 +70,7 @@ Rectangle {
         }
 
         ColumnLayout {
-            Text {
+            StyledText {
                 text: root.title
                 font.bold: true
                 font.pixelSize: 18
@@ -79,7 +79,7 @@ Rectangle {
                 Layout.fillWidth: true
             }
 
-            Text {
+            StyledText {
                 text: root.body.length > 123 ? root.body.substr(0, 120) + "..." : root.body
                 visible: root.body.length > 0
                 font.pixelSize: 12
@@ -119,7 +119,7 @@ Rectangle {
         id: mouseHandler
         anchors.fill: parent
         hoverEnabled: true
-        visible: root.buttons.length === 0 || root.buttons.length === 1 
+        visible: root.buttons.length === 0 || root.buttons.length === 1
         cursorShape: Qt.PointingHandCursor
         onClicked: {
             if (root.buttons.length === 1 && root.buttons[0].onClick) {

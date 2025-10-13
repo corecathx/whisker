@@ -6,7 +6,7 @@ import qs.services
 import qs.modules
 ShellRoot {
 	id: root
-	property real animation_time: Appearance.anim_slow
+	property real animation_time: Appearance.animation.slow
     IpcHandler {
         target: "lockscreen"
         function lock() {

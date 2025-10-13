@@ -9,7 +9,7 @@ import qs.components
 
 Item {
     anchors.fill: parent
-    
+
     SoundEffect { id: cat0; source: Utils.getPath("audios/mc-cat0.wav"); volume: 0.8 }
     SoundEffect { id: cat1; source: Utils.getPath("audios/mc-cat1.wav"); volume: 0.8 }
     SoundEffect { id: cat2; source: Utils.getPath("audios/mc-cat2.wav"); volume: 0.8 }
@@ -65,7 +65,7 @@ Item {
                 spacing: 10
                 Layout.alignment: Qt.AlignHCenter
 
-                Text {
+                StyledText {
                     text: "Whisker"
                     font.pixelSize: 24
                     font.family: "Outfit ExtraBold"
@@ -74,7 +74,7 @@ Item {
                     Layout.preferredWidth: 360
                 }
 
-                Text {
+                StyledText {
                     text: "A simple shell focusing on usability and customization."
                     font.pixelSize: 14
                     wrapMode: Text.Wrap
@@ -83,7 +83,7 @@ Item {
                     Layout.preferredWidth: 360
                 }
 
-                Text {
+                StyledText {
                     text: "Cat sounds from Minecraft"
                     font.pixelSize: 10
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.5)

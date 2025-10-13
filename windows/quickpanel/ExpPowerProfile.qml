@@ -12,12 +12,18 @@ RowLayout {
     Layout.leftMargin: 20
     Layout.rightMargin: 20
 
+    property bool showText: true
     property string current_mode: "Balanced"
 
+    Component.onCompleted: {
+        if (showText) return;
+
+        btn_balanced.text = btn_saver.text = btn_perf.text = ""
+    }
     StyledButton {
         id: btn_saver
         text: "Power Saver"
-        icon: "eco"
+        icon: "energy_savings_leaf"
         checkable: true
         Layout.fillWidth: true
         onToggled: if (checked) {
@@ -38,7 +44,7 @@ RowLayout {
     StyledButton {
         id: btn_balanced
         text: "Balanced"
-        icon: "tune"
+        icon: "balance"
         checkable: true
         Layout.fillWidth: true
         onToggled: if (checked) {

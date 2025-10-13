@@ -46,7 +46,7 @@ Scope {
 
             anchors.bottom: Preferences.barPosition === 'bottom'
 			margins.bottom: Preferences.barPosition === 'bottom' ? 10 : 0
-			
+
 			anchors.right: true
 			margins.right: Preferences.smallBar ? Preferences.barPadding + 10 : 10
 
@@ -84,13 +84,13 @@ Scope {
 						Layout.fillWidth: true
 						implicitHeight: 40
 						spacing: 5
-						
-						Text {
+
+						StyledText {
 							color: Appearance.colors.m3on_background
 							text: Pipewire.defaultAudioSink?.description + " - " + (Pipewire.defaultAudioSink?.audio.muted ? 'Muted' : Math.floor(Pipewire.defaultAudioSink?.audio.volume*100) + '%')
 							font.pixelSize: 16
 						}
-						
+
 						StyledSlider {
 							implicitHeight: 20
 							icon: ""

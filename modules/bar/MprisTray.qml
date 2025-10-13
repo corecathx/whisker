@@ -62,11 +62,29 @@ Item {
             }
         }
 
-        Text {
+        StyledText {
             Layout.alignment: Qt.AlignVCenter
             color: Appearance.colors.m3on_background
             font.pixelSize: 12
             text: Utils.truncateText(root.title, 20)
+        }
+    }
+    HoverHandler {
+        id: hover
+    }
+    StyledPopout {
+        hoverTarget: hover
+        interactable: true
+        hCenterOnItem: true
+        Component {
+            PlayerDisplay {
+                artSize: 55
+                titleSize: 14
+                artistSize: 10
+                iconSize: 46
+                sliderHeight: 10
+                spacing: 20
+            }
         }
     }
 }

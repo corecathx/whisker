@@ -6,29 +6,31 @@ import Quickshell.Io
 import qs.components
 import qs.modules
 import qs.preferences
-import Quickshell.Services.UPower
+import qs.services
+
+import qs.windows.quickpanel
 
 Item {
     id: root
     property bool verticalMode: false
-    width: verticalMode ? 28 : 50
-    height: verticalMode ? 50 : 25
-    visible: UPower.displayDevice.isLaptopBattery
+    implicitWidth: verticalMode ? 32 : 50
+    implicitHeight: verticalMode ? 60 : 25
+    visible: Power.laptop
 
     property var low_battery_level: 15
     property int notifiedLevel: -1
-    property string battery: UPower.displayDevice.isLaptopBattery 
-        ? (Math.round(UPower.displayDevice.percentage * 100).toFixed(1)) + "" 
+    property string battery: Power.batteries.length > 0
+        ? (Math.round(Power.percentage * 100).toFixed(1)) + ""
         : "0%"
 
     property color batteryColor: {
-        if (!UPower.onBattery) {
+        if (!Power.onBattery) {
             return Appearance.colors.m3primary;
         }
-        if (UPower.displayDevice.percentage < 0.2) {
+        if (Power.percentage < 0.2) {
             return Appearance.colors.m3error;
         }
-        if (UPower.displayDevice.percentage < 0.5) {
+        if (Power.percentage < 0.5) {
             return Appearance.colors.m3secondary;
         }
         return Appearance.colors.m3primary;
@@ -40,12 +42,12 @@ Item {
 
     // Notifications for battery levels
     Connections {
-        target: UPower.displayDevice
+        target: Power
         function onPercentageChanged() {
-            if (!UPower.onBattery)
+            if (!Power.onBattery)
                 return;
 
-            const pct = Math.floor(UPower.displayDevice.percentage * 100);
+            const pct = Math.floor(Power.percentage * 100);
             if (pct === notifiedLevel)
                 return;
 
@@ -69,7 +71,7 @@ Item {
     }
 
     property string icon: {
-        if (!UPower.onBattery) return "bolt";
+        if (!Power.onBattery) return "bolt";
         return "";
     }
 
@@ -79,23 +81,28 @@ Item {
         radius: 100
         color: Colors.opacify(batteryColor, 0.2)
 
-        RowLayout {
+        GridLayout {
             id: textLayer
             anchors.centerIn: parent
-            spacing: 0
+            columns: root.verticalMode ? 1 : 2
+            rows: root.verticalMode ? 2 : 1
+            rowSpacing: root.verticalMode ? 2 : 0
+            columnSpacing: root.verticalMode ? 0 : 2
 
             MaterialIcon {
                 icon: root.icon
-                font.pixelSize: 16
+                font.pixelSize: root.verticalMode ? 14 : 16
                 color: batteryColor
+                Layout.alignment: Qt.AlignHCenter
             }
 
-            Text {
+            StyledText {
                 id: batteryText
                 text: root.battery
-                font.pixelSize: 12
+                font.pixelSize: root.verticalMode ? 11 : 12
                 color: batteryColor
                 font.bold: root.isLowBattery()
+                Layout.alignment: Qt.AlignHCenter
             }
         }
 
@@ -111,27 +118,143 @@ Item {
             color: batteryColor
 
             Behavior on width {
-                NumberAnimation { duration: 300; easing.type: Easing.OutExpo }
+                NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
             }
 
-            RowLayout {
+            GridLayout {
                 id: textLayer2
-                x: (root.width - width) / 2
-                y: (root.height - height) / 2
-                spacing: 0
+                columns: root.verticalMode ? 1 : 2
+                rows: root.verticalMode ? 2 : 1
+                rowSpacing: root.verticalMode ? 2 : 0
+                columnSpacing: root.verticalMode ? 0 : 2
+                x: (root.implicitWidth - width) / 2
+                y: (root.implicitHeight - height) / 2
 
                 MaterialIcon {
                     icon: root.icon
-                    font.pixelSize: 16
+                    font.pixelSize: root.verticalMode ? 14 : 16
                     color: Appearance.colors.m3surface
+                    Layout.alignment: Qt.AlignHCenter
                 }
 
-                Text {
+                StyledText {
                     text: root.battery
-                    font.pixelSize: 12
+                    font.pixelSize: root.verticalMode ? 11 : 12
                     color: Appearance.colors.m3surface
+                    Layout.alignment: Qt.AlignHCenter
                 }
             }
         }
     }
+        MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            Quickshell.execDetached({
+                command: ['whisker', 'ipc', 'settings', 'open', 'power']
+            })
+        }
+    }
+
+    HoverHandler {
+        id: hover
+    }
+
+    StyledPopout {
+        hoverTarget: hover
+        hCenterOnItem: true
+        interactable: true
+        Component {
+            Item {
+                implicitWidth: 250
+                implicitHeight: contentColumn.height + 24
+
+                ColumnLayout {
+                    id: contentColumn
+                    anchors.centerIn: parent
+                    width: parent.width - 24
+                    spacing: 12
+
+                    StyledText {
+                        text: "Batteries"
+                        font.pixelSize: 16
+                        font.bold: true
+                        color: Appearance.colors.m3on_surface
+                    }
+
+                    Repeater {
+                        model: Power.batteries
+                        delegate: ColumnLayout {
+                            spacing: 8
+                            Layout.fillWidth: true
+
+                            RowLayout {
+                                spacing: 6
+                                Layout.fillWidth: true
+
+                                StyledText {
+                                    text: "Battery " + (index + 1)
+                                    font.pixelSize: 13
+                                    font.bold: true
+                                    color: Appearance.colors.m3on_surface
+                                }
+
+                                StyledText {
+                                    text: modelData.model
+                                    font.pixelSize: 10
+                                    color: Colors.opacify(Appearance.colors.m3on_surface, 0.6)
+                                }
+                            }
+
+                            ClippingRectangle {
+                                Layout.fillWidth: true
+                                height: 10
+                                radius: 5
+                                color: Colors.opacify(batteryColor, 0.2)
+
+                                Rectangle {
+                                    width: parent.width * modelData.percentage
+                                    height: parent.height
+                                    radius: 5
+                                    color: batteryColor
+
+                                    Behavior on width {
+                                        NumberAnimation {
+                                            duration: Appearance.animation.medium
+                                            easing.type: Appearance.animation.easing
+                                        }
+                                    }
+                                }
+                            }
+
+                            RowLayout {
+                                Layout.fillWidth: true
+
+                                StyledText {
+                                    text: (modelData.percentage * 100).toFixed(0) + "%"
+                                    font.pixelSize: 12
+                                    color: Appearance.colors.m3on_surface
+                                }
+
+                                Item { Layout.fillWidth: true }
+
+                                StyledText {
+                                    text: Power.onBattery
+                                        ? (modelData.timeToEmpty > 0 ? Utils.formatSeconds(modelData.timeToEmpty) : "Calculating")
+                                        : (modelData.timeToFull > 0 ? Utils.formatSeconds(modelData.timeToFull) : "Fully charged")
+                                    font.pixelSize: 12
+                                    color: Colors.opacify(Appearance.colors.m3on_surface, 0.7)
+                                }
+                            }
+                        }
+                    }
+
+                    ExpPowerProfile {
+                        showText: false
+                    }
+                }
+            }
+        }
+    }
+
 }

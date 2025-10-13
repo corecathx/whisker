@@ -10,6 +10,21 @@ import qs.modules
 Singleton {
     id:root
 
+    signal reloaded();
+    property bool spawnedWelcome: false
+    onReloaded: {
+        if (!root.finishedSetup && !root.spawnedWelcome) {
+            console.log('what')
+            root.spawnedWelcome = true
+            Quickshell.execDetached({ command: ['whisker', 'welcome'] })
+        }
+    }
+
+    /**
+     * Internal usage only, defines whether the Preferences has been load or not.
+     */
+    property bool ready: false
+
     /**
      * Wallpaper that will be displayed by Whisker.
      * @values string: <Local file path> "/home/corecat/Pictures/wallpaper.jpg"
@@ -90,18 +105,45 @@ Singleton {
      */
     property bool notificationEnabled: true
 
-    function load(content) { 
+    /**
+     * Whether the user has finished setting up whisker.
+     * @values bool: true, false
+     * @default bool: true
+     */
+    property bool finishedSetup: false
+
+    Component.onCompleted: {
+        fileView.reload()
+        root.ready = true
+    }
+    Process {
+        id: exitProc
+        command: ['whisker', 'prefs', '--no-prompt']
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: {
+                fileView.reload()
+            }
+        }
+    }
+    function load(content) {
         const parsed = JSON.parse(content);
 
         for (const [name, value] of Object.entries(parsed)) {
             if (root.hasOwnProperty(name))
                 root[name] = value;
         }
+        root.ready = true
+        root.reloaded();
     }
     FileView {
+        id: fileView
         path: Utils.getConfigRelativePath('preferences.json')
         watchChanges: true
-        onFileChanged: reload()
+        onFileChanged: {
+            console.log("Preferences updated.")
+            fileView.reload()
+        }
         onLoaded: root.load(text())
     }
 

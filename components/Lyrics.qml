@@ -10,12 +10,12 @@ BaseCard {
     property bool hideOnNoLyrics: false
     LrclibProvider {
         id: lyrics
-        currentArtist: Players.active?.trackArtist
+        currentArtist: Players.active?.trackArtist.replace(" - Topic", "")
         currentTrack: Players.active?.trackTitle
         Component.onCompleted: fetchLyrics()
     }
 
-    Text {
+    StyledText {
         color: Appearance.colors.m3on_surface
         text: lyrics.status !== "LOADED" ? lyrics.statusMessage : ""
         visible: lyrics.status !== "LOADED"
@@ -69,8 +69,8 @@ BaseCard {
                 opacity: ListView.isCurrentItem ? 1 : 0
                 scale: ListView.isCurrentItem ? 1 : 0.95
 
-                Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-                Behavior on scale { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+                Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                Behavior on scale { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
 
                 layer.enabled: ListView.isCurrentItem
                 layer.effect: MultiEffect {
@@ -88,7 +88,7 @@ BaseCard {
                 width: parent.width
                 spacing: 4
 
-                Text {
+                StyledText {
                     id: mainLyrics
                     text: modelData.text
                     font.bold: ListView.isCurrentItem
@@ -99,11 +99,11 @@ BaseCard {
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.Wrap
 
-                    Behavior on font.pixelSize { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-                    Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+                    Behavior on font.pixelSize { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                    Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
                 }
 
-                Text {
+                StyledText {
                     id: translatedLyrics
                     text: modelData.translation
                     visible: text !== ""
@@ -115,8 +115,8 @@ BaseCard {
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.Wrap
 
-                    Behavior on font.pixelSize { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-                    Behavior on opacity { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+                    Behavior on font.pixelSize { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                    Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
                 }
             }
         }

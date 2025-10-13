@@ -12,7 +12,7 @@ Item {
     property bool inLockScreen: false
     implicitWidth: container.implicitWidth
     implicitHeight: container.implicitHeight
-    Behavior on implicitWidth { NumberAnimation { duration: Appearance.anim_medium; easing.type: Easing.OutExpo } }
+    Behavior on implicitWidth { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
     visible: icon !== ""
     Layout.preferredWidth: visible ? implicitWidth : 0
     Layout.preferredHeight: visible ? implicitHeight : 0
@@ -31,7 +31,7 @@ Item {
             radius: 10
             width: this.implicitHeight
             color: Appearance.colors.m3primary
-            Text {
+            StyledText {
                 text: NotifServer.data.length
                 anchors.centerIn: parent
                 font.pixelSize: parent.height-2
@@ -39,17 +39,19 @@ Item {
             }
         }
     }
-    
+
     HoverHandler {
         id: detect
     }
-    
+
     StyledPopout {
         hoverTarget: !root.inLockScreen ? detect : null
         interactable: true
-        
+                hCenterOnItem: true
+
         Component {
-            NotificationPanel {}
+            NotificationPanel {
+            }
         }
     }
 }

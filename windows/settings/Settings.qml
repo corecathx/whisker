@@ -12,8 +12,17 @@ import qs.services
 Scope {
     IpcHandler {
         target: "settings"
-        function open() {
+        function open(menu: string) {
             Globals.visible_settingsMenu = true
+            if (menu !== "" && settingsWindow !== null) {
+                for (var i = 0; i < settingsWindow.menuModel.length; i++) {
+                    var item = settingsWindow.menuModel[i]
+                    if (!item.header && item.label.toLowerCase() === menu.toLowerCase()) {
+                        settingsWindow.selectedIndex = item.page
+                        break
+                    }
+                }
+            }
         }
     }
 
@@ -29,6 +38,7 @@ Scope {
             color: Appearance.colors.m3background
             onClosing: Globals.visible_settingsMenu = false
 
+            // Expose menuModel at window level so IpcHandler can access it
             property var menuModel: {
                 var raw = [
                     { header: true, label: "Connections" },
@@ -54,6 +64,11 @@ Scope {
                 });
             }
 
+            // Store reference to this window for IPC handler
+            Component.onCompleted: {
+                settingsWindow = root
+            }
+
             RowLayout {
                 anchors.fill: parent
 
@@ -68,7 +83,7 @@ Scope {
                         anchors.margins: 40
                         spacing: 5
 
-                        Text {
+                        StyledText {
                             text: "Settings"
                             color: Appearance.colors.m3on_surface
                             font.family: "Outfit ExtraBold"
@@ -85,8 +100,8 @@ Scope {
 
                             property bool hovered: mouseArea.containsMouse
 
-                            color: hovered 
-                                ? Appearance.colors.m3surface_container_high 
+                            color: hovered
+                                ? Appearance.colors.m3surface_container_high
                                 : Appearance.colors.m3surface_container
 
                             RowLayout {
@@ -98,8 +113,8 @@ Scope {
                                     Layout.preferredWidth: userCard.opened ? 60 : 40
                                     Layout.preferredHeight: userCard.opened ? 60 : 40
 
-                                    Behavior on Layout.preferredWidth { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
-                                    Behavior on Layout.preferredHeight { NumberAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+                                    Behavior on Layout.preferredWidth { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                                    Behavior on Layout.preferredHeight { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
 
                                     IconImage {
                                         anchors.fill: parent
@@ -109,7 +124,7 @@ Scope {
 
                                 ColumnLayout {
                                     spacing: 2
-                                    Text {
+                                    StyledText {
                                         text: Quickshell.env("USER")
                                         color: Appearance.colors.m3on_surface
                                         font.pixelSize: 22
@@ -121,7 +136,7 @@ Scope {
                                             sourceSize: Qt.size(20, 20)
                                             source:  Quickshell.iconPath(System.logo)
                                         }
-                                        Text {
+                                        StyledText {
                                             text: System.prettyName
                                             color: Colors.opacify(Appearance.colors.m3on_surface, 0.7)
                                             font.pixelSize: 12
@@ -133,7 +148,7 @@ Scope {
                             MouseArea {
                                 id: mouseArea
                                 anchors.fill: parent
-                                hoverEnabled: true 
+                                hoverEnabled: true
                                 onClicked: userCard.opened = !userCard.opened
                             }
                         }
@@ -153,7 +168,7 @@ Scope {
                                 property bool hovered: mouseArea2.containsMouse
                                 property bool selected: root.selectedIndex === modelData.page && modelData.page !== -1
 
-                                Text {
+                                StyledText {
                                     anchors.top: parent.top
                                     anchors.topMargin: (parent.height - height) * 0.5 // lol
                                     anchors.left: parent.left
@@ -175,7 +190,7 @@ Scope {
                                                ? Appearance.colors.m3surface_container_high
                                                : Appearance.colors.m3surface_container_low)
                                     radius: 20
-                                    Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }}
+                                    Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }}
                                 }
 
                                 RowLayout {
@@ -191,14 +206,14 @@ Scope {
                                         icon: modelData.icon ?? ""
                                         color: selected ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface
                                         font.pixelSize: 24
-                                        Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }}
+                                        Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }}
                                     }
 
-                                    Text {
+                                    StyledText {
                                         text: modelData.label ?? ""
                                         font.pixelSize: 16
                                         color: selected ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface
-                                        Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo }}
+                                        Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }}
                                     }
                                 }
 
@@ -217,7 +232,7 @@ Scope {
                             }
                         }
 
-                        Text {
+                        StyledText {
                             anchors.horizontalCenter: parent.horizontalCenter
                             text: "! Everything here is TBA !"
                             color: Colors.opacify(Appearance.colors.m3on_surface_variant, 0.6)
@@ -231,6 +246,7 @@ Scope {
                     anchors.top: parent.top
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
+                    currentIndex: root.selectedIndex
 
                     // Connections
                     WifiMenu {}
@@ -250,4 +266,7 @@ Scope {
             }
         }
     }
+
+    // Property to store window reference
+    property var settingsWindow: null
 }

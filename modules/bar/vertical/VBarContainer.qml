@@ -13,7 +13,7 @@ Item {
     id: root
     property bool inLockScreen: false
 
-    implicitWidth: 44
+    implicitWidth: Appearance.barSize
     implicitHeight: parent ? parent.height : 0
     anchors.fill: parent
 
@@ -26,7 +26,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
-            Behavior on color { ColorAnimation { duration: Appearance.anim_fast; easing.type: Easing.OutExpo } }
+            Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
         }
 
         Item {

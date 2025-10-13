@@ -11,12 +11,14 @@ QtObject {
     signal ready();
 
     // translation
-    property string targetLanguage: "en"
+    property string targetLanguage: "id"
     property bool enableTranslation: true
 
     // players
     property string currentTrack: Players.active.trackTitle ?? ""
-    property string currentArtist: Players.active.trackArtist ?? ""
+    property string currentArtist: {
+        return Players.active.trackArtist.replace("- Topic", "") ?? ""
+    }
     property int currentPosition: Players.active.position * 1000
     property bool isPlaying: Players.active?.playbackState == MprisPlaybackState.Playing
 
@@ -82,22 +84,22 @@ QtObject {
                 let time = (minutes * 60 + seconds) * 1000 + centiseconds * 10;
                 let text = match[4].trim();
                 if (text) {
-                    parsed.push({ 
-                        time: time, 
-                        text: text, 
-                        translation: "" 
+                    parsed.push({
+                        time: time,
+                        text: text,
+                        translation: ""
                     });
                 }
             }
         }
-        
+
         parsed = parsed.sort((a, b) => a.time - b.time);
-        
+
         if (enableTranslation) {
             for (let i = 0; i < parsed.length; i++)
                 translateText(parsed[i].text, i);
         }
-        
+
         return parsed;
     }
 
@@ -150,10 +152,10 @@ QtObject {
             }
         }
     }
-    
+
     function translateText(text, index) {
         if (!enableTranslation) return;
-        
+
         let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLanguage}&dt=t&q=${encodeURIComponent(text)}`;
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url);

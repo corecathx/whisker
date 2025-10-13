@@ -11,8 +11,10 @@ import qs.windows.notification
 import qs.windows.launcher
 import qs.windows.lockscreen
 import qs.windows.emojies
+import qs.windows.screencapture
 import qs.windows.dev
 import qs.windows.osdpanel
+import qs.windows.firsttime
 import qs.services
 
 ShellRoot {
@@ -40,4 +42,7 @@ ShellRoot {
         Audio.init()
     }
     // DevWindow {}
+    //
+    Screencapture {}
+
 }

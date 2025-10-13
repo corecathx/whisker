@@ -13,7 +13,7 @@ WlSessionLockSurface {
 	id: root
 	required property LockContext context
 	required property real animation_time
-	property var easingType: Easing.OutExpo
+	property var easingType: Appearance.animation.easing
 	color: !root.startAnim ? "transparent" : Appearance.colors.m3surface
 	Behavior on color { ColorAnimation { duration: animation_time; easing.type: easingType } }
 	property bool startAnim: false
@@ -99,23 +99,23 @@ WlSessionLockSurface {
 			id: centeredContainer
 			spacing: 10
 			ColumnLayout {
-				Layout.alignment: Qt.AlignHCenter 
+				Layout.alignment: Qt.AlignHCenter
 
 				id: clockContainer
 				spacing: 0
-				Text { 
+				StyledText {
 					text: Qt.formatDateTime(Serv.Time.date, "HH:mm")
 					font.family: "Outfit ExtraBold"
 					color: Appearance.colors.m3on_background
 					font.pixelSize: 92
-					Layout.alignment: Qt.AlignHCenter 
-				} 
-				Text { 
+					Layout.alignment: Qt.AlignHCenter
+				}
+				StyledText {
 					text: Qt.formatDateTime(Serv.Time.date, "dddd, dd/MM")
 					color: Appearance.colors.m3on_background
-					font.pixelSize: 32 
-					Layout.alignment: Qt.AlignHCenter 
-				} 
+					font.pixelSize: 32
+					Layout.alignment: Qt.AlignHCenter
+				}
 			}
 
 		}
@@ -167,7 +167,7 @@ WlSessionLockSurface {
         title: "Error while authenticating."
         description: root.context.lastMessage
 		radius: 40
-				
+
 		layer.enabled: true
         layer.effect: MultiEffect {
             shadowEnabled: true
@@ -192,9 +192,9 @@ WlSessionLockSurface {
 	Item {
 		id: loginContainer
 		property real shakeOffset: 0
-		
+
 		transform: Translate { x: loginContainer.shakeOffset }
-		
+
 		SequentialAnimation {
 			id: shakeAnim
 			NumberAnimation { target: loginContainer; property: "shakeOffset"; to: -10; duration: 50; easing.type: Easing.InOutQuad }
@@ -203,7 +203,7 @@ WlSessionLockSurface {
 			NumberAnimation { target: loginContainer; property: "shakeOffset"; to: 5; duration: 50; easing.type: Easing.InOutQuad }
 			NumberAnimation { target: loginContainer; property: "shakeOffset"; to: 0; duration: 50; easing.type: Easing.InOutQuad }
 		}
-		
+
 		layer.enabled: true
         layer.effect: MultiEffect {
             shadowEnabled: true
@@ -228,7 +228,7 @@ WlSessionLockSurface {
 		anchors.horizontalCenter: parent.horizontalCenter
 		implicitWidth: rowContainer.width + 40
 		implicitHeight: rowContainer.height + 40
-		
+
 		Rectangle {
 			id: loginBG
 			color: Appearance.panel_color
@@ -313,7 +313,7 @@ WlSessionLockSurface {
 
 		implicitWidth: rightContainer.width + 40
 		implicitHeight: rightContainer.height + 40
-				
+
 		Rectangle {
 			id: loginBG2
 			color: Appearance.panel_color

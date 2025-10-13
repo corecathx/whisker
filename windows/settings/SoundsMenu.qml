@@ -17,7 +17,7 @@ BaseMenu {
         description: "This menu is still being developed, so things might change overtime!"
     }
     BaseCard {
-        Text {
+        StyledText {
             text: "Output Device"
             font.pixelSize: 20
             font.bold: true
@@ -47,13 +47,13 @@ BaseMenu {
                             anchors.left: icon.right
                             anchors.leftMargin: 10
                             spacing: 0
-                            Text {
+                            StyledText {
                                 text: modelData.description
                                 font.pixelSize: 16
                                 font.bold: true
                                 color: Appearance.colors.m3on_background
                             }
-                            Text {
+                            StyledText {
                                 text: modelData.name
                                 font.pixelSize: 12
                                 color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -70,7 +70,7 @@ BaseMenu {
                     }
                 }
         }
-        Text {
+        StyledText {
             text: "Volume"
             font.pixelSize: 16
             color: Appearance.colors.m3on_background
@@ -78,7 +78,7 @@ BaseMenu {
         StyledSlider {
             id: vlmSlider
             value: Audio.volume * 100
-            
+
             onValueChanged: {
                 Audio.setVolume(value/100)
                 if (value === 0) vlmSlider.icon = "volume_off";
@@ -88,12 +88,12 @@ BaseMenu {
         }
         RowLayout {
             ColumnLayout {
-                Text {
+                StyledText {
                     text: "Mute"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Whether to mute this device."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -109,15 +109,15 @@ BaseMenu {
                 }
             }
         }
-    } 
+    }
     BaseCard {
-        Text {
+        StyledText {
             text: "Input Device"
             font.pixelSize: 20
             font.bold: true
             color: Appearance.colors.m3on_background
         }
-        Text {
+        StyledText {
             visible: Audio.sources.length == 0
             text: "No Input Devices found."
             font.pixelSize: 16
@@ -149,13 +149,13 @@ BaseMenu {
                             anchors.left: icon.right
                             anchors.leftMargin: 10
                             spacing: 0
-                            Text {
+                            StyledText {
                                 text: modelData.description
                                 font.pixelSize: 16
                                 font.bold: true
                                 color: Appearance.colors.m3on_background
                             }
-                            Text {
+                            StyledText {
                                 text: modelData.name
                                 font.pixelSize: 12
                                 color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -172,7 +172,7 @@ BaseMenu {
                     }
                 }
         }
-        Text {
+        StyledText {
             visible: Audio.sources.length > 0
             text: "Input Volume"
             font.pixelSize: 16
@@ -182,7 +182,7 @@ BaseMenu {
             visible: Audio.sources.length > 0
             id: vlmSrcSlider
             value: Audio.defaultSource.audio.volume * 100
-            
+
             onValueChanged: {
                 Audio.setSourceVolume(value/100)
                 if (value === 0) vlmSrcSlider.icon = "volume_off";
@@ -193,12 +193,12 @@ BaseMenu {
         RowLayout {
             visible: Audio.sources.length > 0
             ColumnLayout {
-                Text {
+                StyledText {
                     text: "Mute"
                     font.pixelSize: 16
                     color: Appearance.colors.m3on_background
                 }
-                Text {
+                StyledText {
                     text: "Whether to mute this device."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -214,6 +214,5 @@ BaseMenu {
                 }
             }
         }
-    } 
+    }
 }
-
