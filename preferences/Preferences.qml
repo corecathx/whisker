@@ -106,6 +106,13 @@ Singleton {
     property bool notificationEnabled: true
 
     /**
+     * Whether to render overview windows.
+     * @values bool: true, false
+     * @default bool: true
+     */
+    property bool renderOverviewWindows: true
+
+    /**
      * Whether the user has finished setting up whisker.
      * @values bool: true, false
      * @default bool: true

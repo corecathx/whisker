@@ -18,15 +18,14 @@ import qs.windows.firsttime
 import qs.services
 
 ShellRoot {
+    // Shell-specific windows.
     Wallpaper {}
     ScreenCorners {}
-    //VolumeOSD {}
     OsdPanel {}
     Bar {}
     QuickPanel {}
     Notification {}
     Settings {}
-    Launcher {}
     Lockscreen {}
 
     LazyLoader {
@@ -36,6 +35,9 @@ ShellRoot {
     }
 
     // EmojiWindow {}
+
+    // Whisker Apps.
+    Launcher {}
 
     Component.onCompleted: {
         Theme.init()

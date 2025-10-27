@@ -26,7 +26,7 @@ Item {
             color: Appearance.colors.m3on_background
         }
         Rectangle {
-            visible: Preferences.notificationEnabled && NotifServer.data.length > 0
+            visible: NotifServer.data.length > 0
             implicitHeight: 14
             radius: 10
             width: this.implicitHeight
@@ -47,7 +47,7 @@ Item {
     StyledPopout {
         hoverTarget: !root.inLockScreen ? detect : null
         interactable: true
-                hCenterOnItem: true
+        hCenterOnItem: true
 
         Component {
             NotificationPanel {

@@ -7,6 +7,7 @@ import Quickshell.Services.Notifications
 import Quickshell.Wayland
 import qs.modules
 import qs.components
+import qs.preferences
 import qs.modules.corners
 import qs.services
 
@@ -78,7 +79,7 @@ Scope {
 
             Repeater {
                 id: rep
-                model: NotifServer.popups
+                model: Preferences.notificationEnabled ? NotifServer.popups : []
 
                 delegate: NotificationChild {
                     id: child

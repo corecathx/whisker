@@ -273,7 +273,7 @@ Scope {
 
                     ParallelAnimation {
                         id: shrinkAnim
-                        running: captureWindow.visible && !captureWindow.isClosing
+                        running: captureWindow.visible && !captureWindow.isClosing && captureWindow.width > 0 && captureWindow.height > 0
                         NumberAnimation { target: wallpaper; property: "scale"; from: wallpaper.scale; to: wallpaper.scale + 0.05; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
                         NumberAnimation { target: screenContainer; property: "width"; from: captureWindow.width; to: captureWindow.width * 0.8; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
                         NumberAnimation { target: screenContainer; property: "height"; from: captureWindow.height; to: captureWindow.height * 0.8; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
