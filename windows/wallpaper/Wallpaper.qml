@@ -22,6 +22,7 @@ PanelWindow {
     }
     color: Appearance.colors.m3surface
     WlrLayershell.layer: WlrLayer.Background
+    WlrLayershell.namespace: 'whisker:wallpaper'
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
     Image {
