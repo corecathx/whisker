@@ -10,7 +10,11 @@ TextField {
     property color iconColor: Appearance.colors.m3on_surface
     property string placeholder: "Type here..."
     property real iconSize: icon === "" ? 0 : 25
-    property real radius: 20
+    property alias radius: background.radius
+    property alias topLeftRadius: background.topLeftRadius
+    property alias topRightRadius: background.topRightRadius
+    property alias bottomLeftRadius: background.bottomLeftRadius
+    property alias bottomRightRadius: background.bottomRightRadius
     property color backgroundColor: Appearance.colors.m3surface_container
 
     width: parent ? parent.width - 40 : 300
@@ -34,8 +38,8 @@ TextField {
     }
 
     background: Rectangle {
-        id: bg
-        radius: control.radius
+        id: background
+        radius: 20
         color: control.backgroundColor
         border.width: 0
 

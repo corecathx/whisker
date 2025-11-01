@@ -8,7 +8,11 @@ Control {
   property alias text: label.text
   property string icon: ""
   property int icon_size: 20
-  property int radius: 20
+  property alias radius: background.radius
+  property alias topLeftRadius: background.topLeftRadius
+  property alias topRightRadius: background.topRightRadius
+  property alias bottomLeftRadius: background.bottomLeftRadius
+  property alias bottomRightRadius: background.bottomRightRadius
   property bool checkable: false
   property bool checked: true
   property bool secondary: false
@@ -76,7 +80,8 @@ Control {
   }
 
   background: Rectangle {
-    radius: root.radius
+      id: background
+    radius: 20
     color: root.background_color
     Behavior on color {
       ColorAnimation { duration: Appearance.animation.fast / 2; easing.type: Appearance.animation.easing }
