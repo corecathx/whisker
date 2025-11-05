@@ -15,7 +15,7 @@
 
 **Whisker** is already usable now, but everything is still subject to change overtime.
 
-**Whisker** is available on Arch Linux's AUR Repository!
+**Whisker** is available on Arch Linux's User Repository (AUR)!
 Simply run 
 ```bash
 yay -S whisker-shell-git
