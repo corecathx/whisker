@@ -50,7 +50,15 @@ Singleton {
         const selectedScheme = schemeData[scheme];
         const mode = Preferences.darkMode ? "dark" : "light";
         const colors = selectedScheme[mode];
-        return colors
+
+        var outputColors = {};
+        for (const [name, colorModes] of Object.entries(selectedScheme)) {
+            if (colorModes[mode]) {
+                outputColors[name] = colorModes[mode];
+            }
+        }
+
+        return outputColors
     }
     function reloadScheme(data: string): void {
         if (data !== '' && root.lastData !== data)
@@ -71,14 +79,14 @@ Singleton {
         }
 
         const mode = Preferences.darkMode ? "dark" : "light";
-        const colors = selectedScheme[mode];
-        if (!colors)
-            return;
 
-        for (const [name, color] of Object.entries(colors)) {
+        for (const [name, colorModes] of Object.entries(selectedScheme)) {
             const propName = `m3${name}`;
-            if (root.colors.hasOwnProperty(propName))
-                root.colors[propName] = color;
+            if (root.colors.hasOwnProperty(propName)) {
+                if (colorModes[mode]) {
+                    root.colors[propName] = colorModes[mode];
+                }
+            }
         }
     }
 
