@@ -12,16 +12,22 @@ BaseCard {
         id: lyrics
         currentArtist: Players.active?.trackArtist.replace(" - Topic", "")
         currentTrack: Players.active?.trackTitle
+        currentPosition: Players.active.position * 1000
         Component.onCompleted: fetchLyrics()
     }
 
-    StyledText {
-        color: Appearance.colors.m3on_surface
-        text: lyrics.status !== "LOADED" ? lyrics.statusMessage : ""
-        visible: lyrics.status !== "LOADED"
+    RowLayout {
         anchors.centerIn: parent
-    }
 
+        LoadingIcon {
+            visible: lyrics.status === "FETCHING"
+        }
+        StyledText {
+            color: Appearance.colors.m3on_surface
+            text: lyrics.status !== "LOADED" ? lyrics.statusMessage : ""
+            visible: lyrics.status !== "LOADED"
+        }
+    }
     ListView {
         id: lyricsView
         anchors.margins: 40
@@ -128,6 +134,12 @@ BaseCard {
             }
             function onReady() {
                 lyricsView.currentIndex = lyrics.currentLineIndex
+            }
+            function onCurrentPositionChanged() {
+                if (lyricsView.currentIndex != lyrics.currentLineIndex) {
+                    console.log('Forced to resync based off position.');
+                    lyricsView.currentIndex = lyrics.currentLineIndex
+                }
             }
         }
     }

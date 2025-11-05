@@ -83,9 +83,13 @@ Control {
       id: background
     radius: 20
     color: root.background_color
-    Behavior on color {
-      ColorAnimation { duration: Appearance.animation.fast / 2; easing.type: Appearance.animation.easing }
-    }
+    Behavior on color { ColorAnimation { duration: Appearance.animation.fast / 2; easing.type: Appearance.animation.easing } }
+    Behavior on radius { NumberAnimation { duration: Appearance.animation.fast / 2; easing.type: Appearance.animation.easing } }
+    Behavior on topLeftRadius { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+    Behavior on topRightRadius { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+    Behavior on bottomLeftRadius { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+    Behavior on bottomRightRadius { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+
   }
 
   MouseArea {

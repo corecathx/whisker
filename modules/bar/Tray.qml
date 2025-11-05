@@ -28,6 +28,7 @@ Item {
         Repeater {
             id: items
             model: SystemTray.items
+
             delegate: Item {
                 id: trayItemRoot
                 required property SystemTrayItem modelData
@@ -47,15 +48,7 @@ Item {
                     anchors.fill: parent
                 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-                    hoverEnabled: true
-                }
-
-                HoverHandler {
-                    id: hover
-                }
+                HoverHandler { id: hover }
 
                 QsMenuOpener {
                     id: menuOpener
@@ -63,16 +56,21 @@ Item {
                 }
 
                 StyledPopout {
+                    id: popout
                     hoverTarget: hover
                     interactable: true
                     hCenterOnItem: true
+                    requiresHover: false
+
                     Component {
                         Item {
                             width: childColumn.implicitWidth
                             height: childColumn.height
+
                             ColumnLayout {
                                 id: childColumn
                                 spacing: 5
+
                                 Repeater {
                                     model: menuOpener.children
                                     delegate: TrayMenuItem {
@@ -82,6 +80,19 @@ Item {
                                 }
                             }
                         }
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    hoverEnabled: true
+
+                    onClicked: {
+                        if (popout.isVisible)
+                            popout.hide()
+                        else
+                            popout.show()
                     }
                 }
             }
@@ -102,11 +113,11 @@ Item {
             hoverEnabled: itemRoot.modelData.enabled
             anchors.fill: parent
             onClicked: {
-                if (!itemRoot.modelData.hasChildren) {
+                if (!itemRoot.modelData.hasChildren)
                     itemRoot.modelData.triggered()
-                }
             }
         }
+
         Rectangle {
             id: itemBg
             anchors.fill: parent
@@ -121,7 +132,6 @@ Item {
             visible: !itemRoot.modelData.isSeparator
             opacity: itemRoot.modelData.isSeparator ? 0.5 : 1
             spacing: 5
-
             anchors {
                 left: itemBg.left
                 leftMargin: 5

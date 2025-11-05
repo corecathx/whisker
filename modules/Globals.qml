@@ -1,8 +1,12 @@
 pragma Singleton
 import QtQuick
+import Quickshell
+
 
 // think of this like a shared properties across qmls
-QtObject {
+Singleton {
+    property bool isBarHovered: false
+
     property bool visible_quickPanel: false
     property bool visible_settingsMenu: false
     property bool visible_volumeOSD: false

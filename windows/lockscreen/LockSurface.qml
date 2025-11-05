@@ -7,6 +7,7 @@ import Quickshell.Wayland
 import qs.modules
 import qs.modules.bar
 import qs.components
+import qs.components.players
 import qs.services as Serv
 
 WlSessionLockSurface {

@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell.Services.Mpris
 import Quickshell.Io
 import qs.components
+import qs.components.players
 import qs.modules
 import qs.services
 

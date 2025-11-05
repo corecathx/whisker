@@ -19,6 +19,8 @@ Scope {
 
         property int counter: 0
 
-        Lyrics {}
+        Lyrics {
+            hideOnNoLyrics: true
+        }
     }
 }

@@ -128,6 +128,7 @@ Scope {
             anchors.bottom: true
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusionMode: ExclusionMode.Normal
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
             color: "transparent"
 
             Hypr.HyprlandFocusGrab {

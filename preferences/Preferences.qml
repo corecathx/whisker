@@ -113,6 +113,14 @@ Singleton {
     property bool renderOverviewWindows: true
 
     /**
+     * Whether to automatically hide the bar
+     * To show your bar again, move your cursor to the edge of your bar's position
+     * @values bool: true, false
+     * @default bool: true
+     */
+    property bool autoHideBar: false
+
+    /**
      * Whether the user has finished setting up whisker.
      * @values bool: true, false
      * @default bool: true

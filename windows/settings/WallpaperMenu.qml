@@ -12,6 +12,7 @@ import qs.preferences
 BaseMenu {
     title: "Wallpaper"
     description: "Choose and set wallpapers for your desktop."
+
     BaseCard {
         InfoCard {
             icon: "info"
@@ -32,6 +33,7 @@ BaseMenu {
                 icon: "wallpaper"
                 font.pixelSize: 64
                 color: Appearance.colors.m3on_surface_variant
+                visible: !wpImage.source || wpImage.source === ""
             }
 
             Image {
@@ -42,6 +44,7 @@ BaseMenu {
                 smooth: true
             }
         }
+
         BaseRowCard {
             cardMargin: 0
             verticalPadding: 0
@@ -57,7 +60,6 @@ BaseMenu {
                 interactive: true
                 boundsBehavior: Flickable.StopAtBounds
                 flickableDirection: Flickable.HorizontalFlick
-
                 contentWidth: rowContent2.childrenRect.width
                 contentHeight: rowContent2.childrenRect.height
 
@@ -80,11 +82,11 @@ BaseMenu {
                                 id: mouseHover
                                 anchors.fill: parent
                                 hoverEnabled: true
+                                enabled: !wpSetProc.running
                                 onClicked: {
                                     if (Preferences.wallpaper === modelData) return;
-                                    Quickshell.execDetached({
-                                        command: ['whisker', 'wallpaper', modelData]
-                                    });
+                                    wpSetProc.command = ['whisker', 'wallpaper', modelData];
+                                    wpSetProc.running = true;
                                 }
                             }
 
@@ -99,11 +101,9 @@ BaseMenu {
                                     fillMode: Image.PreserveAspectCrop
                                     asynchronous: true
                                     cache: true
-                                    sourceSize.width: width    // downscale to preview size
+                                    sourceSize.width: width
                                     sourceSize.height: height
                                 }
-
-
                             }
 
                             Rectangle {
@@ -120,7 +120,19 @@ BaseMenu {
                 }
             }
 
-            // Fetch wallpapers
+            // Disable all interactions while wallpaper is setting
+            Rectangle {
+                anchors.fill: parent
+                color: Colors.opacify(Appearance.colors.m3surface, 0.4)
+                visible: wpSetProc.running
+                z: 999
+
+                LoadingIcon {
+                    anchors.centerIn: parent
+                    visible: true
+                }
+            }
+
             Process {
                 id: wpFetchProc
                 command: ["whisker", "list", "wallpapers"]
@@ -128,6 +140,19 @@ BaseMenu {
                 stdout: StdioCollector {
                     onStreamFinished: {
                         wpSelectorCard.wallpapers = this.text.trim().split("\n").filter(s => s.length > 0)
+                    }
+                }
+            }
+
+            Process {
+                id: wpSetProc
+                command: []
+                running: false
+
+                stdout: StdioCollector {
+                    onStreamFinished: {
+                        wpImage.source = Preferences.wallpaper
+                        wpSetProc.running = false
                     }
                 }
             }

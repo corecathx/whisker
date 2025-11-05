@@ -36,6 +36,11 @@ BaseMenu {
                         Layout.fillWidth: true
                         implicitWidth: 0
                         checked: Preferences.barPosition === modelData.toLowerCase()
+                        topLeftRadius: modelData == "Left" || Preferences.barPosition === modelData.toLowerCase() ? 20 : 5
+                        bottomLeftRadius: modelData == "Left" || Preferences.barPosition === modelData.toLowerCase() ? 20 : 5
+                        topRightRadius: modelData == "Right" || Preferences.barPosition === modelData.toLowerCase() ? 20 : 5
+                        bottomRightRadius: modelData == "Right" || Preferences.barPosition === modelData.toLowerCase() ? 20 : 5
+
                         onClicked: {
                             Quickshell.execDetached({
                                 command: ['whisker', 'prefs', 'set', 'barPosition', modelData.toLowerCase()]
@@ -45,55 +50,15 @@ BaseMenu {
                 }
             }
         }
-        RowLayout {
-            ColumnLayout {
-                StyledText {
-                    text: "Keep bar opaque"
-                    font.pixelSize: 16
-                    color: Appearance.colors.m3on_background
-                }
-                StyledText {
-                    text: "Whether to keep the bar opaque or not\nIf disabled, the bar will adjust it's transparency, such as on desktop, etc."
-                    font.pixelSize: 12
-                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
-                }
-            }
-            Item {
-                Layout.fillWidth: true
-            }
-            StyledSwitch {
-                checked: Preferences.keepBarOpaque
-                onToggled: {
-                    Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'keepBarOpaque', checked]
-                    })
-                }
-            }
+        SwitchOption {
+            title: "Keep bar opaque";
+            description: "Padding for bars\nThis will only take effect if `smallBar` is `true`."
+            prefField: "keepBarOpaque"
         }
-        RowLayout {
-            ColumnLayout {
-                StyledText {
-                    text: "Small bar"
-                    font.pixelSize: 16
-                    color: Appearance.colors.m3on_background
-                }
-                StyledText {
-                    text: "Whether to use small bar layout.\nThis has no effect on Left and Right bar layout."
-                    font.pixelSize: 12
-                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
-                }
-            }
-            Item {
-                Layout.fillWidth: true
-            }
-            StyledSwitch {
-                checked: Preferences.smallBar
-                onToggled: {
-                    Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'smallBar', checked]
-                    })
-                }
-            }
+        SwitchOption {
+            title: "Small bar";
+            description: "Whether to keep the bar opaque or not\nIf disabled, the bar will adjust it's transparency, such as on desktop, etc."
+            prefField: "smallBar"
         }
         RowLayout {
             visible: Preferences.smallBar
@@ -125,6 +90,40 @@ BaseMenu {
                         command: ['whisker', 'prefs', 'set', 'barPadding', num.toString()]
                     });
                 }
+            }
+        }
+        SwitchOption {
+            title: "Auto hide bar";
+            description: "Whether to automatically hide the bar\nTo show your bar again, move your cursor to the edge of your bar's position."
+            prefField: "autoHideBar"
+        }
+    }
+    component SwitchOption: RowLayout {
+        id: main
+        property string title: "Title"
+        property string description: "Description"
+        property string prefField: ''
+        ColumnLayout {
+            StyledText {
+                text: main.title
+                font.pixelSize: 16
+                color: Appearance.colors.m3on_background
+            }
+            StyledText {
+                text: main.description
+                font.pixelSize: 12
+                color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
+            }
+        }
+        Item {
+            Layout.fillWidth: true
+        }
+        StyledSwitch {
+            checked: Preferences[main.prefField]
+            onToggled: {
+                Quickshell.execDetached({
+                    command: ['whisker', 'prefs', 'set', prefField, checked]
+                })
             }
         }
     }

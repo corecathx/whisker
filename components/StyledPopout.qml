@@ -9,7 +9,7 @@ import Quickshell.Wayland
 
 LazyLoader {
     id: root
-    
+
     property HoverHandler hoverTarget
     property real margin: 10
     default property list<Component> content
@@ -22,10 +22,13 @@ LazyLoader {
     property bool followMouse: false
     property list<StyledPopout> childPopouts: []
 
+    property bool requiresHover: true
+    property bool _manualControl: false
+
     property bool targetHovered: hoverTarget && hoverTarget.hovered
     property bool containerHovered: interactable && root.item && root.item.containerHovered
     property bool selfHovered: targetHovered || containerHovered
-    
+
     property bool childrenHovered: {
         for (let i = 0; i < childPopouts.length; i++) {
             if (childPopouts[i].selfHovered) return true
@@ -50,10 +53,14 @@ LazyLoader {
         onTriggered: {
             root.isVisible = false
             root.keepAlive = false
+            root._manualControl = false
         }
     }
 
     onHoverActiveChanged: {
+        if (_manualControl) return
+        if (!requiresHover) return
+
         if (hoverActive) {
             hangTimer.stop()
             cleanupTimer.stop()
@@ -65,26 +72,42 @@ LazyLoader {
         }
     }
 
+    function show() {
+        hangTimer.stop()
+        cleanupTimer.stop()
+        _manualControl = true
+        keepAlive = true
+        isVisible = true
+        startAnim = true
+    }
+
+    function hide() {
+        _manualControl = true
+        startAnim = false
+        hangTimer.stop()
+        cleanupTimer.restart()
+    }
+
     active: keepAlive
 
     component: PanelWindow {
-        id: popupWindow
-        
+        id: popoutWindow
+
         color: "transparent"
         visible: root.isVisible
-        
+
         WlrLayershell.namespace: "whisker:popout"
         WlrLayershell.layer: WlrLayer.Overlay
         exclusionMode: ExclusionMode.Ignore
         exclusiveZone: 0
-        
+
         anchors {
             left: true
             top: true
             right: true
             bottom: true
         }
-        
+
         implicitWidth: screen.width
         implicitHeight: screen.height
 
@@ -92,30 +115,41 @@ LazyLoader {
         property var parentPopoutWindow: null
         property point mousePos: Qt.point(0, 0)
         property bool containerHovered: root.interactable && containerHoverHandler.hovered
-        
+
         HoverHandler {
             id: windowHover
             onPointChanged: (point) => {
-                if (root.followMouse) {
-                    popupWindow.mousePos = point.position
-                }
+                if (root.followMouse)
+                    popoutWindow.mousePos = point.position
             }
         }
 
         mask: Region {
-            x: !root.hasHitbox ? 0 : container.x
-            y: !root.hasHitbox ? 0 : container.y
-            width: !root.hasHitbox ? 0 : container.implicitWidth
-            height: !root.hasHitbox ? 0 : container.implicitHeight
+            x: !root.hasHitbox ? 0 : !requiresHover ? 0 : container.x
+            y: !root.hasHitbox ? 0 : !requiresHover ? 0 : container.y
+            width: !root.hasHitbox ? 0 : !requiresHover ? popoutWindow.width : container.implicitWidth
+            height: !root.hasHitbox ? 0 : !requiresHover ? popoutWindow.height : container.implicitHeight
         }
+        MouseArea {
+            id:mouseArea
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+            hoverEnabled: false
 
+            onPressed: {
+                if (!containerHoverHandler.containsMouse && root.isVisible) {
+                    root.hide()
+                }
+            }
+        }
         Item {
             id: container
-            
+
             implicitWidth: contentArea.implicitWidth + root.margin * 2
             implicitHeight: contentArea.implicitHeight + root.margin * 2
+
             x: {
-                let xValue;
+                let xValue
 
                 if (root.followMouse)
                     xValue = mousePos.x + 10
@@ -155,16 +189,18 @@ LazyLoader {
             }
 
             y: {
-                let yValue;
+                let yValue
 
                 if (root.followMouse)
                     yValue = mousePos.y + 10
                 else {
                     let targetItem = hoverTarget?.parent
-                    if (!targetItem) yValue = 0
+                    if (!targetItem)
+                        yValue = 0
                     else {
                         let yPos = targetItem.mapToGlobal(Qt.point(0, 0)).y
-                        if (parentPopoutWindow) yPos += parentPopoutWindow.y
+                        if (parentPopoutWindow)
+                            yPos += parentPopoutWindow.y
                         yValue = yPos + (Preferences.horizontalBar() ? targetItem.height : 0)
                     }
                 }
@@ -174,7 +210,7 @@ LazyLoader {
 
             opacity: root.startAnim ? 1 : 0
             scale: root.startAnim ? 1 : 0.9
-            
+
             layer.enabled: true
             layer.effect: MultiEffect {
                 shadowEnabled: true
@@ -183,30 +219,30 @@ LazyLoader {
                 shadowBlur: 1
                 shadowScale: 1
             }
-            
-            Behavior on opacity { 
-                NumberAnimation { 
+
+            Behavior on opacity {
+                NumberAnimation {
                     duration: Appearance.animation.fast
-                    easing.type: Appearance.animation.easing 
-                } 
+                    easing.type: Appearance.animation.easing
+                }
             }
-            Behavior on scale { 
-                NumberAnimation { 
+            Behavior on scale {
+                NumberAnimation {
                     duration: Appearance.animation.fast
-                    easing.type: Appearance.animation.easing 
-                } 
+                    easing.type: Appearance.animation.easing
+                }
             }
-            Behavior on implicitWidth { 
-                NumberAnimation { 
+            Behavior on implicitWidth {
+                NumberAnimation {
                     duration: Appearance.animation.fast
-                    easing.type: Appearance.animation.easing 
-                } 
+                    easing.type: Appearance.animation.easing
+                }
             }
-            Behavior on implicitHeight { 
-                NumberAnimation { 
+            Behavior on implicitHeight {
+                NumberAnimation {
                     duration: Appearance.animation.fast
-                    easing.type: Appearance.animation.easing 
-                } 
+                    easing.type: Appearance.animation.easing
+                }
             }
 
             ClippingRectangle {
@@ -230,22 +266,22 @@ LazyLoader {
 
         Component.onCompleted: {
             for (let i = 0; i < root.content.length; i++) {
-                const comp = root.content[i];
+                const comp = root.content[i]
                 if (comp && comp.createObject) {
-                    comp.createObject(contentArea);
+                    comp.createObject(contentArea)
                 } else {
-                    console.warn("StyledPopout: Invalid content, expected Component:", comp);
+                    console.warn("StyledPopout: invalid content:", comp)
                 }
             }
 
-            let parentPopout = root.parent;
-            while (parentPopout && !parentPopout.childPopouts) {
-                parentPopout = parentPopout.parent;
-            }
+            let parentPopout = root.parent
+            while (parentPopout && !parentPopout.childPopouts)
+                parentPopout = parentPopout.parent
+
             if (parentPopout) {
-                parentPopout.childPopouts.push(root);
+                parentPopout.childPopouts.push(root)
                 if (parentPopout.item)
-                    popupWindow.parentPopoutWindow = parentPopout.item;
+                    popoutWindow.parentPopoutWindow = parentPopout.item
             }
         }
     }

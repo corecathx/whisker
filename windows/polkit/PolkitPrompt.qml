@@ -1,13 +1,13 @@
-import QtQuick;
-import QtQuick.Layouts;
-import QtQuick.Effects;
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Effects
 
-import Quickshell;
-import Quickshell.Wayland;
+import Quickshell
+import Quickshell.Wayland
 
-import qs.modules;
-import qs.services;
-import qs.components;
+import qs.modules
+import qs.services
+import qs.components
 
 Scope {
     id: root
@@ -100,6 +100,14 @@ Scope {
                         duration: Appearance.animation.medium
                         easing.type: Appearance.animation.easing
                     }
+                    ColorAnimation {
+                        target: window
+                        property: "color"
+                        from: "transparent"
+                        to: Appearance.colors.m3surface
+                        duration: Appearance.animation.medium
+                        easing.type: Appearance.animation.easing
+                    }
                     NumberAnimation {
                         target: promptContainer
                         property: "opacity"
@@ -119,10 +127,10 @@ Scope {
                         duration: Appearance.animation.medium
                         easing.type: Appearance.animation.easing
                     }
-                    NumberAnimation {
-                        target: screencopy
-                        property: "scale"
-                        to: 1.05
+                    ColorAnimation {
+                        target: window
+                        property: "color"
+                        to: "transparent"
                         duration: Appearance.animation.medium
                         easing.type: Appearance.animation.easing
                     }
@@ -239,21 +247,9 @@ Scope {
                             }
                         }
 
-                        MaterialIcon {
+                        LoadingIcon {
                             visible: promptContainer.authenticating
-                            icon: "progress_activity"
-                            font.pixelSize: 28
-                            width: font.pixelSize
-                            height: font.pixelSize
-                            color: Appearance.colors.m3primary
                             Layout.alignment: Qt.AlignHCenter
-                            RotationAnimator on rotation {
-                                running: promptContainer.authenticating
-                                loops: Animation.Infinite
-                                from: 0
-                                to: 360
-                                duration: 1000
-                            }
                         }
 
                         RowLayout {
