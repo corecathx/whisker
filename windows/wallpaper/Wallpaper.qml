@@ -176,7 +176,7 @@ PanelWindow {
 
                 ColumnLayout {
                     StyledText {
-                        text: "You got no default wallpaper set!"
+                        text: "You don't have a wallpaper set!"
                         color: Appearance.colors.m3on_background
                         font.family: "Outfit SemiBold"
                         font.pixelSize: 32
