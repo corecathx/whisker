@@ -9,7 +9,8 @@ TextField {
     property string icon: ""
     property color iconColor: Appearance.colors.m3on_surface
     property string placeholder: "Type here..."
-    property real iconSize: icon === "" ? 0 : 25
+    property real iconSize: 25
+
     property alias radius: background.radius
     property alias topLeftRadius: background.topLeftRadius
     property alias topRightRadius: background.topRightRadius
@@ -17,11 +18,16 @@ TextField {
     property alias bottomRightRadius: background.bottomRightRadius
     property color backgroundColor: Appearance.colors.m3surface_container
 
+    property int fieldPadding: 20
+    property int iconSpacing: 15
+    property int iconMargin: 20
+
     width: parent ? parent.width - 40 : 300
     placeholderText: placeholder
     font.pixelSize: 16
-    padding: 20
-    leftPadding: icon !== "" ? iconSize + 35 : 0
+    padding: fieldPadding
+    leftPadding: icon !== "" ? iconSize + iconSpacing + iconMargin : fieldPadding
+
     color: Appearance.colors.m3on_surface
     placeholderTextColor: Colors.opacify(Appearance.colors.m3on_surface, 0.4)
     cursorVisible: control.focus
@@ -42,15 +48,13 @@ TextField {
         radius: 20
         color: control.backgroundColor
         border.width: 0
-
         Behavior on color { ColorAnimation { duration: 180 } }
     }
-
 
     MaterialIcon {
         icon: control.icon
         anchors.left: parent.left
-        anchors.leftMargin: control.icon !== "" ? 20 : 0
+        anchors.leftMargin: control.icon !== "" ? control.iconMargin : 0
         anchors.verticalCenter: parent.verticalCenter
         font.pixelSize: control.iconSize
         color: control.iconColor

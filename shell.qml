@@ -16,6 +16,7 @@ import qs.windows.dev
 import qs.windows.osdpanel
 import qs.windows.firsttime
 import qs.windows.polkit
+import qs.windows.cliphist
 import qs.services
 
 ShellRoot {
@@ -48,5 +49,6 @@ ShellRoot {
     //
     Screencapture {}
     PolkitPrompt {}
+    Cliphist {}
 
 }

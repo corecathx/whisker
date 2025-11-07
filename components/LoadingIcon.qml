@@ -17,7 +17,7 @@ Item {
     }
     RotationAnimator on rotation {
         target: mIcon
-        running: promptContainer.authenticating
+        running: true
         loops: Animation.Infinite
         from: 0
         to: 360
