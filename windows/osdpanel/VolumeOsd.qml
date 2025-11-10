@@ -57,7 +57,7 @@ Item {
                       icon: {
             return volume > 50 ? "volume_up" : volume > 0 ? "volume_down" : 'volume_off'
           }
-        font.pixelSize: 30;
+        font.pixelSize: 24;
         color: Appearance.colors.m3on_background
       }
 
@@ -69,12 +69,12 @@ Item {
         StyledText {
           color: Appearance.colors.m3on_background
           text: Pipewire.defaultAudioSink?.description + " - " + (Pipewire.defaultAudioSink?.audio.muted ? 'Muted' : Math.floor(Pipewire.defaultAudioSink?.audio.volume*100) + '%')
-          font.pixelSize: 16
+          font.pixelSize: 14
         }
 
         StyledSlider {
           implicitHeight: 20
-          icon: ""
+          trackHeightDiff: 10
           value: (Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume)*100
         }
       }
