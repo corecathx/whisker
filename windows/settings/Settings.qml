@@ -41,7 +41,7 @@ Scope {
             property var menuModel: {
                 var raw = [
                     { header: true, label: "Connections" },
-                    { icon: "signal_wifi_4_bar", label: "Wi-Fi" },
+                    { icon: "language", label: "Network" },
                     { icon: "bluetooth", label: "Bluetooth" },
                     { icon: "vpn_key", label: "VPN" },
                     { header: true, label: "System" },
@@ -248,7 +248,7 @@ Scope {
                     currentIndex: root.selectedIndex
 
                     // Connections
-                    WifiMenu {}
+                    NetworkMenu {}
                     BluetoothMenu {}
                     VPNMenu {}
                     // System
@@ -267,6 +267,5 @@ Scope {
         }
     }
 
-    // Property to store window reference
     property var settingsWindow: null
 }

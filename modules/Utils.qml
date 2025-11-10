@@ -37,6 +37,6 @@ QtObject {
         if (min > 0)
             comps.push(`${min}m`);
 
-        return comps.join(" ") || null;
+        return comps.join(" ");
 }
 }

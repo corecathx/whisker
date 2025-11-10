@@ -5,6 +5,7 @@ import Quickshell
 Singleton {
     property alias enabled: clock.enabled
     readonly property date date: clock.date
+    readonly property int years: date.getFullYear()
     readonly property int hours: clock.hours
     readonly property int minutes: clock.minutes
     readonly property int seconds: clock.seconds

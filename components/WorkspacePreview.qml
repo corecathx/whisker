@@ -149,8 +149,8 @@ Item {
                                     id: preview
                                     anchors.fill: parent
                                     captureSource: modelData && modelData.wayland ? modelData.wayland : null
-                                    live: Preferences.renderOverviewWindows && visible
-                                    visible: Preferences.renderOverviewWindows && captureSource !== null
+                                    live: Preferences.misc.renderOverviewWindows && visible
+                                    visible: Preferences.misc.renderOverviewWindows && captureSource !== null
 
                                     layer.enabled: windowMouseArea.containsMouse
                                     layer.effect: MultiEffect {

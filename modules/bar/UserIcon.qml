@@ -64,7 +64,7 @@ Rectangle {
             hoverEnabled: true
             onEntered: root.hovered = true
             onExited: root.hovered = false
-            onClicked: Globals.toggle_quickPanel()
+            onClicked: Quickshell.execDetached({ command: ['whisker', 'ipc', 'quickpanel', 'toggle'] })
         }
     }
 }

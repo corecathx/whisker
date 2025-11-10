@@ -8,16 +8,16 @@ import qs.preferences
 
 Singleton {
     Connections {
-        target: Preferences
+        target: Preferences.theme
         function onWallpaperChanged(){
             regenColor()
         }
 
-        function onColorSchemeChanged() {
+        function onSchemeChanged() {
             regenColor()
         }
 
-        function onDarkModeChanged() {
+        function onDarkChanged() {
             regenColor()
         }
     }
@@ -35,8 +35,8 @@ Singleton {
 
     Process {
         id: matugenProc
-        command: ['matugen', 'image', Preferences.wallpaper, '-m', (Preferences.darkMode ? 'dark' : 'light'), '-t', "scheme-"+Preferences.colorScheme]
-        //command: ["sh", "-c", "~/.config/whisker/scripts/wallpaper.sh " + Preferences.wallpaper + " " + (Preferences.darkMode ? 'dark' : 'light') + " " + Preferences.colorScheme]
+        command: ['matugen', 'image', Preferences.theme.wallpaper, '-m', (Preferences.theme.dark ? 'dark' : 'light'), '-t', "scheme-"+Preferences.theme.scheme]
+        //command: ["sh", "-c", "~/.config/whisker/scripts/wallpaper.sh " + Preferences.theme.wallpaper + " " + (Preferences.theme.dark ? 'dark' : 'light') + " " + Preferences.theme.scheme]
 
         stdout: StdioCollector {
             onStreamFinished: console.log("[ThemeScript] ", text.trim())

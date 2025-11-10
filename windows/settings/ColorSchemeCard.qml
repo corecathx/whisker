@@ -19,9 +19,9 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onClicked: {
-            if (Preferences.colorScheme === schemeName) return
+            if (Preferences.theme.scheme === schemeName) return
             Quickshell.execDetached({
-                command: ['whisker', 'prefs', 'set', 'colorScheme', schemeName]
+                command: ['whisker', 'prefs', 'set', 'theme.scheme', schemeName]
             })
         }
     }
@@ -29,13 +29,13 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 10
-        color: Preferences.colorScheme === schemeName
+        color: Preferences.theme.scheme === schemeName
             ? !hovered ? schemeColor.surface_container_high : schemeColor.surface_container_highest
             : !hovered ? schemeColor.surface_container : schemeColor.surface_container_high
         Behavior on color {
             ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
         }
-        border.width: Preferences.colorScheme === schemeName ? 3 : 1
+        border.width: Preferences.theme.scheme === schemeName ? 3 : 1
         border.color: schemeColor.outline
 
         ColumnLayout {

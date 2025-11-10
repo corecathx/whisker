@@ -28,7 +28,7 @@ Item {
 
     Rectangle {
         id: bgRect
-        opacity: !Preferences.keepBarOpaque && !Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
+        opacity: !Preferences.bar.keepOpaque && !Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
         Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
 
         anchors.fill: parent

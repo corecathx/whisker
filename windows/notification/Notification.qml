@@ -79,7 +79,7 @@ Scope {
 
             Repeater {
                 id: rep
-                model: Preferences.notificationEnabled ? NotifServer.popups : []
+                model: Preferences.misc.notificationEnabled ? NotifServer.popups : []
 
                 delegate: NotificationChild {
                     id: child

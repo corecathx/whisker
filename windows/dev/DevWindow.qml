@@ -19,8 +19,10 @@ Scope {
 
         property int counter: 0
 
-        Lyrics {
-            hideOnNoLyrics: true
+        ColumnLayout {
+            anchors.centerIn: parent
         }
+        Lyrics {}
+
     }
 }

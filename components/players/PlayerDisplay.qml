@@ -43,7 +43,6 @@ Rectangle {
             spacing: musicPlayer.spacing
             Layout.fillWidth: true
 
-            // Album art
             ClippingRectangle {
                 id: coverParent
                 property bool hovered: false
@@ -106,7 +105,6 @@ Rectangle {
                 }
             }
 
-            // Text + slider
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 5
@@ -135,14 +133,17 @@ Rectangle {
 
                 StyledSlider {
                     useAnim: false
+                    trackHeightDiff: sliderHeight * 0.2
+                    handleGap: 5
+                    handle.width: 2
                     id: barSlider
                     implicitHeight: sliderHeight
                     icon: ""
-                    value: (Players.active.position / Players.active.length) * 100
+                    value: (Players.active?.position / Players.active.length) * 100
                     Connections {
                         target: Players.active
                         function onPositionChanged() {
-                            barSlider.value = (Players.active.position / Players.active.length) * 100
+                            barSlider.value = (Players.active?.position / Players.active.length) * 100
                         }
                         function onPostTrackChanged() {
                             barSlider.value = 0

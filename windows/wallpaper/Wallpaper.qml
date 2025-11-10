@@ -18,8 +18,8 @@ PanelWindow {
     property real widgetOffset: 40
     property real screenOffset: 50
 
-    property bool barIsShowing: !Preferences.autoHideBar || Globals.isBarHovered
-    property real wallpaperShift: (Preferences.autoHideBar && barIsShowing) ? widgetOffset * 0.6 : 0
+    property bool barIsShowing: !Preferences.bar.autoHide || Globals.isBarHovered
+    property real wallpaperShift: (Preferences.bar.autoHide && barIsShowing) ? widgetOffset * 0.6 : 0
     property real widgetShift: barIsShowing ? widgetOffset + screenOffset : widgetOffset
 
     anchors {
@@ -38,10 +38,10 @@ PanelWindow {
         clip: true
         anchors.fill: parent
 
-        anchors.leftMargin: Preferences.barPosition === 'left' ? wallpaperShift : 0
-        anchors.rightMargin: Preferences.barPosition === 'right' ? wallpaperShift : 0
-        anchors.topMargin: (Preferences.barPosition === 'top' && !Preferences.smallBar) ? wallpaperShift : 0
-        anchors.bottomMargin: (Preferences.barPosition === 'bottom' && !Preferences.smallBar) ? wallpaperShift : 0
+        anchors.leftMargin: Preferences.bar.position === 'left' ? wallpaperShift : 0
+        anchors.rightMargin: Preferences.bar.position === 'right' ? wallpaperShift : 0
+        anchors.topMargin: (Preferences.bar.position === 'top' && !Preferences.bar.small) ? wallpaperShift : 0
+        anchors.bottomMargin: (Preferences.bar.position === 'bottom' && !Preferences.bar.small) ? wallpaperShift : 0
 
         Behavior on anchors.leftMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
         Behavior on anchors.rightMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
@@ -56,7 +56,7 @@ PanelWindow {
             fillMode: Image.PreserveAspectCrop
             smooth: true
             cache: true
-            visible: Preferences.useWallpaper && !Preferences.useVideoWallpaper
+            visible: Preferences.theme.useWallpaper && !Preferences.theme.useVideoWallpaper
         }
 
         ClippingRectangle {
@@ -116,10 +116,10 @@ PanelWindow {
             loops: 9999
             muted: true
             source: "file:///home/corecat/Downloads/lucanimations_vaapi.mp4"
-            visible: Preferences.useVideoWallpaper
+            visible: Preferences.theme.useVideoWallpaper
 
             function updatePlayback() {
-                if (!Preferences.useVideoWallpaper) {
+                if (!Preferences.theme.useVideoWallpaper) {
                     video.stop()
                     return
                 }
@@ -138,7 +138,7 @@ PanelWindow {
                 function onWorkspaceUpdated() { video.updatePlayback() }
             }
             Connections {
-                target: Preferences
+                target: Preferences.theme
                 function onUseVideoWallpaperChanged() { video.updatePlayback() }
             }
 
@@ -146,7 +146,7 @@ PanelWindow {
         }
 
         Item {
-            visible: Preferences.useWallpaper && Appearance.wallpaper === ""
+            visible: Preferences.theme.useWallpaper && Appearance.wallpaper === ""
             anchors.fill: parent
 
             Image {
@@ -195,8 +195,8 @@ PanelWindow {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.bottomMargin: {
-                if (Preferences.smallBar) return 0
-                if (Preferences.barPosition === 'bottom' && barIsShowing)
+                if (Preferences.bar.small) return 0
+                if (Preferences.bar.position === 'bottom' && barIsShowing)
                     return screenOffset - 15 - wallpaperShift
                 return 0
             }
@@ -216,8 +216,8 @@ PanelWindow {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
-        anchors.leftMargin: Preferences.barPosition === 'left' ? widgetShift : widgetOffset
-        anchors.bottomMargin: Preferences.barPosition === 'bottom' ? widgetShift : widgetOffset
+        anchors.leftMargin: Preferences.bar.position === 'left' ? widgetShift : widgetOffset
+        anchors.bottomMargin: Preferences.bar.position === 'bottom' ? widgetShift : widgetOffset
 
         Behavior on anchors.leftMargin {
             NumberAnimation {

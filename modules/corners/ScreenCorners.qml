@@ -76,7 +76,7 @@ PanelWindow {
     Corners {
         cornerType: "inverted"
         cornerHeight: 20
-        color: Preferences.smallBar ? "black" : Appearance.colors.m3surface
+        color: Preferences.bar.small ? "black" : Appearance.colors.m3surface
         corners: [0,1,2,3]
     }
 }

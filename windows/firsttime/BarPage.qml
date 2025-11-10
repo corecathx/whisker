@@ -24,10 +24,10 @@ SetupMenu {
                     text: modelData
                     Layout.fillWidth: true
                     implicitWidth: 0
-                    checked: Preferences.barPosition === modelData.toLowerCase()
+                    checked: Preferences.bar.position === modelData.toLowerCase()
                     onClicked: {
                         Quickshell.execDetached({
-                            command: ['whisker', 'prefs', 'set', 'barPosition', modelData.toLowerCase()]
+                            command: ['whisker', 'prefs', 'set', 'bar.position', modelData.toLowerCase()]
                         })
                     }
                 }
@@ -51,10 +51,10 @@ SetupMenu {
             Layout.fillWidth: true
         }
         StyledSwitch {
-            checked: Preferences.keepBarOpaque
+            checked: Preferences.bar.keepOpaque
             onToggled: {
                 Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', 'keepBarOpaque', checked]
+                    command: ['whisker', 'prefs', 'set', 'bar.keepOpaque', checked]
                 })
             }
         }
@@ -76,16 +76,16 @@ SetupMenu {
             Layout.fillWidth: true
         }
         StyledSwitch {
-            checked: Preferences.smallBar
+            checked: Preferences.bar.small
             onToggled: {
                 Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', 'smallBar', checked]
+                    command: ['whisker', 'prefs', 'set', 'bar.small', checked]
                 })
             }
         }
     }
     RowLayout {
-        visible: Preferences.smallBar
+        visible: Preferences.bar.small
         ColumnLayout {
             StyledText {
                 text: "Bar Padding"
@@ -102,7 +102,7 @@ SetupMenu {
             Layout.fillWidth: true
         }
         StyledTextField {
-            text: Preferences.barPadding
+            text: Preferences.bar.padding
             padding: 10
             leftPadding: undefined
             implicitWidth: 200
@@ -111,7 +111,7 @@ SetupMenu {
                 let num = Math.max(0, Math.min(parseInt(this.text.replace(/[^0-9.]/g, "")) || 0, Screen.width));
 
                 Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', 'barPadding', num.toString()]
+                    command: ['whisker', 'prefs', 'set', 'bar.padding', num.toString()]
                 });
             }
         }

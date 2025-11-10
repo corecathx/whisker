@@ -21,10 +21,10 @@ Item {
         RowLayout {
             StyledButton {
                 icon: checked ? "notifications" : "notifications_off"
-                checked: Preferences.notificationEnabled
+                checked: Preferences.misc.notificationEnabled
                 checkable: true
                 onToggled: {
-                    Quickshell.execDetached({ command: [ 'whisker', 'prefs', 'set', 'notificationEnabled', checked ] })
+                    Quickshell.execDetached({ command: [ 'whisker', 'prefs', 'set', 'misc.notificationEnabled', checked ] })
                 }
                 implicitHeight: 30
                 HoverHandler {

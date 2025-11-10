@@ -11,236 +11,293 @@ import qs.components
 import qs.preferences
 import qs.modules.bar
 import Quickshell.Hyprland
+
 Scope {
     id: root
     property bool opened: false
+
+    component StyledLargeButton: Rectangle {
+        id: toggle
+        property string icon: ""
+        property string label: ""
+        property string subtitle: ""
+        property bool active: false
+        signal clicked()
+
+        radius: 18
+        color: active ? Appearance.colors.m3primary : Appearance.colors.m3surface_container_high
+        Behavior on color { ColorAnimation { duration: 150 } }
+
+        height: content.height+20
+        ColumnLayout {
+            id: content
+            anchors {
+                top: parent.top
+                left: parent.left
+                margins: 10
+            }
+            spacing: 2
+
+            MaterialIcon {
+                icon: toggle.icon
+                font.pixelSize: 20
+                color: toggle.active ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface_variant
+            }
+
+            Item { Layout.fillHeight: true }
+
+            StyledText {
+                text: toggle.label
+                font.pixelSize: 14
+                font.family: "Outfit Medium"
+                color: toggle.active ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface_variant
+            }
+
+            StyledText {
+                text: toggle.subtitle
+                font.pixelSize: 12
+                color: toggle.active ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface_variant
+                opacity: 0.7
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: toggle.clicked()
+        }
+    }
+    component SliderControl: ColumnLayout {
+        id: control
+        property string icon: ""
+        property string label: ""
+        property real value: 50
+        property alias useAnim: slide.useAnim
+
+        RowLayout {
+            MaterialIcon {
+                icon: control.icon
+                font.pixelSize: 20
+                color: Appearance.colors.m3on_surface_variant
+            }
+
+            StyledText {
+                text: control.label
+                font.pixelSize: 14
+                font.family: "Outfit Medium"
+                color: Appearance.colors.m3on_surface_variant
+            }
+
+            Item { Layout.fillWidth: true }
+
+            StyledText {
+                text: Math.round(control.value) + "%"
+                font.pixelSize: 12
+                color: Appearance.colors.m3on_surface_variant
+            }
+        }
+
+        StyledSlider {
+            id: slide
+            Layout.fillWidth: true
+            value: control.value
+            onValueChanged: control.value = value
+        }
+    }
+
+    IpcHandler {
+        target: "quickpanel"
+        function toggle() {
+            root.opened = !root.opened
+        }
+    }
+
     LazyLoader {
-        active: Globals.visible_quickPanel
+        active: root.opened
 
         PanelWindow {
             id: window
-            anchors.top: Preferences.barPosition !== 'bottom'|| Preferences.verticalBar()
+            anchors.top: Preferences.bar.position !== 'bottom'|| Preferences.verticalBar()
             margins.top: -10
-            anchors.bottom: Preferences.barPosition === 'bottom'
-            margins.bottom:  Preferences.barPosition === 'bottom' ? -10 : 0
+            anchors.bottom: Preferences.bar.position === 'bottom'
+            margins.bottom: Preferences.bar.position === 'bottom' ? -10 : 0
 
-
-            anchors.left: Preferences.barPosition === 'left' || Preferences.horizontalBar()
-            margins.left: Preferences.verticalBar() && Preferences.smallBar ? Preferences.barPadding + 20 : -10
-            anchors.right: Preferences.barPosition === 'right'
+            anchors.left: Preferences.bar.position === 'left' || Preferences.horizontalBar()
+            margins.left: Preferences.verticalBar() && Preferences.bar.small ? Preferences.bar.padding + 20 : -10
+            anchors.right: Preferences.bar.position === 'right'
             margins.right: -10
             WlrLayershell.layer: WlrLayer.Top
 
-            implicitWidth: 450 + 20
+            implicitWidth: 460 + 20
             implicitHeight: 600 + 20
             color: 'transparent'
 
             Item {
                 anchors.fill: parent
+                BaseShadow {}
 
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: true
-                    shadowOpacity: 1
-                    shadowColor: Appearance.colors.m3shadow
-                    shadowBlur: 1
-                    shadowScale: 1
-                }
                 Rectangle {
-                    id: bgRectangle
+                    id: bg
                     anchors.fill: parent
-
                     color: Appearance.panel_color
                     radius: 20
                     anchors.margins: 20
                 }
-                Item {
-                    Layout.fillWidth: true
-                    anchors {
-                        left: bgRectangle.left
-                        right: bgRectangle.right
-                        top: bgRectangle.top
-                    }
-                    ColumnLayout {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        spacing: 20
+
+                ColumnLayout {
+                    anchors.fill: bg
+                    anchors.margins: 20
+                    spacing: 10
+
+                    RowLayout {
+                        spacing: 16
+
+                        ClippingRectangle {
+                            width: 72
+                            height: 72
+                            radius: 18
+                            color: "transparent"
+
+                            IconImage {
+                                anchors.fill: parent
+                                source: Appearance.profileImage
+                            }
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 2
+
+                            StyledText {
+                                text: Quickshell.env("USER")
+                                font.pixelSize: 26
+                                font.family: "Outfit SemiBold"
+                                color: Appearance.colors.m3on_background
+                            }
+
+                            RowLayout {
+                                IconImage {
+                                    width: 20
+                                    height: 20
+                                    source:  Quickshell.iconPath(System.logo)
+                                }
+                                StyledText {
+                                    text: 'Uptime ' + Utils.formatSeconds(System.uptime) + " • " + Power.chargingInfo
+                                    color: Appearance.colors.m3on_surface_variant
+                                    font.pixelSize: 12
+                                }
+                            }
+                        }
+                        Item { Layout.fillWidth: true }
 
                         RowLayout {
-                            Layout.margins: 20
-                            Layout.bottomMargin: 0
-                            spacing: 20
-                            Layout.fillWidth: true
+                            spacing: 5
 
-                            ClippingRectangle {
-                                width: 80
-                                height: 80
-                                radius: 20
-                                color: "transparent"
+                            Rectangle {
+                                width: 40
+                                height: 40
+                                radius: 10
+                                color: settingsArea.pressed ? Appearance.colors.m3surface_container : Appearance.colors.m3surface_container_high
 
-                                IconImage {
-                                    anchors.fill: parent
-                                    source: Appearance.profileImage
-                                }
-                            }
+                                Behavior on color { ColorAnimation { duration: Appearance.animation.fast } }
 
-                            ColumnLayout {
-                                //anchors.verticalCenter: parent.verticalCenter
-                                Layout.fillWidth: true
-
-                                StyledText {
-                                    text: Quickshell.env("USER")
-                                    font.pixelSize: 28
-                                    font.bold: true
-                                    font.letterSpacing: 2
-                                    color: Appearance.colors.m3on_background
+                                MaterialIcon {
+                                    icon: "settings"
+                                    font.pixelSize: 20
+                                    color: Appearance.colors.m3on_surface
+                                    anchors.centerIn: parent
                                 }
 
-                                RowLayout {
-                                    visible: Power.laptop
-
-                                    Battery {
-                                        id: battery
-                                    }
-                                    StyledText {
-                                        text: {
-                                            function formatSeconds(s: int) {
-                                                const day = Math.floor(s / 86400);
-                                                const hr = Math.floor(s / 3600) % 60;
-                                                const min = Math.floor(s / 60) % 60;
-
-                                                let comps = [];
-                                                if (day > 0)
-                                                    comps.push(`${day}d`);
-                                                if (hr > 0)
-                                                    comps.push(`${hr}h`);
-                                                if (min > 0)
-                                                    comps.push(`${min}m`);
-
-                                                return comps.join(" ") || null;
-                                            }
-
-                                            let output = "•  ";
-                                            if (Power.onBattery)
-                                                output += formatSeconds(Power.displayDevice.timeToEmpty) || "Calculating"
-                                            else
-                                                output += formatSeconds(Power.displayDevice.timeToFull) || "Fully charged"
-
-                                            return output
-                                        }
-                                        font.pixelSize: 14
-                                        color: Appearance.colors.m3on_background
-                                    }
-                                }
-                            }
-                            Item {
-                                Layout.fillWidth: true
-                            }
-
-                            MaterialIcon {
-                                icon: "settings"
-                                font.pixelSize: 26
-                                color: Appearance.colors.m3on_background
-                                //anchors.verticalCenter: parent.verticalCenter
                                 MouseArea {
+                                    id: settingsArea
                                     anchors.fill: parent
                                     cursorShape: Qt.PointingHandCursor
-
                                     onClicked: {
-                                        Globals.visible_settingsMenu = true
-                                        grab.active = false;
+                                        Quickshell.execDetached({ command: ['whisker', 'ipc', 'settings', 'open', '""'] })
+                                        root.opened = false
                                     }
                                 }
                             }
-                        }
+                            Rectangle {
+                                width: 40
+                                height: 40
+                                radius: 10
+                                color: powerArea.pressed ? Appearance.colors.m3surface_container : Appearance.colors.m3surface_container_high
 
+                                Behavior on color { ColorAnimation { duration: Appearance.animation.fast } }
 
-                        RowLayout {
-                            height: 40
-                            Layout.leftMargin: 20
-                            Layout.rightMargin: 20
-                            spacing: 20
-                            BtnWifi {}
+                                MaterialIcon {
+                                    icon: "power_settings_new"
+                                    font.pixelSize: 20
+                                    color: Appearance.colors.m3on_surface
+                                    anchors.centerIn: parent
+                                }
 
-                            // bluetooth
-                            StyledButton {
-                                Layout.fillWidth: true
-                                implicitWidth: 0
-                                icon: Bluetooth.icon
-                                base_bg: !Bluetooth.defaultAdapter.enabled
-                                    ? Appearance.colors.m3secondary_container
-                                    : Appearance.colors.m3primary
-
-                                base_fg: !Bluetooth.defaultAdapter.enabled
-                                    ? Appearance.colors.m3on_secondary_container
-                                    : Appearance.colors.m3on_primary
-                                text: {
-                                    if (Bluetooth.activeDevice) {
-                                        if (Bluetooth.activeDevice.deviceName.length > 12) {
-                                            return Bluetooth.activeDevice.deviceName.slice(0, 12) + "..."
-                                        } else {
-                                            return Bluetooth.activeDevice.deviceName
-                                        }
-                                    } else {
-                                        return "Bluetooth"
+                                MouseArea {
+                                    id: powerArea
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        popout.show();
                                     }
                                 }
-                                onClicked: Bluetooth.defaultAdapter.enabled = !Bluetooth.defaultAdapter.enabled
-                            }
-                        }
+                                HoverHandler { id: hover }
+                                StyledPopout {
+                                    id: popout
+                                    hoverTarget: hover
+                                    requiresHover: false
+                                    interactable: true
+                                    Component {
+                                        Repeater {
+                                            model: [
+                                                { icon: "power_settings_new", label: "Power off", command: ["whisker", "ipc", "power", "off"], color: Appearance.colors.m3error},
+                                                { icon: "restart_alt",        label: "Restart",   command: ["whisker", "ipc", "power", "restart"] },
+                                                { icon: "bedtime",            label: "Suspend",   command: ["whisker", "ipc", "power", "suspend"] }
+                                            ]
 
-                        ExpPowerProfile {}
+                                            delegate: Item {
+                                                width: 150
+                                                height: 30
 
-                        RowLayout {
-                            height: 40
-                            Layout.leftMargin: 20
-                            Layout.rightMargin: 20
-                            spacing: 20
-                            StyledSlider {
-                                id: vlmSlider
-                                value: Audio.volume * 100
+                                                Rectangle {
+                                                    anchors.fill: parent
+                                                    radius: 5
+                                                    color: mArea.containsMouse
+                                                        ? Appearance.colors.m3surface_container
+                                                        : Appearance.colors.m3surface
+                                                }
 
-                                onValueChanged: {
-                                    Audio.setVolume(value/100)
-                                    if (value === 0) vlmSlider.icon = "volume_off";
-                                    else if (value <= 50) vlmSlider.icon = "volume_down";
-                                    else vlmSlider.icon = "volume_up";
-                                }
-                            }
-                        }
-                        RowLayout {
-                            height: 40
-                            Layout.leftMargin: 20
-                            Layout.rightMargin: 20
-                            spacing: 20
-                            StyledSlider {
-                                id: briSlider
+                                                RowLayout {
+                                                    anchors {
+                                                        top: parent.top
+                                                        left: parent.left
+                                                        margins: 5
+                                                    }
+                                                    spacing: 10
 
-                                onValueChanged: {
-                                    Quickshell.execDetached(["sh", "-c", `brightnessctl set ${value}%`]);
+                                                    MaterialIcon {
+                                                        icon: modelData.icon
+                                                        font.pixelSize: 18
+                                                        color: modelData.color ?? Appearance.colors.m3on_surface
+                                                    }
 
-                                    const icons = ["brightness_empty", "brightness_5", "brightness_6", "brightness_7"];
-                                    if (value <= 0) {
-                                        briSlider.icon = icons[0];
-                                    } else {
-                                        const index = Math.min(icons.length - 1, Math.ceil(value / (100 / (icons.length - 1))));
-                                        briSlider.icon = icons[index];
-                                    }
-                                }
+                                                    StyledText {
+                                                        text: modelData.label
+                                                        font.pixelSize: 14
+                                                        color: modelData.color ?? Appearance.colors.m3on_surface
+                                                    }
+                                                }
 
-                                Process {
-                                    id: brightnessReadProc
-                                    command: ["sh", "-c", "brightnessctl get && brightnessctl max"]
-                                    running: true
-                                    stdout: StdioCollector {
-                                        onStreamFinished: {
-                                            const lines = text.trim().split('\n');
-                                            if (lines.length >= 2) {
-                                                const current = parseInt(lines[0])
-                                                const maximum = parseInt(lines[1])
-                                                if (!isNaN(current) && !isNaN(maximum) && maximum > 0) {
-                                                    const percent = (current / maximum) * 100
-                                                    briSlider.value = percent
+                                                MouseArea {
+                                                    id: mArea
+                                                    anchors.fill: parent
+                                                    hoverEnabled: true
+                                                    cursorShape: Qt.PointingHandCursor
+
+                                                    onClicked: {
+                                                        Quickshell.execDetached({ command: modelData.command })
+                                                        root.opened = false
+                                                    }
                                                 }
                                             }
                                         }
@@ -249,12 +306,77 @@ Scope {
                             }
                         }
                     }
+
+                    GridLayout {
+                        columns: 2
+                        rowSpacing: 10
+                        columnSpacing: 10
+
+                        StyledLargeButton {
+                            Layout.fillWidth: true
+                            icon: Network.icon
+                            label: Network.wifiLabel
+                            subtitle: Network.wifiStatus
+                            active: Network.wifiEnabled
+                            onClicked: {
+                                Network.toggleWifi()
+                            }
+                        }
+
+                        StyledLargeButton {
+                            Layout.fillWidth: true
+                            icon: Bluetooth.icon
+                            label: Bluetooth.defaultAdapter.enabled && Bluetooth.activeDevice ? Bluetooth.activeDevice.name : "Bluetooth"
+                            subtitle: Bluetooth.defaultAdapter.enabled ? "On" : "Off"
+                            active: Bluetooth.defaultAdapter.enabled
+                            onClicked: Bluetooth.defaultAdapter.enabled = !Bluetooth.defaultAdapter.enabled
+                        }
+                    }
+
+                    ExpPowerProfile {}
+
+                    Rectangle { Layout.fillWidth: true; height: 1; color: Appearance.colors.m3outline_variant }
+
+                    SliderControl {
+                        icon: Audio.volume === 0 ? "volume_off" : Audio.volume < 0.5 ? "volume_down" : "volume_up"
+                        value: Audio.volume * 100
+                        label: "Volume"
+
+                        onValueChanged: {
+                            Audio.setVolume(value/100);
+                        }
+                    }
+                    SliderControl {
+                        id: briSlider
+                        label: "Brightness"
+                        icon: Brightness.icon
+
+                        value: Brightness.value * 100
+
+                        onValueChanged: {
+                            Brightness.set(value/100)
+                        }
+
+                        Connections {
+                            target: Brightness
+                            function onBrightnessChanged(newValue) {
+                                briSlider.value = newValue * 100
+                            }
+                        }
+                    }
+
+
+                    Rectangle { Layout.fillWidth: true; height: 1; color: Appearance.colors.m3outline_variant }
+
+                    GithubContribCalendar { Layout.fillWidth: true }
+
+                    Item { Layout.fillHeight: true }
                 }
             }
 
             HyprlandFocusGrab {
                 id: grab
-                windows: [ window ]
+                windows: [ window, popout.instance ]
             }
 
             onVisibleChanged: {
@@ -265,7 +387,7 @@ Scope {
                 target: grab
                 function onActiveChanged() {
                     if (!grab.active) {
-                        Globals.visible_quickPanel = false;
+                        root.opened = false;
                     }
                 }
             }

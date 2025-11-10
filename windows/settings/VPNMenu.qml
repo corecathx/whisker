@@ -6,8 +6,8 @@ import qs.components
 import qs.modules
 import qs.services
 BaseMenu {
-    title: "Sounds"
-    description: "Adjust your audio devices and system volume."
+    title: "VPN"
+    description: "Manage your VPN connections."
     InfoCard {
         icon: "info"
         backgroundColor: Appearance.colors.m3primary

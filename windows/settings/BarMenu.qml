@@ -35,15 +35,15 @@ BaseMenu {
                         // checkable: true
                         Layout.fillWidth: true
                         implicitWidth: 0
-                        checked: Preferences.barPosition === modelData.toLowerCase()
-                        topLeftRadius: modelData == "Left" || Preferences.barPosition === modelData.toLowerCase() ? 20 : 5
-                        bottomLeftRadius: modelData == "Left" || Preferences.barPosition === modelData.toLowerCase() ? 20 : 5
-                        topRightRadius: modelData == "Right" || Preferences.barPosition === modelData.toLowerCase() ? 20 : 5
-                        bottomRightRadius: modelData == "Right" || Preferences.barPosition === modelData.toLowerCase() ? 20 : 5
+                        checked: Preferences.bar.position === modelData.toLowerCase()
+                        topLeftRadius: modelData == "Left" || Preferences.bar.position === modelData.toLowerCase() ? 20 : 5
+                        bottomLeftRadius: modelData == "Left" || Preferences.bar.position === modelData.toLowerCase() ? 20 : 5
+                        topRightRadius: modelData == "Right" || Preferences.bar.position === modelData.toLowerCase() ? 20 : 5
+                        bottomRightRadius: modelData == "Right" || Preferences.bar.position === modelData.toLowerCase() ? 20 : 5
 
                         onClicked: {
                             Quickshell.execDetached({
-                                command: ['whisker', 'prefs', 'set', 'barPosition', modelData.toLowerCase()]
+                                command: ['whisker', 'prefs', 'set', 'bar.position', modelData.toLowerCase()]
                             })
                         }
                     }
@@ -53,15 +53,15 @@ BaseMenu {
         SwitchOption {
             title: "Keep bar opaque";
             description: "Padding for bars\nThis will only take effect if `smallBar` is `true`."
-            prefField: "keepBarOpaque"
+            prefField: "bar.keepOpaque"
         }
         SwitchOption {
             title: "Small bar";
             description: "Whether to keep the bar opaque or not\nIf disabled, the bar will adjust it's transparency, such as on desktop, etc."
-            prefField: "smallBar"
+            prefField: "bar.small"
         }
         RowLayout {
-            visible: Preferences.smallBar
+            visible: Preferences.bar.small
             ColumnLayout {
                 StyledText {
                     text: "Bar Padding"
@@ -78,7 +78,7 @@ BaseMenu {
                 Layout.fillWidth: true
             }
             StyledTextField {
-                text: Preferences.barPadding
+                text: Preferences.bar.padding
                 padding: 10
                 leftPadding: undefined
                 implicitWidth: 200
@@ -87,7 +87,7 @@ BaseMenu {
                     let num = Math.max(0, Math.min(parseInt(this.text.replace(/[^0-9.]/g, "")) || 0, Screen.width));
 
                     Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'barPadding', num.toString()]
+                        command: ['whisker', 'prefs', 'set', 'bar.padding', num.toString()]
                     });
                 }
             }
@@ -95,7 +95,7 @@ BaseMenu {
         SwitchOption {
             title: "Auto hide bar";
             description: "Whether to automatically hide the bar\nTo show your bar again, move your cursor to the edge of your bar's position."
-            prefField: "autoHideBar"
+            prefField: "bar.autoHide"
         }
     }
     component SwitchOption: RowLayout {
@@ -119,7 +119,7 @@ BaseMenu {
             Layout.fillWidth: true
         }
         StyledSwitch {
-            checked: Preferences[main.prefField]
+            checked: Preferences[main.prefField.split('.')[0]][main.prefField.split('.')[1]]
             onToggled: {
                 Quickshell.execDetached({
                     command: ['whisker', 'prefs', 'set', prefField, checked]

@@ -20,14 +20,15 @@ Scope {
             id: window
             property var modelData
             screen: modelData
-            property bool shouldShow: !Preferences.autoHideBar
+            property bool shouldShow: !Preferences.bar.autoHide
             property bool isAnimating: false
 
             exclusionMode: {
-                if (!Preferences.autoHideBar)
+                if (!Preferences.bar.autoHide)
                     return ExclusionMode.Auto
                 return ExclusionMode.Ignore
             }
+            exclusiveZone: 1
 
             WlrLayershell.layer: WlrLayer.Top
             WlrLayershell.namespace: 'whisker:bar'
@@ -37,36 +38,36 @@ Scope {
                 id: maskRegion
 
                 x: {
-                    if (!Preferences.autoHideBar) return 0;
+                    if (!Preferences.bar.autoHide) return 0;
                     return Globals.isBarHovered ? 0 : hoverZone.x
                 }
                 y: {
-                    if (!Preferences.autoHideBar) return 0;
+                    if (!Preferences.bar.autoHide) return 0;
                     Globals.isBarHovered ? 0 : hoverZone.y
                 }
                 width:{
-                    if (!Preferences.autoHideBar) return window.width;
+                    if (!Preferences.bar.autoHide) return window.width;
                     return Globals.isBarHovered ? window.width : hoverZone.width
                 }
 
                 height: {
-                    if (!Preferences.autoHideBar) return window.height;
+                    if (!Preferences.bar.autoHide) return window.height;
                     return Globals.isBarHovered ? window.height : hoverZone.height
                 }
             }
 
             anchors {
-                top: Preferences.barPosition === 'top' || Preferences.verticalBar()
-                bottom: Preferences.barPosition === 'bottom' || Preferences.verticalBar()
-                left: Preferences.barPosition === 'left' || Preferences.horizontalBar()
-                right: Preferences.barPosition === 'right' || Preferences.horizontalBar()
+                top: Preferences.bar.position === 'top' || Preferences.verticalBar()
+                bottom: Preferences.bar.position === 'bottom' || Preferences.verticalBar()
+                left: Preferences.bar.position === 'left' || Preferences.horizontalBar()
+                right: Preferences.bar.position === 'right' || Preferences.horizontalBar()
             }
 
             implicitHeight: barLoader.item ? barLoader.item.implicitHeight : 0
             implicitWidth: barLoader.item ? barLoader.item.implicitWidth : 0
 
             function updateHoverState() {
-                if (!Preferences.autoHideBar) {
+                if (!Preferences.bar.autoHide) {
                     Globals.isBarHovered = false
                     return
                 }
@@ -82,9 +83,9 @@ Scope {
                 }
             }
             Connections {
-                target: Preferences
-                function onAutoHideBarChanged() {
-                    shouldShow = !Preferences.autoHideBar
+                target: Preferences.bar
+                function onAutoHideChanged() {
+                    shouldShow = !Preferences.bar.autoHide
                 }
             }
 
@@ -97,9 +98,9 @@ Scope {
                     id: slideTransform
 
                     property real targetX: {
-                        if (!Preferences.autoHideBar) return 0
+                        if (!Preferences.bar.autoHide) return 0
                         if (!shouldShow) {
-                            const pos = Preferences.barPosition.toLowerCase()
+                            const pos = Preferences.bar.position.toLowerCase()
                             if (pos === 'left') return -barItem.width
                             if (pos === 'right') return barItem.width
                         }
@@ -107,9 +108,9 @@ Scope {
                     }
 
                     property real targetY: {
-                        if (!Preferences.autoHideBar) return 0
+                        if (!Preferences.bar.autoHide) return 0
                         if (!shouldShow) {
-                            const pos = Preferences.barPosition.toLowerCase()
+                            const pos = Preferences.bar.position.toLowerCase()
                             if (pos === 'top') return -barItem.height
                             if (pos === 'bottom') return barItem.height
                         }
@@ -161,8 +162,8 @@ Scope {
                 Component.onCompleted: positionHoverZone()
 
                 Connections {
-                    target: Preferences
-                    function onBarPositionChanged() { hoverZone.positionHoverZone() }
+                    target: Preferences.bar
+                    function onPositionChanged() { hoverZone.positionHoverZone() }
                 }
 
                 function positionHoverZone() {
@@ -171,7 +172,7 @@ Scope {
                     anchors.left = undefined
                     anchors.right = undefined
 
-                    const pos = Preferences.barPosition.toLowerCase()
+                    const pos = Preferences.bar.position.toLowerCase()
 
                     if (pos === 'top') {
                         anchors.top = parent.top

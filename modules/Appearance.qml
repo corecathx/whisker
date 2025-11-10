@@ -23,7 +23,7 @@ Singleton {
      * URI to the current wallpaper.
      * @values string (file:// URI)
      */
-    property string wallpaper: !!Preferences.wallpaper && Preferences.wallpaper !== "" ? "file://" + Preferences.wallpaper : ""
+    property string wallpaper: !!Preferences.theme.wallpaper && Preferences.theme.wallpaper !== "" ? "file://" + Preferences.theme.wallpaper : ""
 
     /**
      * URI to the user’s profile image, typically located at ~/.face.
@@ -48,7 +48,7 @@ Singleton {
 
         let schemeData = JSON.parse(root.lastData);
         const selectedScheme = schemeData[scheme];
-        const mode = Preferences.darkMode ? "dark" : "light";
+        const mode = Preferences.theme.dark ? "dark" : "light";
         const colors = selectedScheme[mode];
 
         var outputColors = {};
@@ -73,12 +73,12 @@ Singleton {
             return;
         }
 
-        const selectedScheme = schemeData[Preferences.colorScheme];
+        const selectedScheme = schemeData[Preferences.theme.scheme];
         if (!selectedScheme) {
             return;
         }
 
-        const mode = Preferences.darkMode ? "dark" : "light";
+        const mode = Preferences.theme.dark ? "dark" : "light";
 
         for (const [name, colorModes] of Object.entries(selectedScheme)) {
             const propName = `m3${name}`;

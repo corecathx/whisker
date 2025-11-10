@@ -49,7 +49,7 @@ BaseCard {
                 day: nextDay,
                 isCurrentMonth: false,
                 isToday: false,
-                isWeekend: date.getDay()===0 
+                isWeekend: date.getDay()===0
             })
             nextDay++
         }
@@ -81,7 +81,7 @@ BaseCard {
                 Layout.fillWidth: true
             }
             Label {
-                width: parent.width
+                Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: 18
                 font.bold: true

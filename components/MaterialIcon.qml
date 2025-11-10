@@ -14,6 +14,7 @@ StyledText {
     "GRAD": root.grad,
     "wght": root.fontInfo.weight
   }
-  renderType: Text.NativeRendering
+  renderType: Text.QtRendering
+
   text: root.icon
 }

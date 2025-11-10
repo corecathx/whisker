@@ -36,7 +36,7 @@ Item {
                     anchors.fill: parent
                     radius: 20
                     color: Appearance.colors.m3surface_container
-                    opacity: !Preferences.keepBarOpaque && !Serv.Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
+                    opacity: !Preferences.bar.keepOpaque && !Serv.Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
 
                     Behavior on opacity {
                         NumberAnimation {

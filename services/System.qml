@@ -1,17 +1,15 @@
 pragma Singleton
-
 import QtQuick
 import Quickshell
 import Quickshell.Io
-
 Singleton {
     id: system
-
     property string name: ""
     property string version: ""
     property string prettyName: ""
     property string logo: ""
     property string id: ""
+    property int uptime: 0
 
     Process {
         running: true
@@ -27,6 +25,29 @@ Singleton {
                     system.id = parts[4]
                 }
             }
+        }
+    }
+
+    Process {
+        id: uptimeProcess
+        running: true
+        command: ["cat", "/proc/uptime"]
+        stdout: StdioCollector {
+            onStreamFinished: () => {
+                var parts = this.text.trim().split(" ")
+                if (parts.length >= 1) {
+                    system.uptime = Math.floor(parseFloat(parts[0]))
+                }
+            }
+        }
+    }
+
+    Timer {
+        interval: 60000
+        running: true
+        repeat: true
+        onTriggered: {
+            uptimeProcess.running = true
         }
     }
 }

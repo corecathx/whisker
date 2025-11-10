@@ -25,7 +25,7 @@ Item {
 
         Rectangle {
             anchors.fill: parent
-            color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
+            color: !inLockScreen && Preferences.bar.keepOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
             Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
         }
 
@@ -54,7 +54,7 @@ Item {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 110
-                
+
                 BarBottom {
                     id: btm
                     anchors.centerIn: parent
@@ -65,7 +65,7 @@ Item {
         layer.enabled: true
         layer.effect: MultiEffect {
             shadowEnabled: true
-            shadowOpacity: !Preferences.keepBarOpaque && !Hyprland.currentWorkspace.hasTilingWindow()
+            shadowOpacity: !Preferences.bar.keepOpaque && !Hyprland.currentWorkspace.hasTilingWindow()
             shadowColor: Appearance.colors.m3shadow
             shadowBlur: 1
             shadowScale: 1

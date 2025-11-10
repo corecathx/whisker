@@ -25,12 +25,12 @@ Scope {
 
         anchors.top: true
         margins.top: -10
-        
-        anchors.left: Preferences.barPosition === "right"
-        margins.left: Preferences.barPosition === "right" ? -10 : 0
 
-        anchors.right: Preferences.barPosition !== "right"
-        margins.right: Preferences.barPosition !== "right" ? -10 : 0
+        anchors.left: Preferences.bar.position === "right"
+        margins.left: Preferences.bar.position === "right" ? -10 : 0
+
+        anchors.right: Preferences.bar.position !== "right"
+        margins.right: Preferences.bar.position !== "right" ? -10 : 0
 
         anchors.bottom: true
         margins.bottom: 10
@@ -72,6 +72,7 @@ Scope {
                     anchors.right: bgRectangle.right
                     anchors.topMargin: 10
                     VolumeOsd {}
+                    BrightnessOsd {}
                 }
             }
         }

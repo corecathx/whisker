@@ -40,7 +40,7 @@ BaseMenu {
                 id: wpImage
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectCrop
-                source: Preferences.wallpaper
+                source: Preferences.theme.wallpaper
                 smooth: true
             }
         }
@@ -76,7 +76,7 @@ BaseMenu {
                             width: 120
                             height: width * screen.height / screen.width
                             property bool hovered: mouseHover.containsMouse
-                            property bool selected: Preferences.wallpaper === modelData
+                            property bool selected: Preferences.theme.wallpaper === modelData
 
                             MouseArea {
                                 id: mouseHover
@@ -84,7 +84,7 @@ BaseMenu {
                                 hoverEnabled: true
                                 enabled: !wpSetProc.running
                                 onClicked: {
-                                    if (Preferences.wallpaper === modelData) return;
+                                    if (Preferences.theme.wallpaper === modelData) return;
                                     wpSetProc.command = ['whisker', 'wallpaper', modelData];
                                     wpSetProc.running = true;
                                 }
@@ -151,7 +151,7 @@ BaseMenu {
 
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        wpImage.source = Preferences.wallpaper
+                        wpImage.source = Preferences.theme.wallpaper
                         wpSetProc.running = false
                     }
                 }

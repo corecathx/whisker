@@ -78,7 +78,7 @@ Item {
                     font.family: "Outfit ExtraBold"
                     color: Appearance.colors.m3on_background
                     horizontalAlignment: Text.AlignHCenter
-                    Layout.preferredWidth: 360
+                    Layout.preferredWidth: 400
                 }
 
                 StyledText {
@@ -87,9 +87,10 @@ Item {
                     wrapMode: Text.Wrap
                     color: Appearance.colors.m3on_background
                     horizontalAlignment: Text.AlignHCenter
-                    Layout.preferredWidth: 360
+                    Layout.preferredWidth: 400
                 }
             }
+            Item {}
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
                 spacing: 10
@@ -98,12 +99,16 @@ Item {
                     text: "View on GitHub"
                     icon: 'code'
                     onClicked: Qt.openUrlExternally("https://github.com/corecathx/whisker")
+                    topRightRadius: 5
+                    bottomRightRadius: 5
                 }
                 StyledButton {
                     text: "Report Issue"
                     icon: "bug_report"
                     secondary: true
                     onClicked: Qt.openUrlExternally("https://github.com/corecathx/whisker/issues")
+                    topLeftRadius: 5
+                    bottomLeftRadius: 5
                 }
 
             }

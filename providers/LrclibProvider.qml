@@ -11,7 +11,7 @@ QtObject {
     signal ready();
 
     // translation
-    property string targetLanguage: "id"
+    property string targetLanguage: "en"
     property bool enableTranslation: true
 
     // players

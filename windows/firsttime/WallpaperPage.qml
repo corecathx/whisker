@@ -10,7 +10,7 @@ import qs.preferences
 SetupMenu {
     id: root
     title: "Wallpaper"
-    canContinue: Preferences.wallpaper !== ""
+    canContinue: Preferences.theme.wallpaper !== ""
     description: "Pick something cool"
     blockedMessage: "Please select a wallpaper before continuing"
 
@@ -32,7 +32,7 @@ SetupMenu {
         Image {
             anchors.fill: parent
             fillMode: Image.PreserveAspectCrop
-            source: Preferences.wallpaper
+            source: Preferences.theme.wallpaper
             smooth: true
         }
     }
@@ -63,7 +63,7 @@ SetupMenu {
                         width: 120
                         height: width * screen.height / screen.width
                         property bool hovered: wpMouse.containsMouse
-                        property bool selected: Preferences.wallpaper === modelData
+                        property bool selected: Preferences.theme.wallpaper === modelData
 
                         MouseArea {
                             id: wpMouse
@@ -71,7 +71,7 @@ SetupMenu {
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
-                                if (Preferences.wallpaper === modelData) return;
+                                if (Preferences.theme.wallpaper === modelData) return;
                                 Quickshell.execDetached({
                                     command: ['whisker', 'wallpaper', modelData]
                                 });

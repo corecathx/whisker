@@ -7,7 +7,7 @@ import qs.preferences
 
 Singleton {
     PwObjectTracker {
-        objects: [ 
+        objects: [
             Pipewire.defaultAudioSource,
             Pipewire.defaultAudioSink,
             Pipewire.nodes,

@@ -9,11 +9,11 @@ Item {
     id: root
     width: 400
     height: 200
-    property real multiplier: 1.2
+    property real multiplier: 1.3
     property real spacing: 8
     property string position: "bottom"
     Row {
-        visible: Preferences.cavaEnabled
+        visible: Preferences.misc.cavaEnabled
         id: visualizerLayout
         anchors.fill: parent
         spacing: root.spacing

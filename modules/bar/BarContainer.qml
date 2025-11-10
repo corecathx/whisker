@@ -16,7 +16,7 @@ Item {
         anchors.left: barContainer.right
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
-        color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
+        color: !inLockScreen && Preferences.bar.keepOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.animation.fast
@@ -25,14 +25,14 @@ Item {
         }
         corner: 1
         transform: Scale {
-            yScale: Preferences.barPosition === 'top' ? 1 : -1
-            origin.y: Preferences.barPosition === 'top' ? 0 : height/2
+            yScale: Preferences.bar.position === 'top' ? 1 : -1
+            origin.y: Preferences.bar.position === 'top' ? 0 : height/2
         }
     }
     Item {
         id: barContainer
         implicitHeight: root.implicitHeight
-        width: Preferences.smallBar ? screen?.width - Preferences.barPadding * 2 : parent?.width ?? 0
+        width: Preferences.bar.small ? screen?.width - Preferences.bar.padding * 2 : parent?.width ?? 0
         clip: true
         Behavior on width {
             NumberAnimation {
@@ -45,7 +45,7 @@ Item {
         Rectangle {
             id: panelBackground
             anchors.fill: parent
-            color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
+            color: !inLockScreen && Preferences.bar.keepOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
             Behavior on color {
                 ColorAnimation {
                     duration: Appearance.animation.fast
@@ -76,7 +76,7 @@ Item {
             layer.enabled: true
             layer.effect: MultiEffect {
                 shadowEnabled: true
-                shadowOpacity: !Preferences.keepBarOpaque && !Hyprland.currentWorkspace.hasTilingWindow()
+                shadowOpacity: !Preferences.bar.keepOpaque && !Hyprland.currentWorkspace.hasTilingWindow()
                 shadowColor: Appearance.colors.m3shadow
                 shadowBlur: 1
                 shadowScale: 1
@@ -88,7 +88,7 @@ Item {
         anchors.right: barContainer.left
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
-        color: !inLockScreen && Preferences.keepBarOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
+        color: !inLockScreen && Preferences.bar.keepOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
         Behavior on color {
             ColorAnimation {
                 duration: Appearance.animation.fast
@@ -97,8 +97,8 @@ Item {
         }
         corner: 0
         transform: Scale {
-            yScale: Preferences.barPosition === 'top' ? 1 : -1
-            origin.y: Preferences.barPosition === 'top' ? 0 : height/2
+            yScale: Preferences.bar.position === 'top' ? 1 : -1
+            origin.y: Preferences.bar.position === 'top' ? 0 : height/2
         }
     }
 }

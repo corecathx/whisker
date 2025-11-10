@@ -2,6 +2,7 @@
 //@ pragma UseQApplication
 import QtQuick
 import Quickshell
+import qs.modules.overlays
 import qs.modules.bar
 import qs.modules.corners
 import qs.windows.wallpaper
@@ -16,6 +17,7 @@ import qs.windows.dev
 import qs.windows.osdpanel
 import qs.windows.firsttime
 import qs.windows.polkit
+import qs.windows.power
 import qs.windows.cliphist
 import qs.services
 
@@ -44,11 +46,13 @@ ShellRoot {
     Component.onCompleted: {
         Theme.init()
         Audio.init()
+        Brightness.init()
     }
     // DevWindow {}
     //
     Screencapture {}
     PolkitPrompt {}
+    PowerPrompt {}
     Cliphist {}
 
 }

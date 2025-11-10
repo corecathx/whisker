@@ -41,14 +41,14 @@ Scope {
 		active: root.shouldShowOsd
 
 		PanelWindow {
-			anchors.top: Preferences.barPosition === 'top'
-			margins.top: Preferences.barPosition === 'top' ? 10 : 0
+			anchors.top: Preferences.bar.position === 'top'
+			margins.top: Preferences.bar.position === 'top' ? 10 : 0
 
-            anchors.bottom: Preferences.barPosition === 'bottom'
-			margins.bottom: Preferences.barPosition === 'bottom' ? 10 : 0
+            anchors.bottom: Preferences.bar.position === 'bottom'
+			margins.bottom: Preferences.bar.position === 'bottom' ? 10 : 0
 
 			anchors.right: true
-			margins.right: Preferences.smallBar ? Preferences.barPadding + 10 : 10
+			margins.right: Preferences.bar.small ? Preferences.bar.padding + 10 : 10
 
 
 			implicitWidth: 400

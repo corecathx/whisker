@@ -13,12 +13,12 @@ import qs.modules.bar
 Item {
     id: root
     property bool inLockScreen: false
-    
+
     Column {
         id: contentCol
         anchors.centerIn: parent
         spacing: 10
-        
+
         Item {
             id: trayContainer
             width: trays.implicitWidth + 10
@@ -30,7 +30,7 @@ Item {
                 anchors.fill: parent
                 radius: 20
                 color: Appearance.colors.m3surface_container
-                opacity: !Preferences.keepBarOpaque && !Serv.Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
+                opacity: !Preferences.bar.keepOpaque && !Serv.Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
 
                 Behavior on opacity {
                     NumberAnimation {
@@ -53,7 +53,7 @@ Item {
         // Battery {
         //     verticalMode: true
         // }
-        
+
         // sorry but making the battery object from horizontal bar is difficult for vertical :(
 
 

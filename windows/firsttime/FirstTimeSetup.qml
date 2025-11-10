@@ -23,7 +23,7 @@ FloatingWindow {
 
     onClosed: {
         Quickshell.execDetached({
-            command: ['whisker', 'prefs', 'set', 'finishedSetup', 'true']
+            command: ['whisker', 'prefs', 'set', 'misc.finishedSetup', 'true']
         });
         Quickshell.execDetached({
             command: ['whisker', 'notify', 'Whisker', 'Setup skipped! You can tweak settings anytime with SUPER + I']
@@ -56,7 +56,7 @@ FloatingWindow {
                 onNextRequested: setupContainer.nextPage()
                 onQuitRequested: {
                     Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'finishedSetup', 'true']
+                        command: ['whisker', 'prefs', 'set', 'misc.finishedSetup', 'true']
                     });
                     Quickshell.execDetached({
                         command: ['whisker', 'notify', 'Whisker', 'Setup skipped! You can tweak settings anytime with SUPER + I', 'true']
@@ -83,7 +83,7 @@ FloatingWindow {
             FinishPage {
                 onCloseRequested: {
                     Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'finishedSetup', 'true']
+                        command: ['whisker', 'prefs', 'set', 'misc.finishedSetup', 'true']
                     });
                     Quickshell.execDetached({
                         command: ['whisker', 'notify', 'Whisker', 'Awesome! Hope you enjoy this shell :]']

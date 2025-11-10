@@ -121,7 +121,7 @@ Scope {
         PanelWindow {
             id: window
             property int selectedIndex: -1  // Track selected item
-            property bool barIsOpaque: ((Preferences.barPosition === "bottom" && Hyprland.currentWorkspace.hasTilingWindow()) || Preferences.keepBarOpaque) || (Preferences.barPosition === "top")
+            property bool barIsOpaque: ((Preferences.bar.position === "bottom" && Hyprland.currentWorkspace.hasTilingWindow()) || Preferences.bar.keepOpaque) || (Preferences.bar.position === "top")
             implicitWidth: (screen.width * 0.4) + 20
             implicitHeight: (screen.height * 0.6) + 20
 

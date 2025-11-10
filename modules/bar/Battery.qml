@@ -20,7 +20,7 @@ Item {
     property var low_battery_level: 15
     property int notifiedLevel: -1
     property string battery: Power.batteries.length > 0
-        ? (Math.round(Power.percentage * 100).toFixed(1)) + ""
+        ? ((Power.percentage * 100).toFixed(1)) + ""
         : "0%"
 
     property color batteryColor: {
@@ -176,7 +176,7 @@ Item {
                     spacing: 12
 
                     StyledText {
-                        text: "Batteries"
+                        text: "Batteries - " + (Power.percentage*100).toFixed(1) + "%"
                         font.pixelSize: 16
                         font.bold: true
                         color: Appearance.colors.m3on_surface

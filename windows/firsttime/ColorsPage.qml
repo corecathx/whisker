@@ -49,10 +49,10 @@ SetupMenu {
             Layout.fillWidth: true
         }
         StyledSwitch {
-            checked: Preferences.darkMode
+            checked: Preferences.theme.dark
             onToggled: {
                 Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', 'darkMode', checked]
+                    command: ['whisker', 'prefs', 'set', 'theme.dark', checked]
                 })
             }
         }

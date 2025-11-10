@@ -7,10 +7,8 @@ import qs.components
 
 RowLayout {
     id: root
-    spacing: 12
+    spacing: 5
     anchors.margins: 20
-    Layout.leftMargin: 20
-    Layout.rightMargin: 20
 
     property bool showText: true
     property string current_mode: "Balanced"
@@ -24,6 +22,8 @@ RowLayout {
         id: btn_saver
         text: "Power Saver"
         icon: "energy_savings_leaf"
+        topRightRadius: 5
+        bottomRightRadius: 5
         checkable: true
         Layout.fillWidth: true
         onToggled: if (checked) {
@@ -47,6 +47,7 @@ RowLayout {
         icon: "balance"
         checkable: true
         Layout.fillWidth: true
+        radius: 5
         onToggled: if (checked) {
             btn_saver.checked = false
             btn_perf.checked = false
@@ -68,6 +69,8 @@ RowLayout {
         icon: "flash_on"
         checkable: true
         Layout.fillWidth: true
+        topLeftRadius: 5
+        bottomLeftRadius: 5
         onToggled: if (checked) {
             btn_saver.checked = false
             btn_balanced.checked = false
@@ -91,7 +94,7 @@ RowLayout {
     Process {
         id: notifyProc
         property string message: ""
-        command: ["dunstify", "-i", Utils.getPath('logo.png'), "Whisker", message]
+        command: ["whisker", "notify", "Whisker", message]
         running: false
     }
 

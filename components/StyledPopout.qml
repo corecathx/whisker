@@ -10,6 +10,7 @@ import Quickshell.Wayland
 LazyLoader {
     id: root
 
+    property PanelWindow instance: null
     property HoverHandler hoverTarget
     property real margin: 10
     default property list<Component> content
@@ -54,6 +55,7 @@ LazyLoader {
             root.isVisible = false
             root.keepAlive = false
             root._manualControl = false
+            root.instance = null
         }
     }
 
@@ -107,9 +109,6 @@ LazyLoader {
             right: true
             bottom: true
         }
-
-        implicitWidth: screen.width
-        implicitHeight: screen.height
 
         property bool exceedingHalf: false
         property var parentPopoutWindow: null
@@ -265,6 +264,7 @@ LazyLoader {
         }
 
         Component.onCompleted: {
+            root.instance = popoutWindow
             for (let i = 0; i < root.content.length; i++) {
                 const comp = root.content[i]
                 if (comp && comp.createObject) {

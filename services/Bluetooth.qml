@@ -6,7 +6,8 @@ import qs.modules
 import qs.preferences
 
 Singleton {
-    readonly property BluetoothAdapter defaultAdapter: Bluetooth.defaultAdapter ?? null
+    id: root
+    readonly property BluetoothAdapter defaultAdapter: Bluetooth.defaultAdapter
     readonly property list<BluetoothDevice> devices: defaultAdapter?.devices?.values ?? []
     readonly property BluetoothDevice activeDevice: devices.find(d => d.connected) ?? null
     readonly property string icon: {
