@@ -8,7 +8,7 @@ import qs.preferences
 
 Item {
     id: root
-    property string icon: Preferences.notificationEnabled ? "notifications" : "notifications_off"
+    property string icon: Preferences.misc.notificationEnabled ? "notifications" : "notifications_off"
     property bool inLockScreen: false
     implicitWidth: container.implicitWidth
     implicitHeight: container.implicitHeight

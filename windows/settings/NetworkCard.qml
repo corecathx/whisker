@@ -5,8 +5,8 @@ import qs.modules
 import qs.services
 
 BaseCard {
-    id: wifiRow
-    property var network
+    id: networkRow
+    property var connection
     property bool isActive: false
     property bool showConnect: false
     property bool showDisconnect: false
@@ -16,9 +16,10 @@ BaseCard {
     cardMargin: 0
     cardSpacing: 10
     verticalPadding: 0
-    opacity: isActive ? 1 : 1
 
     function signalIcon(strength, secure) {
+        if (connection.type === "ethernet") return "settings_ethernet";
+
         let icon = "";
         if (strength >= 75) icon = "network_wifi";
         else if (strength >= 50) icon = "network_wifi_3_bar";
@@ -30,88 +31,85 @@ BaseCard {
 
     RowLayout {
         MaterialIcon {
-            icon: signalIcon(network.strength, network.isSecure)
+            icon: signalIcon(connection.strength, connection.isSecure)
             color: Appearance.colors.m3on_background
             font.pixelSize: 32
             MaterialIcon {
                 icon: 'lock'
-                visible: network.isSecure
+                visible: connection.type === "wifi" && connection.isSecure
                 color: Appearance.colors.m3on_background
                 font.pixelSize: 12
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
             }
         }
-
         ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             spacing: 0
             StyledText {
-                text: network.ssid
+                text: connection.name
                 font.pixelSize: 16
                 font.bold: true
                 color: Appearance.colors.m3on_background
             }
             StyledText {
-                text: isActive ? "Connected" : (network.isSecure ? "Secured" : "Open")
+                text: {
+                    if (isActive) return "Connected";
+                    if (connection.type === "ethernet") return connection.device || "Ethernet";
+                    return connection.isSecure ? "Secured" : "Open";
+                }
                 font.pixelSize: 12
                 color: isActive ? Appearance.colors.m3primary : Colors.opacify(Appearance.colors.m3on_background, 0.6)
             }
         }
-
         Item { Layout.fillWidth: true }
-
         StyledButton {
             visible: showConnect && !showPasswordField
             icon: "link"
             onClicked: {
-                if (network.isSecure) {
+                if (connection.type === "ethernet") {
+                    Network.connect(connection, "");
+                } else if (connection.isSecure) {
                     showPasswordField = true;
                 } else {
-                    Network.connectToNetwork(network.ssid, "");
+                    Network.connect(connection, "");
                 }
             }
         }
-
         StyledButton {
             visible: showDisconnect && !showPasswordField
             icon: "link_off"
-            onClicked: Network.disconnectFromNetwork()
+            onClicked: Network.disconnect()
         }
     }
-
     RowLayout {
-        visible: showPasswordField
+        visible: showPasswordField && connection.type === "wifi"
         property bool showPassword: false
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: 10
-
         StyledTextField {
             padding: 10
             icon: "password"
             Layout.fillWidth: true
             placeholder: "Enter password"
             echoMode: parent.showPassword ? TextInput.Normal : TextInput.Password
-            onTextChanged: wifiRow.password = text
+            onTextChanged: networkRow.password = text
             onAccepted: {
-                Network.connectToNetwork(network.ssid, wifiRow.password)
-                showPasswordField = false  // hide on enter
+                Network.connect(connection, networkRow.password)
+                showPasswordField = false
             }
         }
-
         StyledButton {
             icon: parent.showPassword ? "visibility" : "visibility_off"
             onClicked: parent.showPassword = !parent.showPassword
         }
-
         StyledButton {
             icon: "link"
             onClicked: {
-                Network.connectToNetwork(network.ssid, wifiRow.password)
-                showPasswordField = false  // hide on connect button
+                Network.connect(connection, networkRow.password)
+                showPasswordField = false
             }
         }
     }
-
 }

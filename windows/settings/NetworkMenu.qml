@@ -6,8 +6,8 @@ import qs.modules
 import qs.services
 
 BaseMenu {
-    title: "Wi-Fi"
-    description: "Manage Wi-Fi networks and connections."
+    title: "Network"
+    description: "Manage network connections."
 
     BaseCard {
         BaseRowCard {
@@ -15,7 +15,7 @@ BaseMenu {
             verticalPadding: Network.wifiEnabled ? 10 : 0
             cardMargin: 0
             StyledText {
-                text: powerSwitch.checked ? "Power: On" : "Power: Off"
+                text: powerSwitch.checked ? "Wi-Fi: On" : "Wi-Fi: Off"
                 font.pixelSize: 16
                 font.bold: true
                 color: Appearance.colors.m3on_background
@@ -50,11 +50,12 @@ BaseMenu {
             StyledSwitch {
                 checked: Network.scanning
                 onToggled: {
-                    if (checked) Network.rescanWifi()
+                    if (checked) Network.rescan()
                 }
             }
         }
     }
+
     InfoCard {
         visible: Network.message !== "" && Network.message !== "ok"
         icon: "error"
@@ -63,33 +64,52 @@ BaseMenu {
         title: "Failed to connect to " + Network.lastNetworkAttempt
         description: Network.message
     }
+
     BaseCard {
         visible: Network.active !== null
         StyledText {
-            text: "Connected Network"
+            text: "Active Connection"
             font.pixelSize: 18
             font.bold: true
             color: Appearance.colors.m3on_background
         }
 
-        WifiNetworkCard {
-            network: Network.active
+        NetworkCard {
+            connection: Network.active
             isActive: true
-            showDisconnect: true
+            showDisconnect: Network.active?.type === "wifi"
+        }
+    }
+
+    BaseCard {
+        visible: Network.connections.filter(c => c.type === "ethernet").length > 0
+        StyledText {
+            text: "Ethernet"
+            font.pixelSize: 18
+            font.bold: true
+            color: Appearance.colors.m3on_background
+        }
+
+        Repeater {
+            model: Network.connections.filter(c => c.type === "ethernet" && !c.active)
+            delegate: NetworkCard {
+                connection: modelData
+                showConnect: true
+            }
         }
     }
 
     BaseCard {
         visible: Network.wifiEnabled
         StyledText {
-            text: "Available Networks"
+            text: "Available Wi-Fi Networks"
             font.pixelSize: 18
             font.bold: true
             color: Appearance.colors.m3on_background
         }
 
         Item {
-            visible: Network.networks.length === 0 && !Network.scanning
+            visible: Network.connections.filter(c => c.type === "wifi").length === 0 && !Network.scanning
             width: parent.width
             height: 40
             StyledText {
@@ -101,13 +121,14 @@ BaseMenu {
         }
 
         Repeater {
-            model: Network.networks.filter(n => !n.active)
-            delegate: WifiNetworkCard {
-                network: modelData
+            model: Network.connections.filter(c => c.type === "wifi" && !c.active)
+            delegate: NetworkCard {
+                connection: modelData
                 showConnect: true
             }
         }
     }
+
     BaseCard {
         visible: Network.savedNetworks.length > 0
         StyledText {
@@ -130,13 +151,12 @@ BaseMenu {
         }
 
         Repeater {
-            model: Network.networks.filter(n => n.saved)
-            delegate: WifiNetworkCard {
-                network: modelData
+            model: Network.connections.filter(c => c.type === "wifi" && c.saved && !c.active)
+            delegate: NetworkCard {
+                connection: modelData
                 showConnect: false
                 showDisconnect: false
             }
         }
     }
-
 }
