@@ -15,6 +15,10 @@ import QtMultimedia
 
 PanelWindow {
     id: wallpaper
+    property string fallbackWallpaper: Utils.getPath("images/fallback-wallpaper.png")
+    property string currentWallpaper: Appearance.wallpaper !== "" ? Appearance.wallpaper : fallbackWallpaper
+    property bool isVideo: Utils.isVideo(currentWallpaper)
+
     property real widgetOffset: 40
     property real screenOffset: 50
 
@@ -30,18 +34,45 @@ PanelWindow {
     }
     color: Appearance.colors.m3surface
     WlrLayershell.layer: WlrLayer.Background
-    WlrLayershell.namespace: 'whisker:wallpaper'
+    WlrLayershell.namespace: "whisker:wallpaper"
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
+
+    onCurrentWallpaperChanged: {
+        var newIsVideo = Utils.isVideo(currentWallpaper)
+        var wasVideo = isVideo
+
+        if (wasVideo) {
+            oldVideo.source = currentVideo.source
+            oldVideo.opacity = 1
+            oldVideo.play()
+            oldVideoFadeOut.start()
+        } else {
+            oldImage.source = currentImage.source
+            oldImage.opacity = 1
+            oldImageFadeOut.start()
+        }
+
+        isVideo = newIsVideo
+
+        if (newIsVideo) {
+            var wp = currentWallpaper
+            currentVideo.source = wp.startsWith("file://") ? wp : "file://" + wp
+            currentVideo.opacity = 0
+        } else {
+            currentImage.source = currentWallpaper
+            currentImage.opacity = 0
+        }
+    }
 
     Item {
         id: wallpaperWrapper
         clip: true
         anchors.fill: parent
 
-        anchors.leftMargin: Preferences.bar.position === 'left' ? wallpaperShift : 0
-        anchors.rightMargin: Preferences.bar.position === 'right' ? wallpaperShift : 0
-        anchors.topMargin: (Preferences.bar.position === 'top' && !Preferences.bar.small) ? wallpaperShift : 0
-        anchors.bottomMargin: (Preferences.bar.position === 'bottom' && !Preferences.bar.small) ? wallpaperShift : 0
+        anchors.leftMargin: Preferences.bar.position === "left" ? wallpaperShift : 0
+        anchors.rightMargin: Preferences.bar.position === "right" ? wallpaperShift : 0
+        anchors.topMargin: (Preferences.bar.position === "top" && !Preferences.bar.small) ? wallpaperShift : 0
+        anchors.bottomMargin: (Preferences.bar.position === "bottom" && !Preferences.bar.small) ? wallpaperShift : 0
 
         Behavior on anchors.leftMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
         Behavior on anchors.rightMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
@@ -49,145 +80,140 @@ PanelWindow {
         Behavior on anchors.bottomMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
 
         Image {
-            id: oldWallpaper
+            id: currentImage
+            anchors.fill: parent
             sourceSize: Qt.size(wallpaper.width, wallpaper.height)
-            anchors.centerIn: parent
-            source: Appearance.wallpaper
+            source: ""
             fillMode: Image.PreserveAspectCrop
             smooth: true
             cache: true
-            visible: Preferences.theme.useWallpaper && !Preferences.theme.useVideoWallpaper
-        }
+            visible: !isVideo
+            opacity: 1
 
-        ClippingRectangle {
-            id: animClip
-            anchors.centerIn: parent
-            width: 0
-            height: width
-            radius: width
-            color: "transparent"
-            layer.smooth: true
-
-            NumberAnimation {
-                id: revealAnim
-                target: animClip
-                property: "width"
-                duration: Appearance.animation.slow * 2
-                easing.type: Appearance.animation.easing
-                from: 0
-                to: Math.max(wallpaper.width, wallpaper.height) * 1.2
-                onStopped: {
-                    oldWallpaper.source = newWallpaper.source
-                    newWallpaper.source = ""
-                    animClip.width = 0
-                }
+            Component.onCompleted: {
+                if (!isVideo) source = currentWallpaper
             }
-
-            Image {
-                id: newWallpaper
-                anchors.centerIn: parent
-                sourceSize: Qt.size(wallpaper.width, wallpaper.height)
-                source: ""
-                fillMode: Image.PreserveAspectCrop
-                smooth: true
-                cache: true
-            }
-        }
-
-        Connections {
-            target: Appearance
-            function onWallpaperChanged() {
-                newWallpaper.source = Appearance.wallpaper
-                delayTimer.start()
-            }
-        }
-
-        Timer {
-            id: delayTimer
-            interval: 500
-            onTriggered: revealAnim.start()
         }
 
         Video {
-            id: video
+            id: currentVideo
             anchors.fill: parent
-            autoPlay: false
-            smooth: false
-            loops: 9999
+            source: ""
+            autoPlay: true
+            loops: MediaPlayer.Infinite
             muted: true
-            source: "file:///home/corecat/Downloads/lucanimations_vaapi.mp4"
-            visible: Preferences.theme.useVideoWallpaper
+            fillMode: VideoOutput.PreserveAspectCrop
+            visible: isVideo
+            opacity: 1
 
             function updatePlayback() {
-                if (!Preferences.theme.useVideoWallpaper) {
-                    video.stop()
+                if (!isVideo) {
+                    stop()
                     return
                 }
 
                 if (Hyprland.currentWorkspace.hasTilingWindow()) {
-                    if (video.playbackState === MediaPlayer.PlayingState)
-                        video.pause()
+                    if (playbackState === MediaPlayer.PlayingState)
+                        pause()
                 } else {
-                    if (video.playbackState !== MediaPlayer.PlayingState)
-                        video.play()
+                    if (playbackState !== MediaPlayer.PlayingState)
+                        play()
                 }
             }
 
             Connections {
                 target: Hyprland
-                function onWorkspaceUpdated() { video.updatePlayback() }
-            }
-            Connections {
-                target: Preferences.theme
-                function onUseVideoWallpaperChanged() { video.updatePlayback() }
+                function onWorkspaceUpdated() { currentVideo.updatePlayback() }
             }
 
-            Component.onCompleted: video.updatePlayback()
+            Component.onCompleted: {
+                if (isVideo) {
+                    var wp = currentWallpaper
+                    source = wp.startsWith("file://") ? wp : "file://" + wp
+                }
+                updatePlayback()
+            }
         }
 
-        Item {
-            visible: Preferences.theme.useWallpaper && Appearance.wallpaper === ""
+        Image {
+            id: oldImage
             anchors.fill: parent
+            sourceSize: Qt.size(wallpaper.width, wallpaper.height)
+            source: ""
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+            cache: true
+            opacity: 0
 
-            Image {
-                anchors.fill: parent
-                fillMode: Image.PreserveAspectCrop
-                source: Utils.getPath("images/fallback-wallpaper-overlay.png")
-                smooth: true
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    colorization: 1.0
-                    colorizationColor: Appearance.colors.m3on_surface_variant
-                }
-            }
+            NumberAnimation {
+                id: oldImageFadeOut
+                target: oldImage
+                property: "opacity"
+                duration: Appearance.animation.medium
+                easing.type: Appearance.animation.easing
+                from: 1
+                to: 0
 
-            RowLayout {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: 60
-                spacing: 20
-
-                Rectangle {
-                    Layout.fillHeight: true
-                    width: 10
-                    radius: 20
-                    color: Appearance.colors.m3on_surface
-                }
-
-                ColumnLayout {
-                    StyledText {
-                        text: "You don't have a wallpaper set!"
-                        color: Appearance.colors.m3on_background
-                        font.family: "Outfit SemiBold"
-                        font.pixelSize: 32
-                    }
-                    StyledText {
-                        text: "Set your wallpaper by opening Whisker Settings!\n(SUPER + I)"
-                        color: Appearance.colors.m3on_background
-                        font.pixelSize: 24
+                onStopped: {
+                    oldImage.source = ""
+                    if (!isVideo) {
+                        newImageFadeIn.start()
+                    } else {
+                        newVideoFadeIn.start()
                     }
                 }
             }
+        }
+
+        Video {
+            id: oldVideo
+            anchors.fill: parent
+            source: ""
+            autoPlay: false
+            loops: MediaPlayer.Infinite
+            muted: true
+            fillMode: VideoOutput.PreserveAspectCrop
+            opacity: 0
+
+            NumberAnimation {
+                id: oldVideoFadeOut
+                target: oldVideo
+                property: "opacity"
+                duration: Appearance.animation.medium
+                easing.type: Appearance.animation.easing
+                from: 1
+                to: 0
+
+                onStopped: {
+                    oldVideo.stop()
+                    oldVideo.source = ""
+                    if (!isVideo) {
+                        newImageFadeIn.start()
+                    } else {
+                        newVideoFadeIn.start()
+                    }
+                }
+            }
+        }
+
+        NumberAnimation {
+            id: newImageFadeIn
+            target: currentImage
+            property: "opacity"
+            duration: Appearance.animation.medium
+            easing.type: Appearance.animation.easing
+            from: 0
+            to: 1
+        }
+
+        NumberAnimation {
+            id: newVideoFadeIn
+            target: currentVideo
+            property: "opacity"
+            duration: Appearance.animation.medium
+            easing.type: Appearance.animation.easing
+            from: 0
+            to: 1
         }
 
         CavaVisualizer {
@@ -196,7 +222,7 @@ PanelWindow {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: {
                 if (Preferences.bar.small) return 0
-                if (Preferences.bar.position === 'bottom' && barIsShowing)
+                if (Preferences.bar.position === "bottom" && barIsShowing)
                     return screenOffset - 15 - wallpaperShift
                 return 0
             }
@@ -210,14 +236,13 @@ PanelWindow {
         }
     }
 
-
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
-        anchors.leftMargin: Preferences.bar.position === 'left' ? widgetShift : widgetOffset
-        anchors.bottomMargin: Preferences.bar.position === 'bottom' ? widgetShift : widgetOffset
+        anchors.leftMargin: Preferences.bar.position === "left" ? widgetShift : widgetOffset
+        anchors.bottomMargin: Preferences.bar.position === "bottom" ? widgetShift : widgetOffset
 
         Behavior on anchors.leftMargin {
             NumberAnimation {
@@ -240,12 +265,14 @@ PanelWindow {
             color: Appearance.colors.m3on_background
             font.pixelSize: 72
         }
+
         StyledText {
             text: Qt.formatDateTime(Time.date, "dddd, dd/MM")
             color: Appearance.colors.m3on_background
             font.pixelSize: 32
             font.bold: true
         }
+
         PlayerDisplay {
             Layout.topMargin: 20
             Layout.minimumWidth: 400

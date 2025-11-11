@@ -26,7 +26,6 @@ Singleton {
         property bool dark: true
         property string scheme: "tonal-spot"
         property bool useWallpaper: true
-        property bool useVideoWallpaper: false
         property string wallpaper: ""
     }
 

@@ -38,5 +38,11 @@ QtObject {
             comps.push(`${min}m`);
 
         return comps.join(" ");
-}
+    }
+    function isVideo(path) {
+        if (!path) return false
+        var videoExts = ["mp4", "mkv", "webm", "avi", "mov", "flv", "wmv", "m4v"]
+        var ext = path.split(".").pop().toLowerCase()
+        return videoExts.indexOf(ext) !== -1
+    }
 }

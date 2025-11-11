@@ -4,6 +4,7 @@ import Quickshell.Io
 
 import QtQuick
 import QtQuick.Layouts
+import QtMultimedia
 
 import qs.modules
 import qs.components
@@ -14,16 +15,10 @@ BaseMenu {
     description: "Choose and set wallpapers for your desktop."
 
     BaseCard {
-        InfoCard {
-            icon: "info"
-            title: "Wallpaper update might take a few seconds."
-            description: "Whisker needs time to cache all of your color schemes."
-        }
-
         ClippingRectangle {
             id: wpContainer
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width * 0.8
+            width: parent.width * 0.9
             height: width * screen.height / screen.width
             radius: 10
             color: Appearance.colors.m3surface_container
@@ -33,94 +28,244 @@ BaseMenu {
                 icon: "wallpaper"
                 font.pixelSize: 64
                 color: Appearance.colors.m3on_surface_variant
-                visible: !wpImage.source || wpImage.source === ""
+                visible: !wpImage.visible && !wpVideoPreview.visible
             }
 
             Image {
                 id: wpImage
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectCrop
-                source: Preferences.theme.wallpaper
+                source: {
+                    var wp = Preferences.theme.wallpaper
+                    if (!wp || Utils.isVideo(wp)) return ""
+                    return wp
+                }
                 smooth: true
+                visible: source !== ""
             }
+
+            Video {
+                id: wpVideoPreview
+                anchors.fill: parent
+                source: {
+                    var wp = Preferences.theme.wallpaper
+                    if (!wp || !Utils.isVideo(wp)) return ""
+                    return wp.startsWith("file://") ? wp : "file://" + wp
+                }
+                autoPlay: true
+                loops: MediaPlayer.Infinite
+                muted: true
+                visible: source !== ""
+            }
+
         }
 
         BaseRowCard {
             cardMargin: 0
-            verticalPadding: 0
+            verticalPadding: 8
             id: wpSelectorCard
             property var wallpapers: []
+            property var filteredWallpapers: []
 
-            Flickable {
-                id: wpFlick
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 70
-                clip: true
-                interactive: true
-                boundsBehavior: Flickable.StopAtBounds
-                flickableDirection: Flickable.HorizontalFlick
-                contentWidth: rowContent2.childrenRect.width
-                contentHeight: rowContent2.childrenRect.height
+            onWallpapersChanged: updateFiltered()
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 10
 
                 RowLayout {
-                    id: rowContent2
+                    Layout.fillWidth: true
+                    Layout.leftMargin: 10
+                    Layout.rightMargin: 10
                     spacing: 10
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
 
-                    Repeater {
-                        model: wpSelectorCard.wallpapers
-                        delegate: Item {
-                            width: 120
-                            height: width * screen.height / screen.width
-                            property bool hovered: mouseHover.containsMouse
-                            property bool selected: Preferences.theme.wallpaper === modelData
+                    StyledTextField {
+                        id: searchInput
+                        Layout.fillWidth: true
+                        icon: "search"
+                        placeholder: "Search wallpapers..."
+                        fieldPadding: 12
+                        iconSize: 20
+                        font.pixelSize: 14
+                        onTextChanged: wpSelectorCard.updateFiltered()
+                    }
 
-                            MouseArea {
-                                id: mouseHover
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                enabled: !wpSetProc.running
-                                onClicked: {
-                                    if (Preferences.theme.wallpaper === modelData) return;
-                                    wpSetProc.command = ['whisker', 'wallpaper', modelData];
-                                    wpSetProc.running = true;
-                                }
+                    StyledButton {
+                        id: imageFilterBtn
+                        icon: "image"
+                        icon_size: 20
+                        checkable: true
+                        checked: true
+                        onToggled: function(checked) {
+                            if (!checked && !videoFilterBtn.checked) {
+                                checked = true
+                                imageFilterBtn.checked = true
                             }
+                            wpSelectorCard.updateFiltered()
+                        }
+                    }
 
-                            ClippingRectangle {
-                                anchors.fill: parent
-                                radius: 10
-                                color: Appearance.colors.m3surface_container_high
+                    StyledButton {
+                        id: videoFilterBtn
+                        icon: "videocam"
+                        icon_size: 20
+                        checkable: true
+                        checked: true
+                        onToggled: function(checked) {
+                            if (!checked && !imageFilterBtn.checked) {
+                                checked = true
+                                videoFilterBtn.checked = true
+                            }
+                            wpSelectorCard.updateFiltered()
+                        }
+                    }
+                }
 
-                                Image {
+                Flickable {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 400
+                    clip: true
+                    contentWidth: width
+                    contentHeight: gridContent.childrenRect.height
+                    boundsBehavior: Flickable.StopAtBounds
+
+                    Grid {
+                        id: gridContent
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+                        columns: Math.floor((parent.width - 20) / 160)
+                        spacing: 10
+
+                        Repeater {
+                            model: wpSelectorCard.filteredWallpapers
+
+                            delegate: Item {
+                                width: 150
+                                height: width * screen.height / screen.width + 35
+                                property bool hovered: mouseArea.containsMouse
+                                property bool selected: Preferences.theme.wallpaper === modelData
+                                property bool itemIsVideo: Utils.isVideo(modelData)
+
+                                MouseArea {
+                                    id: mouseArea
                                     anchors.fill: parent
-                                    source: modelData
-                                    fillMode: Image.PreserveAspectCrop
-                                    asynchronous: true
-                                    cache: true
-                                    sourceSize.width: width
-                                    sourceSize.height: height
+                                    hoverEnabled: true
+                                    enabled: !wpSetProc.running
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        if (selected) return
+                                        wpSetProc.command = ['whisker', 'wallpaper', modelData]
+                                        wpSetProc.running = true
+                                    }
                                 }
-                            }
 
-                            Rectangle {
-                                anchors.fill: parent
-                                radius: 10
-                                color: "transparent"
-                                border.width: selected ? 3 : (hovered ? 2 : 1)
-                                border.color: selected
-                                    ? Appearance.colors.m3primary
-                                    : Colors.opacify(Appearance.colors.m3on_background, hovered ? 0.6 : 0.3)
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    spacing: 5
+
+                                    ClippingRectangle {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: parent.width * screen.height / screen.width
+                                        radius: 10
+                                        color: Appearance.colors.m3surface_container_high
+
+                                        Image {
+                                            anchors.fill: parent
+                                            source: !itemIsVideo ? modelData : ""
+                                            fillMode: Image.PreserveAspectCrop
+                                            asynchronous: true
+                                            cache: true
+                                            sourceSize.width: width
+                                            sourceSize.height: height
+                                            visible: !itemIsVideo
+                                        }
+
+                                        Video {
+                                            id: thumbVideo
+                                            anchors.fill: parent
+                                            source: {
+                                                if (!itemIsVideo) return ""
+                                                return modelData.startsWith("file://") ? modelData : "file://" + modelData
+                                            }
+                                            autoPlay: true
+                                            muted: true
+                                            visible: itemIsVideo
+                                            position: 100
+                                            Component.onCompleted: {
+                                                thumbVideo.pause()
+                                            }
+                                            Connections {
+                                                target: mouseArea
+                                                function onContainsMouseChanged() {
+                                                    if (itemIsVideo) {
+                                                        if (mouseArea.containsMouse)
+                                                            thumbVideo.play()
+                                                        else {
+                                                            thumbVideo.pause()
+                                                            thumbVideo.position = 100
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        Rectangle {
+                                            anchors.right: parent.right
+                                            anchors.top: parent.top
+                                            anchors.margins: 5
+                                            width: 24
+                                            height: 24
+                                            radius: 12
+                                            color: Colors.opacify(Appearance.colors.m3primary, 0.9)
+                                            visible: itemIsVideo
+
+                                            MaterialIcon {
+                                                anchors.centerIn: parent
+                                                icon: "play_circle"
+                                                font.pixelSize: 16
+                                                color: Appearance.colors.m3on_primary
+                                            }
+                                        }
+
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            radius: 10
+                                            color: "transparent"
+                                            border.width: selected ? 3 : (hovered ? 2 : 1)
+                                            border.color: selected
+                                                ? Appearance.colors.m3primary
+                                                : Colors.opacify(Appearance.colors.m3on_background, hovered ? 0.6 : 0.3)
+                                        }
+                                    }
+
+                                    StyledText {
+                                        Layout.fillWidth: true
+                                        text: modelData.split('/').pop()
+                                        color: Appearance.colors.m3on_surface
+                                        font.pixelSize: 11
+                                        elide: Text.ElideMiddle
+                                        horizontalAlignment: Text.AlignHCenter
+                                    }
+                                }
                             }
                         }
                     }
                 }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: 10
+                    Layout.rightMargin: 10
+                    text: wpSelectorCard.filteredWallpapers.length + " wallpaper" +
+                          (wpSelectorCard.filteredWallpapers.length !== 1 ? "s" : "") + " found"
+                    color: Appearance.colors.m3on_surface_variant
+                    font.pixelSize: 12
+                    horizontalAlignment: Text.AlignRight
+                }
             }
 
-            // Disable all interactions while wallpaper is setting
             Rectangle {
                 anchors.fill: parent
                 color: Colors.opacify(Appearance.colors.m3surface, 0.4)
@@ -133,13 +278,34 @@ BaseMenu {
                 }
             }
 
+            function updateFiltered() {
+                var result = []
+                var searchTerm = searchInput.text.toLowerCase()
+
+                for (var i = 0; i < wallpapers.length; i++) {
+                    var wp = wallpapers[i]
+                    var fileName = wp.split('/').pop().toLowerCase()
+                    var matchesSearch = !searchTerm || fileName.indexOf(searchTerm) !== -1
+                    var wpIsVideo = Utils.isVideo(wp)
+                    var matchesFilter = (imageFilterBtn.checked && !wpIsVideo) ||
+                                        (videoFilterBtn.checked && wpIsVideo)
+
+                    if (matchesSearch && matchesFilter) {
+                        result.push(wp)
+                    }
+                }
+
+                filteredWallpapers = result
+            }
+
             Process {
                 id: wpFetchProc
                 command: ["whisker", "list", "wallpapers"]
                 running: true
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        wpSelectorCard.wallpapers = this.text.trim().split("\n").filter(s => s.length > 0)
+                        var lines = this.text.trim().split("\n").filter(function(s) { return s.length > 0 })
+                        wpSelectorCard.wallpapers = lines
                     }
                 }
             }
@@ -148,10 +314,8 @@ BaseMenu {
                 id: wpSetProc
                 command: []
                 running: false
-
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        wpImage.source = Preferences.theme.wallpaper
                         wpSetProc.running = false
                     }
                 }
