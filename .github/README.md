@@ -1,9 +1,9 @@
-<p align="center">
+<div align="center">
     <img src="../logo.png" alt="Whisker Logo" width="200"/>
     <img src='./images/title.png'>
-</p>
+</div>
 
-<hr>
+<h2></h2>
 <div align="center">
 
 <br>
