@@ -1,8 +1,12 @@
 <p align="center">
-  <img src="../logo.png" alt="Whisker Logo" width="200"/>
+    <img src="../logo.png" alt="Whisker Logo" width="200"/>
+    <img src='./images/title.png'>
 </p>
-<h2 align="center">✦ ◇&nbsp; Whisker &nbsp;◇ ✦</h2>
+
+<hr>
 <div align="center">
+
+<br>
 
 ![AUR Version](https://img.shields.io/aur/version/whisker-shell-git?style=for-the-badge&logo=archlinux&logoColor=%23adc6ff&labelColor=%231e1f25&color=%23adc6ff)
 ![GitHub last commit](https://img.shields.io/github/last-commit/corecathx/whisker?display_timestamp=committer&style=for-the-badge&logo=git&logoColor=%23adc6ff&labelColor=%231e1f25&color=%23adc6ff)
