@@ -15,7 +15,10 @@
   Built on top of <b><a href="https://quickshell.org"><img src="https://quickshell.org/favicon.svg" height='14'> Quickshell</a></b>.
 </p>
 
-## Under Development
+<div align="center">
+    <h2>✦ Information ✦</h2>
+</div>
+
 **Whisker** is already usable now, but everything is still subject to change over time.
 
 **Whisker** is available on Arch Linux's User Repository (AUR)!
@@ -27,13 +30,42 @@ yay -S whisker-shell-git
 
 Also I'm still a Quickshell newbie, so most code in here might look messy / unorganized :')
 
-## Previews
+<div align="center">
+    <h2>✦ Previews ✦</h2>
+</div>
+
 | <p align="center"> Default Layout (Top Bar) </p> | <p align="center"> Alternative Layout (Bottom Bar) </p>  |
 |--------------------------|--------------------------------|
 | <p align="center"><img src="../previews/preview0.png" alt="Top bar preview" width="300"/></p> | <p align="center"><img src="../previews/preview1.png" alt="Bottom bar preview" width="300"/></p> |
 | **Whisker**'s default layout. | Perfect for our Windows friends ;) |
 
-## Motivational Cat
-Behold, the vibing cat.
+<div align="center">
+    <h2>✦ Related Projects ✦</h2>
+</div>
+
+### ✦ whisker-cli
+
+`whisker-cli` is a small helper program for my Hyprland Shell, **Whisker**.
+
+> https://github.com/corecathx/whisker-cli
+
+<div align="center">
+    <h2>✦ Credits ✦</h2>
+</div>
+
+This shell is **heavily** inspired by  
+- **[caelestia-shell](https://github.com/caelestia-dots/shell)** by [soramanew](https://github.com/soramanew)  
+- **[illogical-impulse](https://github.com/end-4/illogical-impulse)** by [end-4](https://github.com/end-4).
+
+Big thanks to the **Quickshell** community with all the help they provided when I'm developing this shell <3
+
+<div align="center">
+    <h2>✦ Motivational Cat ✦</h2>
+</div>
+
+
+<div align='center'>
 
 ![Cat vibing](https://corecathx.github.io/images/catvibe.gif)
+
+</div>
