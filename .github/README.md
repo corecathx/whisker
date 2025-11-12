@@ -33,15 +33,41 @@ yay -S whisker-shell-git
 ... or with any other AUR helpers to get your hands on this shell :]
 
 Also I'm still a Quickshell newbie, so most code in here might look messy / unorganized :')
-
 <div align="center">
-    <h2>✦ Previews ✦</h2>
+  <h2>✦ Previews ✦</h2>
 </div>
 
-| <p align="center"> Default Layout (Top Bar) </p> | <p align="center"> Alternative Layout (Bottom Bar) </p>  |
-|--------------------------|--------------------------------|
-| <p align="center"><img src="../previews/preview0.png" alt="Top bar preview" width="300"/></p> | <p align="center"><img src="../previews/preview1.png" alt="Bottom bar preview" width="300"/></p> |
-| **Whisker**'s default layout. | Perfect for our Windows friends ;) |
+<table align="center">
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="./images/previews/preview-topbar.png" alt="Top bar preview" width="300"/><br>
+        <b>Default Layout (Top Bar)</b>
+      </td>
+      <td align="center">
+        <img src="./images/previews/preview-bottombar.png" alt="Bottom bar preview" width="300"/><br>
+        <b>Alternative Layout (Bottom Bar)</b>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <br>
+        These left and right bar modes are still experimental!
+        <br><br>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="./images/previews/preview-leftbar.png" alt="Left bar preview" width="300"/><br>
+        <b>Left Bar Layout (Experimental)</b>
+      </td>
+      <td align="center">
+        <img src="./images/previews/preview-rightbar.png" alt="Right bar preview" width="300"/><br>
+        <b>Right Bar Layout (Experimental)</b>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <div align="center">
     <h2>✦ Related Projects ✦</h2>
