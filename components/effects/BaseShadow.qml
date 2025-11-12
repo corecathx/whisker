@@ -4,8 +4,8 @@ import qs.modules
 
 Item {
     Component.onCompleted: {
-        parent.layer.enabled = true
-        parent.layer.effect = effectComponent
+        parent.layer.enabled = true;
+        parent.layer.effect = effectComponent;
     }
 
     Component {

@@ -79,14 +79,7 @@ Item {
         interactable: true
         hCenterOnItem: true
         Component {
-            PlayerDisplay {
-                artSize: 55
-                titleSize: 14
-                artistSize: 10
-                iconSize: 46
-                sliderHeight: 10
-                spacing: 20
-            }
+            PlayerPopup {}
         }
     }
 }

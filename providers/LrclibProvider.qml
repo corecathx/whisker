@@ -3,21 +3,22 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import qs.services
+import qs.preferences
 import Quickshell.Services.Mpris
 
 QtObject {
     id: root
 
-    signal ready();
+    signal ready
 
     // translation
-    property string targetLanguage: "en"
-    property bool enableTranslation: true
+    property string targetLanguage: Preferences.misc.lyricsLanguage
+    property bool enableTranslation: Preferences.misc.translateLyrics
 
     // players
     property string currentTrack: Players.active.trackTitle ?? ""
     property string currentArtist: {
-        return Players.active.trackArtist.replace("- Topic", "") ?? ""
+        return Players.active.trackArtist.replace("- Topic", "") ?? "";
     }
     property int currentPosition: Players.active.position * 1000
     property bool isPlaying: Players.active?.playbackState == MprisPlaybackState.Playing
@@ -25,31 +26,49 @@ QtObject {
     // states
     property var lyricsData: []
     property int currentLineIndex: -1
-    readonly property string currentLine: (
-        currentLineIndex >= 0 && currentLineIndex < lyricsData.length
-            ? lyricsData[currentLineIndex].text
-            : ""
-    )
+    readonly property string currentLine: (currentLineIndex >= 0 && currentLineIndex < lyricsData.length ? lyricsData[currentLineIndex].text : "")
 
     // can only be one of these: "IDLE", "FETCHING", "LOADED", "ERROR", "NOT_FOUND"
     property string status: "IDLE"
 
     property string statusMessage: {
         switch (root.status) {
-            case "IDLE":
-                return "No track is playing";
-            case "FETCHING":
-                return "Fetching lyrics...";
-            case "LOADED":
-                return "Lyrics loaded";
-            case "NOT_FOUND":
-                return "Lyrics not found :(";
-            default:
-                if (root.status.startsWith("ERROR_")) {
-                    let split = root.status.split("_")
-                    return "Error: " + split[1]
-                }
-                return "Unknown";
+        case "IDLE":
+            return "No track is playing";
+        case "FETCHING":
+            return "Fetching lyrics...";
+        case "LOADED":
+            return "Lyrics loaded";
+        case "NOT_FOUND":
+            return "Lyrics not found :(";
+        default:
+            if (root.status.startsWith("ERROR_")) {
+                let split = root.status.split("_");
+                return "Error: " + split[1];
+            }
+            return "Unknown";
+        }
+    }
+
+    property Timer prefDebounceTimer: Timer {
+        interval: 500
+        repeat: false
+        onTriggered: {
+            if (currentArtist && currentTrack) {
+                fetchLyrics();
+            }
+        }
+    }
+
+    onTargetLanguageChanged: {
+        if (lyricsData.length > 0) {
+            prefDebounceTimer.restart();
+        }
+    }
+
+    onEnableTranslationChanged: {
+        if (lyricsData.length > 0) {
+            prefDebounceTimer.restart();
         }
     }
 
@@ -125,8 +144,8 @@ QtObject {
                 if (xhr.status === 200) {
                     let response = JSON.parse(xhr.responseText);
                     if (response.syncedLyrics) {
-                        lyricsData = parseLRC(response.syncedLyrics)
-                        root.ready()
+                        lyricsData = parseLRC(response.syncedLyrics);
+                        root.ready();
                         root.status = `LOADED`;
                     } else {
                         root.status = "NOT_FOUND";
@@ -154,12 +173,13 @@ QtObject {
     }
 
     function translateText(text, index) {
-        if (!enableTranslation) return;
+        if (!enableTranslation)
+            return;
 
         let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLanguage}&dt=t&q=${encodeURIComponent(text)}`;
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url);
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                 try {
                     let response = JSON.parse(xhr.responseText);

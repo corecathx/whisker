@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.preferences
+
 Singleton {
     id: root
     property int contributionNumber
@@ -17,16 +18,16 @@ Singleton {
         repeat: false
         onTriggered: {
             if (root.author && root.author.length > 0) {
-                root.loaded = false
-                root.contributions = []
-                root.contributionNumber = 0
-                getContributions.running = true
+                root.loaded = false;
+                root.contributions = [];
+                root.contributionNumber = 0;
+                getContributions.running = true;
             }
         }
     }
 
     onAuthorChanged: {
-        debounceTimer.restart()
+        debounceTimer.restart();
     }
 
     Timer {
@@ -35,10 +36,10 @@ Singleton {
         repeat: true
         onTriggered: {
             if (root.author && root.author.length > 0) {
-                root.loaded = false
-                root.contributions = []
-                root.contributionNumber = 0
-                getContributions.running = true
+                root.loaded = false;
+                root.contributions = [];
+                root.contributionNumber = 0;
+                getContributions.running = true;
             }
         }
     }
@@ -50,25 +51,21 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
-                    const json = JSON.parse(text)
-                    const year = Time.year
+                    const json = JSON.parse(text);
+                    const year = Time.year;
                     const oneYearAgo = new Date();
                     oneYearAgo.setDate(oneYearAgo.getDate() - 365);
-                    root.contributionNumber = json.contributions
-                        .filter(c => new Date(c.date) >= oneYearAgo)
-                        .reduce((sum, c) => sum + c.count, 0);
+                    root.contributionNumber = json.contributions.filter(c => new Date(c.date) >= oneYearAgo).reduce((sum, c) => sum + c.count, 0);
                     const allContribs = json.contributions;
                     const today = new Date();
                     const cutoff = new Date(today);
                     cutoff.setDate(cutoff.getDate() - 280);
-                    const recentContribs = allContribs
-                        .filter(c => new Date(c.date) >= cutoff)
-                        .sort((a, b) => new Date(a.date) - new Date(b.date));
+                    const recentContribs = allContribs.filter(c => new Date(c.date) >= cutoff).sort((a, b) => new Date(a.date) - new Date(b.date));
                     root.contributions = recentContribs;
-                    root.loaded = true
+                    root.loaded = true;
                 } catch (e) {
-                    console.error("Failed to parse GitHub contributions:", e)
-                    root.loaded = false
+                    console.error("Failed to parse GitHub contributions:", e);
+                    root.loaded = false;
                 }
             }
         }

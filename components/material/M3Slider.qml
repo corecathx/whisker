@@ -10,6 +10,7 @@ Slider {
     property real trackHeightDiff: 15
     property real handleGap: 6
     property real trackDotSize: 4
+    property real trackNearHandleRadius: 2
     property bool useAnim: true
 
     Layout.fillWidth: true
@@ -69,9 +70,9 @@ Slider {
             width: root.handleGap + (root.visualPosition * (root.width - root.handleGap * 2)) - ((root.pressed ? 1.5 : 3) / 2 + root.handleGap)
             height: root.height - root.trackHeightDiff
             color: Appearance.colors.m3primary
-            radius: 20
-            topRightRadius: 5
-            bottomRightRadius: 5
+            radius: 10
+            topRightRadius: root.trackNearHandleRadius
+            bottomRightRadius: root.trackNearHandleRadius
 
 
             Behavior on width {
@@ -90,10 +91,10 @@ Slider {
             width: root.handleGap + ((1 - root.visualPosition) * (root.width - root.handleGap * 2)) - ((root.pressed ? 1.5 : 3) / 2 + root.handleGap)
             height: root.height - root.trackHeightDiff
             color: Appearance.colors.m3secondary_container
-            radius: 20
+            radius: 10
 
-            topLeftRadius: 5
-            bottomLeftRadius: 5
+            topLeftRadius: root.trackNearHandleRadius
+            bottomLeftRadius: root.trackNearHandleRadius
             Behavior on width {
                 NumberAnimation {
                     duration: !root.useAnim ? 0 : Appearance.animation.fast

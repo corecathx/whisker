@@ -9,6 +9,7 @@ import qs.modules
 import qs.windows
 import qs.services
 import qs.components
+import qs.components.effects
 
 Scope {
     id: root
@@ -19,9 +20,9 @@ Scope {
         target: Polkit
         function onIsActiveChanged() {
             if (Polkit.isActive) {
-                root.active = true
+                root.active = true;
             } else if (root.active && window) {
-                window.closeWithAnimation()
+                window.closeWithAnimation();
             }
         }
     }
@@ -143,7 +144,9 @@ Scope {
                     }
 
                     RowLayout {
-                        Item { Layout.fillWidth: true }
+                        Item {
+                            Layout.fillWidth: true
+                        }
                         StyledButton {
                             radius: 10
                             topRightRadius: 5
@@ -161,8 +164,8 @@ Scope {
                             text: promptContainer.authenticating ? "Authenticating..." : "OK"
                             enabled: !promptContainer.authenticating
                             onClicked: {
-                                promptContainer.authenticating = true
-                                Polkit.flow.submit(textfield.text)
+                                promptContainer.authenticating = true;
+                                Polkit.flow.submit(textfield.text);
                             }
                         }
                     }
@@ -172,17 +175,17 @@ Scope {
                     target: Polkit.flow
                     function onIsCompletedChanged() {
                         if (Polkit.flow.isCompleted) {
-                            promptContainer.authenticating = false
+                            promptContainer.authenticating = false;
                         }
                     }
                     function onFailedChanged() {
                         if (Polkit.flow.failed) {
-                            promptContainer.authenticating = false
+                            promptContainer.authenticating = false;
                         }
                     }
                     function onIsCancelledChanged() {
                         if (Polkit.flow.isCancelled) {
-                            promptContainer.authenticating = false
+                            promptContainer.authenticating = false;
                         }
                     }
                 }

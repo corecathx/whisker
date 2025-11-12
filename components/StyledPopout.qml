@@ -32,9 +32,10 @@ LazyLoader {
 
     property bool childrenHovered: {
         for (let i = 0; i < childPopouts.length; i++) {
-            if (childPopouts[i].selfHovered) return true
+            if (childPopouts[i].selfHovered)
+                return true;
         }
-        return false
+        return false;
     }
 
     property bool hoverActive: selfHovered || childrenHovered
@@ -43,8 +44,8 @@ LazyLoader {
         interval: 200
         repeat: false
         onTriggered: {
-            root.startAnim = false
-            cleanupTimer.restart()
+            root.startAnim = false;
+            cleanupTimer.restart();
         }
     }
 
@@ -52,42 +53,43 @@ LazyLoader {
         interval: Appearance.animation.fast
         repeat: false
         onTriggered: {
-            root.isVisible = false
-            root.keepAlive = false
-            root._manualControl = false
-            root.instance = null
+            root.isVisible = false;
+            root.keepAlive = false;
+            root._manualControl = false;
+            root.instance = null;
         }
     }
 
     onHoverActiveChanged: {
-        if (_manualControl) return
-        if (!requiresHover) return
-
+        if (_manualControl)
+            return;
+        if (!requiresHover)
+            return;
         if (hoverActive) {
-            hangTimer.stop()
-            cleanupTimer.stop()
-            root.keepAlive = true
-            root.isVisible = true
-            root.startAnim = true
+            hangTimer.stop();
+            cleanupTimer.stop();
+            root.keepAlive = true;
+            root.isVisible = true;
+            root.startAnim = true;
         } else {
-            hangTimer.restart()
+            hangTimer.restart();
         }
     }
 
     function show() {
-        hangTimer.stop()
-        cleanupTimer.stop()
-        _manualControl = true
-        keepAlive = true
-        isVisible = true
-        startAnim = true
+        hangTimer.stop();
+        cleanupTimer.stop();
+        _manualControl = true;
+        keepAlive = true;
+        isVisible = true;
+        startAnim = true;
     }
 
     function hide() {
-        _manualControl = true
-        startAnim = false
-        hangTimer.stop()
-        cleanupTimer.restart()
+        _manualControl = true;
+        startAnim = false;
+        hangTimer.stop();
+        cleanupTimer.restart();
     }
 
     active: keepAlive
@@ -117,9 +119,9 @@ LazyLoader {
 
         HoverHandler {
             id: windowHover
-            onPointChanged: (point) => {
+            onPointChanged: point => {
                 if (root.followMouse)
-                    popoutWindow.mousePos = point.position
+                    popoutWindow.mousePos = point.position;
             }
         }
 
@@ -130,14 +132,14 @@ LazyLoader {
             height: !root.hasHitbox ? 0 : !requiresHover ? popoutWindow.height : container.implicitHeight
         }
         MouseArea {
-            id:mouseArea
+            id: mouseArea
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             hoverEnabled: false
 
             onPressed: {
                 if (!containerHoverHandler.containsMouse && root.isVisible) {
-                    root.hide()
+                    root.hide();
                 }
             }
         }
@@ -148,63 +150,63 @@ LazyLoader {
             implicitHeight: contentArea.implicitHeight + root.margin * 2
 
             x: {
-                let xValue
+                let xValue;
 
                 if (root.followMouse)
-                    xValue = mousePos.x + 10
+                    xValue = mousePos.x + 10;
                 else {
-                    let targetItem = hoverTarget?.parent
+                    let targetItem = hoverTarget?.parent;
                     if (!targetItem)
-                        xValue = 0
+                        xValue = 0;
                     else {
-                        let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x
+                        let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x;
                         if (parentPopoutWindow)
-                            baseX += parentPopoutWindow.x
+                            baseX += parentPopoutWindow.x;
 
-                        let targetWidth = targetItem.width
-                        let popupWidth = container.implicitWidth
+                        let targetWidth = targetItem.width;
+                        let popupWidth = container.implicitWidth;
 
                         if (root.hCenterOnItem) {
-                            let centeredX = baseX + (targetWidth - popupWidth) / 2
+                            let centeredX = baseX + (targetWidth - popupWidth) / 2;
                             if (centeredX + popupWidth > screen.width)
-                                centeredX = screen.width - popupWidth - 10
+                                centeredX = screen.width - popupWidth - 10;
                             if (centeredX < 10)
-                                centeredX = 10
-                            xValue = centeredX
+                                centeredX = 10;
+                            xValue = centeredX;
                         } else {
-                            let xPos = baseX - (Preferences.horizontalBar() ? 20 : -40)
+                            let xPos = baseX - (Preferences.horizontalBar() ? 20 : -40);
                             if (xPos + popupWidth > screen.width) {
-                                exceedingHalf = true
-                                xValue = baseX - popupWidth
+                                exceedingHalf = true;
+                                xValue = baseX - popupWidth;
                             } else {
-                                exceedingHalf = false
-                                xValue = xPos
+                                exceedingHalf = false;
+                                xValue = xPos;
                             }
                         }
                     }
                 }
 
-                return root.cleanupTimer.running ? xValue : Math.round(xValue)
+                return root.cleanupTimer.running ? xValue : Math.round(xValue);
             }
 
             y: {
-                let yValue
+                let yValue;
 
                 if (root.followMouse)
-                    yValue = mousePos.y + 10
+                    yValue = mousePos.y + 10;
                 else {
-                    let targetItem = hoverTarget?.parent
+                    let targetItem = hoverTarget?.parent;
                     if (!targetItem)
-                        yValue = 0
+                        yValue = 0;
                     else {
-                        let yPos = targetItem.mapToGlobal(Qt.point(0, 0)).y
+                        let yPos = targetItem.mapToGlobal(Qt.point(0, 0)).y;
                         if (parentPopoutWindow)
-                            yPos += parentPopoutWindow.y
-                        yValue = yPos + (Preferences.horizontalBar() ? targetItem.height : 0)
+                            yPos += parentPopoutWindow.y;
+                        yValue = yPos + (Preferences.horizontalBar() ? targetItem.height : 0);
                     }
                 }
 
-                return root.cleanupTimer.running ? yValue : Math.round(yValue)
+                return root.cleanupTimer.running ? yValue : Math.round(yValue);
             }
 
             opacity: root.startAnim ? 1 : 0
@@ -264,24 +266,24 @@ LazyLoader {
         }
 
         Component.onCompleted: {
-            root.instance = popoutWindow
+            root.instance = popoutWindow;
             for (let i = 0; i < root.content.length; i++) {
-                const comp = root.content[i]
+                const comp = root.content[i];
                 if (comp && comp.createObject) {
-                    comp.createObject(contentArea)
+                    comp.createObject(contentArea);
                 } else {
-                    console.warn("StyledPopout: invalid content:", comp)
+                    console.warn("StyledPopout: invalid content:", comp);
                 }
             }
 
-            let parentPopout = root.parent
+            let parentPopout = root.parent;
             while (parentPopout && !parentPopout.childPopouts)
-                parentPopout = parentPopout.parent
+                parentPopout = parentPopout.parent;
 
             if (parentPopout) {
-                parentPopout.childPopouts.push(root)
+                parentPopout.childPopouts.push(root);
                 if (parentPopout.item)
-                    popoutWindow.parentPopoutWindow = parentPopout.item
+                    popoutWindow.parentPopoutWindow = parentPopout.item;
             }
         }
     }

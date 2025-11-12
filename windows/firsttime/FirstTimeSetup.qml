@@ -80,6 +80,11 @@ FloatingWindow {
                 onBackRequested: setupContainer.previousPage()
             }
 
+            IntegrationPage {
+                onNextRequested: setupContainer.nextPage()
+                onBackRequested: setupContainer.previousPage()
+            }
+
             FinishPage {
                 onCloseRequested: {
                     Quickshell.execDetached({

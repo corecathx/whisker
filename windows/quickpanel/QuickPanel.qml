@@ -8,6 +8,7 @@ import Quickshell.Widgets
 import qs.modules
 import qs.services
 import qs.components
+import qs.components.effects
 import qs.preferences
 import qs.modules.bar
 import Quickshell.Hyprland
@@ -22,13 +23,17 @@ Scope {
         property string label: ""
         property string subtitle: ""
         property bool active: false
-        signal clicked()
+        signal clicked
 
         radius: 18
         color: active ? Appearance.colors.m3primary : Appearance.colors.m3surface_container_high
-        Behavior on color { ColorAnimation { duration: 150 } }
+        Behavior on color {
+            ColorAnimation {
+                duration: 150
+            }
+        }
 
-        height: content.height+20
+        height: content.height + 20
         ColumnLayout {
             id: content
             anchors {
@@ -44,7 +49,9 @@ Scope {
                 color: toggle.active ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface_variant
             }
 
-            Item { Layout.fillHeight: true }
+            Item {
+                Layout.fillHeight: true
+            }
 
             StyledText {
                 text: toggle.label
@@ -88,7 +95,9 @@ Scope {
                 color: Appearance.colors.m3on_surface_variant
             }
 
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
+            }
 
             StyledText {
                 text: Math.round(control.value) + "%"
@@ -108,7 +117,7 @@ Scope {
     IpcHandler {
         target: "quickpanel"
         function toggle() {
-            root.opened = !root.opened
+            root.opened = !root.opened;
         }
     }
 
@@ -117,7 +126,7 @@ Scope {
 
         PanelWindow {
             id: window
-            anchors.top: Preferences.bar.position !== 'bottom'|| Preferences.verticalBar()
+            anchors.top: Preferences.bar.position !== 'bottom' || Preferences.verticalBar()
             margins.top: -10
             anchors.bottom: Preferences.bar.position === 'bottom'
             margins.bottom: Preferences.bar.position === 'bottom' ? -10 : 0
@@ -179,7 +188,7 @@ Scope {
                                 IconImage {
                                     width: 20
                                     height: 20
-                                    source:  Quickshell.iconPath(System.logo)
+                                    source: Quickshell.iconPath(System.logo)
                                 }
                                 StyledText {
                                     text: 'Uptime ' + Utils.formatSeconds(System.uptime) + " • " + Power.chargingInfo
@@ -188,7 +197,9 @@ Scope {
                                 }
                             }
                         }
-                        Item { Layout.fillWidth: true }
+                        Item {
+                            Layout.fillWidth: true
+                        }
 
                         RowLayout {
                             spacing: 5
@@ -199,7 +210,11 @@ Scope {
                                 radius: 10
                                 color: settingsArea.pressed ? Appearance.colors.m3surface_container : Appearance.colors.m3surface_container_high
 
-                                Behavior on color { ColorAnimation { duration: Appearance.animation.fast } }
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: Appearance.animation.fast
+                                    }
+                                }
 
                                 MaterialIcon {
                                     icon: "settings"
@@ -213,8 +228,10 @@ Scope {
                                     anchors.fill: parent
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        Quickshell.execDetached({ command: ['whisker', 'ipc', 'settings', 'open', '""'] })
-                                        root.opened = false
+                                        Quickshell.execDetached({
+                                            command: ['whisker', 'ipc', 'settings', 'open', '""']
+                                        });
+                                        root.opened = false;
                                     }
                                 }
                             }
@@ -224,7 +241,11 @@ Scope {
                                 radius: 10
                                 color: powerArea.pressed ? Appearance.colors.m3surface_container : Appearance.colors.m3surface_container_high
 
-                                Behavior on color { ColorAnimation { duration: Appearance.animation.fast } }
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: Appearance.animation.fast
+                                    }
+                                }
 
                                 MaterialIcon {
                                     icon: "power_settings_new"
@@ -241,7 +262,9 @@ Scope {
                                         popout.show();
                                     }
                                 }
-                                HoverHandler { id: hover }
+                                HoverHandler {
+                                    id: hover
+                                }
                                 StyledPopout {
                                     id: popout
                                     hoverTarget: hover
@@ -250,9 +273,22 @@ Scope {
                                     Component {
                                         Repeater {
                                             model: [
-                                                { icon: "power_settings_new", label: "Power off", command: ["whisker", "ipc", "power", "off"], color: Appearance.colors.m3error},
-                                                { icon: "restart_alt",        label: "Restart",   command: ["whisker", "ipc", "power", "restart"] },
-                                                { icon: "bedtime",            label: "Suspend",   command: ["whisker", "ipc", "power", "suspend"] }
+                                                {
+                                                    icon: "power_settings_new",
+                                                    label: "Power off",
+                                                    command: ["whisker", "ipc", "power", "off"],
+                                                    color: Appearance.colors.m3error
+                                                },
+                                                {
+                                                    icon: "restart_alt",
+                                                    label: "Restart",
+                                                    command: ["whisker", "ipc", "power", "restart"]
+                                                },
+                                                {
+                                                    icon: "bedtime",
+                                                    label: "Suspend",
+                                                    command: ["whisker", "ipc", "power", "suspend"]
+                                                }
                                             ]
 
                                             delegate: Item {
@@ -262,9 +298,7 @@ Scope {
                                                 Rectangle {
                                                     anchors.fill: parent
                                                     radius: 5
-                                                    color: mArea.containsMouse
-                                                        ? Appearance.colors.m3surface_container
-                                                        : Appearance.colors.m3surface
+                                                    color: mArea.containsMouse ? Appearance.colors.m3surface_container : Appearance.colors.m3surface
                                                 }
 
                                                 RowLayout {
@@ -295,8 +329,10 @@ Scope {
                                                     cursorShape: Qt.PointingHandCursor
 
                                                     onClicked: {
-                                                        Quickshell.execDetached({ command: modelData.command })
-                                                        root.opened = false
+                                                        Quickshell.execDetached({
+                                                            command: modelData.command
+                                                        });
+                                                        root.opened = false;
                                                     }
                                                 }
                                             }
@@ -319,7 +355,7 @@ Scope {
                             subtitle: Network.wifiStatus
                             active: Network.wifiEnabled
                             onClicked: {
-                                Network.toggleWifi()
+                                Network.toggleWifi();
                             }
                         }
 
@@ -335,7 +371,11 @@ Scope {
 
                     ExpPowerProfile {}
 
-                    Rectangle { Layout.fillWidth: true; height: 1; color: Appearance.colors.m3outline_variant }
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: 1
+                        color: Appearance.colors.m3outline_variant
+                    }
 
                     SliderControl {
                         icon: Audio.volume === 0 ? "volume_off" : Audio.volume < 0.5 ? "volume_down" : "volume_up"
@@ -343,7 +383,7 @@ Scope {
                         label: "Volume"
 
                         onValueChanged: {
-                            Audio.setVolume(value/100);
+                            Audio.setVolume(value / 100);
                         }
                     }
                     SliderControl {
@@ -354,33 +394,41 @@ Scope {
                         value: Brightness.value * 100
 
                         onValueChanged: {
-                            Brightness.set(value/100)
+                            Brightness.set(value / 100);
                         }
 
                         Connections {
                             target: Brightness
                             function onBrightnessChanged(newValue) {
-                                briSlider.value = newValue * 100
+                                briSlider.value = newValue * 100;
                             }
                         }
                     }
 
+                    Rectangle {
+                        Layout.fillWidth: true
+                        height: 1
+                        color: Appearance.colors.m3outline_variant
+                    }
 
-                    Rectangle { Layout.fillWidth: true; height: 1; color: Appearance.colors.m3outline_variant }
+                    GithubContribCalendar {
+                        Layout.fillWidth: true
+                    }
 
-                    GithubContribCalendar { Layout.fillWidth: true }
-
-                    Item { Layout.fillHeight: true }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                 }
             }
 
             HyprlandFocusGrab {
                 id: grab
-                windows: [ window, popout.instance ]
+                windows: [window, popout.instance]
             }
 
             onVisibleChanged: {
-                if (visible) grab.active = true;
+                if (visible)
+                    grab.active = true;
             }
 
             Connections {

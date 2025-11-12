@@ -72,7 +72,7 @@ BaseMenu {
     function updateResolution() {
         if (Quickshell.screens.length > 0) {
             const screen = Quickshell.screens[0]
-            root.resolution = screen.width + "x" + screen.height + " @ " + screen.refreshRate + "Hz"
+            root.resolution = screen.width + "x" + screen.height
         }
     }
 
@@ -525,8 +525,8 @@ BaseMenu {
         cardMargin: 0
 
         Rectangle {
-            width: 40
-            height: 40
+            Layout.preferredWidth: 40
+            Layout.preferredHeight: 40
             radius: 10
             color: Colors.opacify(Appearance.colors.m3primary, 0.15)
 

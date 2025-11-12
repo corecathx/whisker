@@ -8,6 +8,7 @@ import Quickshell.Io
 import qs.services
 import qs.modules
 import qs.components
+import qs.components.effects
 
 Scope {
     id: root
@@ -16,7 +17,7 @@ Scope {
     IpcHandler {
         target: "clipboard"
         function toggle() {
-            root.active = !root.active
+            root.active = !root.active;
         }
     }
 
@@ -43,30 +44,30 @@ Scope {
                 property var filteredItems: []
 
                 function getItem(idx) {
-                    var items = searchField.text === "" ? Clipboard.list : filteredItems
+                    var items = searchField.text === "" ? Clipboard.list : filteredItems;
                     if (items.get !== undefined) {
-                        return items.get(idx)
+                        return items.get(idx);
                     } else {
-                        return items[idx]
+                        return items[idx];
                     }
                 }
 
                 function updateFilter() {
-                    var query = searchField.text.toLowerCase().trim()
+                    var query = searchField.text.toLowerCase().trim();
                     if (query === "") {
-                        filteredItems = []
-                        return
+                        filteredItems = [];
+                        return;
                     }
 
-                    var result = []
+                    var result = [];
                     for (var i = 0; i < Clipboard.list.count; i++) {
-                        var item = Clipboard.list.get(i)
-                        var match = false
+                        var item = Clipboard.list.get(i);
+                        var match = false;
 
                         if (!item.isBinary && item.content.toLowerCase().includes(query)) {
-                            match = true
+                            match = true;
                         } else if (item.isBinary && item.binaryType.toLowerCase().includes(query)) {
-                            match = true
+                            match = true;
                         }
 
                         if (match) {
@@ -79,56 +80,56 @@ Scope {
                                 binaryDimensions: item.binaryDimensions,
                                 previewSource: item.previewSource,
                                 originalIndex: i
-                            })
+                            });
                         }
                     }
-                    filteredItems = result
+                    filteredItems = result;
                 }
 
                 Connections {
                     target: Clipboard.list
                     function onCountChanged() {
-                        rootItem.updateFilter()
+                        rootItem.updateFilter();
                     }
                 }
 
-                Keys.onPressed: (event) => {
+                Keys.onPressed: event => {
                     if (event.key === Qt.Key_Escape) {
-                        root.active = false
-                        event.accepted = true
+                        root.active = false;
+                        event.accepted = true;
                     } else if (event.key === Qt.Key_Delete && (event.modifiers & Qt.ControlModifier)) {
-                        Clipboard.clearHistory()
-                        event.accepted = true
+                        Clipboard.clearHistory();
+                        event.accepted = true;
                     } else if (event.key === Qt.Key_Up) {
                         if (clipboardList.currentIndex > 0) {
-                            clipboardList.currentIndex--
+                            clipboardList.currentIndex--;
                         }
-                        event.accepted = true
+                        event.accepted = true;
                     } else if (event.key === Qt.Key_Down) {
                         if (clipboardList.currentIndex < clipboardList.count - 1) {
-                            clipboardList.currentIndex++
+                            clipboardList.currentIndex++;
                         }
-                        event.accepted = true
+                        event.accepted = true;
                     } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                         if (clipboardList.currentIndex >= 0 && clipboardList.count > 0) {
-                            var item = rootItem.getItem(clipboardList.currentIndex)
+                            var item = rootItem.getItem(clipboardList.currentIndex);
                             if (item) {
-                                Clipboard.copyToClipboard(item.id)
-                                root.active = false
+                                Clipboard.copyToClipboard(item.id);
+                                root.active = false;
                             }
                         }
-                        event.accepted = true
+                        event.accepted = true;
                     } else if (event.key === Qt.Key_Delete) {
                         if (clipboardList.currentIndex >= 0 && clipboardList.count > 0) {
-                            var item = rootItem.getItem(clipboardList.currentIndex)
+                            var item = rootItem.getItem(clipboardList.currentIndex);
                             if (item) {
-                                Clipboard.deleteEntry(item.id)
+                                Clipboard.deleteEntry(item.id);
                             }
                         }
-                        event.accepted = true
+                        event.accepted = true;
                     } else if (event.key === Qt.Key_F && (event.modifiers & Qt.ControlModifier)) {
-                        searchField.forceActiveFocus()
-                        event.accepted = true
+                        searchField.forceActiveFocus();
+                        event.accepted = true;
                     }
                 }
 
@@ -174,7 +175,9 @@ Scope {
                             }
                         }
 
-                        Item { Layout.fillWidth: true }
+                        Item {
+                            Layout.fillWidth: true
+                        }
 
                         StyledButton {
                             icon: 'delete'
@@ -205,22 +208,22 @@ Scope {
                         font.pixelSize: 14
 
                         onTextChanged: {
-                            clipboardList.currentIndex = -1
-                            rootItem.updateFilter()
+                            clipboardList.currentIndex = -1;
+                            rootItem.updateFilter();
                         }
 
-                        Keys.onPressed: (event) => {
+                        Keys.onPressed: event => {
                             if (event.key === Qt.Key_Escape) {
-                                searchField.text = ""
-                                searchField.focus = false
-                                event.accepted = true
+                                searchField.text = "";
+                                searchField.focus = false;
+                                event.accepted = true;
                             } else if (event.key === Qt.Key_Down) {
                                 if (clipboardList.count > 0) {
-                                    clipboardList.currentIndex = 0
+                                    clipboardList.currentIndex = 0;
                                 }
-                                event.accepted = true
+                                event.accepted = true;
                             } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                                event.accepted = false
+                                event.accepted = false;
                             }
                         }
                     }
@@ -245,9 +248,7 @@ Scope {
 
                             StyledText {
                                 color: Appearance.colors.m3on_surface_variant
-                                text: searchField.text === ""
-                                    ? "You haven't copied anything!"
-                                    : "Nothing found"
+                                text: searchField.text === "" ? "You haven't copied anything!" : "Nothing found"
                                 font.pixelSize: 14
                             }
                         }
@@ -290,11 +291,9 @@ Scope {
                             border.color: Colors.opacify(Appearance.colors.m3on_surface, 0.2)
                             color: {
                                 if (clipboardList.currentIndex === index) {
-                                    return Appearance.colors.m3surface_container_high
+                                    return Appearance.colors.m3surface_container_high;
                                 }
-                                return mouseArea.containsMouse
-                                    ? Appearance.colors.m3surface_container
-                                    : Appearance.colors.m3surface_container_low
+                                return mouseArea.containsMouse ? Appearance.colors.m3surface_container : Appearance.colors.m3surface_container_low;
                             }
 
                             Behavior on color {
@@ -312,9 +311,9 @@ Scope {
                             }
 
                             Component.onCompleted: {
-                                var idx = modelData.originalIndex !== undefined ? modelData.originalIndex : index
+                                var idx = modelData.originalIndex !== undefined ? modelData.originalIndex : index;
                                 if (modelData.isBinary && modelData.previewSource === "") {
-                                    Clipboard.loadImagePreview(idx)
+                                    Clipboard.loadImagePreview(idx);
                                 }
                             }
 
@@ -404,8 +403,8 @@ Scope {
                                 hoverEnabled: true
                                 z: -1
                                 onClicked: {
-                                    Clipboard.copyToClipboard(modelData.id)
-                                    root.active = false
+                                    Clipboard.copyToClipboard(modelData.id);
+                                    root.active = false;
                                 }
                             }
                         }
@@ -414,11 +413,12 @@ Scope {
             }
             HyprlandFocusGrab {
                 id: grab
-                windows: [ window ]
+                windows: [window]
             }
 
             onVisibleChanged: {
-                if (visible) grab.active = true;
+                if (visible)
+                    grab.active = true;
             }
 
             Connections {

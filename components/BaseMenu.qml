@@ -10,10 +10,16 @@ Item {
     scale: visible ? 1 : 0.95
 
     Behavior on opacity {
-        NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+        NumberAnimation {
+            duration: Appearance.animation.medium
+            easing.type: Appearance.animation.easing
+        }
     }
     Behavior on scale {
-        NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+        NumberAnimation {
+            duration: Appearance.animation.medium
+            easing.type: Appearance.animation.easing
+        }
     }
 
     property string title: "Settings"
@@ -93,7 +99,4 @@ Item {
             }
         }
     }
-
-
-
 }

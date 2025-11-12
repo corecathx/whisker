@@ -6,8 +6,10 @@ import Quickshell.Widgets
 import Quickshell.Wayland
 import qs.modules
 import qs.services
+import qs.providers
 import qs.preferences
 import qs.components
+import qs.components.effects
 import qs.components.players
 import QtQuick.Layouts
 import QtQuick.Effects
@@ -38,29 +40,29 @@ PanelWindow {
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
     onCurrentWallpaperChanged: {
-        var newIsVideo = Utils.isVideo(currentWallpaper)
-        var wasVideo = isVideo
+        var newIsVideo = Utils.isVideo(currentWallpaper);
+        var wasVideo = isVideo;
 
         if (wasVideo) {
-            oldVideo.source = currentVideo.source
-            oldVideo.opacity = 1
-            oldVideo.play()
-            oldVideoFadeOut.start()
+            oldVideo.source = currentVideo.source;
+            oldVideo.opacity = 1;
+            oldVideo.play();
+            oldVideoFadeOut.start();
         } else {
-            oldImage.source = currentImage.source
-            oldImage.opacity = 1
-            oldImageFadeOut.start()
+            oldImage.source = currentImage.source;
+            oldImage.opacity = 1;
+            oldImageFadeOut.start();
         }
 
-        isVideo = newIsVideo
+        isVideo = newIsVideo;
 
         if (newIsVideo) {
-            var wp = currentWallpaper
-            currentVideo.source = wp.startsWith("file://") ? wp : "file://" + wp
-            currentVideo.opacity = 0
+            var wp = currentWallpaper;
+            currentVideo.source = wp.startsWith("file://") ? wp : "file://" + wp;
+            currentVideo.opacity = 0;
         } else {
-            currentImage.source = currentWallpaper
-            currentImage.opacity = 0
+            currentImage.source = currentWallpaper;
+            currentImage.opacity = 0;
         }
     }
 
@@ -74,10 +76,30 @@ PanelWindow {
         anchors.topMargin: (Preferences.bar.position === "top" && !Preferences.bar.small) ? wallpaperShift : 0
         anchors.bottomMargin: (Preferences.bar.position === "bottom" && !Preferences.bar.small) ? wallpaperShift : 0
 
-        Behavior on anchors.leftMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
-        Behavior on anchors.rightMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
-        Behavior on anchors.topMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
-        Behavior on anchors.bottomMargin { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
+        Behavior on anchors.leftMargin {
+            NumberAnimation {
+                duration: Appearance.animation.medium
+                easing.type: Appearance.animation.easing
+            }
+        }
+        Behavior on anchors.rightMargin {
+            NumberAnimation {
+                duration: Appearance.animation.medium
+                easing.type: Appearance.animation.easing
+            }
+        }
+        Behavior on anchors.topMargin {
+            NumberAnimation {
+                duration: Appearance.animation.medium
+                easing.type: Appearance.animation.easing
+            }
+        }
+        Behavior on anchors.bottomMargin {
+            NumberAnimation {
+                duration: Appearance.animation.medium
+                easing.type: Appearance.animation.easing
+            }
+        }
 
         Image {
             id: currentImage
@@ -91,7 +113,8 @@ PanelWindow {
             opacity: 1
 
             Component.onCompleted: {
-                if (!isVideo) source = currentWallpaper
+                if (!isVideo)
+                    source = currentWallpaper;
             }
         }
 
@@ -108,30 +131,32 @@ PanelWindow {
 
             function updatePlayback() {
                 if (!isVideo) {
-                    stop()
-                    return
+                    stop();
+                    return;
                 }
 
                 if (Hyprland.currentWorkspace.hasTilingWindow()) {
                     if (playbackState === MediaPlayer.PlayingState)
-                        pause()
+                        pause();
                 } else {
                     if (playbackState !== MediaPlayer.PlayingState)
-                        play()
+                        play();
                 }
             }
 
             Connections {
                 target: Hyprland
-                function onWorkspaceUpdated() { currentVideo.updatePlayback() }
+                function onWorkspaceUpdated() {
+                    currentVideo.updatePlayback();
+                }
             }
 
             Component.onCompleted: {
                 if (isVideo) {
-                    var wp = currentWallpaper
-                    source = wp.startsWith("file://") ? wp : "file://" + wp
+                    var wp = currentWallpaper;
+                    source = wp.startsWith("file://") ? wp : "file://" + wp;
                 }
-                updatePlayback()
+                updatePlayback();
             }
         }
 
@@ -155,11 +180,11 @@ PanelWindow {
                 to: 0
 
                 onStopped: {
-                    oldImage.source = ""
+                    oldImage.source = "";
                     if (!isVideo) {
-                        newImageFadeIn.start()
+                        newImageFadeIn.start();
                     } else {
-                        newVideoFadeIn.start()
+                        newVideoFadeIn.start();
                     }
                 }
             }
@@ -185,12 +210,12 @@ PanelWindow {
                 to: 0
 
                 onStopped: {
-                    oldVideo.stop()
-                    oldVideo.source = ""
+                    oldVideo.stop();
+                    oldVideo.source = "";
                     if (!isVideo) {
-                        newImageFadeIn.start()
+                        newImageFadeIn.start();
                     } else {
-                        newVideoFadeIn.start()
+                        newVideoFadeIn.start();
                     }
                 }
             }
@@ -221,10 +246,11 @@ PanelWindow {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.bottomMargin: {
-                if (Preferences.bar.small) return 0
+                if (Preferences.bar.small)
+                    return 0;
                 if (Preferences.bar.position === "bottom" && barIsShowing)
-                    return screenOffset - 15 - wallpaperShift
-                return 0
+                    return screenOffset - 15 - wallpaperShift;
+                return 0;
             }
             Behavior on anchors.bottomMargin {
                 NumberAnimation {
@@ -233,6 +259,124 @@ PanelWindow {
                 }
             }
             visible: !Hyprland.currentWorkspace.hasTilingWindow()
+        }
+
+        Item {
+            id: lyricsBox
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: Preferences.bar.position === "bottom" ? widgetShift : widgetOffset
+            width: content.implicitWidth + 40
+            height: content.implicitHeight + 20
+
+            visible: lyrics.status === "FETCHING" || lyrics.status === "LOADED"
+
+            Behavior on width {
+                NumberAnimation {
+                    duration: Appearance.animation.medium
+                    easing.type: Appearance.animation.easing
+                }
+            }
+            Behavior on height {
+                NumberAnimation {
+                    duration: Appearance.animation.medium
+                    easing.type: Appearance.animation.easing
+                }
+            }
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: true
+                shadowOpacity: 1
+                shadowColor: Appearance.colors.m3shadow
+                shadowBlur: 1
+                shadowScale: 1
+            }
+
+            LrclibProvider {
+                id: lyrics
+                currentArtist: Players.active?.trackArtist.replace(" - Topic", "")
+                currentTrack: Players.active?.trackTitle
+                currentPosition: Players.active.position * 1000
+                Component.onCompleted: fetchLyrics()
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                color: Appearance.colors.m3surface
+                radius: 20
+            }
+
+            ColumnLayout {
+                id: content
+                anchors.centerIn: parent
+
+                LoadingIcon {
+                    Layout.alignment: Qt.AlignHCenter
+                    visible: lyrics.status === "FETCHING"
+                }
+
+                StyledText {
+                    id: mainLyric
+                    visible: lyrics.status === "LOADED" && text !== ""
+                    Layout.alignment: Qt.AlignHCenter
+                    font.pixelSize: 24
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Appearance.animation.fast
+                            easing.type: Appearance.animation.easing
+                        }
+                    }
+                }
+
+                StyledText {
+                    id: subLyric
+                    Layout.alignment: Qt.AlignHCenter
+                    color: Appearance.colors.m3on_surface_variant
+                    font.pixelSize: 16
+                    visible: lyrics.status === "LOADED" && text !== ""
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Appearance.animation.fast
+                            easing.type: Appearance.animation.easing
+                        }
+                    }
+                }
+            }
+
+            Connections {
+                target: lyrics
+                function onReady() {
+                    lyricsBox.updateLyrics();
+                }
+                function onCurrentLineIndexChanged() {
+                    lyricsBox.fadeOutAndUpdate();
+                }
+            }
+
+            function updateLyrics() {
+                const current = lyrics.currentLineIndex;
+                mainLyric.text = lyrics.lyricsData[current]?.text || "";
+                subLyric.text = lyrics.lyricsData[current]?.translation || "";
+            }
+
+            function fadeOutAndUpdate() {
+                mainLyric.opacity = 0;
+                subLyric.opacity = 0;
+                updateTimer.restart();
+            }
+
+            Timer {
+                id: updateTimer
+                interval: Appearance.animation.fast
+                onTriggered: {
+                    lyricsBox.updateLyrics();
+                    Qt.callLater(() => {
+                        mainLyric.opacity = 1;
+                        subLyric.opacity = 1;
+                    });
+                }
+            }
         }
     }
 

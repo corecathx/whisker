@@ -12,6 +12,7 @@ import qs.modules
 import qs.windows
 import qs.services
 import qs.components
+import qs.components.effects
 
 Scope {
     id: root
@@ -22,18 +23,18 @@ Scope {
     IpcHandler {
         target: "power"
         function off() {
-            root.action = "off"
-            root.active = true
+            root.action = "off";
+            root.active = true;
         }
 
         function restart() {
-            root.action = "restart"
-            root.active = true
+            root.action = "restart";
+            root.active = true;
         }
 
         function suspend() {
-            root.action = "suspend"
-            root.active = true
+            root.action = "suspend";
+            root.active = true;
         }
     }
 
@@ -76,11 +77,15 @@ Scope {
                         spacing: 5
                         MaterialIcon {
                             icon: {
-                                switch(root.action) {
-                                    case "off": return "power_settings_new"
-                                    case "restart": return "restart_alt"
-                                    case "suspend": return "bedtime"
-                                    default: return "power_settings_new"
+                                switch (root.action) {
+                                case "off":
+                                    return "power_settings_new";
+                                case "restart":
+                                    return "restart_alt";
+                                case "suspend":
+                                    return "bedtime";
+                                default:
+                                    return "power_settings_new";
                                 }
                             }
                             color: root.action === "off" ? Appearance.colors.m3error : Appearance.colors.m3primary
@@ -89,11 +94,15 @@ Scope {
                         }
                         StyledText {
                             text: {
-                                switch(root.action) {
-                                    case "off": return "Power Off"
-                                    case "restart": return "Restart"
-                                    case "suspend": return "Suspend"
-                                    default: return "Power Options"
+                                switch (root.action) {
+                                case "off":
+                                    return "Power Off";
+                                case "restart":
+                                    return "Restart";
+                                case "suspend":
+                                    return "Suspend";
+                                default:
+                                    return "Power Options";
                                 }
                             }
                             font.family: "Outfit SemiBold"
@@ -149,7 +158,9 @@ Scope {
                                             elide: Text.ElideRight
                                             width: parent.width - 36
                                         }
-                                        Item { Layout.fillWidth: true }
+                                        Item {
+                                            Layout.fillWidth: true
+                                        }
                                     }
                                 }
                             }
@@ -174,32 +185,40 @@ Scope {
                             topLeftRadius: 5
                             bottomLeftRadius: 5
                             text: {
-                                switch(root.action) {
-                                    case "off": return "Power Off"
-                                    case "restart": return "Restart"
-                                    case "suspend": return "Suspend"
-                                    default: return "Confirm"
+                                switch (root.action) {
+                                case "off":
+                                    return "Power Off";
+                                case "restart":
+                                    return "Restart";
+                                case "suspend":
+                                    return "Suspend";
+                                default:
+                                    return "Confirm";
                                 }
                             }
                             onClicked: {
-                                switch(root.action) {
-                                    case "off":
-                                        Quickshell.execDetached({ command: ['systemctl', 'poweroff'] })
-                                        break
-                                    case "restart":
-                                        Quickshell.execDetached({ command: ['systemctl', 'reboot'] })
-                                        break
-                                    case "suspend":
-                                        Quickshell.execDetached({ command: ['systemctl', 'suspend'] })
-                                        break
+                                switch (root.action) {
+                                case "off":
+                                    Quickshell.execDetached({
+                                        command: ['systemctl', 'poweroff']
+                                    });
+                                    break;
+                                case "restart":
+                                    Quickshell.execDetached({
+                                        command: ['systemctl', 'reboot']
+                                    });
+                                    break;
+                                case "suspend":
+                                    Quickshell.execDetached({
+                                        command: ['systemctl', 'suspend']
+                                    });
+                                    break;
                                 }
-                                window.closeWithAnimation()
+                                window.closeWithAnimation();
                             }
                         }
                     }
                 }
-
-
             }
         }
     }

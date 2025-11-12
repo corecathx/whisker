@@ -11,6 +11,10 @@ QtObject {
         return Quickshell.env("HOME") + "/.config/whisker/" + key
     }
 
+    function getUserLocalRelativePath(key) {
+        return Quickshell.env("HOME") + "/.local/share/whisker/" + key
+    }
+
     function truncateText(text: string, maxLength: int): string {
         if (text.length <= maxLength)
             return text;
