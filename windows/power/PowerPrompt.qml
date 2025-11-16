@@ -27,8 +27,8 @@ Scope {
             root.active = true;
         }
 
-        function restart() {
-            root.action = "restart";
+        function reboot() {
+            root.action = "reboot";
             root.active = true;
         }
 
@@ -80,7 +80,7 @@ Scope {
                                 switch (root.action) {
                                 case "off":
                                     return "power_settings_new";
-                                case "restart":
+                                case "reboot":
                                     return "restart_alt";
                                 case "suspend":
                                     return "bedtime";
@@ -97,8 +97,8 @@ Scope {
                                 switch (root.action) {
                                 case "off":
                                     return "Power Off";
-                                case "restart":
-                                    return "Restart";
+                                case "reboot":
+                                    return "reboot";
                                 case "suspend":
                                     return "Suspend";
                                 default:
@@ -188,8 +188,8 @@ Scope {
                                 switch (root.action) {
                                 case "off":
                                     return "Power Off";
-                                case "restart":
-                                    return "Restart";
+                                case "reboot":
+                                    return "Reboot";
                                 case "suspend":
                                     return "Suspend";
                                 default:
@@ -203,7 +203,7 @@ Scope {
                                         command: ['systemctl', 'poweroff']
                                     });
                                     break;
-                                case "restart":
+                                case "reboot":
                                     Quickshell.execDetached({
                                         command: ['systemctl', 'reboot']
                                     });

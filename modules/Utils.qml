@@ -11,6 +11,10 @@ QtObject {
         return Quickshell.env("HOME") + "/.config/whisker/" + key
     }
 
+    function getCachePath(key) {
+        return Quickshell.env("HOME") + "/.cache/whisker/" + key
+    }
+
     function getUserLocalRelativePath(key) {
         return Quickshell.env("HOME") + "/.local/share/whisker/" + key
     }

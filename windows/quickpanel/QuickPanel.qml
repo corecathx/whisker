@@ -281,8 +281,8 @@ Scope {
                                                 },
                                                 {
                                                     icon: "restart_alt",
-                                                    label: "Restart",
-                                                    command: ["whisker", "ipc", "power", "restart"]
+                                                    label: "Reboot",
+                                                    command: ["whisker", "ipc", "power", "reboot"]
                                                 },
                                                 {
                                                     icon: "bedtime",

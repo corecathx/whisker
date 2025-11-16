@@ -13,13 +13,13 @@ Scope {
     IpcHandler {
         target: "settings"
         function open(menu: string) {
-            Globals.visible_settingsMenu = true
+            Globals.visible_settingsMenu = true;
             if (menu !== "" && settingsWindow !== null) {
                 for (var i = 0; i < settingsWindow.menuModel.length; i++) {
-                    var item = settingsWindow.menuModel[i]
+                    var item = settingsWindow.menuModel[i];
                     if (!item.header && item.label.toLowerCase() === menu.toLowerCase()) {
-                        settingsWindow.selectedIndex = item.page
-                        break
+                        settingsWindow.selectedIndex = item.page;
+                        break;
                     }
                 }
             }
@@ -41,32 +41,88 @@ Scope {
 
             property var menuModel: {
                 var raw = [
-                    { header: true, label: "Connections" },
-                    { icon: "language", label: "Network" },
-                    { icon: "bluetooth", label: "Bluetooth" },
-                    { icon: "vpn_key", label: "VPN" },
-                    { header: true, label: "System" },
-                    { icon: "volume_up", label: "Sounds" },
-                    { icon: "power", label: "Power" },
-                    { header: true, label: "Customization" },
-                    { icon: "wallpaper", label: "Wallpaper" },
-                    { icon: "palette", label: "Colors" },
-                    { icon: "widgets", label: "Bar" },
-                    { icon: "extension", label: "Misc" },
-                    { header: true, label: "About" },
-                    { icon: "desktop_windows", label: "System" },
-                    { icon: "info", label: "About" }
+                    {
+                        header: true,
+                        label: "Connections"
+                    },
+                    {
+                        icon: "language",
+                        label: "Network",
+                        component: "NetworkMenu"
+                    },
+                    {
+                        icon: "bluetooth",
+                        label: "Bluetooth",
+                        component: "BluetoothMenu"
+                    },
+                    {
+                        icon: "vpn_key",
+                        label: "VPN",
+                        component: "VPNMenu"
+                    },
+                    {
+                        header: true,
+                        label: "System"
+                    },
+                    {
+                        icon: "volume_up",
+                        label: "Sounds",
+                        component: "SoundsMenu"
+                    },
+                    {
+                        icon: "power",
+                        label: "Power",
+                        component: "PowerMenu"
+                    },
+                    {
+                        header: true,
+                        label: "Customization"
+                    },
+                    {
+                        icon: "wallpaper",
+                        label: "Wallpaper",
+                        component: "WallpaperMenu"
+                    },
+                    {
+                        icon: "palette",
+                        label: "Colors",
+                        component: "ColorsMenu"
+                    },
+                    {
+                        icon: "widgets",
+                        label: "Bar",
+                        component: "BarMenu"
+                    },
+                    {
+                        icon: "extension",
+                        label: "Misc",
+                        component: "MiscMenu"
+                    },
+                    {
+                        header: true,
+                        label: "About"
+                    },
+                    {
+                        icon: "desktop_windows",
+                        label: "System",
+                        component: "SystemMenu"
+                    },
+                    {
+                        icon: "info",
+                        label: "About",
+                        component: "AboutMenu"
+                    }
                 ];
 
                 var pageCounter = 0;
-                return raw.map(function(item) {
+                return raw.map(function (item) {
                     item.page = item.header ? -1 : pageCounter++;
-                    return item
+                    return item;
                 });
             }
 
             Component.onCompleted: {
-                settingsWindow = root
+                settingsWindow = root;
             }
 
             Item {
@@ -95,8 +151,18 @@ Scope {
                         anchors.bottomMargin: 40
                         spacing: 5
 
-                        Behavior on anchors.leftMargin { NumberAnimation { duration: Appearance.animation.normal; easing.type: Appearance.animation.easing } }
-                        Behavior on anchors.rightMargin { NumberAnimation { duration: Appearance.animation.normal; easing.type: Appearance.animation.easing } }
+                        Behavior on anchors.leftMargin {
+                            NumberAnimation {
+                                duration: Appearance.animation.normal
+                                easing.type: Appearance.animation.easing
+                            }
+                        }
+                        Behavior on anchors.rightMargin {
+                            NumberAnimation {
+                                duration: Appearance.animation.normal
+                                easing.type: Appearance.animation.easing
+                            }
+                        }
 
                         RowLayout {
                             Layout.fillWidth: true
@@ -111,7 +177,11 @@ Scope {
                                 font.pixelSize: 28
                                 visible: !root.sidebarCollapsed
                                 opacity: root.sidebarCollapsed ? 0 : 1
-                                Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast } }
+                                Behavior on opacity {
+                                    NumberAnimation {
+                                        duration: Appearance.animation.fast
+                                    }
+                                }
                             }
 
                             StyledButton {
@@ -134,13 +204,15 @@ Scope {
                             visible: !root.sidebarCollapsed
                             opacity: root.sidebarCollapsed ? 0 : 1
 
-                            Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast } }
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: Appearance.animation.fast
+                                }
+                            }
 
                             property bool hovered: mouseArea.containsMouse
 
-                            color: hovered
-                                ? Appearance.colors.m3surface_container_high
-                                : Appearance.colors.m3surface_container
+                            color: hovered ? Appearance.colors.m3surface_container_high : Appearance.colors.m3surface_container
 
                             RowLayout {
                                 width: parent.width
@@ -153,8 +225,18 @@ Scope {
                                     Layout.preferredWidth: userCard.opened ? 60 : 40
                                     Layout.preferredHeight: userCard.opened ? 60 : 40
 
-                                    Behavior on Layout.preferredWidth { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-                                    Behavior on Layout.preferredHeight { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                                    Behavior on Layout.preferredWidth {
+                                        NumberAnimation {
+                                            duration: Appearance.animation.fast
+                                            easing.type: Appearance.animation.easing
+                                        }
+                                    }
+                                    Behavior on Layout.preferredHeight {
+                                        NumberAnimation {
+                                            duration: Appearance.animation.fast
+                                            easing.type: Appearance.animation.easing
+                                        }
+                                    }
 
                                     IconImage {
                                         anchors.fill: parent
@@ -174,7 +256,7 @@ Scope {
                                         visible: userCard.opened
                                         Image {
                                             sourceSize: Qt.size(20, 20)
-                                            source:  Quickshell.iconPath(System.logo)
+                                            source: Quickshell.iconPath(System.logo)
                                         }
                                         StyledText {
                                             text: System.prettyName
@@ -229,13 +311,14 @@ Scope {
                                     id: sidebarItemBG
                                     anchors.fill: parent
                                     visible: !modelData.header
-                                    color: selected
-                                           ? Appearance.colors.m3primary
-                                           : (hovered
-                                               ? Appearance.colors.m3surface_container_high
-                                               : Appearance.colors.m3surface_container_low)
+                                    color: selected ? Appearance.colors.m3primary : (hovered ? Appearance.colors.m3surface_container_high : Appearance.colors.m3surface_container_low)
                                     radius: 20
-                                    Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }}
+                                    Behavior on color {
+                                        ColorAnimation {
+                                            duration: Appearance.animation.fast
+                                            easing.type: Appearance.animation.easing
+                                        }
+                                    }
 
                                     RowLayout {
                                         y: (parent.height - height) * 0.5
@@ -246,7 +329,12 @@ Scope {
                                             icon: modelData.icon ?? ""
                                             color: selected ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface
                                             font.pixelSize: 24
-                                            Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }}
+                                            Behavior on color {
+                                                ColorAnimation {
+                                                    duration: Appearance.animation.fast
+                                                    easing.type: Appearance.animation.easing
+                                                }
+                                            }
                                         }
 
                                         StyledText {
@@ -255,8 +343,17 @@ Scope {
                                             color: selected ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface
                                             visible: !root.sidebarCollapsed
                                             opacity: root.sidebarCollapsed ? 0 : 1
-                                            Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }}
-                                            Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast } }
+                                            Behavior on color {
+                                                ColorAnimation {
+                                                    duration: Appearance.animation.fast
+                                                    easing.type: Appearance.animation.easing
+                                                }
+                                            }
+                                            Behavior on opacity {
+                                                NumberAnimation {
+                                                    duration: Appearance.animation.fast
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -268,8 +365,7 @@ Scope {
                                     enabled: modelData.page !== -1
                                     onClicked: {
                                         if (modelData.page !== -1) {
-                                            root.selectedIndex = modelData.page
-                                            settingsStack.currentIndex = modelData.page
+                                            root.selectedIndex = modelData.page;
                                         }
                                     }
                                 }
@@ -290,30 +386,70 @@ Scope {
                     }
                 }
 
-                StackLayout {
-                    id: settingsStack
+                Item {
+                    id: settingsContainer
                     anchors.left: sidebarBG.right
                     anchors.top: parent.top
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
-                    currentIndex: root.selectedIndex
 
-                    // Connections
-                    NetworkMenu {}
-                    BluetoothMenu {}
-                    VPNMenu {}
-                    // System
-                    SoundsMenu {}
-                    PowerMenu {}
-                    // Customization
-                    WallpaperMenu {}
-                    ColorsMenu {}
-                    BarMenu {}
-                    MiscMenu {}
-                    // About
-                    SystemMenu {}
-                    AboutMenu {}
+                    Loader {
+                        id: menuLoader
+                        anchors.fill: parent
+
+                        sourceComponent: {
+                            var components = [networkComponent, bluetoothComponent, vpnComponent, soundsComponent, powerComponent, wallpaperComponent, colorsComponent, barComponent, miscComponent, systemComponent, aboutComponent];
+                            return components[root.selectedIndex] || null;
+                        }
+                    }
                 }
+            }
+
+            Component {
+                id: networkComponent
+                NetworkMenu {}
+            }
+            Component {
+                id: bluetoothComponent
+                BluetoothMenu {}
+            }
+            Component {
+                id: vpnComponent
+                VPNMenu {}
+            }
+            Component {
+                id: soundsComponent
+                SoundsMenu {}
+            }
+            Component {
+                id: powerComponent
+                PowerMenu {}
+            }
+            Component {
+                id: wallpaperComponent
+                WallpaperMenu {
+                    screen: root.screen
+                }
+            }
+            Component {
+                id: colorsComponent
+                ColorsMenu {}
+            }
+            Component {
+                id: barComponent
+                BarMenu {}
+            }
+            Component {
+                id: miscComponent
+                MiscMenu {}
+            }
+            Component {
+                id: systemComponent
+                SystemMenu {}
+            }
+            Component {
+                id: aboutComponent
+                AboutMenu {}
             }
         }
     }

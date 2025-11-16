@@ -21,8 +21,15 @@ Scope {
 
         ColumnLayout {
             anchors.centerIn: parent
-        }
-        Lyrics {}
+            StyledDropDown {
+                width: 280
+                label: "Choose a fruit"
+                model: ["Apple", "Banana", "Orange", "Mango", "Strawberry"]
 
+                onSelectedIndexChanged: (index) => {
+                    console.log("Selected:", model[index])
+                }
+            }
+        }
     }
 }

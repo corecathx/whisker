@@ -20,6 +20,8 @@ import qs.windows.polkit
 import qs.windows.power
 import qs.windows.cliphist
 import qs.services
+import qs.windows.stats
+import qs.preferences
 
 ShellRoot {
     // Shell-specific windows.
@@ -33,9 +35,9 @@ ShellRoot {
     Lockscreen {}
 
     LazyLoader {
-        active: false
+        active: Preferences.misc.showStatsOverlay
 
-        StatsWindow {}
+        StatsOverlay {}
     }
 
     // EmojiWindow {}
@@ -44,9 +46,9 @@ ShellRoot {
     Launcher {}
 
     Component.onCompleted: {
-        Theme.init()
-        Audio.init()
-        Brightness.init()
+        Theme.init();
+        Audio.init();
+        Brightness.init();
     }
     // DevWindow {}
     //
@@ -54,5 +56,4 @@ ShellRoot {
     PolkitPrompt {}
     PowerPrompt {}
     Cliphist {}
-
 }

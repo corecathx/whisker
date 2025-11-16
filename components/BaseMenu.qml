@@ -6,8 +6,14 @@ Item {
     id: baseMenu
     anchors.fill: parent
 
-    opacity: visible ? 1 : 0
-    scale: visible ? 1 : 0.95
+    property bool startAnim: false
+    Component.onCompleted: {
+        Qt.callLater(() => {
+            baseMenu.startAnim = true;
+        });
+    }
+    opacity: startAnim ? 1 : 0
+    scale: startAnim ? 1 : 0.95
 
     Behavior on opacity {
         NumberAnimation {

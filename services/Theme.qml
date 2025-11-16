@@ -28,6 +28,11 @@ Singleton {
 
     function regenColor() {
         console.log("[Theme] Regenerating Colors...");
+        if (Utils.isVideo(Preferences.theme.wallpaper)) { // use whisker's color gen if it's a video.
+            matugenProc.command = ['whisker', 'wallpaper', Preferences.theme.wallpaper, '--no-scheme-gen']
+        } else {
+            matugenProc.command = ['matugen', 'image', Preferences.theme.wallpaper, '-m', (Preferences.theme.dark ? 'dark' : 'light'), '-t', "scheme-"+Preferences.theme.scheme]
+        }
         matugenProc.running = true
         Appearance.reloadScheme("")
         console.log("[Theme] Color generation finished.")
@@ -35,7 +40,6 @@ Singleton {
 
     Process {
         id: matugenProc
-        command: ['matugen', 'image', Preferences.theme.wallpaper, '-m', (Preferences.theme.dark ? 'dark' : 'light'), '-t', "scheme-"+Preferences.theme.scheme]
         //command: ["sh", "-c", "~/.config/whisker/scripts/wallpaper.sh " + Preferences.theme.wallpaper + " " + (Preferences.theme.dark ? 'dark' : 'light') + " " + Preferences.theme.scheme]
 
         stdout: StdioCollector {

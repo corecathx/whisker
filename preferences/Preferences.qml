@@ -37,6 +37,7 @@ Singleton {
         property string githubUsername: ""
         property bool translateLyrics: true
         property string lyricsLanguage: 'en'
+        property bool showStatsOverlay: false
     }
 
     onReloaded: {

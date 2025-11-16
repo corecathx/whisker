@@ -123,12 +123,10 @@ WlSessionLockSurface {
 	}
 
 	Lyrics {
+	    anchors.horizontalCenter: parent.horizontalCenter
 		anchors.bottom: loginContainer.top
 		anchors.bottomMargin: 20
-		visible: Players.active && Players.active.trackTitle !== ""
-		color: "transparent"
 		opacity: root.startAnim ? 1 : 0
-		hideOnNoLyrics: true
 		Behavior on opacity { NumberAnimation { duration: animation_time; easing.type: easingType } }
 	}
 
@@ -230,6 +228,7 @@ WlSessionLockSurface {
 		implicitWidth: rowContainer.width + 40
 		implicitHeight: rowContainer.height + 40
 
+		Behavior on implicitWidth { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
 		Rectangle {
 			id: loginBG
 			color: Appearance.panel_color
@@ -245,14 +244,25 @@ WlSessionLockSurface {
 			spacing: 20
 			id: rowContainer
 
-			ProfileIcon {
-				implicitWidth: 55
-				implicitHeight: this.implicitWidth
-				radius: 100
+			Item {
+    			implicitWidth: 55
+    			implicitHeight: this.implicitWidth
+                ProfileIcon {
+    			    anchors.fill: parent
+    				radius: 100
+                    opacity: !root.context.unlockInProgress || !root.context.accountLocked ? 1 : 0.5
+                    Behavior on opacity { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
+
+    			}
+                LoadingIcon {
+                    visible: root.context.unlockInProgress  && !root.context.accountLocked
+                    anchors.centerIn: parent
+                }
 			}
 
 			ColumnLayout  {
 				id: loginContent
+				visible: !root.context.unlockInProgress || root.context.accountLocked
 
 				RowLayout {
 					spacing: 10
@@ -360,6 +370,8 @@ WlSessionLockSurface {
 			}
 		}
 	}
+
+	FPSOverlay {}
 
 	Connections {
 		target: context

@@ -11,117 +11,98 @@ import qs.modules.corners
 import qs.components
 import qs.preferences
 import qs.services
+
 Scope {
     id: root
     property bool opened: false
+    property var menuStack: []
+    property var currentMenu: null
 
-    property var customCommands: [
-        {
-            name: "Calculator",
-            trigger: "=",
-            comment: "Perform quick math calculations",
-            icon: "calculate",
-            exec: function(input) {
-                try {
-                    return eval(input.substring(1));
-                } catch(e) {
-                    return "Invalid syntax.";
-                }
-            }
-        },
-        {
-            name: "Hello",
-            trigger: "!",
-            comment: "Say hello to Whisker!",
-            icon: "pets",
-            autoRun: false,
-            exec: function(input) {
-                Quickshell.execDetached({
-                    command: [
-                        "dunstify",
-                        "-i", Utils.getPath("logo.png"),
-                        "Whisker",
-                        "Hello, " + Quickshell.env("USER") + "!"
-                    ]
-                })
-            }
-        },
-        {
-            name: "Web Search",
-            trigger: "?",
-            comment: "Search the web",
-            icon: "globe",
-            autoRun: false,
-            exec: function(input) {
-                Quickshell.execDetached({
-                    command: [
-                        "xdg-open",
-                        "https://www.google.com/search?q=" + encodeURIComponent(input.substring(1))
-                    ]
-                })
-            }
-        },
-        {
-            name: "Set Wallpaper",
-            trigger: ">wallpaper",
-            comment: "Set your wallpaper.",
-            icon: "wallpaper",
-            autoRun: false,
-            exec: function(input) {
-                Quickshell.execDetached({
-                    command: [
-                        "xdg-open",
-                        "https://www.google.com/search?q=" + encodeURIComponent(input.substring(1))
-                    ]
-                })
-            }
-        },
-        {
-            name: "Set Theme",
-            trigger: ">theme",
-            comment: "Search the web",
-            icon: "globe",
-            autoRun: false,
-            exec: function(input) {
-                Quickshell.execDetached({
-                    command: [
-                        "xdg-open",
-                        "https://www.google.com/search?q=" + encodeURIComponent(input.substring(1))
-                    ]
-                })
+    property var commands: Commands.commands
+
+    function getMatchedCommand(query) {
+        const trimmed = query.trim();
+        for (let i = 0; i < commands.length; i++) {
+            if (trimmed.startsWith(commands[i].trigger)) {
+                return commands[i];
             }
         }
-    ]
-
-    function getMatchedCommands(query) {
-        return customCommands.filter(cmd =>
-            query.startsWith(cmd.trigger) || cmd.trigger.startsWith(query)
-        );
+        return null;
     }
 
+    function getCommandSuggestions(query) {
+        const trimmed = query.trim().toLowerCase();
+        if (!trimmed.startsWith("/"))
+            return [];
 
+        let suggestions = [];
+        for (let i = 0; i < commands.length; i++) {
+            if (commands[i].trigger.toLowerCase().startsWith(trimmed)) {
+                suggestions.push(commands[i]);
+            }
+        }
+        return suggestions;
+    }
 
-    IpcHandler {
-        target: "launcher"
-        function toggle() {
-            root.opened = !root.opened
+    function executeCommand(cmd, input) {
+        if (cmd.mode === "menu") {
+            menuStack = [
+                {
+                    items: cmd.menu,
+                    title: cmd.name
+                }
+            ];
+            currentMenu = cmd.menu;
+        } else if (cmd.mode === "inline") {
+            return cmd.exec ? cmd.exec(input) : null;
+        } else if (cmd.mode === "direct") {
+            if (cmd.exec)
+                cmd.exec(input);
+            root.opened = false;
+        }
+    }
+
+    function navigateToSubmenu(menuItem) {
+        if (menuItem.submenu) {
+            menuStack.push({
+                items: menuItem.submenu,
+                title: menuItem.name
+            });
+            currentMenu = menuItem.submenu;
+        } else if (menuItem.exec) {
+            menuItem.exec();
+            root.opened = false;
+        }
+    }
+
+    function navigateBack() {
+        if (menuStack.length > 1) {
+            menuStack.pop();
+            currentMenu = menuStack[menuStack.length - 1].items;
+        } else if (menuStack.length === 1) {
+            menuStack = [];
+            currentMenu = null;
         }
     }
 
     function fuzzyMatch(needle, haystack) {
-        return substringMatch(needle, haystack)
-    }
-    function substringMatch(needle, haystack) {
         return haystack.toLowerCase().includes(needle.toLowerCase());
     }
 
+    IpcHandler {
+        target: "launcher"
+        function toggle() {
+            root.opened = !root.opened;
+        }
+    }
 
     LazyLoader {
         active: root.opened
+
         PanelWindow {
             id: window
-            property int selectedIndex: -1  // Track selected item
-            property bool barIsOpaque: ((Preferences.bar.position === "bottom" && Hyprland.currentWorkspace.hasTilingWindow()) || Preferences.bar.keepOpaque) || (Preferences.bar.position === "top")
+            property int selectedIndex: 0
+
             implicitWidth: (screen.width * 0.4) + 20
             implicitHeight: (screen.height * 0.6) + 20
 
@@ -133,7 +114,7 @@ Scope {
 
             Hypr.HyprlandFocusGrab {
                 id: grab
-                windows: [ window ]
+                windows: [window]
             }
 
             mask: Region {
@@ -143,9 +124,12 @@ Scope {
 
             onVisibleChanged: {
                 if (visible) {
-                    grab.active = true
-                    searchField.text = ""
-                    searchField.focus = true
+                    grab.active = true;
+                    searchField.text = "";
+                    searchField.focus = true;
+                    menuStack = [];
+                    currentMenu = null;
+                    selectedIndex = 0;
                 }
             }
 
@@ -153,72 +137,106 @@ Scope {
                 target: grab
                 function onActiveChanged() {
                     if (!grab.active)
-                        root.opened = false
+                        root.opened = false;
                 }
             }
 
             Item {
+                id: mainContainer
                 anchors.fill: parent
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
                 anchors.rightMargin: 20
                 anchors.bottomMargin: 10
-                Behavior on anchors.bottomMargin {
-                    NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
-                }
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled: true
-                    shadowOpacity: 1
                     shadowColor: Appearance.colors.m3shadow
                     shadowBlur: 1
-                    shadowScale: 1
                 }
 
                 Keys.onPressed: {
-                    const visibleItems = getVisibleItems()
+                    const visibleItems = getVisibleItems();
+
                     if (event.key === Qt.Key_Down) {
-                        event.accepted = true
+                        event.accepted = true;
                         if (visibleItems.length > 0) {
-                            selectedIndex = Math.min(selectedIndex + 1, visibleItems.length - 1)
-                            scrollToSelected(visibleItems)
+                            selectedIndex = (selectedIndex + 1) % visibleItems.length;
+                            scrollToSelected(visibleItems);
                         }
                     } else if (event.key === Qt.Key_Up) {
-                        event.accepted = true
+                        event.accepted = true;
                         if (visibleItems.length > 0) {
-                            selectedIndex = Math.max(selectedIndex - 1, 0)
-                            scrollToSelected(visibleItems)
+                            selectedIndex = (selectedIndex - 1 + visibleItems.length) % visibleItems.length;
+                            scrollToSelected(visibleItems);
                         }
                     } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                        event.accepted = true
-                        if (selectedIndex >= 0 && selectedIndex < visibleItems.length) {
-                            visibleItems[selectedIndex].storedModelData.execute()
-                            root.opened = false
+                        event.accepted = true;
+                        if (selectedIndex < visibleItems.length) {
+                            handleItemClick(visibleItems[selectedIndex].itemData);
                         }
                     } else if (event.key === Qt.Key_Escape) {
-                        event.accepted = true
-                        root.opened = false
+                        event.accepted = true;
+                        if (menuStack.length > 0) {
+                            navigateBack();
+                            selectedIndex = 0;
+                        } else {
+                            root.opened = false;
+                        }
+                    } else if (event.key === Qt.Key_Backspace) {
+                        if (searchField.text === "" && menuStack.length > 0) {
+                            event.accepted = true;
+                            navigateBack();
+                            selectedIndex = 0;
+                        }
+                    }
+                }
+
+                function handleItemClick(itemData) {
+                    if (itemData.execute) {
+                        itemData.execute();
+                        if (itemData.icon.startsWith('whisker:')) {
+                            console.log(`${itemData.name} is a whisker command, no action has taken`);
+                        } else {
+                            console.log(`${itemData.name} is not a whisker command, closing launcher`);
+                            root.opened = false;
+                        }
+                    } else if (itemData.submenu) {
+                        navigateToSubmenu(itemData);
+                    } else if (itemData.exec) {
+                        itemData.exec();
+                        root.opened = false;
                     }
                 }
 
                 function getVisibleItems() {
-                    let items = []
+                    let items = [];
                     for (let i = 0; i < appRepeater.count; i++) {
-                        const it = appRepeater.itemAt(i)
-                        if (it && it.visible)
-                            items.push(it)
+                        const item = appRepeater.itemAt(i);
+                        if (item && item.visible)
+                            items.push(item);
                     }
-                    return items
+                    return items;
                 }
 
                 function scrollToSelected(visibleItems) {
-                    const item = visibleItems[selectedIndex]
-                    if (item) {
-                        listFlick.contentY = item.y
-                        for (let i = 0; i < visibleItems.length; i++)
-                            visibleItems[i].children[0].selected = (i === selectedIndex)
+                    if (selectedIndex < 0 || selectedIndex >= visibleItems.length)
+                        return;
+                    const item = visibleItems[selectedIndex];
+                    const itemTop = item.y;
+                    const itemBottom = item.y + item.height;
+                    const viewTop = listFlick.contentY;
+                    const viewBottom = listFlick.contentY + listFlick.height;
+
+                    if (itemBottom > viewBottom) {
+                        listFlick.contentY = itemBottom - listFlick.height;
+                    } else if (itemTop < viewTop) {
+                        listFlick.contentY = itemTop;
                     }
+
+                    for (let i = 0; i < visibleItems.length; i++)
+                        visibleItems[i].selected = (i === selectedIndex);
                 }
 
                 Rectangle {
@@ -226,50 +244,89 @@ Scope {
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: listFlick.height + searchField.height + 60
+                    height: listFlick.height + searchField.height + breadcrumbArea.height + 60
                     color: Appearance.panel_color
                     radius: 20
 
-                    Behavior on bottomLeftRadius {
-                        NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
-                    }
-                    Behavior on bottomRightRadius {
-                        NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
+                    Behavior on height {
+                        NumberAnimation {
+                            duration: Appearance.animation.fast
+                            easing.type: Appearance.animation.easing
+                        }
                     }
                 }
 
                 Item {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        top: bgRectangle.top
-                        bottom: searchField.top
-                        leftMargin: 20
-                        topMargin: 40
-                        bottomMargin: 20
-                        rightMargin: 20
-                        //margins: 0
+                    id: breadcrumbArea
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: bgRectangle.top
+                    anchors.topMargin: 15
+                    anchors.leftMargin: 20
+                    anchors.rightMargin: 20
+                    height: menuStack.length > 0 ? 40 : 0
+                    visible: menuStack.length > 0
+
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: 10
+
+                        MaterialIcon {
+                            icon: "arrow_back"
+                            font.pixelSize: 20
+                            color: Appearance.colors.m3on_surface
+
+                            MouseArea {
+                                anchors.fill: parent
+                                anchors.margins: -5
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    navigateBack();
+                                    selectedIndex = 0;
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: menuStack.length > 0 ? menuStack[menuStack.length - 1].title : ""
+                            font.pixelSize: 18
+                            font.bold: true
+                            color: Appearance.colors.m3on_surface
+                        }
+                        Item {
+                            Layout.fillWidth: true
+                        }
                     }
+                }
+
+                Item {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: breadcrumbArea.bottom
+                    height: listFlick.height - (searchField.implicitHeight - 20)
+                    anchors.leftMargin: 20
+                    anchors.topMargin: breadcrumbArea.visible ? 50 : 50
+                    anchors.bottomMargin: 20
+                    anchors.rightMargin: 20
+
                     Flickable {
                         id: listFlick
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            bottom: parent.bottom
-
-                            //margins: 0
-                        }
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
                         contentWidth: width
                         contentHeight: column.implicitHeight
-                        Behavior on contentY {
-                            NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
-                        }
-
                         clip: true
                         height: Math.min(column.implicitHeight, window.implicitHeight - 140)
-                        Behavior on height {
-                            NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
+                        interactive: contentHeight > height
+
+                        Behavior on contentY {
+                            NumberAnimation {
+                                duration: Appearance.animation.fast
+                                easing.type: Appearance.animation.easing
+                            }
                         }
+
                         Column {
                             id: column
                             width: parent.width
@@ -279,162 +336,103 @@ Scope {
                                 id: appRepeater
                                 model: {
                                     let query = searchField.text.trim();
-                                    let appsArray = DesktopEntries.applications.values.slice().sort(
-                                        (a, b) => a.name.localeCompare(b.name, Qt.locale().name)
-                                    );
 
-                                    if (query !== "") {
-                                        let commands = getMatchedCommands(query);
-                                        for (let cmd of commands) {
-                                            let result = cmd.comment
-                                            if (cmd.autoRun ?? true)
-                                                result = cmd.exec(query) ?? cmd.comment;
-                                            appsArray.unshift({
-                                                name: cmd.name,
-                                                comment: String(result),
-                                                execString: query,
-                                                execute: function() {
-                                                    if (!cmd.autoRun) {
-                                                        cmd.exec(query)
+                                    if (currentMenu !== null) {
+                                        return currentMenu;
+                                    }
+
+                                    const matchedCmd = getMatchedCommand(query);
+                                    if (matchedCmd) {
+                                        if (matchedCmd.mode === "inline") {
+                                            const result = matchedCmd.exec(query);
+                                            return [
+                                                {
+                                                    name: matchedCmd.name,
+                                                    comment: String(result),
+                                                    icon: "whisker:" + matchedCmd.icon,
+                                                    execute: function () {
+                                                        if (matchedCmd.onExecute) {
+                                                            matchedCmd.onExecute(query);
+                                                        }
+                                                        root.opened = false;
                                                     }
-                                                    root.opened = false;
-                                                },
-                                                icon: "whisker:" + cmd.icon
-                                            });
+                                                }
+                                            ];
+                                        } else if (matchedCmd.mode === "menu") {
+                                            return currentMenu || [];
                                         }
                                     }
 
+                                    const suggestions = getCommandSuggestions(query);
+                                    if (query.startsWith("/") && suggestions.length > 0) {
+                                        return suggestions.map(cmd => ({
+                                                    name: cmd.trigger,
+                                                    comment: cmd.comment,
+                                                    icon: "whisker:" + cmd.icon,
+                                                    execute: function () {
+                                                        if (cmd.mode === "menu") {
+                                                            executeCommand(cmd, cmd.trigger);
+                                                        } else if (cmd.mode === "direct") {
+                                                            cmd.exec(cmd.trigger);
+                                                            root.opened = false;
+                                                        } else {
+                                                            searchField.text = cmd.trigger + " ";
+                                                        }
+                                                    }
+                                                }));
+                                    }
+
+                                    let appsArray = DesktopEntries.applications.values.slice().sort((a, b) => a.name.localeCompare(b.name, Qt.locale().name));
                                     return appsArray;
                                 }
 
-
-
-                                delegate: Item {
-                                    property var storedModelData: modelData
+                                delegate: LauncherItem {
+                                    itemData: modelData
                                     width: parent.width
-                                    height: visible ? 60 : 0
-                                    visible: searchField.text.trim() === "" ||
-                                        fuzzyMatch(searchField.text,
-                                                modelData.name + " " +
-                                                modelData.comment + " " +
-                                                modelData.execString)
 
-                                    Rectangle {
-                                        id: appItem
-                                        anchors.fill: parent
-                                        radius: 20
-                                        color: selected || hovered
-                                            ? Appearance.colors.m3surface_container_low
-                                            : Appearance.colors.m3surface
+                                    visible: {
+                                        if (currentMenu !== null)
+                                            return true;
 
-                                        Behavior on color {
-                                            ColorAnimation { duration: 200; easing.type: Appearance.animation.easing }
-                                        }
+                                        const query = searchField.text.trim();
+                                        if (query === "")
+                                            return true;
+                                        if (query.startsWith("/"))
+                                            return true;
 
-                                        MouseArea {
-                                            id: mouseArea
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            onClicked: {
-                                                modelData.execute()
-                                                root.opened = false
-                                            }
-                                        }
-                                        property bool hovered: mouseArea.containsMouse
-                                        property bool selected: false
+                                        return fuzzyMatch(query, modelData.name + " " + (modelData.comment || "") + " " + (modelData.execString || ""));
+                                    }
 
-                                        RowLayout {
-                                            anchors.fill: parent
-                                            anchors.margins: 10
-                                            anchors.leftMargin: 20
-                                            spacing: 20
-
-                                            Image {
-                                                id: appicon
-                                                asynchronous: true
-                                                cache: true
-                                                source: {
-                                                    if (modelData.icon.startsWith("whisker:"))
-                                                        return ""
-                                                    return Quickshell.iconPath(modelData.icon, true)
-
-                                                }
-                                                visible: source != ""
-                                                fillMode: Image.PreserveAspectCrop
-                                                smooth: true
-                                                sourceSize.width: 30
-                                                sourceSize.height: 30
-                                                Layout.alignment: Qt.AlignVCenter
-                                            }
-
-                                            MaterialIcon {
-                                                visible: appicon.source == ""
-                                                icon: {
-                                                    if (modelData.icon.startsWith("whisker:"))
-                                                        return modelData.icon.replace("whisker:", "")
-                                                    return "terminal"
-                                                }
-                                                font.pixelSize: 30
-                                                color: Appearance.colors.m3on_surface
-                                                Layout.alignment: Qt.AlignVCenter
-                                            }
-
-                                            ColumnLayout {
-                                                spacing: 0
-                                                Layout.fillWidth: true
-
-                                                StyledText {
-                                                    text: modelData.name
-                                                    font.pixelSize: 16
-                                                    font.bold: true
-                                                    color: Appearance.colors.m3on_surface
-                                                    Layout.fillWidth: true
-                                                }
-                                                StyledText {
-                                                    visible: text !== ""
-                                                    text: {
-                                                        if (modelData.comment === "")
-                                                            return "> " + modelData.execString
-                                                        return modelData.comment
-                                                    }
-                                                    font.pixelSize: 12
-                                                    font.family: text.startsWith(">")
-                                                        ? "monospace"
-                                                        : Qt.application.font.family
-                                                    color: Appearance.colors.m3on_surface_variant
-                                                    Layout.fillWidth: true
-                                                }
-                                            }
-                                        }
+                                    onClicked: {
+                                        mainContainer.handleItemClick(modelData);
                                     }
                                 }
                             }
 
                             Item {
-                                id: emptyOverlay
-                                Layout.alignment: Qt.AlignHCenter
-                                implicitWidth: parent.width
-                                implicitHeight: emptyOverlayRow.height
-                                z: 1
+                                width: parent.width
+                                height: 200
                                 visible: {
-                                    if (searchField.text.trim() === "") return false
+                                    if (currentMenu !== null)
+                                        return false;
+                                    if (searchField.text.trim() === "")
+                                        return false;
+
                                     for (let i = 0; i < appRepeater.count; i++) {
-                                        const it = appRepeater.itemAt(i)
-                                        if (it && it.visible) return false
+                                        const item = appRepeater.itemAt(i);
+                                        if (item && item.visible)
+                                            return false;
                                     }
-                                    return true
+                                    return true;
                                 }
 
-
                                 RowLayout {
-                                    id: emptyOverlayRow
                                     anchors.centerIn: parent
-                                    Layout.alignment: Qt.AlignHCenter
-                                    Layout.bottomMargin: 50
                                     spacing: 20
+
                                     Image {
                                         source: Utils.getPath("images/nothing-found.png")
-                                        sourceSize: Qt.size(200,200)
+                                        sourceSize: Qt.size(150, 150)
                                         smooth: true
                                         Layout.alignment: Qt.AlignVCenter
                                         layer.enabled: true
@@ -447,12 +445,14 @@ Scope {
                                     ColumnLayout {
                                         StyledText {
                                             text: "Nothing found."
-                                            font.pixelSize: 32
+                                            font.pixelSize: 28
                                             font.bold: true
                                             color: Appearance.colors.m3on_surface_variant
-                                            Layout.alignment: Qt.AlignVCenter
-                                            horizontalAlignment: Text.AlignLeft
-                                            wrapMode: Text.NoWrap
+                                        }
+                                        StyledText {
+                                            text: "Try a different search"
+                                            font.pixelSize: 14
+                                            color: Appearance.colors.m3on_surface_variant
                                         }
                                     }
                                 }
@@ -463,17 +463,21 @@ Scope {
 
                 StyledTextField {
                     id: searchField
-                    icon: "search"
-                    placeholder: "Search"
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        bottom: parent.bottom
-                        margins: 20
-                    }
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 20
+
+                    icon: currentMenu !== null ? "" : "search"
+                    placeholder: currentMenu !== null ? "Select an option..." : "Search or type /"
+                    readOnly: currentMenu !== null
+                    opacity: currentMenu !== null ? 0.5 : 1.0
+
                     onTextChanged: {
-                        selectedIndex = 0
-                        parent.scrollToSelected(parent.getVisibleItems())
+                        if (currentMenu === null) {
+                            selectedIndex = 0;
+                            mainContainer.scrollToSelected(mainContainer.getVisibleItems());
+                        }
                     }
                 }
             }

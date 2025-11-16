@@ -157,7 +157,7 @@ Scope {
                         MaterialIcon {
                             icon: "content_paste"
                             font.pixelSize: 20
-                            color: Appearance.colors.m3on_primary_container
+                            color: Appearance.colors.m3primary
                         }
 
                         RowLayout {

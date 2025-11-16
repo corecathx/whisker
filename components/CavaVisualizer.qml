@@ -12,21 +12,33 @@ Item {
     property real multiplier: 1.3
     property real spacing: 8
     property string position: "bottom"
-    Row {
-        visible: Preferences.misc.cavaEnabled
+
+    readonly property int barCount: Cava.values.length
+    readonly property real barWidth: barCount > 0 ?
+        Math.max(1, (width - ((barCount - 1) * spacing)) / barCount) : 1
+
+    Item {
         id: visualizerLayout
+        visible: Preferences.misc.cavaEnabled
         anchors.fill: parent
-        spacing: root.spacing
 
         Repeater {
-            model: Cava.values.length
+            model: root.barCount
 
             Rectangle {
-                width: Math.max(1,(visualizerLayout.width - ((Cava.values.length - 1) * visualizerLayout.spacing)) / Cava.values.length)
-                height: Math.max(1, Cava.values[index] * multiplier)
+                required property int index
+
+                x: index * (root.barWidth + root.spacing)
+                y: root.position === "bottom" ? root.height - height : 0
+
+                width: root.barWidth
+                height: {
+                    if (!root.visible) return 0;
+                    const value = Cava.values[index] || 0;
+                    return Math.max(1, value * root.multiplier);
+                }
+
                 color: Colors.opacify(Appearance.colors.m3on_background, 0.3)
-                anchors.bottom: root.position === "bottom" ? parent.bottom : undefined
-                anchors.top: root.position === "top" ? parent.top : undefined
             }
         }
     }

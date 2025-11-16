@@ -27,39 +27,38 @@ BaseMenu {
                 font.pixelSize: 16
                 color: Appearance.colors.m3on_background
             }
-            RowLayout {
-                Repeater {
-                    model: ['Left', 'Bottom', 'Top', 'Right']
-                    delegate: StyledButton {
-                        text: modelData
-                        // checkable: true
-                        Layout.fillWidth: true
-                        implicitWidth: 0
-                        checked: Preferences.bar.position === modelData.toLowerCase()
-                        topLeftRadius: modelData == "Left" || Preferences.bar.position === modelData.toLowerCase() ? 20 : 5
-                        bottomLeftRadius: modelData == "Left" || Preferences.bar.position === modelData.toLowerCase() ? 20 : 5
-                        topRightRadius: modelData == "Right" || Preferences.bar.position === modelData.toLowerCase() ? 20 : 5
-                        bottomRightRadius: modelData == "Right" || Preferences.bar.position === modelData.toLowerCase() ? 20 : 5
 
-                        onClicked: {
-                            Quickshell.execDetached({
-                                command: ['whisker', 'prefs', 'set', 'bar.position', modelData.toLowerCase()]
-                            })
-                        }
-                    }
+            StyledDropDown {
+                Layout.fillWidth: true
+                label: "Bar Position"
+                model: ['Left', 'Bottom', 'Top', 'Right']
+                currentIndex: {
+                    const pos = Preferences.bar.position
+                    const positions = ['left', 'bottom', 'top', 'right']
+                    return positions.indexOf(pos)
+                }
+
+                onSelectedIndexChanged: (index) => {
+                    const positions = ['left', 'bottom', 'top', 'right']
+                    Quickshell.execDetached({
+                        command: ['whisker', 'prefs', 'set', 'bar.position', positions[index]]
+                    })
                 }
             }
         }
+
         SwitchOption {
-            title: "Keep bar opaque";
+            title: "Keep bar opaque"
             description: "Padding for bars\nThis will only take effect if `smallBar` is `true`."
             prefField: "bar.keepOpaque"
         }
+
         SwitchOption {
-            title: "Small bar";
+            title: "Small bar"
             description: "Whether to keep the bar opaque or not\nIf disabled, the bar will adjust it's transparency, such as on desktop, etc."
             prefField: "bar.small"
         }
+
         RowLayout {
             visible: Preferences.bar.small
             ColumnLayout {
@@ -92,12 +91,14 @@ BaseMenu {
                 }
             }
         }
+
         SwitchOption {
-            title: "Auto hide bar";
+            title: "Auto hide bar"
             description: "Whether to automatically hide the bar\nTo show your bar again, move your cursor to the edge of your bar's position."
             prefField: "bar.autoHide"
         }
     }
+
     component SwitchOption: RowLayout {
         id: main
         property string title: "Title"

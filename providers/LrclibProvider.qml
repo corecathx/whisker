@@ -86,11 +86,12 @@ QtObject {
         }
     }
 
-    property FrameAnimation frAnim: FrameAnimation {
+    property Timer frAnim: Timer {
+        interval: 250
+        repeat: true
         running: !!Players.active && root.isPlaying
         onTriggered: Players.active?.positionChanged()
     }
-
     function parseLRC(lrcText) {
         let lines = lrcText.split('\n');
         let parsed = [];

@@ -11,6 +11,8 @@ import qs.components
 import qs.preferences
 
 BaseMenu {
+    id: root
+    required property var screen
     title: "Wallpaper"
     description: "Choose and set wallpapers for your desktop."
 
@@ -18,8 +20,8 @@ BaseMenu {
         ClippingRectangle {
             id: wpContainer
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width * 0.9
-            height: width * screen.height / screen.width
+            width: 600
+            height: width * root.screen.height / root.screen.width
             radius: 10
             color: Appearance.colors.m3surface_container
 
@@ -143,7 +145,7 @@ BaseMenu {
 
                             delegate: Item {
                                 width: 150
-                                height: width * screen.height / screen.width + 35
+                                height: width * root.screen.height / root.screen.width + 35
                                 property bool hovered: mouseArea.containsMouse
                                 property bool selected: Preferences.theme.wallpaper === modelData
                                 property bool itemIsVideo: Utils.isVideo(modelData)
@@ -167,7 +169,7 @@ BaseMenu {
 
                                     ClippingRectangle {
                                         Layout.fillWidth: true
-                                        Layout.preferredHeight: parent.width * screen.height / screen.width
+                                        Layout.preferredHeight: parent.width * root.screen.height / root.screen.width
                                         radius: 10
                                         color: Appearance.colors.m3surface_container_high
 

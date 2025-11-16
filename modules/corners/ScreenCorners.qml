@@ -21,7 +21,7 @@ PanelWindow {
 
     mask: Region {}
     WlrLayershell.layer: WlrLayer.Top
-    exclusionMode: ExclusionMode.Auto
+    exclusionMode: Preferences.bar.small ? ExclusionMode.Ignore : ExclusionMode.Auto
 
     property int shadowSize: 20
     property color shadowColor: Colors.opacify(Appearance.colors.m3shadow, 0.5)

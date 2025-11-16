@@ -50,6 +50,14 @@ BaseMenu {
             description: "Target language code for lyrics translation.\nExamples: en, id, ja, ko, etc."
             prefField: "misc.lyricsLanguage"
         }
+
+        Divider {}
+
+        SwitchOption {
+            title: "Show Stats Overlay"
+            description: "Shows general information about the system (FPS, CPU Usage, and Memory Usage)"
+            prefField: "misc.showStatsOverlay"
+        }
     }
 
     component Divider: Rectangle {
