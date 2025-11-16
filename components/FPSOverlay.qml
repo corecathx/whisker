@@ -76,7 +76,6 @@ Item {
         anchors.margins: 12
         spacing: 8
 
-        // Compact view
         RowLayout {
             visible: !root.expanded
             spacing: 10
@@ -149,7 +148,6 @@ Item {
             }
         }
 
-        // Expanded view
         Column {
             visible: root.expanded
             spacing: 12
@@ -160,7 +158,6 @@ Item {
                 }
             }
 
-            // FPS section
             Column {
                 spacing: 6
 
@@ -273,7 +270,6 @@ Item {
                 }
             }
 
-            // Memory section
             Column {
                 spacing: 6
 
@@ -353,7 +349,6 @@ Item {
                 }
             }
 
-            // CPU section
             Column {
                 spacing: 6
 
@@ -449,7 +444,6 @@ Item {
             visible: root.expanded || hover.hovered
         }
 
-        // Controls
         RowLayout {
             spacing: 6
             visible: root.expanded || hover.hovered

@@ -27,9 +27,9 @@ Item {
 
     LrclibProvider {
         id: lyrics
-        currentArtist: Players.active?.trackArtist.replace(" - Topic", "")
-        currentTrack: Players.active?.trackTitle
-        currentPosition: Players.active.position * 1000
+        currentArtist: Players.active?.trackArtist.replace(" - Topic", "") ?? ""
+        currentTrack: Players.active?.trackTitle ?? ""
+        currentPosition: (Players.active?.position ?? 0) * 1000
         Component.onCompleted: fetchLyrics()
     }
 

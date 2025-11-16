@@ -105,7 +105,6 @@ Singleton {
         target: Hyprland
 
         function onRawEvent(event: HyprlandEvent): void {
-            console.log(event.name);
             try {
                 const n = event.name;
                 if (!n || !n.endsWith("v2"))
