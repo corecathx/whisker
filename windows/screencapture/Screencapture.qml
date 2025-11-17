@@ -15,16 +15,31 @@ Scope {
     property rect selectedRegion: Qt.rect(0, 0, 0, 0)
     property string frozenImagePath: ""
     property string lastReported: ""
+    property real captureStartTime: 0
+    property bool freezeImageReady: false
+
+    function debugLog(message) {
+        return;
+        console.log("[SCRCPT]", message);
+    }
 
     IpcHandler {
         target: "screen"
         function record() {
-            console.log("implement recording later")
+            root.debugLog("Record requested (not implemented)");
+            console.log("implement recording later");
         }
         function capture() {
-            if (root.active) return
-            root.lastReported = ""
-            freezeProcess.running = true
+            if (root.active) {
+                root.debugLog("Capture already in progress, ignoring request");
+                return;
+            }
+
+            root.debugLog("Initiating capture...");
+            root.captureStartTime = Date.now();
+            root.lastReported = "";
+            root.freezeImageReady = false;
+            freezeProcess.running = true;
         }
     }
 
@@ -33,9 +48,40 @@ Scope {
         command: ["whisker", "screen", "freeze"]
         stdout: StdioCollector {
             onStreamFinished: {
-                root.frozenImagePath = text.trim()
-                console.log("Frozen image at:", root.frozenImagePath)
-                root.active = true
+                const freezeDuration = ((Date.now() - root.captureStartTime) / 1000).toFixed(1);
+                root.frozenImagePath = text.trim();
+                root.debugLog("Screen freeze completed in " + freezeDuration + "s");
+                root.debugLog("Frozen image path: " + root.frozenImagePath);
+
+                if (root.frozenImagePath === "") {
+                    root.debugLog("ERROR: Empty frozen image path!");
+                    return;
+                }
+
+                root.active = true;
+            }
+        }
+
+        stderr: StdioCollector {
+            onStreamFinished: {
+                if (text.trim() !== "") {
+                    root.debugLog("Freeze process stderr: " + text.trim());
+                }
+            }
+        }
+    }
+
+    // Timeout timer for freeze process
+    Timer {
+        id: freezeTimeout
+        interval: 10000 // 10 second timeout
+        running: freezeProcess.running
+        repeat: false
+        onTriggered: {
+            if (freezeProcess.running) {
+                root.debugLog("ERROR: Freeze process timed out after 10s");
+                freezeProcess.running = false;
+                root.active = false;
             }
         }
     }
@@ -46,6 +92,9 @@ Scope {
             id: captureWindow
             property bool isClosing: false
             property bool isRegionMode: true
+            property bool uiReady: false
+            property real uiReadyTime: 0
+
             color: Appearance.colors.m3surface
             anchors {
                 top: true
@@ -57,24 +106,47 @@ Scope {
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
             WlrLayershell.namespace: "whisker:screencapture"
 
+            Component.onCompleted: {
+                root.debugLog("Capture window created");
+            }
+
             function closeWithAnimation() {
-                if (isClosing) return
-                isClosing = true
-                zoomInAnim.start()
+                if (isClosing) {
+                    root.debugLog("Close already in progress, skipping");
+                    return;
+                }
+
+                root.debugLog("Starting close animation");
+                isClosing = true;
+                zoomInAnim.start();
             }
 
             function captureRegion() {
+                if (!root.freezeImageReady) {
+                    root.debugLog("ERROR: Attempted capture before image ready!");
+                    return;
+                }
+
+                if (!captureWindow.uiReady) {
+                    root.debugLog("ERROR: Attempted capture before UI ready!");
+                    return;
+                }
+
                 if (selectionArea.hasSelection) {
-                    whiskerCapture.command = [
-                        "whisker", "screen", "capture",
-                        "--source=" + root.frozenImagePath,
-                        "--region=" + Math.floor(root.selectedRegion.x) + "," + Math.floor(root.selectedRegion.y)
-                            + "_" + Math.floor(root.selectedRegion.width) + "x" + Math.floor(root.selectedRegion.height),
-                        "--copy"
-                    ]
-                    console.log(whiskerCapture.command)
-                    whiskerCapture.running = true
-                    closeWithAnimation()
+                    const regionX = Math.floor(root.selectedRegion.x);
+                    const regionY = Math.floor(root.selectedRegion.y);
+                    const regionW = Math.floor(root.selectedRegion.width);
+                    const regionH = Math.floor(root.selectedRegion.height);
+
+                    root.debugLog("Capturing region: " + regionX + "," + regionY + " " + regionW + "x" + regionH);
+
+                    whiskerCapture.command = ["whisker", "screen", "capture", "--source=" + root.frozenImagePath, "--region=" + regionX + "," + regionY + "_" + regionW + "x" + regionH, "--copy"];
+
+                    root.debugLog("Executing: " + whiskerCapture.command.join(" "));
+                    whiskerCapture.running = true;
+                    closeWithAnimation();
+                } else {
+                    root.debugLog("No valid selection to capture");
                 }
             }
 
@@ -82,7 +154,20 @@ Scope {
                 id: whiskerCapture
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        root.lastReported = text.trim()
+                        root.lastReported = text.trim();
+                        const totalDuration = ((Date.now() - root.captureStartTime) / 1000).toFixed(1);
+                        root.debugLog("Capture completed in " + totalDuration + "s total");
+                        if (root.lastReported !== "") {
+                            root.debugLog("Saved to: " + root.lastReported);
+                        }
+                    }
+                }
+
+                stderr: StdioCollector {
+                    onStreamFinished: {
+                        if (text.trim() !== "") {
+                            root.debugLog("Capture process stderr: " + text.trim());
+                        }
                     }
                 }
             }
@@ -91,9 +176,13 @@ Scope {
                 anchors.fill: parent
                 focus: true
                 Keys.onEscapePressed: {
-                    Quickshell.execDetached({ command: [] })
-                    captureWindow.closeWithAnimation()
+                    root.debugLog("Escape pressed, canceling capture");
+                    Quickshell.execDetached({
+                        command: []
+                    });
+                    captureWindow.closeWithAnimation();
                 }
+
                 Image {
                     id: wallpaper
                     anchors.fill: parent
@@ -113,8 +202,12 @@ Scope {
                     }
 
                     onStatusChanged: {
-                        if (status === Image.Ready)
-                            fadeInAnim.start()
+                        if (status === Image.Ready) {
+                            root.debugLog("Wallpaper loaded, starting fade-in");
+                            fadeInAnim.start();
+                        } else if (status === Image.Error) {
+                            root.debugLog("ERROR: Wallpaper failed to load");
+                        }
                     }
                 }
 
@@ -129,6 +222,7 @@ Scope {
                 }
 
                 Item {
+                    id: screenContainer
                     layer.enabled: true
                     layer.effect: MultiEffect {
                         shadowEnabled: true
@@ -137,7 +231,6 @@ Scope {
                         shadowBlur: 1
                         shadowScale: 1
                     }
-                    id: screenContainer
                     anchors.centerIn: parent
                     width: captureWindow.width
                     height: captureWindow.height
@@ -145,10 +238,40 @@ Scope {
                     Image {
                         id: frozenScreen
                         anchors.fill: parent
-                        source: "file://" + root.frozenImagePath
+                        source: root.frozenImagePath !== "" ? ("file://" + root.frozenImagePath) : ""
                         fillMode: Image.PreserveAspectFit
                         smooth: true
                         cache: false
+                        asynchronous: false // Force synchronous loading for reliability
+
+                        onStatusChanged: {
+                            if (status === Image.Loading) {
+                                root.debugLog("Loading frozen screen image...");
+                            } else if (status === Image.Ready) {
+                                const loadTime = ((Date.now() - root.captureStartTime) / 1000).toFixed(1);
+                                root.debugLog("Frozen screen image ready (" + loadTime + "s total)");
+                                root.freezeImageReady = true;
+
+                                // Wait for shrink animation to complete before allowing interaction
+                                uiReadyTimer.start();
+                            } else if (status === Image.Error) {
+                                root.debugLog("ERROR: Failed to load frozen screen image!");
+                                captureWindow.closeWithAnimation();
+                            }
+                        }
+                    }
+
+                    // Timer to ensure UI is fully ready after animations
+                    Timer {
+                        id: uiReadyTimer
+                        interval: Appearance.animation.medium + 50 // Animation duration + small buffer
+                        repeat: false
+                        onTriggered: {
+                            captureWindow.uiReady = true;
+                            captureWindow.uiReadyTime = Date.now();
+                            const readyTime = ((Date.now() - root.captureStartTime) / 1000).toFixed(1);
+                            root.debugLog("UI ready for interaction (" + readyTime + "s total)");
+                        }
                     }
 
                     Item {
@@ -156,10 +279,38 @@ Scope {
                         anchors.fill: parent
                         visible: (selectionArea.hasSelection || selectionArea.isSelecting) && captureWindow.isRegionMode
 
-                        Rectangle { x: 0; y: 0; width: parent.width; height: selectionArea.selectionY; color: "black"; opacity: 0.5 }
-                        Rectangle { x: 0; y: selectionArea.selectionY + selectionArea.selectionHeight; width: parent.width; height: parent.height - (selectionArea.selectionY + selectionArea.selectionHeight); color: "black"; opacity: 0.5 }
-                        Rectangle { x: 0; y: selectionArea.selectionY; width: selectionArea.selectionX; height: selectionArea.selectionHeight; color: "black"; opacity: 0.5 }
-                        Rectangle { x: selectionArea.selectionX + selectionArea.selectionWidth; y: selectionArea.selectionY; width: parent.width - (selectionArea.selectionX + selectionArea.selectionWidth); height: selectionArea.selectionHeight; color: "black"; opacity: 0.5 }
+                        Rectangle {
+                            x: 0
+                            y: 0
+                            width: parent.width
+                            height: selectionArea.selectionY
+                            color: "black"
+                            opacity: 0.5
+                        }
+                        Rectangle {
+                            x: 0
+                            y: selectionArea.selectionY + selectionArea.selectionHeight
+                            width: parent.width
+                            height: parent.height - (selectionArea.selectionY + selectionArea.selectionHeight)
+                            color: "black"
+                            opacity: 0.5
+                        }
+                        Rectangle {
+                            x: 0
+                            y: selectionArea.selectionY
+                            width: selectionArea.selectionX
+                            height: selectionArea.selectionHeight
+                            color: "black"
+                            opacity: 0.5
+                        }
+                        Rectangle {
+                            x: selectionArea.selectionX + selectionArea.selectionWidth
+                            y: selectionArea.selectionY
+                            width: parent.width - (selectionArea.selectionX + selectionArea.selectionWidth)
+                            height: selectionArea.selectionHeight
+                            color: "black"
+                            opacity: 0.5
+                        }
                     }
 
                     Rectangle {
@@ -190,17 +341,14 @@ Scope {
                             color: Appearance.colors.m3on_surface
                             property real scaleX: screenContainer.width / captureWindow.width
                             property real scaleY: screenContainer.height / captureWindow.height
-                            text: Math.floor(selectionArea.selectionX / innerText.scaleX) + ", " +
-                                  Math.floor(selectionArea.selectionY / innerText.scaleY) + " " +
-                                  Math.floor(selectionArea.selectionWidth / innerText.scaleX) + "x" +
-                                  Math.floor(selectionArea.selectionHeight / innerText.scaleY)
+                            text: Math.floor(selectionArea.selectionX / innerText.scaleX) + ", " + Math.floor(selectionArea.selectionY / innerText.scaleY) + " " + Math.floor(selectionArea.selectionWidth / innerText.scaleX) + "x" + Math.floor(selectionArea.selectionHeight / innerText.scaleY)
                         }
                     }
 
                     MouseArea {
                         id: selectionArea
                         anchors.fill: parent
-                        enabled: captureWindow.isRegionMode
+                        enabled: captureWindow.isRegionMode && captureWindow.uiReady
 
                         property real startX: 0
                         property real startY: 0
@@ -219,53 +367,62 @@ Scope {
                         property real selectionWidth: selectionWidthPercent * parent.width
                         property real selectionHeight: selectionHeightPercent * parent.height
 
-                        onPressed: (mouse) => {
-                            startX = Math.max(0, Math.min(mouse.x, width))
-                            startY = Math.max(0, Math.min(mouse.y, height))
-                            endX = startX
-                            endY = startY
-                            isSelecting = true
-                            hasSelection = false
+                        onPressed: mouse => {
+                            if (!captureWindow.uiReady) {
+                                root.debugLog("Selection blocked: UI not ready");
+                                return;
+                            }
+
+                            startX = Math.max(0, Math.min(mouse.x, width));
+                            startY = Math.max(0, Math.min(mouse.y, height));
+                            endX = startX;
+                            endY = startY;
+                            isSelecting = true;
+                            hasSelection = false;
+                            root.debugLog("Selection started at " + Math.floor(startX) + "," + Math.floor(startY));
                         }
 
-                        onPositionChanged: (mouse) => {
+                        onPositionChanged: mouse => {
                             if (isSelecting) {
-                                endX = Math.max(0, Math.min(mouse.x, width))
-                                endY = Math.max(0, Math.min(mouse.y, height))
-                                selectionXPercent = Math.min(startX, endX) / width
-                                selectionYPercent = Math.min(startY, endY) / height
-                                selectionWidthPercent = Math.abs(endX - startX) / width
-                                selectionHeightPercent = Math.abs(endY - startY) / height
+                                endX = Math.max(0, Math.min(mouse.x, width));
+                                endY = Math.max(0, Math.min(mouse.y, height));
+                                selectionXPercent = Math.min(startX, endX) / width;
+                                selectionYPercent = Math.min(startY, endY) / height;
+                                selectionWidthPercent = Math.abs(endX - startX) / width;
+                                selectionHeightPercent = Math.abs(endY - startY) / height;
                             }
                         }
 
-                        onReleased: (mouse) => {
+                        onReleased: mouse => {
                             if (isSelecting) {
-                                endX = Math.max(0, Math.min(mouse.x, width))
-                                endY = Math.max(0, Math.min(mouse.y, height))
-                                isSelecting = false
+                                endX = Math.max(0, Math.min(mouse.x, width));
+                                endY = Math.max(0, Math.min(mouse.y, height));
+                                isSelecting = false;
 
-                                const pixelWidth = Math.abs(endX - startX)
-                                const pixelHeight = Math.abs(endY - startY)
-                                hasSelection = pixelWidth > 5 && pixelHeight > 5
+                                const pixelWidth = Math.abs(endX - startX);
+                                const pixelHeight = Math.abs(endY - startY);
+                                hasSelection = pixelWidth > 5 && pixelHeight > 5;
 
                                 if (hasSelection) {
-                                    selectionXPercent = Math.min(startX, endX) / width
-                                    selectionYPercent = Math.min(startY, endY) / height
-                                    selectionWidthPercent = pixelWidth / width
-                                    selectionHeightPercent = pixelHeight / height
+                                    selectionXPercent = Math.min(startX, endX) / width;
+                                    selectionYPercent = Math.min(startY, endY) / height;
+                                    selectionWidthPercent = pixelWidth / width;
+                                    selectionHeightPercent = pixelHeight / height;
 
-                                    root.selectedRegion = Qt.rect(
-                                        Math.min(startX, endX) * captureWindow.screen.width / width,
-                                        Math.min(startY, endY) * captureWindow.screen.height / height,
-                                        pixelWidth * captureWindow.screen.width / width,
-                                        pixelHeight * captureWindow.screen.height / height
-                                    )
+                                    const screenScaleX = captureWindow.screen.width / width;
+                                    const screenScaleY = captureWindow.screen.height / height;
 
-                                    captureWindow.captureRegion()
+                                    root.selectedRegion = Qt.rect(Math.min(startX, endX) * screenScaleX, Math.min(startY, endY) * screenScaleY, pixelWidth * screenScaleX, pixelHeight * screenScaleY);
+
+                                    root.debugLog("Selection completed: " + Math.floor(pixelWidth) + "x" + Math.floor(pixelHeight) + " pixels");
+
+                                    captureWindow.captureRegion();
                                 } else {
-                                    Quickshell.execDetached({ command: [] })
-                                    captureWindow.closeWithAnimation()
+                                    root.debugLog("Selection too small (" + Math.floor(pixelWidth) + "x" + Math.floor(pixelHeight) + "), canceling");
+                                    Quickshell.execDetached({
+                                        command: []
+                                    });
+                                    captureWindow.closeWithAnimation();
                                 }
                             }
                         }
@@ -273,27 +430,94 @@ Scope {
 
                     ParallelAnimation {
                         id: shrinkAnim
-                        running: captureWindow.visible && !captureWindow.isClosing && captureWindow.width > 0 && captureWindow.height > 0
-                        NumberAnimation { target: wallpaper; property: "scale"; from: wallpaper.scale; to: wallpaper.scale + 0.05; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
-                        NumberAnimation { target: screenContainer; property: "width"; from: captureWindow.width; to: captureWindow.width * 0.8; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
-                        NumberAnimation { target: screenContainer; property: "height"; from: captureWindow.height; to: captureWindow.height * 0.8; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+                        running: captureWindow.visible && !captureWindow.isClosing && captureWindow.width > 0 && captureWindow.height > 0 && root.freezeImageReady
+
+                        onRunningChanged: {
+                            if (running) {
+                                root.debugLog("Starting shrink animation");
+                            }
+                        }
+
+                        NumberAnimation {
+                            target: wallpaper
+                            property: "scale"
+                            from: wallpaper.scale
+                            to: wallpaper.scale + 0.05
+                            duration: Appearance.animation.medium
+                            easing.type: Appearance.animation.easing
+                        }
+                        NumberAnimation {
+                            target: screenContainer
+                            property: "width"
+                            from: captureWindow.width
+                            to: captureWindow.width * 0.8
+                            duration: Appearance.animation.medium
+                            easing.type: Appearance.animation.easing
+                        }
+                        NumberAnimation {
+                            target: screenContainer
+                            property: "height"
+                            from: captureWindow.height
+                            to: captureWindow.height * 0.8
+                            duration: Appearance.animation.medium
+                            easing.type: Appearance.animation.easing
+                        }
                     }
 
                     ParallelAnimation {
                         id: zoomInAnim
-                        NumberAnimation { target: wallpaper; property: "scale"; from: wallpaper.scale; to: wallpaper.scale - 0.05; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
-                        NumberAnimation { target: screenContainer; property: "width"; to: captureWindow.width; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
-                        NumberAnimation { target: screenContainer; property: "height"; to: captureWindow.height; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
 
-                        NumberAnimation { target: darkerItem; property: "opacity"; from: darkerItem.opacity; to: 0; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
-                        NumberAnimation { target: outlineItem; property: "opacity"; from: outlineItem.opacity; to: 0; duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+                        onStarted: {
+                            root.debugLog("Starting zoom-in animation");
+                        }
+
+                        NumberAnimation {
+                            target: wallpaper
+                            property: "scale"
+                            from: wallpaper.scale
+                            to: wallpaper.scale - 0.05
+                            duration: Appearance.animation.medium
+                            easing.type: Appearance.animation.easing
+                        }
+                        NumberAnimation {
+                            target: screenContainer
+                            property: "width"
+                            to: captureWindow.width
+                            duration: Appearance.animation.medium
+                            easing.type: Appearance.animation.easing
+                        }
+                        NumberAnimation {
+                            target: screenContainer
+                            property: "height"
+                            to: captureWindow.height
+                            duration: Appearance.animation.medium
+                            easing.type: Appearance.animation.easing
+                        }
+
+                        NumberAnimation {
+                            target: darkerItem
+                            property: "opacity"
+                            from: darkerItem.opacity
+                            to: 0
+                            duration: Appearance.animation.medium
+                            easing.type: Appearance.animation.easing
+                        }
+                        NumberAnimation {
+                            target: outlineItem
+                            property: "opacity"
+                            from: outlineItem.opacity
+                            to: 0
+                            duration: Appearance.animation.medium
+                            easing.type: Appearance.animation.easing
+                        }
 
                         onFinished: {
-                            root.active = false
+                            root.debugLog("Close animation completed");
+                            root.active = false;
                             if (root.lastReported !== "") {
                                 Quickshell.execDetached({
                                     command: ["whisker", "notify", "Screenshot taken", "Saved to " + root.lastReported]
-                                })
+                                });
                             }
                         }
                     }
@@ -305,14 +529,22 @@ Scope {
                 windows: [captureWindow]
             }
 
-            onVisibleChanged: if (visible) grab.active = true
+            onVisibleChanged: {
+                if (visible) {
+                    root.debugLog("Capture window visible, activating focus grab");
+                    grab.active = true;
+                }
+            }
 
             Connections {
                 target: grab
                 function onActiveChanged() {
                     if (!grab.active && !captureWindow.isClosing) {
-                        Quickshell.execDetached({ command: [] })
-                        captureWindow.closeWithAnimation()
+                        root.debugLog("Focus lost, closing capture window");
+                        Quickshell.execDetached({
+                            command: []
+                        });
+                        captureWindow.closeWithAnimation();
                     }
                 }
             }

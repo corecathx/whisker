@@ -17,8 +17,20 @@ Scope {
     property bool opened: false
     property var menuStack: []
     property var currentMenu: null
-
     property var commands: Commands.commands
+
+    property var sortedApps: []
+
+    Component.onCompleted: {
+        sortedApps = DesktopEntries.applications.values.slice().sort((a, b) => a.name.localeCompare(b.name, Qt.locale().name));
+    }
+
+    Connections {
+        target: DesktopEntries.applications
+        function onValuesChanged() {
+            sortedApps = DesktopEntries.applications.values.slice().sort((a, b) => a.name.localeCompare(b.name, Qt.locale().name));
+        }
+    }
 
     function getMatchedCommand(query) {
         const trimmed = query.trim();
@@ -157,24 +169,23 @@ Scope {
                 }
 
                 Keys.onPressed: {
-                    const visibleItems = getVisibleItems();
-
                     if (event.key === Qt.Key_Down) {
                         event.accepted = true;
-                        if (visibleItems.length > 0) {
-                            selectedIndex = (selectedIndex + 1) % visibleItems.length;
-                            scrollToSelected(visibleItems);
+                        if (listView.count > 0) {
+                            selectedIndex = (selectedIndex + 1) % listView.count;
+                            listView.currentIndex = selectedIndex;
                         }
                     } else if (event.key === Qt.Key_Up) {
                         event.accepted = true;
-                        if (visibleItems.length > 0) {
-                            selectedIndex = (selectedIndex - 1 + visibleItems.length) % visibleItems.length;
-                            scrollToSelected(visibleItems);
+                        if (listView.count > 0) {
+                            selectedIndex = (selectedIndex - 1 + listView.count) % listView.count;
+                            listView.currentIndex = selectedIndex;
                         }
                     } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                         event.accepted = true;
-                        if (selectedIndex < visibleItems.length) {
-                            handleItemClick(visibleItems[selectedIndex].itemData);
+                        if (selectedIndex < listView.count) {
+                            const itemData = listView.model[selectedIndex];
+                            handleItemClick(itemData);
                         }
                     } else if (event.key === Qt.Key_Escape) {
                         event.accepted = true;
@@ -196,7 +207,7 @@ Scope {
                 function handleItemClick(itemData) {
                     if (itemData.execute) {
                         itemData.execute();
-                        if (itemData.icon.startsWith('whisker:')) {
+                        if (itemData.icon && itemData.icon.startsWith('whisker:')) {
                             console.log(`${itemData.name} is a whisker command, no action has taken`);
                         } else {
                             console.log(`${itemData.name} is not a whisker command, closing launcher`);
@@ -210,41 +221,12 @@ Scope {
                     }
                 }
 
-                function getVisibleItems() {
-                    let items = [];
-                    for (let i = 0; i < appRepeater.count; i++) {
-                        const item = appRepeater.itemAt(i);
-                        if (item && item.visible)
-                            items.push(item);
-                    }
-                    return items;
-                }
-
-                function scrollToSelected(visibleItems) {
-                    if (selectedIndex < 0 || selectedIndex >= visibleItems.length)
-                        return;
-                    const item = visibleItems[selectedIndex];
-                    const itemTop = item.y;
-                    const itemBottom = item.y + item.height;
-                    const viewTop = listFlick.contentY;
-                    const viewBottom = listFlick.contentY + listFlick.height;
-
-                    if (itemBottom > viewBottom) {
-                        listFlick.contentY = itemBottom - listFlick.height;
-                    } else if (itemTop < viewTop) {
-                        listFlick.contentY = itemTop;
-                    }
-
-                    for (let i = 0; i < visibleItems.length; i++)
-                        visibleItems[i].selected = (i === selectedIndex);
-                }
-
                 Rectangle {
                     id: bgRectangle
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: listFlick.height + searchField.height + breadcrumbArea.height + 60
+                    height: listView.height + searchField.height + breadcrumbArea.height + 60
                     color: Appearance.panel_color
                     radius: 20
 
@@ -303,157 +285,138 @@ Scope {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: breadcrumbArea.bottom
-                    height: listFlick.height - (searchField.implicitHeight - 20)
+                    height: listView.height - (searchField.implicitHeight - 20)
                     anchors.leftMargin: 20
                     anchors.topMargin: breadcrumbArea.visible ? 50 : 50
                     anchors.bottomMargin: 20
                     anchors.rightMargin: 20
 
-                    Flickable {
-                        id: listFlick
+                    ListView {
+                        id: listView
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
-                        contentWidth: width
-                        contentHeight: column.implicitHeight
                         clip: true
-                        height: Math.min(column.implicitHeight, window.implicitHeight - 140)
+                        height: Math.min(contentHeight, window.implicitHeight - 140)
                         interactive: contentHeight > height
+                        spacing: 10
 
-                        Behavior on contentY {
-                            NumberAnimation {
-                                duration: Appearance.animation.fast
-                                easing.type: Appearance.animation.easing
+                        // only render visible items + some buffer
+                        cacheBuffer: 300
+
+                        // smooth scrolling
+                        highlightFollowsCurrentItem: true
+                        highlightMoveDuration: Appearance.animation.fast
+
+                        model: {
+                            let query = searchField.text.trim();
+
+                            if (currentMenu !== null) {
+                                return currentMenu;
+                            }
+
+                            const matchedCmd = getMatchedCommand(query);
+                            if (matchedCmd) {
+                                if (matchedCmd.mode === "inline") {
+                                    const result = matchedCmd.exec(query);
+                                    return [
+                                        {
+                                            name: matchedCmd.name,
+                                            comment: String(result),
+                                            icon: "whisker:" + matchedCmd.icon,
+                                            execute: function () {
+                                                if (matchedCmd.onExecute) {
+                                                    matchedCmd.onExecute(query);
+                                                }
+                                                root.opened = false;
+                                            }
+                                        }
+                                    ];
+                                } else if (matchedCmd.mode === "menu") {
+                                    return currentMenu || [];
+                                }
+                            }
+
+                            const suggestions = getCommandSuggestions(query);
+                            if (query.startsWith("/") && suggestions.length > 0) {
+                                return suggestions.map(cmd => ({
+                                            name: cmd.trigger,
+                                            comment: cmd.comment,
+                                            icon: "whisker:" + cmd.icon,
+                                            execute: function () {
+                                                if (cmd.mode === "menu") {
+                                                    executeCommand(cmd, cmd.trigger);
+                                                } else if (cmd.mode === "direct") {
+                                                    cmd.exec(cmd.trigger);
+                                                    root.opened = false;
+                                                } else {
+                                                    searchField.text = cmd.trigger + " ";
+                                                }
+                                            }
+                                        }));
+                            }
+
+                            // filter apps based on search
+                            if (query === "") {
+                                return sortedApps;
+                            }
+
+                            let filtered = [];
+                            for (let i = 0; i < sortedApps.length; i++) {
+                                const app = sortedApps[i];
+                                if (fuzzyMatch(query, app.name + " " + (app.comment || "") + " " + (app.execString || ""))) {
+                                    filtered.push(app);
+                                }
+                            }
+                            return filtered;
+                        }
+
+                        delegate: LauncherItem {
+                            required property var modelData
+                            required property int index
+
+                            itemData: modelData
+                            width: listView.width
+                            selected: listView.currentIndex === index
+
+                            onClicked: {
+                                mainContainer.handleItemClick(modelData);
                             }
                         }
 
-                        Column {
-                            id: column
-                            width: parent.width
-                            spacing: 10
+                        // empty state
+                        footer: Item {
+                            width: listView.width
+                            height: listView.count === 0 && searchField.text.trim() !== "" ? 200 : 0
+                            visible: height > 0
 
-                            Repeater {
-                                id: appRepeater
-                                model: {
-                                    let query = searchField.text.trim();
+                            RowLayout {
+                                anchors.centerIn: parent
+                                spacing: 20
 
-                                    if (currentMenu !== null) {
-                                        return currentMenu;
-                                    }
-
-                                    const matchedCmd = getMatchedCommand(query);
-                                    if (matchedCmd) {
-                                        if (matchedCmd.mode === "inline") {
-                                            const result = matchedCmd.exec(query);
-                                            return [
-                                                {
-                                                    name: matchedCmd.name,
-                                                    comment: String(result),
-                                                    icon: "whisker:" + matchedCmd.icon,
-                                                    execute: function () {
-                                                        if (matchedCmd.onExecute) {
-                                                            matchedCmd.onExecute(query);
-                                                        }
-                                                        root.opened = false;
-                                                    }
-                                                }
-                                            ];
-                                        } else if (matchedCmd.mode === "menu") {
-                                            return currentMenu || [];
-                                        }
-                                    }
-
-                                    const suggestions = getCommandSuggestions(query);
-                                    if (query.startsWith("/") && suggestions.length > 0) {
-                                        return suggestions.map(cmd => ({
-                                                    name: cmd.trigger,
-                                                    comment: cmd.comment,
-                                                    icon: "whisker:" + cmd.icon,
-                                                    execute: function () {
-                                                        if (cmd.mode === "menu") {
-                                                            executeCommand(cmd, cmd.trigger);
-                                                        } else if (cmd.mode === "direct") {
-                                                            cmd.exec(cmd.trigger);
-                                                            root.opened = false;
-                                                        } else {
-                                                            searchField.text = cmd.trigger + " ";
-                                                        }
-                                                    }
-                                                }));
-                                    }
-
-                                    let appsArray = DesktopEntries.applications.values.slice().sort((a, b) => a.name.localeCompare(b.name, Qt.locale().name));
-                                    return appsArray;
-                                }
-
-                                delegate: LauncherItem {
-                                    itemData: modelData
-                                    width: parent.width
-
-                                    visible: {
-                                        if (currentMenu !== null)
-                                            return true;
-
-                                        const query = searchField.text.trim();
-                                        if (query === "")
-                                            return true;
-                                        if (query.startsWith("/"))
-                                            return true;
-
-                                        return fuzzyMatch(query, modelData.name + " " + (modelData.comment || "") + " " + (modelData.execString || ""));
-                                    }
-
-                                    onClicked: {
-                                        mainContainer.handleItemClick(modelData);
+                                Image {
+                                    source: Utils.getPath("images/nothing-found.png")
+                                    sourceSize: Qt.size(150, 150)
+                                    smooth: true
+                                    Layout.alignment: Qt.AlignVCenter
+                                    layer.enabled: true
+                                    layer.effect: MultiEffect {
+                                        colorization: 1.0
+                                        colorizationColor: Appearance.colors.m3on_surface_variant
                                     }
                                 }
-                            }
 
-                            Item {
-                                width: parent.width
-                                height: 200
-                                visible: {
-                                    if (currentMenu !== null)
-                                        return false;
-                                    if (searchField.text.trim() === "")
-                                        return false;
-
-                                    for (let i = 0; i < appRepeater.count; i++) {
-                                        const item = appRepeater.itemAt(i);
-                                        if (item && item.visible)
-                                            return false;
+                                ColumnLayout {
+                                    StyledText {
+                                        text: "Nothing found."
+                                        font.pixelSize: 28
+                                        font.bold: true
+                                        color: Appearance.colors.m3on_surface_variant
                                     }
-                                    return true;
-                                }
-
-                                RowLayout {
-                                    anchors.centerIn: parent
-                                    spacing: 20
-
-                                    Image {
-                                        source: Utils.getPath("images/nothing-found.png")
-                                        sourceSize: Qt.size(150, 150)
-                                        smooth: true
-                                        Layout.alignment: Qt.AlignVCenter
-                                        layer.enabled: true
-                                        layer.effect: MultiEffect {
-                                            colorization: 1.0
-                                            colorizationColor: Appearance.colors.m3on_surface_variant
-                                        }
-                                    }
-
-                                    ColumnLayout {
-                                        StyledText {
-                                            text: "Nothing found."
-                                            font.pixelSize: 28
-                                            font.bold: true
-                                            color: Appearance.colors.m3on_surface_variant
-                                        }
-                                        StyledText {
-                                            text: "Try a different search"
-                                            font.pixelSize: 14
-                                            color: Appearance.colors.m3on_surface_variant
-                                        }
+                                    StyledText {
+                                        text: "Try a different search"
+                                        font.pixelSize: 14
+                                        color: Appearance.colors.m3on_surface_variant
                                     }
                                 }
                             }
@@ -476,7 +439,8 @@ Scope {
                     onTextChanged: {
                         if (currentMenu === null) {
                             selectedIndex = 0;
-                            mainContainer.scrollToSelected(mainContainer.getVisibleItems());
+                            listView.currentIndex = 0;
+                            listView.positionViewAtBeginning();
                         }
                     }
                 }

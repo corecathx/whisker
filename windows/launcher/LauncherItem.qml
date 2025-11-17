@@ -1,17 +1,16 @@
-
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Widgets
 import qs.modules
 import qs.components
 import qs.preferences
 
 Item {
     id: itemRoot
-
     property var itemData
     property bool selected: false
-    signal clicked()
+    signal clicked
 
     width: parent.width
     height: 60
@@ -20,13 +19,7 @@ Item {
         id: appItem
         anchors.fill: parent
         radius: 20
-        color: selected || mouseArea.containsMouse
-            ? Appearance.colors.m3surface_container_low
-            : Appearance.colors.m3surface
-
-        Behavior on color {
-            ColorAnimation { duration: 200; easing.type: Appearance.animation.easing }
-        }
+        color: selected || mouseArea.containsMouse ? Appearance.colors.m3surface_container_low : Appearance.colors.m3surface
 
         MouseArea {
             id: mouseArea
@@ -41,20 +34,18 @@ Item {
             anchors.leftMargin: 20
             spacing: 20
 
-            Image {
+            IconImage {
                 id: appicon
                 asynchronous: true
-                cache: true
                 source: {
                     if (itemData.icon && itemData.icon.startsWith("whisker:"))
-                        return ""
-                    return Quickshell.iconPath(itemData.icon || "", true)
+                        return "";
+                    return Quickshell.iconPath(itemData.icon || "", true);
                 }
                 visible: source != ""
-                fillMode: Image.PreserveAspectCrop
-                smooth: true
-                sourceSize.width: 30
-                sourceSize.height: 30
+                smooth: false
+                Layout.preferredWidth: 30
+                Layout.preferredHeight: 30
                 Layout.alignment: Qt.AlignVCenter
             }
 
@@ -62,8 +53,8 @@ Item {
                 visible: appicon.source == ""
                 icon: {
                     if (itemData.icon && itemData.icon.startsWith("whisker:"))
-                        return itemData.icon.replace("whisker:", "")
-                    return "terminal"
+                        return itemData.icon.replace("whisker:", "");
+                    return "terminal";
                 }
                 font.pixelSize: 30
                 color: Appearance.colors.m3on_surface
@@ -82,6 +73,7 @@ Item {
                     Layout.fillWidth: true
                     elide: Text.ElideRight
                 }
+
                 StyledText {
                     visible: text !== ""
                     text: itemData.comment || ""
