@@ -21,6 +21,7 @@ import qs.windows.power
 import qs.windows.cliphist
 import qs.services
 import qs.windows.stats
+import qs.windows.overlays
 import qs.preferences
 
 ShellRoot {
@@ -56,4 +57,6 @@ ShellRoot {
     PolkitPrompt {}
     PowerPrompt {}
     Cliphist {}
+
+    OverlayWrapper {}
 }

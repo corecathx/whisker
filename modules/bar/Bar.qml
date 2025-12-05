@@ -21,7 +21,7 @@ Scope {
             id: window
             property var modelData
             screen: modelData
-            property bool shouldShow: !Preferences.bar.autoHide && !Hyprland.focusedWorkspace.hasFullscreen
+            property bool shouldShow: !Preferences.bar.autoHide// && !Hyprland.focusedWorkspace.hasFullscreen
             property bool isAnimating: false
 
             exclusionMode: {
@@ -91,18 +91,18 @@ Scope {
             Connections {
                 target: Preferences.bar
                 function onAutoHideChanged() {
-                    shouldShow = !Preferences.bar.autoHide && !Hyprland.focusedWorkspace.hasFullscreen;
+                    shouldShow = !Preferences.bar.autoHide// && !Hyprland.focusedWorkspace.hasFullscreen;
                 }
             }
 
-            Connections {
-                target: Hyprland.focusedWorkspace
-                function onHasFullscreenChanged() {
-                    if (!Preferences.bar.autoHide) {
-                        shouldShow = !Hyprland.focusedWorkspace.hasFullscreen;
-                    }
-                }
-            }
+            // Connections {
+            //     target: Hyprland.focusedWorkspace
+            //     function onHasFullscreenChanged() {
+            //         if (!Preferences.bar.autoHide) {
+            //             shouldShow = !Hyprland.focusedWorkspace.hasFullscreen;
+            //         }
+            //     }
+            // }
 
             Item {
                 id: barItem

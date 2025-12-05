@@ -7,83 +7,73 @@ import qs.components
 import qs.modules
 import qs.preferences
 import qs.services
-
 import qs.windows.quickpanel
 
 Item {
     id: root
+
     property bool verticalMode: false
     implicitWidth: verticalMode ? 32 : 50
     implicitHeight: verticalMode ? 60 : 25
+
     visible: Power.laptop
 
-    property var low_battery_level: 15
+    property int lowBatteryLevel: 15
     property int notifiedLevel: -1
-    property string battery: Power.batteries.length > 0
-        ? ((Power.percentage * 100).toFixed(1)) + ""
-        : "0%"
+
+    property real pct: Power.batteries.length > 0 ? Power.percentage*100 : 0
+    property string pctText: Math.floor(pct) + "%"
 
     property color batteryColor: {
-        if (!Power.onBattery) {
-            return Appearance.colors.m3primary;
-        }
-        if (Power.percentage < 0.2) {
-            return Appearance.colors.m3error;
-        }
-        if (Power.percentage < 0.5) {
-            return Appearance.colors.m3secondary;
-        }
+        if (!Power.onBattery) return Appearance.colors.m3primary;
+        if (pct < 20) return Appearance.colors.m3error;
+        if (pct < 50) return Appearance.colors.m3secondary;
         return Appearance.colors.m3primary;
     }
 
+    property string icon: !Power.onBattery ? "bolt" : ""
+
     function isLowBattery() {
-        return parseFloat(root.battery) < root.low_battery_level;
+        return pct < lowBatteryLevel;
     }
 
-    // Notifications for battery levels
+    function clampPercent(x) {
+        return Math.max(0, Math.min(100, x)) / 100;
+    }
+
     Connections {
         target: Power
+
         function onPercentageChanged() {
             if (!Power.onBattery)
                 return;
 
-            const pct = Math.floor(Power.percentage * 100);
-            if (pct === notifiedLevel)
-                return;
+            const p = Math.floor(pct);
+            if (p === notifiedLevel) return;
 
-            if (pct <= 5 && notifiedLevel > 5) {
+            if (p <= 5 && notifiedLevel > 5) {
                 notifiedLevel = 5;
-                Quickshell.execDetached({
-                    command: ['notify-send', 'Battery critically low', 'Emergency shutdown imminent unless plugged in.']
-                });
-            } else if (pct <= low_battery_level && notifiedLevel > low_battery_level) {
-                notifiedLevel = low_battery_level;
-                Quickshell.execDetached({
-                    command: ['notify-send', 'Battery very low', 'Please plug in your charger now.']
-                });
-            } else if (pct <= 20 && notifiedLevel > 20) {
+                notify("Battery critically low", "Emergency shutdown imminent unless plugged in.");
+            } else if (p <= lowBatteryLevel && notifiedLevel > lowBatteryLevel) {
+                notifiedLevel = lowBatteryLevel;
+                notify("Battery very low", "Please plug in your charger now.");
+            } else if (p <= 20 && notifiedLevel > 20) {
                 notifiedLevel = 20;
-                Quickshell.execDetached({
-                    command: ['notify-send', 'Low battery', 'Consider plugging in your charger.']
-                });
+                notify("Low battery", "Consider plugging in your charger.");
             }
+        }
+
+        function notify(title, body) {
+            Quickshell.execDetached({
+                command: ["notify-send", title, body]
+            });
         }
     }
 
-    property string icon: {
-        if (!Power.onBattery) return "bolt";
-        return "";
-    }
-
-    ClippingRectangle {
-        id: background
-        anchors.fill: parent
-        radius: 100
-        color: Colors.opacify(batteryColor, 0.2)
+    Component {
+        id: batteryDisplay
 
         GridLayout {
-            id: textLayer
-            anchors.centerIn: parent
             columns: root.verticalMode ? 1 : 2
             rows: root.verticalMode ? 2 : 1
             rowSpacing: root.verticalMode ? 2 : 0
@@ -91,92 +81,89 @@ Item {
 
             MaterialIcon {
                 icon: root.icon
-                font.pixelSize: root.verticalMode ? 14 : 16
-                color: batteryColor
+                font.pixelSize: root.verticalMode ? 14 : 14
                 Layout.alignment: Qt.AlignHCenter
+                color: iconColor
             }
 
             StyledText {
-                id: batteryText
-                text: root.battery
+                text: root.pctText
                 font.pixelSize: root.verticalMode ? 11 : 12
-                color: batteryColor
-                font.bold: root.isLowBattery()
+                font.family: "Outfit Medium"
                 Layout.alignment: Qt.AlignHCenter
+                color: labelColor
             }
+        }
+    }
+
+    ClippingRectangle {
+        id: background
+        anchors.fill: parent
+        radius: 100
+        color: Colors.opacify(root.batteryColor, 0.2)
+
+        Loader {
+            x: (root.width - width) / 2
+            y: (root.height - height) / 2
+            sourceComponent: batteryDisplay
+            property color iconColor: root.batteryColor
+            property color labelColor: root.batteryColor
         }
 
         Rectangle {
             id: bar
             clip: true
-            anchors.top: verticalMode ? undefined : parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: verticalMode ? parent.right : undefined
-            width: verticalMode ? root.width : root.width * Math.min(Math.max(parseFloat(battery), 0), 100) / 100
-            height: verticalMode ? root.height * Math.min(Math.max(parseFloat(battery), 0), 100) / 100 : root.height
-            color: batteryColor
+
+            width: verticalMode ? parent.width : parent.width * root.clampPercent(root.pct)
+            height: verticalMode ? parent.height * root.clampPercent(root.pct) : parent.height
+            color: root.batteryColor
 
             Behavior on width {
                 NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
             }
+            Behavior on height {
+                NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing }
+            }
 
-            GridLayout {
-                id: textLayer2
-                columns: root.verticalMode ? 1 : 2
-                rows: root.verticalMode ? 2 : 1
-                rowSpacing: root.verticalMode ? 2 : 0
-                columnSpacing: root.verticalMode ? 0 : 2
-                x: (root.implicitWidth - width) / 2
-                y: (root.implicitHeight - height) / 2
-
-                MaterialIcon {
-                    icon: root.icon
-                    font.pixelSize: root.verticalMode ? 14 : 16
-                    color: Appearance.colors.m3surface
-                    Layout.alignment: Qt.AlignHCenter
-                }
-
-                StyledText {
-                    text: root.battery
-                    font.pixelSize: root.verticalMode ? 11 : 12
-                    color: Appearance.colors.m3surface
-                    Layout.alignment: Qt.AlignHCenter
-                }
+            Loader {
+                x: (root.width - width) / 2
+                y: (root.height - height) / 2
+                sourceComponent: batteryDisplay
+                property color iconColor: Appearance.colors.m3surface
+                property color labelColor: Appearance.colors.m3surface
             }
         }
     }
-        MouseArea {
+
+    MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked: {
-            Quickshell.execDetached({
-                command: ['whisker', 'ipc', 'settings', 'open', 'power']
-            })
-        }
+
+        onClicked: Quickshell.execDetached({
+            command: ["whisker", "ipc", "settings", "open", "power"]
+        })
     }
 
-    HoverHandler {
-        id: hover
-    }
+    HoverHandler { id: hover }
 
     StyledPopout {
         hoverTarget: hover
         hCenterOnItem: true
         interactable: true
+
         Component {
             Item {
                 implicitWidth: 250
-                implicitHeight: contentColumn.height + 24
+                implicitHeight: content.height + 24
 
                 ColumnLayout {
-                    id: contentColumn
+                    id: content
                     anchors.centerIn: parent
                     width: parent.width - 24
                     spacing: 12
 
                     StyledText {
-                        text: "Batteries - " + (Power.percentage*100).toFixed(1) + "%"
+                        text: "Batteries - " + root.pct.toFixed(1) + "%"
                         font.pixelSize: 16
                         font.bold: true
                         color: Appearance.colors.m3on_surface
@@ -184,13 +171,14 @@ Item {
 
                     Repeater {
                         model: Power.batteries
+
                         delegate: ColumnLayout {
                             spacing: 8
                             Layout.fillWidth: true
 
                             RowLayout {
-                                spacing: 6
                                 Layout.fillWidth: true
+                                spacing: 6
 
                                 StyledText {
                                     text: "Battery " + (index + 1)
@@ -210,13 +198,13 @@ Item {
                                 Layout.fillWidth: true
                                 height: 10
                                 radius: 5
-                                color: Colors.opacify(batteryColor, 0.2)
+                                color: Colors.opacify(root.batteryColor, 0.2)
 
                                 Rectangle {
                                     width: parent.width * modelData.percentage
                                     height: parent.height
                                     radius: 5
-                                    color: batteryColor
+                                    color: root.batteryColor
 
                                     Behavior on width {
                                         NumberAnimation {
@@ -249,12 +237,9 @@ Item {
                         }
                     }
 
-                    ExpPowerProfile {
-                        showText: false
-                    }
+                    ExpPowerProfile { showText: false }
                 }
             }
         }
     }
-
 }

@@ -58,6 +58,12 @@ BaseMenu {
             description: "Shows general information about the system (FPS, CPU Usage, and Memory Usage)"
             prefField: "misc.showStatsOverlay"
         }
+
+        SwitchOption {
+            title: "Activate Linux Overlay"
+            description: "Displays a parody \"Activate Linux\" watermark, similar to the Windows activation message."
+            prefField: "misc.activateLinuxOverlay"
+        }
     }
 
     component Divider: Rectangle {

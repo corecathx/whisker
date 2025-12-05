@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Widgets
 import qs.modules
 import qs.components
+import qs.preferences
 
 Item {
     anchors.fill: parent
@@ -64,6 +65,7 @@ Item {
                     onClicked: {
                         let index = Math.floor(Math.random() * meowSounds.length)
                         meowSounds[index].play()
+                        Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', 'misc.clickerCount', Preferences.misc.clickerCount + 1] });
                     }
                 }
             }
@@ -115,6 +117,22 @@ Item {
         }
     }
 
+    Rectangle {
+        color: Appearance.colors.m3secondary
+        anchors.bottom: parent.bottom;
+        anchors.right: parent.right;
+        anchors.margins: 40;
+        implicitHeight: counterText.height + 20
+        implicitWidth: implicitHeight
+        radius: 10
+        StyledText {
+            id: counterText
+            text: Preferences.misc.clickerCount
+            font.pixelSize: 16
+            color: Appearance.colors.m3on_secondary
+            anchors.centerIn: parent
+        }
+    }
     StyledText {
         text: "Cat sounds from Minecraft"
         font.pixelSize: 12

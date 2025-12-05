@@ -71,10 +71,9 @@ Scope {
         }
     }
 
-    // Timeout timer for freeze process
     Timer {
         id: freezeTimeout
-        interval: 10000 // 10 second timeout
+        interval: 10000
         running: freezeProcess.running
         repeat: false
         onTriggered: {
@@ -242,7 +241,7 @@ Scope {
                         fillMode: Image.PreserveAspectFit
                         smooth: true
                         cache: false
-                        asynchronous: false // Force synchronous loading for reliability
+                        asynchronous: false
 
                         onStatusChanged: {
                             if (status === Image.Loading) {
@@ -252,7 +251,6 @@ Scope {
                                 root.debugLog("Frozen screen image ready (" + loadTime + "s total)");
                                 root.freezeImageReady = true;
 
-                                // Wait for shrink animation to complete before allowing interaction
                                 uiReadyTimer.start();
                             } else if (status === Image.Error) {
                                 root.debugLog("ERROR: Failed to load frozen screen image!");
@@ -261,10 +259,9 @@ Scope {
                         }
                     }
 
-                    // Timer to ensure UI is fully ready after animations
                     Timer {
                         id: uiReadyTimer
-                        interval: Appearance.animation.medium + 50 // Animation duration + small buffer
+                        interval: Appearance.animation.medium + 50
                         repeat: false
                         onTriggered: {
                             captureWindow.uiReady = true;

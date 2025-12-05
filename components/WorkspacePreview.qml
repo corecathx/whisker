@@ -252,7 +252,6 @@ Item {
                                 onPositionChanged: function (mouse) {
                                     if (!dragging && (Math.abs(mouse.x - pressX) > 5 || Math.abs(mouse.y - pressY) > 5)) {
                                         dragging = true;
-                                        //windowMouseArea.drag.active = true
                                     }
                                 }
 

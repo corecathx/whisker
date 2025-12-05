@@ -285,7 +285,7 @@ Scope {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: breadcrumbArea.bottom
-                    height: listView.height - (searchField.implicitHeight - 20)
+                    height: listView.height - (searchField.height - 20)
                     anchors.leftMargin: 20
                     anchors.topMargin: breadcrumbArea.visible ? 50 : 50
                     anchors.bottomMargin: 20
@@ -301,10 +301,8 @@ Scope {
                         interactive: contentHeight > height
                         spacing: 10
 
-                        // only render visible items + some buffer
                         cacheBuffer: 300
 
-                        // smooth scrolling
                         highlightFollowsCurrentItem: true
                         highlightMoveDuration: Appearance.animation.fast
 
@@ -356,7 +354,6 @@ Scope {
                                         }));
                             }
 
-                            // filter apps based on search
                             if (query === "") {
                                 return sortedApps;
                             }
@@ -430,6 +427,7 @@ Scope {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
                     anchors.margins: 20
+                    filled: false
 
                     icon: currentMenu !== null ? "" : "search"
                     placeholder: currentMenu !== null ? "Select an option..." : "Search or type /"

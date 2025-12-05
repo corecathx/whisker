@@ -12,6 +12,22 @@ Item {
     implicitWidth: container.width
     implicitHeight: container.height
 
+    property bool isWhiskerWindow: {
+        let cls = Hyprland.activeToplevel?.lastIpcObject.class ?? "";
+        let title = Hyprland.activeToplevel?.lastIpcObject.title ?? "";
+        return cls === "org.quickshell" && title.toLowerCase().startsWith("whisker");
+    }
+
+    property string actualClass: isWhiskerWindow ? "whisker-shell" : (Hyprland.activeToplevel?.lastIpcObject.class ?? "")
+    property string actualTitle: {
+        if (isWhiskerWindow) {
+            let title = Hyprland.activeToplevel?.lastIpcObject.title ?? "";
+            return title.replace(/^whisker\s*/i, "");
+        }
+        return Hyprland.activeToplevel?.lastIpcObject.title ?? "";
+    }
+    property string actualIcon: isWhiskerWindow ? Appearance.whiskerIcon : Utils.getAppIcon(actualClass)
+
     RowLayout {
         id: container
         spacing: 10
@@ -22,7 +38,7 @@ Item {
                 if (!Hyprland.currentWorkspace.hasWindow) {
                     return "file://" + Quickshell.shellDir + "/logo.png";
                 }
-                return Utils.getAppIcon(Hyprland.activeToplevel?.lastIpcObject.class ?? "");
+                return root.actualIcon;
             }
             implicitWidth: 20
             implicitHeight: 20
@@ -36,7 +52,7 @@ Item {
                     if (!Hyprland.currentWorkspace.hasWindow) {
                         return "Desktop";
                     }
-                    return Utils.truncateText(Hyprland.activeToplevel?.lastIpcObject.class, 30);
+                    return Utils.truncateText(root.actualClass, 30);
                 }
                 font.pixelSize: 10
                 color: Appearance.colors.m3on_surface
@@ -49,7 +65,7 @@ Item {
                     if (!Hyprland.currentWorkspace.hasWindow) {
                         return "Workspace " + Hyprland.activeWsId;
                     }
-                    return Utils.truncateText(Hyprland.activeToplevel?.lastIpcObject.title ?? "", 35);
+                    return Utils.truncateText(root.actualTitle, 35);
                 }
                 font.pixelSize: 12
                 font.family: "Outfit Medium"
@@ -72,14 +88,10 @@ Item {
                 IconImage {
                     implicitWidth: 25
                     implicitHeight: 25
-                    source: {
-                        return Utils.getAppIcon(Hyprland.activeToplevel?.lastIpcObject.class ?? "");
-                    }
+                    source: root.actualIcon
                 }
                 StyledText {
-                    text: {
-                        return Utils.truncateText(Hyprland.activeToplevel?.lastIpcObject.title ?? "", 40);
-                    }
+                    text: Utils.truncateText(root.actualTitle, 40)
                     font.pixelSize: 14
                     color: Appearance.colors.m3on_surface
                     verticalAlignment: Text.AlignVCenter

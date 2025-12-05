@@ -11,6 +11,7 @@ Singleton {
             Pipewire.defaultAudioSource,
             Pipewire.defaultAudioSink,
             Pipewire.nodes,
+            Pipewire.links
         ]
     }
 

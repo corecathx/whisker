@@ -12,7 +12,7 @@ Item {
     property string label: "Select option"
     property var model: ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5"]
     property int currentIndex: -1
-    property string currentText: currentIndex >= 0 ? model[currentIndex] : ""
+    property string currentText: currentIndex >= 0 ? model[currentIndex] ?? "" : ""
     property bool enabled: true
 
     signal selectedIndexChanged(int index)
@@ -23,7 +23,7 @@ Item {
         color: "transparent"
         border.color: dropdown.activeFocus ? Appearance.colors.m3primary : Appearance.colors.m3outline
         border.width: dropdown.activeFocus ? 2 : 1
-        radius: 10
+        radius: 4
 
         Behavior on border.color {
             ColorAnimation {
@@ -52,7 +52,6 @@ Item {
                 }
             }
 
-            // State overlay for hover/press
             Rectangle {
                 anchors.fill: parent
                 radius: parent.parent.radius
@@ -87,7 +86,6 @@ Item {
                 verticalAlignment: Text.AlignVCenter
             }
 
-            // Dropdown icon
             MaterialIcon {
                 id: dropdownIcon
                 Layout.alignment: Qt.AlignVCenter
@@ -117,7 +115,7 @@ Item {
 
             background: Rectangle {
                 color: Appearance.colors.m3surface_container
-                radius: 10
+                radius: 4
                 border.color: Appearance.colors.m3outline
                 border.width: 1
                 layer.enabled: true

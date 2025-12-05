@@ -19,7 +19,6 @@ Control {
   signal clicked
   signal toggled(bool checked)
 
-  // --- state colors ---
   property bool usePrimary: secondary ? false : checked
   property color base_bg: usePrimary
     ? Appearance.colors.m3primary
@@ -28,7 +27,6 @@ Control {
     ? Appearance.colors.m3on_primary
     : Appearance.colors.m3on_secondary_container
 
-  // Disabled colors
   property color disabled_bg: Colors.opacify(base_bg, 0.4)
   property color disabled_fg: Colors.opacify(base_fg, 0.4)
 
@@ -44,7 +42,7 @@ Control {
   property color text_color: !root.enabled ? disabled_fg : base_fg
 
   implicitWidth: (label.text === "" && icon !== "")
-      ? implicitHeight   // square if only icon
+      ? implicitHeight
       : row.implicitWidth + implicitHeight
   implicitHeight: 40
 

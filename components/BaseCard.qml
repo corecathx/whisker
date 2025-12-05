@@ -7,15 +7,13 @@ Item {
     anchors.left: parent.left
     anchors.right: parent.right
     implicitHeight: wpBG.implicitHeight
-
     default property alias content: contentArea.data
     property alias color: wpBG.color
     property alias radius: wpBG.radius
-    property int cardMargin: 20
-    property int cardSpacing: 10
-    property int verticalPadding: 40
+    property int cardMargin: 16
+    property int cardSpacing: 8
+    property int verticalPadding: 32
     property bool useAnims: false
-
     Rectangle {
         id: wpBG
         anchors.left: parent.left
@@ -34,9 +32,8 @@ Item {
                 easing.type: Appearance.animation.easing
             }
         }
-        radius: 20
+        radius: 18
     }
-
     ColumnLayout {
         id: contentArea
         anchors.top: wpBG.top

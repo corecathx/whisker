@@ -97,10 +97,14 @@ BaseMenu {
             description: "Whether to automatically hide the bar\nTo show your bar again, move your cursor to the edge of your bar's position."
             prefField: "bar.autoHide"
         }
+        SwitchOption { title: "Render Overview Windows"; description: "Render window previews in the overview"; prefField: "misc.renderOverviewWindows" }
+
     }
 
     component SwitchOption: RowLayout {
         id: main
+        opacity: visible ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
         property string title: "Title"
         property string description: "Description"
         property string prefField: ''

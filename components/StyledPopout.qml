@@ -137,7 +137,7 @@ LazyLoader {
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             hoverEnabled: false
 
-            onPressed: {
+            onPressed: mouse => {
                 if (!containerHoverHandler.containsMouse && root.isVisible) {
                     root.hide();
                 }
@@ -210,7 +210,7 @@ LazyLoader {
             }
 
             opacity: root.startAnim ? 1 : 0
-            scale: root.startAnim ? 1 : 0.9
+            scale: root.interactable ? 1 : root.startAnim ? 1 : 0.9
 
             layer.enabled: true
             layer.effect: MultiEffect {
@@ -228,18 +228,21 @@ LazyLoader {
                 }
             }
             Behavior on scale {
+                enabled: root.interactable
                 NumberAnimation {
                     duration: Appearance.animation.fast
                     easing.type: Appearance.animation.easing
                 }
             }
             Behavior on implicitWidth {
+                enabled: root.interactable
                 NumberAnimation {
                     duration: Appearance.animation.fast
                     easing.type: Appearance.animation.easing
                 }
             }
             Behavior on implicitHeight {
+                enabled: root.interactable
                 NumberAnimation {
                     duration: Appearance.animation.fast
                     easing.type: Appearance.animation.easing

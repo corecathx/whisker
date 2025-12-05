@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Services.Pipewire
 import Quickshell.Io
 import Quickshell.Widgets
 import QtQuick
@@ -6,6 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Window
 import qs.modules
+import qs.services
 import qs.components
 
 Scope {
@@ -19,17 +21,22 @@ Scope {
 
         property int counter: 0
 
-        ColumnLayout {
-            anchors.centerIn: parent
-            StyledDropDown {
-                width: 280
-                label: "Choose a fruit"
-                model: ["Apple", "Banana", "Orange", "Mango", "Strawberry"]
 
-                onSelectedIndexChanged: (index) => {
-                    console.log("Selected:", model[index])
+        ColumnLayout {
+            Repeater {
+                model: Pipewire.links
+                delegate: StyledText {
+                    text: modelData.source.description +" >> "+ modelData.target.name + (!modelData.source.isStream && !modelData.source.isSink && modelData.target.isStream ? " ?? IS AN APP!!!!!" : "")
+                    font.family: ""
                 }
             }
+        }
+
+        StyledText {
+            anchors.bottom: parent.bottom
+            text: JSON.stringify(Privacy.microphoneApps)
+            width: parent.width
+            wrapMode: Text.WordWrap
         }
     }
 }

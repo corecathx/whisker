@@ -45,7 +45,7 @@ Item {
                 anchors.centerIn: parent
                 spacing: 10
 
-                Audio {}
+                AudioTray {}
                 NetworkTray {}
                 BluetoothTray {}
             }

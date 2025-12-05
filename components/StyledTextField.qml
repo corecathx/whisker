@@ -2,62 +2,108 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
 import qs.modules
-
 TextField {
     id: control
-
     property string icon: ""
-    property color iconColor: Appearance.colors.m3on_surface
-    property string placeholder: "Type here..."
-    property real iconSize: 25
-
-    property alias radius: background.radius
-    property alias topLeftRadius: background.topLeftRadius
-    property alias topRightRadius: background.topRightRadius
-    property alias bottomLeftRadius: background.bottomLeftRadius
-    property alias bottomRightRadius: background.bottomRightRadius
-    property color backgroundColor: Appearance.colors.m3surface_container
-
+    property color iconColor: Appearance.colors.m3on_surface_variant
+    property string placeholder: ""
+    property real iconSize: 24
+    property alias radius: bg.radius
+    property alias topLeftRadius: bg.topLeftRadius
+    property alias topRightRadius: bg.topRightRadius
+    property alias bottomLeftRadius: bg.bottomLeftRadius
+    property alias bottomRightRadius: bg.bottomRightRadius
+    property color backgroundColor: filled
+        ? Appearance.colors.m3surface_container_high
+        : "transparent"
     property int fieldPadding: 20
-    property int iconSpacing: 15
+    property int iconSpacing: 14
     property int iconMargin: 20
-
+    property bool filled: true
     width: parent ? parent.width - 40 : 300
     placeholderText: placeholder
-    font.pixelSize: 16
-    padding: fieldPadding
     leftPadding: icon !== "" ? iconSize + iconSpacing + iconMargin : fieldPadding
-
+    padding: fieldPadding
+    verticalAlignment: TextInput.AlignVCenter
     color: Appearance.colors.m3on_surface
-    placeholderTextColor: Colors.opacify(Appearance.colors.m3on_surface, 0.4)
+    placeholderTextColor: Appearance.colors.m3on_surface_variant
+    font.family: "Outfit"
+    font.pixelSize: 14
     cursorVisible: control.focus
-
     cursorDelegate: Rectangle {
         width: 2
-        radius: 1
-        color: Appearance.colors.m3on_surface
+        color: Appearance.colors.m3primary
+        visible: control.focus
         SequentialAnimation on opacity {
             loops: Animation.Infinite
-            NumberAnimation { from: 1; to: 0; duration: 2000; easing.type: Appearance.animation.easing }
-            NumberAnimation { from: 0; to: 1; duration: 2000; easing.type: Appearance.animation.easing }
+            running: control.focus
+            NumberAnimation { from: 1; to: 0; duration: Appearance.animation.slow*2 }
+            NumberAnimation { from: 0; to: 1; duration: Appearance.animation.slow*2 }
         }
     }
+    background: Item {
 
-    background: Rectangle {
-        id: background
-        radius: 20
-        color: control.backgroundColor
-        border.width: 0
-        Behavior on color { ColorAnimation { duration: 180 } }
+        Rectangle {
+            id: bg
+            anchors.fill: parent
+            radius: 4
+            color: control.backgroundColor
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                color: {
+                    if (control.activeFocus)
+                        return Colors.opacify(Appearance.colors.m3primary, 0.08)
+                    if (control.hovered)
+                        return Colors.opacify(Appearance.colors.m3on_surface, 0.08)
+                    return "transparent"
+                }
+                Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
+            }
+        }
+        Rectangle {
+            id: indicator
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: control.activeFocus ? 2 : 1
+            color: {
+                if (control.activeFocus)
+                    return Appearance.colors.m3primary
+                if (control.hovered)
+                    return Appearance.colors.m3on_surface
+                return Appearance.colors.m3on_surface_variant
+            }
+            visible: filled
+            Behavior on height { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
+            Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
+        }
+        Rectangle {
+            id: outline
+            anchors.fill: parent
+            radius: bg.radius
+            color: "transparent"
+            border.width: control.activeFocus ? 2 : 1
+            border.color: {
+                if (control.activeFocus)
+                    return Appearance.colors.m3primary
+                if (control.hovered)
+                    return Appearance.colors.m3on_surface
+                return Appearance.colors.m3outline
+            }
+            visible: !filled
+            Behavior on border.width { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
+            Behavior on border.color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
+        }
     }
-
     MaterialIcon {
         icon: control.icon
         anchors.left: parent.left
-        anchors.leftMargin: control.icon !== "" ? control.iconMargin : 0
+        anchors.leftMargin: icon !== "" ? iconMargin : 0
         anchors.verticalCenter: parent.verticalCenter
         font.pixelSize: control.iconSize
         color: control.iconColor
         visible: control.icon !== ""
+        Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
     }
 }

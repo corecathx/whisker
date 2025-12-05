@@ -180,7 +180,6 @@ Rectangle {
             }
         }
 
-        // Control buttons with better spacing
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
             spacing: 8

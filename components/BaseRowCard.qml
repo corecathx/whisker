@@ -7,14 +7,12 @@ Item {
     anchors.left: parent.left
     anchors.right: parent.right
     implicitHeight: wpBG.implicitHeight
-
     default property alias content: contentArea.data
     property alias color: wpBG.color
-
-    property int cardMargin: 20
-    property int cardSpacing: 10
-    property int radius: 20
-    property int verticalPadding: 40
+    property int cardMargin: 16
+    property int cardSpacing: 8
+    property int radius: 18
+    property int verticalPadding: 32
 
     Rectangle {
         id: wpBG

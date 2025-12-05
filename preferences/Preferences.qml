@@ -6,14 +6,11 @@ import qs.modules
 
 Singleton {
     id: root
-
     signal reloaded
 
-    // internal
     property bool ready: false
     property bool spawnedWelcome: false
 
-    // configuration
     property QtObject bar: QtObject {
         property string position: "top"
         property bool small: false
@@ -38,15 +35,24 @@ Singleton {
         property bool translateLyrics: true
         property string lyricsLanguage: 'en'
         property bool showStatsOverlay: false
+        property bool activateLinuxOverlay: false
+        property int clickerCount: 0
+    }
+
+    property QtObject widgets: QtObject {
+        property bool showLyrics: true
+        property bool lyricsAsOverlay: false
+
+        property QtObject desktop: QtObject {
+            property bool clock: true
+            property bool player: false
+        }
     }
 
     onReloaded: {
         if (!root.misc.finishedSetup && !root.spawnedWelcome) {
-            console.log("what");
             root.spawnedWelcome = true;
-            Quickshell.execDetached({
-                command: ["whisker", "welcome"]
-            });
+            Quickshell.execDetached({ command: ["whisker", "welcome"] });
         }
     }
 
@@ -59,24 +65,26 @@ Singleton {
         id: exitProc
         command: ["whisker", "prefs", "--no-prompt"]
         running: true
-        stdout: StdioCollector {
-            onStreamFinished: fileView.reload()
+        stdout: StdioCollector { onStreamFinished: fileView.reload() }
+    }
+
+    function loadNested(target, obj) {
+        for (const [key, value] of Object.entries(obj)) {
+            if (!target.hasOwnProperty(key)) continue;
+
+            if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+                if (typeof target[key] === "object" && target[key] !== null) {
+                    loadNested(target[key], value);
+                }
+            } else {
+                target[key] = value;
+            }
         }
     }
 
     function load(content) {
         const parsed = JSON.parse(content);
-
-        for (const [name, value] of Object.entries(parsed)) {
-            if (root.hasOwnProperty(name)) {
-                if (typeof root[name] === "object" && value !== null)
-                    for (const [key, val] of Object.entries(value))
-                        root[name][key] = val;
-                else
-                    root[name] = value;
-            }
-        }
-
+        loadNested(root, parsed);
         root.ready = true;
         root.reloaded();
     }
@@ -85,20 +93,13 @@ Singleton {
         id: fileView
         path: Utils.getConfigRelativePath("preferences.json")
         watchChanges: true
-
         onFileChanged: {
-            console.log("Preferences updated.");
+            // console.log("Preferences updated.");
             fileView.reload();
         }
-
         onLoaded: root.load(text())
     }
 
-    function horizontalBar() {
-        return root.bar.position === "top" || root.bar.position === "bottom";
-    }
-
-    function verticalBar() {
-        return root.bar.position === "left" || root.bar.position === "right";
-    }
+    function horizontalBar() { return root.bar.position === "top" || root.bar.position === "bottom"; }
+    function verticalBar() { return root.bar.position === "left" || root.bar.position === "right"; }
 }

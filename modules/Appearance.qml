@@ -35,7 +35,7 @@ Singleton {
      * Path to the whisker (logo) icon.
      * @values string (file path)
      */
-    property string whiskerIcon: Utils.getPath("logo.png")
+    property string whiskerIcon: "file://"+Utils.getPath("logo.png")
 
     property real barSize: 44
     property M3Palette colors: M3Palette {}

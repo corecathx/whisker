@@ -21,7 +21,9 @@ BaseMenu {
                 font.bold: true
                 color: Appearance.colors.m3on_background
             }
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
+            }
             StyledSwitch {
                 id: powerSwitch
                 checked: Bluetooth.defaultAdapter?.enabled
@@ -46,7 +48,9 @@ BaseMenu {
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
                 }
             }
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
+            }
             StyledSwitch {
                 checked: Bluetooth.defaultAdapter?.discoverable
                 onToggled: Bluetooth.defaultAdapter.discoverable = checked
@@ -70,14 +74,15 @@ BaseMenu {
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
                 }
             }
-            Item { Layout.fillWidth: true }
+            Item {
+                Layout.fillWidth: true
+            }
             StyledSwitch {
                 checked: Bluetooth.defaultAdapter?.discovering
                 onToggled: Bluetooth.defaultAdapter.discovering = checked
             }
         }
     }
-
 
     BaseCard {
         visible: connectedDevices.count > 0
@@ -93,9 +98,7 @@ BaseMenu {
             model: Bluetooth.devices.filter(d => d.connected)
             delegate: BluetoothDeviceCard {
                 device: modelData
-                statusText: modelData.batteryAvailable
-                            ? "Connected, " + Math.floor(modelData.battery * 100) + "% left"
-                            : "Connected"
+                statusText: modelData.batteryAvailable ? "Connected, " + Math.floor(modelData.battery * 100) + "% left" : "Connected"
                 showDisconnect: true
                 showRemove: true
                 usePrimary: true
@@ -150,7 +153,7 @@ BaseMenu {
             width: parent.width
             height: 40
             StyledText {
-                anchors.centerIn: parent
+                Layout.alignment: Qt.AlignHCenter
                 text: "No new devices found"
                 font.pixelSize: 14
                 color: Colors.opacify(Appearance.colors.m3on_background, 0.6)

@@ -32,7 +32,7 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: {} // Prevent clicks from passing through
+        onClicked: {}
     }
 
     Rectangle {

@@ -1,4 +1,3 @@
-// Calendar.qml (fixed day-label alignment)
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -126,7 +125,6 @@ BaseCard {
             }
         }
 
-        // Calendar grid
         Grid {
             id: dayGrid
             columns: 7
@@ -136,7 +134,7 @@ BaseCard {
             Repeater {
                 model: root.generateMonthGrid(root.year, root.month)
                 Rectangle {
-                    width: Math.floor(dayGrid.width / 7)    // keep consistent with header
+                    width: Math.floor(dayGrid.width / 7)
                     height: width
                     radius: 20
                     color: modelData.isToday ? Appearance.colors.m3primary_container

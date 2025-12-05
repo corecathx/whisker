@@ -11,7 +11,7 @@ Scope {
     id: root
     PanelWindow {
         id: window
-        implicitWidth: 440
+        implicitWidth: 300
 
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.namespace: "whisker:osdpanel"
@@ -30,7 +30,7 @@ Scope {
         margins.left: Preferences.bar.position === "right" ? -10 : 0
 
         anchors.right: Preferences.bar.position !== "right"
-        margins.right: Preferences.bar.position !== "right" ? -10 : 0
+        margins.right: Preferences.bar.position !== "right" ? -10 : 10
 
         anchors.bottom: true
         margins.bottom: 10
@@ -45,9 +45,9 @@ Scope {
                 anchors.right: parent.right
                 anchors.left: parent.left
                 anchors.margins: 20
-                implicitHeight: contentWrapper.height > 0 ? contentWrapper.height + 20 : 0
+                implicitHeight: contentWrapper.height > 0 ? contentWrapper.height + 10 : 0
                 color: Appearance.panel_color
-                radius: 20
+                radius: 10
 
                 Behavior on implicitHeight {
                     NumberAnimation {
@@ -70,7 +70,8 @@ Scope {
                     anchors.top: bgRectangle.top
                     anchors.left: bgRectangle.left
                     anchors.right: bgRectangle.right
-                    anchors.topMargin: 10
+                    anchors.topMargin: 5
+                    spacing: 0
                     VolumeOsd {}
                     BrightnessOsd {}
                 }

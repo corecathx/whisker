@@ -85,12 +85,10 @@ Singleton {
                         active: (parts[2] && parts[2].length > 0)
                     }));
 
-                // Remove old ones
                 const destroyed = root.connections.filter(c => !vpnList.find(n => n.name === c.name));
                 for (const conn of destroyed)
                     root.connections.splice(root.connections.indexOf(conn), 1).forEach(n => n.destroy());
 
-                // Add/update new ones
                 for (const conn of vpnList) {
                     const match = root.connections.find(c => c.name === conn.name);
                     if (match) {
@@ -102,7 +100,7 @@ Singleton {
             }
         }
     }
-    
+
     Process {
         id: importProc
         stdout: StdioCollector { }

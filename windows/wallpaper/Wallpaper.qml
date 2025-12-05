@@ -21,7 +21,7 @@ PanelWindow {
     IpcHandler {
         target: "wallpaper"
         function reload() {
-            wallpaper.currentWallpaperChanged()
+            wallpaper.currentWallpaperChanged();
         }
     }
 
@@ -166,10 +166,6 @@ PanelWindow {
             return;
 
         var hasTiling = Hyprland.currentWorkspace.hasTilingWindow();
-
-    // For now, mpvpaper doesn't have easy pause/resume via command
-    // You could kill and restart processes, or use mpv IPC in the future
-    // This is a placeholder for future implementation
     }
 
     Item {
@@ -285,7 +281,7 @@ PanelWindow {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: Preferences.bar.position === "bottom" ? widgetShift : widgetOffset
-            visible: !Hyprland.currentWorkspace.hasTilingWindow() && (status === "FETCHING" || status === "LOADED")
+            visible: Preferences.widgets.showLyrics && !Preferences.widgets.lyricsAsOverlay && !Hyprland.currentWorkspace.hasTilingWindow() && (status === "FETCHING" || status === "LOADED")
         }
     }
 
@@ -317,6 +313,7 @@ PanelWindow {
             font.family: "Outfit ExtraBold"
             color: Appearance.colors.m3primary
             font.pixelSize: 72
+            visible: Preferences.widgets.desktop.clock
         }
 
         StyledText {
@@ -324,9 +321,11 @@ PanelWindow {
             color: Appearance.colors.m3primary
             font.pixelSize: 32
             font.bold: true
+            visible: Preferences.widgets.desktop.clock
         }
 
         PlayerDisplay {
+            visible: Preferences.widgets.desktop.player && !!Players.active
             Layout.topMargin: 20
             Layout.minimumWidth: 400
         }

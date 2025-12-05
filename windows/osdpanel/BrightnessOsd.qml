@@ -8,10 +8,8 @@ Item {
     id: root
     property bool shouldShowOsd: false
     Layout.fillWidth: true
-    Layout.leftMargin: 10
-    Layout.rightMargin: 10
     visible: shouldShowOsd
-    implicitHeight: 80
+    implicitHeight: 60
 
 	Connections {
         target: Brightness
@@ -55,13 +53,13 @@ Item {
         StyledText {
           color: Appearance.colors.m3on_background
           text: "Brightness - " + Math.round(Brightness.value * 100) + "%"
-          font.pixelSize: 14
+          font.pixelSize: 12
         }
 
         StyledSlider {
-          implicitHeight: 20
+          implicitHeight: 15
           value: Brightness.value*100
-          trackHeightDiff: 10
+          trackHeightDiff: 8
         }
       }
     }
