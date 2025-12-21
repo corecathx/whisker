@@ -25,6 +25,8 @@ Item {
 
         Rectangle {
             anchors.fill: parent
+            radius: Preferences.bar.floating ? 20 : 0
+
             color: !inLockScreen && Preferences.bar.keepOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
             Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
         }

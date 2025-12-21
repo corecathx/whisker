@@ -10,9 +10,8 @@ Item {
     id: root
     property bool inLockScreen: false
     implicitHeight: Appearance.barSize
-    anchors.fill: parent
     SingleCorner {
-        visible: !root.inLockScreen
+        visible: !root.inLockScreen && !Preferences.bar.floating
         anchors.left: barContainer.right
         cornerType: "cubic"
         cornerHeight: root.implicitHeight
@@ -32,7 +31,7 @@ Item {
     Item {
         id: barContainer
         implicitHeight: root.implicitHeight
-        width: Preferences.bar.small ? screen?.width - Preferences.bar.padding * 2 : parent?.width ?? 0
+        width: Preferences.bar.small ? screen?.width - Preferences.bar.padding * 2 - (Preferences.bar.floating ? 20 : 0) : parent?.width ?? 0
         clip: true
         Behavior on width {
             NumberAnimation {
@@ -44,6 +43,7 @@ Item {
 
         Rectangle {
             id: panelBackground
+            radius: Preferences.bar.floating ? 20 : 0
             anchors.fill: parent
             color: !inLockScreen && Preferences.bar.keepOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
             Behavior on color {
@@ -84,7 +84,7 @@ Item {
         }
     }
     SingleCorner {
-        visible: !root.inLockScreen
+        visible: !root.inLockScreen && !Preferences.bar.floating
         anchors.right: barContainer.left
         cornerType: "cubic"
         cornerHeight: root.implicitHeight

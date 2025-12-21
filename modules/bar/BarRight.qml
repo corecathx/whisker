@@ -66,7 +66,7 @@ Item {
 
         PrivacyIndicator {
             anchors.verticalCenter: parent.verticalCenter
-            visible: Preferences.bar.position === "top"
+            visible: Preferences.bar.position === "top" && Serv.Privacy.hasAnyActiveAccess
         }
     }
 }

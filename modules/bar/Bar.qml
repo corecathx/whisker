@@ -25,6 +25,8 @@ Scope {
             property bool isAnimating: false
 
             exclusionMode: {
+                if (Preferences.bar.autoHide)
+                    return ExclusionMode.Ignore
                 if (shouldShow)
                     return ExclusionMode.Auto;
                 return ExclusionMode.Ignore;
@@ -67,9 +69,8 @@ Scope {
                 left: Preferences.bar.position === 'left' || Preferences.horizontalBar()
                 right: Preferences.bar.position === 'right' || Preferences.horizontalBar()
             }
-
-            implicitHeight: barLoader.item ? barLoader.item.implicitHeight : 0
-            implicitWidth: barLoader.item ? barLoader.item.implicitWidth : 0
+            implicitHeight: barLoader.item ? barLoader.item.implicitHeight + (Preferences.bar.floating && Preferences.horizontalBar() ? 10 : 0) : 0
+            implicitWidth: barLoader.item ? barLoader.item.implicitWidth + (Preferences.bar.floating && Preferences.verticalBar() ? 10 : 0): 0
 
             function updateHoverState() {
                 if (!Preferences.bar.autoHide) {
@@ -107,6 +108,14 @@ Scope {
             Item {
                 id: barItem
                 anchors.fill: parent
+                anchors.margins: Preferences.bar.floating ? 10 : 0
+                anchors.leftMargin: Preferences.bar.floating && (Preferences.bar.position === "left" || Preferences.horizontalBar()) ? 10 : 0
+                anchors.rightMargin: Preferences.bar.floating && (Preferences.bar.position === "right" || Preferences.horizontalBar()) ? 10 : 0
+                anchors.bottomMargin: Preferences.bar.floating && (Preferences.bar.position === "bottom" || Preferences.verticalBar()) ? 10 : 0
+                anchors.topMargin: Preferences.bar.floating && (Preferences.bar.position === "top" || Preferences.verticalBar()) ? 10 : 0
+                Behavior on anchors.margins { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                Behavior on anchors.bottomMargin { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+                Behavior on anchors.topMargin { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
 
                 transform: Translate {
                     id: slideTransform
@@ -115,9 +124,9 @@ Scope {
                         if (!shouldShow) {
                             const pos = Preferences.bar.position.toLowerCase();
                             if (pos === 'left')
-                                return -barItem.width;
+                                return -window.width;
                             if (pos === 'right')
-                                return barItem.width;
+                                return window.width;
                         }
                         return 0;
                     }
@@ -126,9 +135,9 @@ Scope {
                         if (!shouldShow) {
                             const pos = Preferences.bar.position.toLowerCase();
                             if (pos === 'top')
-                                return -barItem.height;
+                                return -window.height;
                             if (pos === 'bottom')
-                                return barItem.height;
+                                return window.height;
                         }
                         return 0;
                     }
