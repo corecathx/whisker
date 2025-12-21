@@ -22,6 +22,7 @@ import qs.windows.cliphist
 import qs.services
 import qs.windows.stats
 import qs.windows.overlays
+import qs.windows.keybinds
 import qs.preferences
 
 ShellRoot {
@@ -59,4 +60,6 @@ ShellRoot {
     Cliphist {}
 
     OverlayWrapper {}
+
+    KeybindsListWindow {}
 }
