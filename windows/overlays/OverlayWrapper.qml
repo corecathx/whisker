@@ -36,11 +36,12 @@ Scope {
                     anchors.bottom: parent.bottom
                     anchors.margins: 50
                     anchors.rightMargin: 70
+                    visible: Preferences.misc.activateLinuxOverlay
                 }
 
                 Lyrics {
                     id: lyricsBox
-                    visible: Preferences.widgets.showLyrics && Preferences.widgets.lyricsAsOverlay
+                    visible: Preferences.widgets.showLyrics && Preferences.widgets.lyricsAsOverlay && (lyricsBox.status === "FETCHING" || lyricsBox.status === "LOADED")
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 40

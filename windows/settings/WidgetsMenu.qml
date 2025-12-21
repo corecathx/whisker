@@ -77,6 +77,27 @@ BaseMenu {
         }
     }
 
+    BaseCard {
+        ColumnLayout {
+            width: parent.width
+            spacing: 16
+
+            SectionTitle { icon: "tune"; text: "Misc" }
+            SwitchOption {
+                title: "Show Stats Overlay"
+                description: "Shows general information about the system (FPS, CPU Usage, and Memory Usage)"
+                prefField: "misc.showStatsOverlay"
+            }
+
+            SwitchOption {
+                title: "Activate Linux Overlay"
+                description: "Displays a parody \"Activate Linux\" watermark, similar to the Windows activation message."
+                prefField: "misc.activateLinuxOverlay"
+            }
+
+        }
+    }
+
     component SectionTitle: RowLayout {
         id: section
         property string icon: ""
