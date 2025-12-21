@@ -87,7 +87,7 @@ QtObject {
     }
 
     property Timer frAnim: Timer {
-        interval: 250
+        interval: 1000
         repeat: true
         running: !!Players.active && root.isPlaying
         onTriggered: Players.active?.positionChanged()
