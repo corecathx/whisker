@@ -100,9 +100,7 @@ Scope {
                             Layout.fillWidth: true
                             leftPadding: undefined
                             padding: 10
-                            radius: 10
-                            topRightRadius: 5
-                            bottomRightRadius: 5
+                            filled: false
                             enabled: !promptContainer.authenticating
                             placeholder: Polkit.flow.inputPrompt.substring(0, Polkit.flow.inputPrompt.length - 2)
                             echoMode: promptContainer.showPassword ? TextInput.Normal : TextInput.Password
