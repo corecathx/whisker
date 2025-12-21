@@ -21,7 +21,7 @@ PanelWindow {
 
     mask: Region {}
     WlrLayershell.layer: WlrLayer.Top
-    exclusionMode: Preferences.bar.small ? ExclusionMode.Ignore : ExclusionMode.Auto
+    exclusionMode: Preferences.bar.small || Preferences.bar.floating ? ExclusionMode.Ignore : ExclusionMode.Auto
 
     property int shadowSize: 20
     property color shadowColor: Colors.opacify(Appearance.colors.m3shadow, 0.5)
@@ -76,7 +76,7 @@ PanelWindow {
     Corners {
         cornerType: "inverted"
         cornerHeight: 20
-        color: Preferences.bar.small ? "black" : Appearance.colors.m3surface
+        color: Preferences.bar.small || Preferences.bar.floating ? "black" : Appearance.colors.m3surface
         corners: [0,1,2,3]
     }
 }
