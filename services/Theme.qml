@@ -31,7 +31,7 @@ Singleton {
         if (Utils.isVideo(Preferences.theme.wallpaper)) { // use whisker's color gen if it's a video.
             matugenProc.command = ['whisker', 'wallpaper', Preferences.theme.wallpaper, '--no-scheme-gen']
         } else {
-            matugenProc.command = ['matugen', 'image', Preferences.theme.wallpaper, '-m', (Preferences.theme.dark ? 'dark' : 'light'), '-t', "scheme-"+Preferences.theme.scheme]
+            matugenProc.command = ['matugen', 'image', Preferences.theme.wallpaper, '-m', (Preferences.theme.dark ? 'dark' : 'light'), '-t', "scheme-"+Preferences.theme.scheme, "--contrast", Preferences.theme.contrast]
         }
         matugenProc.running = true
         Appearance.reloadScheme("")

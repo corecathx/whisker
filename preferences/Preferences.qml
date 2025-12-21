@@ -24,6 +24,7 @@ Singleton {
         property string scheme: "tonal-spot"
         property bool useWallpaper: true
         property string wallpaper: ""
+        property real contrast: 0.0
     }
 
     property QtObject misc: QtObject {
