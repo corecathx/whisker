@@ -196,149 +196,165 @@ ShellRoot {
                     }
                     anchors.margins: 30
                     spacing: 20
-
                     ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 10
-                        visible: !root.showUserInput
-
-                        StyledText {
-                            text: "User"
-                            font.pixelSize: 14
-                            font.family: "Outfit Medium"
-                            color: Appearance.colors.m3on_surface_variant
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            top: parent.top
                         }
-
-                        StyledDropDown {
-                            Layout.fillWidth: true
-                            model: root.detectedUsers
-
-                            onSelectedIndexChanged: (index) => {
-                                usernameInput.text = root.detectedUsers[index]
-                                root.showUserInput = false
-                                passwordInput.forceActiveFocus()
-                            }
-                        }
-
-                        StyledButton {
-                            Layout.fillWidth: true
-                            text: "Other user"
-                            secondary: true
-                            onClicked: {
-                                root.showUserInput = true
-                                usernameInput.forceActiveFocus()
-                            }
-                        }
+                        spacing: 20
                     }
-
                     ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 10
-                        visible: root.showUserInput
-
-                        StyledText {
-                            text: "Username"
-                            font.pixelSize: 14
-                            font.family: "Outfit Medium"
-                            color: Appearance.colors.m3on_surface_variant
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            top: parent.top
                         }
+                        spacing: 20
 
-                        RowLayout {
+                        ColumnLayout {
                             Layout.fillWidth: true
                             spacing: 10
+                            visible: !root.showUserInput
 
-                            StyledButton {
-                                icon: "arrow_back"
-                                Layout.preferredWidth: 40
-                                Layout.preferredHeight: 40
-                                secondary: true
-                                onClicked: root.showUserInput = false
+                            StyledText {
+                                text: "User"
+                                font.pixelSize: 14
+                                font.family: "Outfit Medium"
+                                color: Appearance.colors.m3on_surface_variant
                             }
 
-                            ColumnLayout {
+                            StyledDropDown {
                                 Layout.fillWidth: true
-                                spacing: 10
-                                StyledTextField {
-                                    id: usernameInput
-                                    Layout.fillWidth: true
-                                    placeholder: "Enter username"
-                                    fieldPadding: 15
-                                    icon: "person"
-                                    filled: false
+                                model: root.detectedUsers
+
+                                onSelectedIndexChanged: (index) => {
+                                    usernameInput.text = root.detectedUsers[index]
+                                    root.showUserInput = false
+                                    passwordInput.forceActiveFocus()
+                                }
+                            }
+
+                            StyledButton {
+                                Layout.fillWidth: true
+                                text: "Other user"
+                                secondary: true
+                                onClicked: {
+                                    root.showUserInput = true
+                                    usernameInput.forceActiveFocus()
                                 }
                             }
                         }
-                    }
 
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 10
-                        visible: usernameInput.text.length > 0
-
-                        StyledText {
-                            text: "Password"
-                            font.pixelSize: 14
-                            font.family: "Outfit Medium"
-                            color: Appearance.colors.m3on_surface_variant
-                        }
-
-                        StyledTextField {
-                            id: passwordInput
+                        ColumnLayout {
                             Layout.fillWidth: true
-                            placeholder: "Enter password"
-                            icon: "lock"
-                            echoMode: TextField.Password
-                            fieldPadding: 15
-                            filled: false
+                            spacing: 10
+                            visible: root.showUserInput
 
-                            Keys.onReturnPressed: submitLogin()
-                        }
-                    }
+                            StyledText {
+                                text: "Username"
+                                font.pixelSize: 14
+                                font.family: "Outfit Medium"
+                                color: Appearance.colors.m3on_surface_variant
+                            }
 
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 12
-                        visible: usernameInput.text.length > 0
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 10
 
-                        StyledText {
-                            text: "Session"
-                            font.pixelSize: 13
-                            font.weight: Font.Medium
-                            color: Appearance.colors.m3on_surface_variant
-                        }
+                                StyledButton {
+                                    icon: "arrow_back"
+                                    Layout.preferredWidth: 40
+                                    Layout.preferredHeight: 40
+                                    secondary: true
+                                    onClicked: root.showUserInput = false
+                                }
 
-                        StyledDropDown {
-                            Layout.fillWidth: true
-                            model: root.detectedDEs
-                            currentIndex: root.selectedDE
-
-                            onSelectedIndexChanged: (index) => {
-                                root.selectedDE = index
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 10
+                                    StyledTextField {
+                                        id: usernameInput
+                                        Layout.fillWidth: true
+                                        placeholder: "Enter username"
+                                        fieldPadding: 15
+                                        icon: "person"
+                                        filled: false
+                                    }
+                                }
                             }
                         }
-                    }
 
-                    StyledText {
-                        id: statusText
-                        Layout.fillWidth: true
-                        font.pixelSize: 13
-                        color: statusText.text.includes("Failed") || statusText.text.includes("Error")
-                            ? Appearance.colors.m3error
-                            : Appearance.colors.m3primary
-                        wrapMode: Text.WordWrap
-                        visible: text !== ""
-                        horizontalAlignment: Text.AlignHCenter
-                    }
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+                            visible: usernameInput.text.length > 0
 
-                    StyledButton {
-                        id: loginButton
-                        Layout.fillWidth: true
-                        text: statusText.text === "" ? "Sign in" : statusText.text
-                        icon: statusText.text === "" ? "login" : ""
-                        visible: usernameInput.text.length > 0
+                            StyledText {
+                                text: "Password"
+                                font.pixelSize: 14
+                                font.family: "Outfit Medium"
+                                color: Appearance.colors.m3on_surface_variant
+                            }
 
-                        onClicked: submitLogin()
-                        enabled: statusText.text === "" || statusText.text.includes("Failed")
+                            StyledTextField {
+                                id: passwordInput
+                                Layout.fillWidth: true
+                                placeholder: "Enter password"
+                                icon: "lock"
+                                echoMode: TextField.Password
+                                fieldPadding: 15
+                                filled: false
+
+                                Keys.onReturnPressed: submitLogin()
+                            }
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 12
+                            visible: usernameInput.text.length > 0
+
+                            StyledText {
+                                text: "Session"
+                                font.pixelSize: 13
+                                font.weight: Font.Medium
+                                color: Appearance.colors.m3on_surface_variant
+                            }
+
+                            StyledDropDown {
+                                Layout.fillWidth: true
+                                model: root.detectedDEs
+                                currentIndex: root.selectedDE
+
+                                onSelectedIndexChanged: (index) => {
+                                    root.selectedDE = index
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            id: statusText
+                            Layout.fillWidth: true
+                            font.pixelSize: 13
+                            color: statusText.text.includes("Failed") || statusText.text.includes("Error")
+                                ? Appearance.colors.m3error
+                                : Appearance.colors.m3primary
+                            wrapMode: Text.WordWrap
+                            visible: text !== ""
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+
+                        StyledButton {
+                            id: loginButton
+                            Layout.fillWidth: true
+                            text: statusText.text === "" ? "Sign in" : statusText.text
+                            icon: statusText.text === "" ? "login" : ""
+                            visible: usernameInput.text.length > 0
+
+                            onClicked: submitLogin()
+                            enabled: statusText.text === "" || statusText.text.includes("Failed")
+                        }
                     }
                 }
             }
