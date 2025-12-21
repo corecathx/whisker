@@ -101,35 +101,4 @@ BaseMenu {
 
     }
 
-    component SwitchOption: RowLayout {
-        id: main
-        opacity: visible ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-        property string title: "Title"
-        property string description: "Description"
-        property string prefField: ''
-        ColumnLayout {
-            StyledText {
-                text: main.title
-                font.pixelSize: 16
-                color: Appearance.colors.m3on_background
-            }
-            StyledText {
-                text: main.description
-                font.pixelSize: 12
-                color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
-            }
-        }
-        Item {
-            Layout.fillWidth: true
-        }
-        StyledSwitch {
-            checked: Preferences[main.prefField.split('.')[0]][main.prefField.split('.')[1]]
-            onToggled: {
-                Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', prefField, checked]
-                })
-            }
-        }
-    }
 }

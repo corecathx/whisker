@@ -35,32 +35,22 @@ BaseMenu {
                 }
             }
         }
+    }
 
-
-        RowLayout {
-            ColumnLayout {
-                StyledText {
-                    text: "Dark mode"
-                    font.pixelSize: 16
-                    color: Appearance.colors.m3on_background
-                }
-                StyledText {
-                    text: "Whether to use dark color schemes."
-                    font.pixelSize: 12
-                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
-                }
-            }
-            Item {
-                Layout.fillWidth: true
-            }
-            StyledSwitch {
-                checked: Preferences.theme.dark
-                onToggled: {
-                    Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'theme.dark', checked]
-                    })
-                }
-            }
+    BaseCard {
+        SectionTitle { icon: "build"; text: "Configuration" }
+        SwitchOption {
+            title: "Dark mode"
+            description: "Whether to use dark color schemes."
+            prefField: "theme.dark"
+        }
+        SliderOption {
+            title: "Contrast"
+            description: "Set how contrast is the colors.\n(Colors need to be applied manually)"
+            prefField: "theme.contrast"
+            from: -1
+            to: 1
+            stepSize: 0.2
         }
     }
 }
