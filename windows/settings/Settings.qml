@@ -51,11 +51,11 @@ Scope {
                     { header: true, label: "Customization" },
                     { icon: "wallpaper", label: "Wallpaper", component: "WallpaperMenu" },
                     { icon: "palette", label: "Colors", component: "ColorsMenu" },
-                    { icon: "widgets", label: "Bar", component: "BarMenu" },
-                    { icon: "dashboard", label: "Widgets", component: "WidgetsMenu" },
-                    { icon: "tune", label: "Misc", component: "MiscMenu" },
+                    { icon: "horizontal_rule", label: "Bar", component: "BarMenu" },
+                    { icon: "widgets", label: "Widgets", component: "WidgetsMenu" },
+                    // { icon: "tune", label: "Misc", component: "MiscMenu" },
                     { header: true, label: "About" },
-                    { icon: "info", label: "System Info", component: "SystemMenu" },
+                    { icon: "info", label: "System", component: "SystemMenu" },
                     { icon: "help", label: "About", component: "AboutMenu" }
                 ];
                 var pageCounter = 0;

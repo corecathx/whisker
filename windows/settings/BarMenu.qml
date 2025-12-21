@@ -14,12 +14,12 @@ BaseMenu {
     description: "Adjust how the Bar panel behaves."
 
     BaseCard {
-        StyledText {
-            text: "Bar"
-            font.pixelSize: 20
-            font.bold: true
-            color: Appearance.colors.m3on_background
-        }
+        // StyledText {
+        //     text: "Bar"
+        //     font.pixelSize: 20
+        //     font.bold: true
+        //     color: Appearance.colors.m3on_background
+        // }
 
         ColumnLayout {
             StyledText {

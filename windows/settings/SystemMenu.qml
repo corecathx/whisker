@@ -5,6 +5,7 @@ import Quickshell.Io
 import qs.preferences
 import qs.components
 import qs.modules
+import qs.services
 
 BaseMenu {
     id: root
@@ -14,7 +15,6 @@ BaseMenu {
     property string hostname: ""
     property string kernel: ""
     property string os: ""
-    property string uptime: ""
     property string cpuModel: ""
     property int cpuCores: 0
     property string cpuUsage: "0"
@@ -47,7 +47,6 @@ BaseMenu {
         hostnameProc.running = true
         kernelProc.running = true
         osProc.running = true
-        uptimeProc.running = true
         cpuModelProc.running = true
         cpuCoresProc.running = true
         cpuFreqProc.running = true
@@ -105,14 +104,6 @@ BaseMenu {
         command: ["uname", "-m"]
         stdout: StdioCollector {
             onStreamFinished: root.architecture = text.trim()
-        }
-    }
-
-    Process {
-        id: uptimeProc
-        command: ["sh", "-c", "uptime -p | sed 's/up //'"]
-        stdout: StdioCollector {
-            onStreamFinished: root.uptime = text.trim()
         }
     }
 
@@ -351,7 +342,7 @@ BaseMenu {
 
             DetailItem {
                 label: "Uptime"
-                value: root.uptime || "Loading..."
+                value: Utils.formatSeconds(System.uptime) || "Loading..."
                 icon: "schedule"
             }
 
