@@ -43,7 +43,7 @@ PanelWindow {
         right: true
     }
     color: "transparent"
-    WlrLayershell.layer: WlrLayer.Bottom
+    WlrLayershell.layer: WlrLayer.Background
     WlrLayershell.namespace: "whisker:wallpaper"
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
