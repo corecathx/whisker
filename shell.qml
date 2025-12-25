@@ -51,6 +51,7 @@ ShellRoot {
         Theme.init();
         Audio.init();
         Brightness.init();
+        Lrclib.fetchLyrics();
     }
     // DevWindow {}
     //

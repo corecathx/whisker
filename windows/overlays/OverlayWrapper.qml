@@ -41,7 +41,7 @@ Scope {
 
                 Lyrics {
                     id: lyricsBox
-                    visible: Preferences.widgets.showLyrics && Preferences.widgets.lyricsAsOverlay && (lyricsBox.status === "FETCHING" || lyricsBox.status === "LOADED")
+                    visible: Preferences.widgets.showLyrics && Preferences.widgets.lyricsAsOverlay
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 40
