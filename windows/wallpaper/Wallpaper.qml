@@ -7,7 +7,6 @@ import Quickshell.Wayland
 import Quickshell.Io
 import qs.modules
 import qs.services
-import qs.providers
 import qs.preferences
 import qs.components
 import qs.components.effects
@@ -33,7 +32,7 @@ PanelWindow {
     property real screenOffset: 50
 
     property bool barIsShowing: !Preferences.bar.autoHide || Globals.isBarHovered
-    property real wallpaperShift: (Preferences.bar.autoHide && barIsShowing) ? widgetOffset * 0.6 : 0
+    property real wallpaperShift: (Preferences.bar.autoHide && barIsShowing) ? widgetOffset * 0.3 : 0
     property real widgetShift: barIsShowing ? widgetOffset + screenOffset : widgetOffset
 
     anchors {
@@ -170,36 +169,31 @@ PanelWindow {
 
     Item {
         id: wallpaperWrapper
-        clip: true
         anchors.fill: parent
 
-        anchors.leftMargin: Preferences.bar.position === "left" ? wallpaperShift : 0
-        anchors.rightMargin: Preferences.bar.position === "right" ? wallpaperShift : 0
-        anchors.topMargin: (Preferences.bar.position === "top" && !Preferences.bar.small) ? wallpaperShift : 0
-        anchors.bottomMargin: (Preferences.bar.position === "bottom" && !Preferences.bar.small) ? wallpaperShift : 0
+        transform: Translate {
+            x: {
+                if (Preferences.bar.position === "left") return wallpaperShift;
+                if (Preferences.bar.position === "right") return -wallpaperShift;
+                return 0;
+            }
+            y: {
+                if (Preferences.bar.position === "top") return wallpaperShift;
+                if (Preferences.bar.position === "bottom") return -wallpaperShift;
+                return 0;
+            }
 
-        Behavior on anchors.leftMargin {
-            NumberAnimation {
-                duration: Appearance.animation.medium
-                easing.type: Appearance.animation.easing
+            Behavior on x {
+                NumberAnimation {
+                    duration: Appearance.animation.medium
+                    easing.type: Appearance.animation.easing
+                }
             }
-        }
-        Behavior on anchors.rightMargin {
-            NumberAnimation {
-                duration: Appearance.animation.medium
-                easing.type: Appearance.animation.easing
-            }
-        }
-        Behavior on anchors.topMargin {
-            NumberAnimation {
-                duration: Appearance.animation.medium
-                easing.type: Appearance.animation.easing
-            }
-        }
-        Behavior on anchors.bottomMargin {
-            NumberAnimation {
-                duration: Appearance.animation.medium
-                easing.type: Appearance.animation.easing
+            Behavior on y {
+                NumberAnimation {
+                    duration: Appearance.animation.medium
+                    easing.type: Appearance.animation.easing
+                }
             }
         }
 
@@ -214,6 +208,8 @@ PanelWindow {
             visible: !isVideo
             opacity: 1
 
+            scale: Preferences.bar.autoHide ? 1.025 : 1
+            Behavior on scale { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
             Component.onCompleted: {
                 if (!isVideo)
                     source = currentWallpaper;
@@ -281,7 +277,7 @@ PanelWindow {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: Preferences.bar.position === "bottom" ? widgetShift : widgetOffset
-            visible: Preferences.widgets.showLyrics && !Preferences.widgets.lyricsAsOverlay && !Hyprland.currentWorkspace.hasTilingWindow() && (status === "FETCHING" || status === "LOADED")
+            visible: Preferences.widgets.showLyrics && !Preferences.widgets.lyricsAsOverlay && !Hyprland.currentWorkspace.hasTilingWindow()
         }
     }
 
