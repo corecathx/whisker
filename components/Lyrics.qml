@@ -1,38 +1,15 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Effects
-import qs.providers
 import qs.services
 import qs.modules
 
 Item {
     id: root
-    property alias status: lyrics.status
     width: content.implicitWidth + 40
     height: content.implicitHeight + 20
-    visible: (root.status === "FETCHING" || root.status === "LOADED")
-
-    Behavior on width {
-        NumberAnimation {
-            duration: Appearance.animation.medium
-            easing.type: Appearance.animation.easing
-        }
-    }
-    Behavior on height {
-        NumberAnimation {
-            duration: Appearance.animation.medium
-            easing.type: Appearance.animation.easing
-        }
-    }
-
-    LrclibProvider {
-        id: lyrics
-        currentArtist: Players.active?.trackArtist.replace(" - Topic", "") ?? ""
-        currentTrack: Players.active?.trackTitle ?? ""
-        currentPosition: (Players.active?.position ?? 0) * 1000
-        Component.onCompleted: fetchLyrics()
-    }
-
+    visible: Lrclib.status === "FETCHING" || Lrclib.status === "LOADED"
+    // Behavior on width { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+    // Behavior on height { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
     Rectangle {
         anchors.fill: parent
         color: Appearance.colors.m3surface
@@ -45,21 +22,16 @@ Item {
 
         LoadingIcon {
             Layout.alignment: Qt.AlignHCenter
-            visible: lyrics.status === "FETCHING"
+            visible: Lrclib.status === "FETCHING"
         }
 
         StyledText {
             id: mainLyric
-            visible: lyrics.status === "LOADED" && text !== ""
+            visible: Lrclib.status === "LOADED" && text !== ""
             Layout.alignment: Qt.AlignHCenter
             font.pixelSize: 24
             font.family: "Outfit SemiBold"
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: Appearance.animation.fast
-                    easing.type: Appearance.animation.easing
-                }
-            }
+            opacity: 0
         }
 
         StyledText {
@@ -67,47 +39,54 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             color: Appearance.colors.m3on_surface_variant
             font.pixelSize: 16
-            visible: lyrics.status === "LOADED" && text !== ""
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: Appearance.animation.fast
-                    easing.type: Appearance.animation.easing
-                }
-            }
+            visible: Lrclib.status === "LOADED" && text !== ""
+            opacity: 0
         }
     }
 
     Connections {
-        target: lyrics
+        target: Lrclib
         function onReady() {
-            root.updateLyrics();
+            updateLyrics();
         }
         function onCurrentLineIndexChanged() {
-            root.fadeOutAndUpdate();
+            updateLyrics();
         }
     }
 
+    Component.onCompleted: updateLyrics()
+
     function updateLyrics() {
-        const current = lyrics.currentLineIndex;
-        mainLyric.text = lyrics.lyricsData[current]?.text || "";
-        subLyric.text = lyrics.lyricsData[current]?.translation || "";
+        var idx = Lrclib.currentLineIndex;
+        if (idx >= 0 && idx < Lrclib.lyricsData.length) {
+            mainLyric.text = Lrclib.lyricsData[idx].text || "";
+            subLyric.text = Lrclib.lyricsData[idx].translation || "";
+            // fadeIn.restart();
+            mainLyric.opacity = 1
+            subLyric.opacity = 1
+        } else {
+            mainLyric.text = "";
+            subLyric.text = "";
+        }
     }
 
-    function fadeOutAndUpdate() {
-        mainLyric.opacity = 0;
-        subLyric.opacity = 0;
-        updateTimer.restart();
-    }
-
-    Timer {
-        id: updateTimer
-        interval: Appearance.animation.fast
-        onTriggered: {
-            root.updateLyrics();
-            Qt.callLater(() => {
-                mainLyric.opacity = 1;
-                subLyric.opacity = 1;
-            });
+    ParallelAnimation {
+        id: fadeIn
+        NumberAnimation {
+            target: mainLyric
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: Appearance.animation.fast
+            easing.type: Appearance.animation.easing
+        }
+        NumberAnimation {
+            target: subLyric
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: Appearance.animation.fast
+            easing.type: Appearance.animation.easing
         }
     }
 }
