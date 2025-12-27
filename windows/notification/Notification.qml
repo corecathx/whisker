@@ -18,7 +18,7 @@ Scope {
 
     PanelWindow {
         id: window
-        implicitWidth: 540 + 20
+        implicitWidth: 440
         visible: true
         anchors{
             top: true
@@ -63,10 +63,10 @@ Scope {
                 }
                 anchors.top: parent.top
                 anchors.left: parent.left
-                anchors.leftMargin: 20
-                anchors.rightMargin: 20
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
                 anchors.right: parent.right
-                height: window.mask.height > 0 ? window.mask.height + 40 : 0
+                height: window.mask.height > 0 ? window.mask.height + 20 : 0
                 color: Appearance.panel_color
                 radius: 20
                 Behavior on height {
@@ -83,8 +83,8 @@ Scope {
 
                 delegate: NotificationChild {
                     id: child
-                    width: bgRectangle.width - 40
-                    x: 40
+                    width: bgRectangle.width - 20
+                    x: 20
 
                     y: {
                         var pos = 0
@@ -93,7 +93,7 @@ Scope {
                             if (prev)
                                 pos += prev.height + root.innerSpacing
                         }
-                        return pos - (tracked ? 0 : 20) + 20
+                        return pos - (tracked ? 0 : 20) + 10
                     }
 
                     Component.onCompleted: {
