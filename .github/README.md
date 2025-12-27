@@ -98,7 +98,7 @@ Big thanks to the **Quickshell** community with all the help they provided when 
 
 ---
 
-**Whisker** is licensed under the [GNU General Public License v3.0](LICENSE).
+**Whisker** is licensed under the [GNU General Public License v3.0](../LICENSE).
 
 * **Copying:** The license allows you to, just make sure to keep it open source and credit if used ;)
 
