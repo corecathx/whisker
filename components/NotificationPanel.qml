@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import qs.services
@@ -9,6 +10,7 @@ Item {
     id: root
     implicitWidth: 400
     implicitHeight: container.implicitHeight + 10
+
     ColumnLayout {
         anchors.left: parent.left
         anchors.right: parent.right
@@ -18,6 +20,7 @@ Item {
         anchors.topMargin: 5
         id: container
         spacing: 10
+
         RowLayout {
             StyledButton {
                 icon: checked ? "notifications" : "notifications_off"
@@ -57,13 +60,16 @@ Item {
                 text: "Clear All"
             }
         }
+
         BaseCard {
             cardMargin: 10
             cardSpacing: 10
             verticalPadding: 20
+
             ColumnLayout {
                 anchors.left: parent.left
                 anchors.right: parent.right
+
                 StyledText {
                     visible: NotifServer.data.length === 0
                     text: "You're all caught up!"
@@ -71,25 +77,39 @@ Item {
                     color: Appearance.colors.m3secondary
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
-                Repeater {
-                    id: rep
-                    model: NotifServer.data
 
-                    delegate: NotificationChild {
-                        id: child
-                        Layout.fillWidth: true
+                ScrollView {
+                    visible: NotifServer.data.length !== 0
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 500
+                    clip: true
 
-                        title: modelData.summary
-                        body: modelData.body
-                        image: modelData.image || modelData.appIcon
-                        rawNotif: modelData
-                        tracked: true
-                        buttons: modelData.actions.map(action => ({
-                                    label: action.text,
-                                    onClick: () => {
-                                        action.invoke();
-                                    }
-                                }))
+                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+                    ColumnLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        Repeater {
+                            id: rep
+                            model: NotifServer.data
+                            delegate: NotificationChild {
+                                id: child
+                                Layout.fillWidth: true
+                                title: modelData.summary
+                                body: modelData.body
+                                image: modelData.image || modelData.appIcon
+                                rawNotif: modelData
+                                tracked: true
+                                buttons: modelData.actions.map(action => ({
+                                            label: action.text,
+                                            onClick: () => {
+                                                action.invoke();
+                                            }
+                                        }))
+                            }
+                        }
                     }
                 }
             }
