@@ -25,14 +25,21 @@
 
 **Whisker** is already usable now, but everything is still subject to change over time.
 
+<div align="center">
+    <h2>✦ Installation ✦</h2>
+</div>
+
 **Whisker** is available on Arch Linux's User Repository (AUR)!
-Simply run
+Install it with
 ```bash
 yay -S whisker-shell-git
 ```
 ... or with any other AUR helpers to get your hands on this shell :]
 
-Also I'm still a Quickshell newbie, so most code in here might look messy / unorganized :')
+Once installed, run `whisker shell` to start.
+
+> Also I'm still a Quickshell newbie, so most code in here might look messy / unorganized :')
+
 <div align="center">
   <h2>✦ Previews ✦</h2>
 </div>
@@ -80,7 +87,7 @@ Also I'm still a Quickshell newbie, so most code in here might look messy / unor
 > https://github.com/corecathx/whisker-cli
 
 <div align="center">
-    <h2>✦ Credits ✦</h2>
+    <h2>✦ Credits & License ✦</h2>
 </div>
 
 This shell is **heavily** inspired by  
@@ -89,10 +96,15 @@ This shell is **heavily** inspired by
 
 Big thanks to the **Quickshell** community with all the help they provided when I'm developing this shell <3
 
+---
+
+**Whisker** is licensed under the [GNU General Public License v3.0](LICENSE).
+
+* **Copying:** The license allows you to, just make sure to keep it open source and credit if used ;)
+
 <div align="center">
     <h2>✦ Motivational Cat ✦</h2>
 </div>
-
 
 <div align='center'>
 
