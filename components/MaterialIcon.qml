@@ -8,6 +8,7 @@ StyledText {
 
   font.family: "Material Symbols Rounded"
   font.hintingPreference: Font.PreferFullHinting
+  antialiasing: true
   font.variableAxes: {
     "FILL": root.fill,
     "opsz": root.fontInfo.pixelSize,

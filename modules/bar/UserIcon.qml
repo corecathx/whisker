@@ -50,15 +50,10 @@ Rectangle {
         }
     }
 
-    ClippingRectangle {
+    ProfileIcon {
         id: avatarClip
-        width: 30
-        height: 30
+        implicitWidth: 30
         radius: 30
-        color: "transparent"
-
-        IconImage { anchors.fill: parent; source: Appearance.profileImage }
-
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true

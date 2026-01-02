@@ -161,16 +161,9 @@ Scope {
                     RowLayout {
                         spacing: 16
 
-                        ClippingRectangle {
-                            width: 72
-                            height: 72
+                        ProfileIcon {
+                            implicitWidth: 70
                             radius: 18
-                            color: "transparent"
-
-                            IconImage {
-                                anchors.fill: parent
-                                source: Appearance.profileImage
-                            }
                         }
 
                         ColumnLayout {

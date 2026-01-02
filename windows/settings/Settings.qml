@@ -54,6 +54,8 @@ Scope {
                     { icon: "horizontal_rule", label: "Bar", component: "BarMenu" },
                     { icon: "widgets", label: "Widgets", component: "WidgetsMenu" },
                     // { icon: "tune", label: "Misc", component: "MiscMenu" },
+                    { header: true, label: "User" },
+                    { icon: "account_circle", label: "Profile", component: "UserMenu" },
                     { header: true, label: "About" },
                     { icon: "info", label: "System", component: "SystemMenu" },
                     { icon: "help", label: "About", component: "AboutMenu" }
@@ -130,15 +132,13 @@ Scope {
                             RowLayout {
                                 width: parent.width
                                 spacing: 8
-                                ClippingRectangle {
-                                    radius: 100
-                                    color: "transparent"
+                                ProfileIcon {
                                     Layout.preferredWidth: userCard.opened ? 50 : 36
                                     Layout.preferredHeight: userCard.opened ? 50 : 36
                                     Behavior on Layout.preferredWidth { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
                                     Behavior on Layout.preferredHeight { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-                                    IconImage { anchors.fill: parent; source: Appearance.profileImage }
                                 }
+
                                 ColumnLayout {
                                     spacing: 2
                                     StyledText {
@@ -235,7 +235,8 @@ Scope {
                                 NetworkMenu: networkComponent, BluetoothMenu: bluetoothComponent, VPNMenu: vpnComponent,
                                 SoundsMenu: soundsComponent, PowerMenu: powerComponent, WallpaperMenu: wallpaperComponent,
                                 ColorsMenu: colorsComponent, BarMenu: barComponent, WidgetsMenu: widgetsComponent,
-                                MiscMenu: miscComponent, SystemMenu: systemComponent, AboutMenu: aboutComponent
+                                MiscMenu: miscComponent, SystemMenu: systemComponent, AboutMenu: aboutComponent,
+                                UserMenu: userComponent
                             };
                             var currentMenu = null;
                             for (var i = 0; i < root.menuModel.length; i++) {
@@ -264,6 +265,8 @@ Scope {
             Component { id: barComponent; BarMenu {} }
             Component { id: widgetsComponent; WidgetsMenu {} }
             Component { id: miscComponent; MiscMenu {} }
+            // user
+            Component { id: userComponent; UserMenu {} }
             // about
             Component { id: systemComponent; SystemMenu {} }
             Component { id: aboutComponent; AboutMenu {} }
