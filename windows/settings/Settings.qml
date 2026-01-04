@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Window
 import qs.modules
+import qs.modules.corners
 import qs.components
 import qs.services
 
@@ -30,6 +31,7 @@ Scope {
         active: Globals.visible_settingsMenu
         Window {
             id: root
+            property real borderWidth: 10
             property int selectedIndex: 0
             property bool sidebarCollapsed: false
             width: 1280
@@ -71,21 +73,40 @@ Scope {
 
             Item {
                 anchors.fill: parent
+                Item {
+                    id: titleBar
+                    height: 46
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.margins: 20
+                    anchors.bottomMargin: 0
+                    anchors.topMargin: 0
+
+                    RowLayout {
+                        id: titleContent
+                    }
+                    StyledText {
+                        text: root.title
+                        font.family: "Outfit SemiBold"
+                        font.pixelSize: 20
+                        anchors.centerIn: parent
+                    }
+                }
 
                 Rectangle {
                     id: sidebarBG
                     anchors.left: parent.left
-                    anchors.top: parent.top
+                    anchors.top: titleBar.bottom
                     anchors.bottom: parent.bottom
                     width: root.sidebarCollapsed ? 70 : 320
-                    color: Appearance.colors.m3surface_container_low
+                    color: Appearance.colors.m3surface
                     Behavior on width { NumberAnimation { duration: Appearance.animation.normal; easing.type: Appearance.animation.easing } }
 
                     ColumnLayout {
                         anchors.fill: parent
                         anchors.leftMargin: root.sidebarCollapsed ? 8 : 32
                         anchors.rightMargin: root.sidebarCollapsed ? 8 : 32
-                        anchors.topMargin: 32
                         anchors.bottomMargin: 32
                         spacing: 4
                         Behavior on anchors.leftMargin { NumberAnimation { duration: Appearance.animation.normal; easing.type: Appearance.animation.easing } }
@@ -95,18 +116,36 @@ Scope {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignHCenter
                             spacing: 8
+                            StyledButton {
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 42
+                                icon: "edit"
+                                text: "Config file"
+                                visible: !root.sidebarCollapsed
+                                bottomRightRadius: root.sidebarCollapsed ? 100 : 5
+                                topRightRadius: root.sidebarCollapsed ? 100 : 5
+                                secondary: true
+                                onClicked: {
+                                    Quickshell.execDetached({
+                                        command: ['xdg-open', Quickshell.env("HOME") + '/.config/whisker/preferences.json']
+                                    })
+                                }
+                            }
                             StyledText {
                                 Layout.fillWidth: true
                                 text: "Settings"
                                 color: Appearance.colors.m3on_surface
                                 font.family: "Outfit ExtraBold"
                                 font.pixelSize: 24
-                                visible: !root.sidebarCollapsed
+                                visible: false//!root.sidebarCollapsed
                                 opacity: root.sidebarCollapsed ? 0 : 1
                                 Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast } }
                             }
                             StyledButton {
-                                Layout.preferredHeight: 34
+                                Layout.fillWidth: root.sidebarCollapsed
+                                bottomLeftRadius: root.sidebarCollapsed ? 100 : 5
+                                topLeftRadius: root.sidebarCollapsed ? 100 : 5
+                                Layout.preferredHeight: 42
                                 Layout.preferredWidth: 34
                                 Layout.alignment: Qt.AlignHCenter
                                 icon: root.sidebarCollapsed ? "chevron_right" : "chevron_left"
@@ -123,7 +162,7 @@ Scope {
                             cardSpacing: 0
                             verticalPadding: 16
                             property bool opened: false
-                            visible: !root.sidebarCollapsed
+                            visible: false//!root.sidebarCollapsed
                             opacity: root.sidebarCollapsed ? 0 : 1
                             Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast } }
                             property bool hovered: mouseArea.containsMouse
@@ -182,7 +221,7 @@ Scope {
                                     id: sidebarItemBG
                                     anchors.fill: parent
                                     visible: !modelData.header
-                                    color: selected ? Appearance.colors.m3primary : (hovered ? Appearance.colors.m3surface_container_high : Appearance.colors.m3surface_container_low)
+                                    color: selected ? Appearance.colors.m3on_primary : (hovered ? Appearance.colors.m3surface_container : sidebarBG.color)
                                     radius: 18
                                     Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
                                     RowLayout {
@@ -191,14 +230,14 @@ Scope {
                                         spacing: 8
                                         MaterialIcon {
                                             icon: modelData.icon ?? ""
-                                            color: selected ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface
+                                            color: selected ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
                                             font.pixelSize: 22
                                             Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
                                         }
                                         StyledText {
                                             text: modelData.label ?? ""
                                             font.pixelSize: 15
-                                            color: selected ? Appearance.colors.m3on_primary : Appearance.colors.m3on_surface
+                                            color: selected ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
                                             visible: !root.sidebarCollapsed
                                             opacity: root.sidebarCollapsed ? 0 : 1
                                             Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
@@ -210,43 +249,119 @@ Scope {
                             }
                         }
 
-                        Item {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 18
-                            visible: !root.sidebarCollapsed
-                            StyledText { x: (parent.width - width) * 0.5; text: "! Everything here is TBA !"; color: Colors.opacify(Appearance.colors.m3on_surface_variant, 0.6); font.pixelSize: 11 }
-                        }
+                        // Item {
+                        //     Layout.fillWidth: true
+                        //     Layout.preferredHeight: 18
+                        //     visible: !root.sidebarCollapsed
+                        //     StyledText { x: (parent.width - width) * 0.5; text: "! Everything here is TBA !"; color: Colors.opacify(Appearance.colors.m3on_surface_variant, 0.6); font.pixelSize: 11 }
+                        // }
                     }
                 }
 
-
+                // i'm trying to do what google did on their apps (like the borders n stuff idk)
+                // ok so i did some searching it's called inset
                 Item {
-                    id: settingsContainer
+                    id: settingsBorders
                     anchors.left: sidebarBG.right
-                    anchors.top: parent.top
+                    anchors.top: titleBar.bottom
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
-                    Loader {
-                        id: menuLoader
+                    Rectangle {
                         anchors.fill: parent
-                        sourceComponent: {
-                            var components = {
-                                NetworkMenu: networkComponent, BluetoothMenu: bluetoothComponent, VPNMenu: vpnComponent,
-                                SoundsMenu: soundsComponent, PowerMenu: powerComponent, WallpaperMenu: wallpaperComponent,
-                                ColorsMenu: colorsComponent, BarMenu: barComponent, WidgetsMenu: widgetsComponent,
-                                MiscMenu: miscComponent, SystemMenu: systemComponent, AboutMenu: aboutComponent,
-                                UserMenu: userComponent
-                            };
-                            var currentMenu = null;
-                            for (var i = 0; i < root.menuModel.length; i++) {
-                                if (root.menuModel[i].page === root.selectedIndex) {
-                                    currentMenu = root.menuModel[i];
-                                    break;
+                        color: Appearance.colors.m3surface_container_low
+                    }
+
+                    SingleCorner {
+                        id: leftTopCorner
+                        cornerType: 'inverted'
+                        color: sidebarBG.color
+                        corner: 1
+                        cornerHeight: Appearance.rounding.large
+                        anchors {
+                            top: titleBar.bottom
+                            left: sidebarBG.right
+                        }
+                    }
+                    Rectangle {
+                        id: rightBorder
+                        anchors {
+                            top: parent.top
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
+                        width: root.borderWidth
+                        color: sidebarBG.color
+                    }
+                    SingleCorner {
+                        cornerType: 'inverted'
+                        color: sidebarBG.color
+                        corner: 0
+                        cornerHeight: Appearance.rounding.large
+                        anchors {
+                            top: titleBar.bottom
+                            right: rightBorder.left
+                        }
+                    }
+                    Rectangle {
+                        id: bottomBorder
+                        anchors {
+                            right: parent.right
+                            left: parent.left
+                            bottom: parent.bottom
+                        }
+                        height: root.borderWidth
+                        color: sidebarBG.color
+                    }
+                    SingleCorner {
+                        cornerType: 'inverted'
+                        color: sidebarBG.color
+                        corner: 3
+                        cornerHeight: Appearance.rounding.large
+                        anchors {
+                            bottom: bottomBorder.top
+                            right: rightBorder.left
+                        }
+                    }
+                    SingleCorner {
+                        cornerType: 'inverted'
+                        color: sidebarBG.color
+                        corner: 2
+                        cornerHeight: Appearance.rounding.large
+                        anchors {
+                            bottom: bottomBorder.top
+                            left: sidebarBG.right
+                        }
+                    }
+
+                    Item {
+                        id: settingsContainer
+                        anchors.left: leftTopCorner.left
+                        anchors.top: leftTopCorner.top
+                        anchors.right: rightBorder.left
+                        anchors.bottom: bottomBorder.top
+
+                        Loader {
+                            id: menuLoader
+                            anchors.fill: parent
+                            sourceComponent: {
+                                var components = {
+                                    NetworkMenu: networkComponent, BluetoothMenu: bluetoothComponent, VPNMenu: vpnComponent,
+                                    SoundsMenu: soundsComponent, PowerMenu: powerComponent, WallpaperMenu: wallpaperComponent,
+                                    ColorsMenu: colorsComponent, BarMenu: barComponent, WidgetsMenu: widgetsComponent,
+                                    MiscMenu: miscComponent, SystemMenu: systemComponent, AboutMenu: aboutComponent,
+                                    UserMenu: userComponent
+                                };
+                                var currentMenu = null;
+                                for (var i = 0; i < root.menuModel.length; i++) {
+                                    if (root.menuModel[i].page === root.selectedIndex) {
+                                        currentMenu = root.menuModel[i];
+                                        break;
+                                    }
                                 }
+                                var menuName = currentMenu?.component ?? "";
+                                return components[menuName] || fallbackComponent;
                             }
-                            var menuName = currentMenu?.component ?? "";
-                            return components[menuName] || fallbackComponent;
                         }
                     }
                 }

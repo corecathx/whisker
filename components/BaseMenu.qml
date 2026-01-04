@@ -33,12 +33,13 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.topMargin: 32
-        anchors.leftMargin: 32
-        anchors.rightMargin: 32
+        anchors.topMargin: 30
+        anchors.leftMargin: 30
+        anchors.rightMargin: 30
         width: parent.width
         ColumnLayout {
             id: headerContent
+            visible: false
             anchors.left: parent.left
             anchors.right: parent.right
             spacing: 8
@@ -70,10 +71,10 @@ Item {
         id: mainScroll
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: headerArea.bottom
+        anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.leftMargin: 32
-        anchors.rightMargin: 32
+        anchors.leftMargin: 30
+        anchors.rightMargin: 30
         anchors.topMargin: 16
         clip: true
         interactive: true
