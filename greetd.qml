@@ -419,7 +419,7 @@ ShellRoot {
             if (root.selectedDE < root.detectedDECommands.length)
                 command = [root.detectedDECommands[root.selectedDE]]
 
-            console.log("Launching command:", command)
+            Log.info("greetd.qml", "Launching command: " + command)
             Greetd.launch(command)
         }
 

@@ -42,7 +42,7 @@ BaseMenu {
             StyledButton {
                 text: "Import WireGuard config"
                 onClicked: {
-                    console.log("OK ", pathInput.text)
+                    Log.info("windows/settings/VPNMenu.qml", "OK " + pathInput.text)
                     VPN.importWireguard(pathInput.text)
                 }
             }

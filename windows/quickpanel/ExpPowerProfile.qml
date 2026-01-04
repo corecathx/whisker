@@ -37,7 +37,7 @@ RowLayout {
             notifyProc.message = "Power profile has changed to: Power Saver"
             notifyProc.running = true
 
-            console.log("Current mode:", root.current_mode)
+            Log.info("windows/quickpanel/ExpPowerProfile.qml", "Current mode: " + root.current_mode)
         }
     }
 
@@ -59,7 +59,7 @@ RowLayout {
             notifyProc.message = "Power profile has changed to: Balanced"
             notifyProc.running = true
 
-            console.log("Current mode:", root.current_mode)
+            Log.info("windows/quickpanel/ExpPowerProfile.qml", "Current mode: " + root.current_mode)
         }
     }
 
@@ -82,7 +82,7 @@ RowLayout {
             notifyProc.message = "Power profile has changed to: Performance"
             notifyProc.running = true
 
-            console.log("Current mode:", root.current_mode)
+            Log.info("windows/quickpanel/ExpPowerProfile.qml", "Current mode: " + root.current_mode)
         }
     }
 
@@ -109,7 +109,7 @@ RowLayout {
                 btn_saver.checked = (output === "power-saver")
                 btn_balanced.checked = (output === "balanced")
                 btn_perf.checked = (output === "performance")
-                console.log("Detected current mode:", output)
+                Log.info("windows/quickpanel/ExpPowerProfile.qml", "Detected current mode:" + output)
             }
         }
 

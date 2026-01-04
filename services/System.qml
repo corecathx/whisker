@@ -45,7 +45,7 @@ Singleton {
         watchChanges: true
         onFileChanged: {
             system.uptime = parseFloat(text().trim().split(" ")[0]);
-            console.log("updated");
+            Log.info("services/System.qml","updated");
         }
         onLoaded: system.uptime = parseFloat(text().trim().split(" ")[0])
     }

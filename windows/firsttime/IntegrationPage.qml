@@ -48,7 +48,7 @@ SetupMenu {
             if (root.rulesIntegration) types.push("rules")
 
             const typeThings = types.join(",")
-            console.log(typeThings);
+            Log.info("windows/firsttime/IntegrationPage.qml", typeThings);
             applyProcess.command = ["whisker", "integration", "hyprland", "apply", typeThings]
             applyProcess.running = true
         }

@@ -165,25 +165,11 @@ Item {
                                 }
                             }
 
-                            ClippingRectangle {
-                                Layout.fillWidth: true
-                                height: 10
-                                radius: 5
-                                color: Colors.opacify(root.batteryColor, 0.2)
-
-                                Rectangle {
-                                    width: parent.width * modelData.percentage
-                                    height: parent.height
-                                    radius: 5
-                                    color: root.batteryColor
-
-                                    Behavior on width {
-                                        NumberAnimation {
-                                            duration: Appearance.animation.medium
-                                            easing.type: Appearance.animation.easing
-                                        }
-                                    }
-                                }
+                            StyledProgressBar {
+                                fill: modelData.percentage
+                                height: 6
+                                gap: 3
+                                gapRadius: 1
                             }
 
                             RowLayout {

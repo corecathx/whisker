@@ -111,7 +111,7 @@ Scope {
                                 hoverEnabled: true
                                 onEntered: parent.color = Appearance.colors.m3surface_container_high
                                 onExited: parent.color = Appearance.colors.m3surface_container
-                                onClicked: console.log("Emoji clicked:", modelData)
+                                onClicked: Log.info("windows/emojies/EmojiWindow.qml", "Emoji clicked:" + modelData)
                             }
                         }
                     }
@@ -124,7 +124,7 @@ Scope {
         try {
             emojiModel = JSON.parse(content)
         } catch (e) {
-            console.log("Failed to load emoji JSON:", e)
+            Log.error("windows/emojies/EmojiWindow.qml", "Failed to load emoji JSON:" + e)
         }
     }
 

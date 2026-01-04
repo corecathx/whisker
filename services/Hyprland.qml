@@ -62,7 +62,7 @@ Singleton {
         Hyprland.dispatch(request);
     }
     function refreshToplevels() {
-        console.log('toplevels updated');
+        Log.info("services/Hyprland.qml",'toplevels updated');
         Hyprland.refreshToplevels();
     }
     function refreshWorkspaces() {

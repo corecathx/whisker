@@ -29,11 +29,11 @@ Singleton {
 
     function open() {
 
-        console.log("Cava opened");
+        Log.info("services/Cava.qml", "Cava opened");
         cavaProc.running = true;
     }
     function close() {
-        console.log("Cava closed");
+        Log.info("services/Cava.qml", "Cava closed");
         cavaProc.running = false;
     }
 
@@ -41,7 +41,7 @@ Singleton {
         target: Preferences.misc
 
         function onCavaEnabledChanged() {
-            console.log("Preferences changed!")
+            Log.info("services/Cava.qml", "Preferences changed!")
             if (Preferences.misc.cavaEnabled)
                 root.open()
             else

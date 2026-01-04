@@ -208,9 +208,9 @@ Scope {
                     if (itemData.execute) {
                         itemData.execute();
                         if (itemData.icon && itemData.icon.startsWith('whisker:')) {
-                            console.log(`${itemData.name} is a whisker command, no action has taken`);
+                            Log.info("windows/launcher/Launcher.qml", `${itemData.name} is a whisker command, no action has taken`);
                         } else {
-                            console.log(`${itemData.name} is not a whisker command, closing launcher`);
+                            Log.info("windows/launcher/Launcher.qml", `${itemData.name} is not a whisker command, closing launcher`);
                             root.opened = false;
                         }
                     } else if (itemData.submenu) {

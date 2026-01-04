@@ -20,14 +20,14 @@ Scope {
 
     function debugLog(message) {
         return;
-        console.log("[SCRCPT]", message);
+        Log.info("windows/screencapture/Screencapture.qml", "Debug - " + message);
     }
 
     IpcHandler {
         target: "screen"
         function record() {
             root.debugLog("Record requested (not implemented)");
-            console.log("implement recording later");
+            Log.info("windows/screencapture/Screencapture.qml", "implement recording later");
         }
         function capture() {
             if (root.active) {

@@ -21,7 +21,7 @@ BaseRowCard {
              device.state === QsBluetooth.BluetoothDeviceState.Disconnecting ? 0.6 : 1
 
     function mapBluetoothIcon(dbusIcon, name) {
-        console.log(dbusIcon, ' / ', name)
+        Log.info("windows/settings/BluetoothDeviceCard.qml", dbusIcon + ' / ' + name)
         const iconMap = {
             "audio-headset": "headset",
             "audio-headphones": "headphones",

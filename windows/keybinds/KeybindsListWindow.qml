@@ -166,7 +166,7 @@ Scope {
 
                             Repeater {
                                 model: {
-                                    console.log(JSON.stringify(root.keybindsList))
+                                    Log.info("windows/keybinds/KeybindsListWindow.qml", JSON.stringify(root.keybindsList))
                                     root.keybindsList}
 
                                 delegate: ColumnLayout {

@@ -23,11 +23,11 @@ Singleton {
     }
 
     function init() {
-        console.log('[Theme] Hi.');
+        Log.info("services/Theme.qml",'Hi.');
     }
 
     function regenColor() {
-        console.log("[Theme] Regenerating Colors...");
+        Log.info("services/Theme.qml","Regenerating Colors...");
         if (Utils.isVideo(Preferences.theme.wallpaper)) { // use whisker's color gen if it's a video.
             matugenProc.command = ['whisker', 'wallpaper', Preferences.theme.wallpaper, '--no-scheme-gen']
         } else {
@@ -35,7 +35,7 @@ Singleton {
         }
         matugenProc.running = true
         Appearance.reloadScheme("")
-        console.log("[Theme] Color generation finished.")
+        Log.info("services/Theme.qml","Color generation finished.")
     }
 
     Process {
@@ -43,7 +43,7 @@ Singleton {
         //command: ["sh", "-c", "~/.config/whisker/scripts/wallpaper.sh " + Preferences.theme.wallpaper + " " + (Preferences.theme.dark ? 'dark' : 'light') + " " + Preferences.theme.scheme]
 
         stdout: StdioCollector {
-            onStreamFinished: console.log("[ThemeScript] ", text.trim())
+            onStreamFinished: Log.info("services/Theme.qml", "Theme Process: " + text.trim())
         }
     }
 }

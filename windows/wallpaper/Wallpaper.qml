@@ -87,7 +87,7 @@ PanelWindow {
         stopAllMpvpaper();
 
         var monitors = Hyprland.monitors?.values || [];
-        console.log("[Wallpaper] Starting mpvpaper for", monitors.length, "monitors");
+        Log.info("windows/wallpaper/Wallpaper.qml", "Starting mpvpaper for " + monitors.length + " monitors");
 
         monitors.forEach(monitor => {
             if (monitor && monitor.name) {
@@ -97,7 +97,7 @@ PanelWindow {
     }
 
     function startMpvpaperForMonitor(monitorName) {
-        console.log("[Wallpaper] Starting mpvpaper for monitor:", monitorName);
+        Log.info("windows/wallpaper/Wallpaper.qml", "Starting mpvpaper for monitor: " + monitorName);
 
         var proc = mpvpaperComponent.createObject(wallpaper, {
             "monitorName": monitorName,
@@ -110,7 +110,7 @@ PanelWindow {
     }
 
     function stopAllMpvpaper() {
-        console.log("[Wallpaper] Stopping all mpvpaper processes");
+        Log.info("windows/wallpaper/Wallpaper.qml", "Stopping all mpvpaper processes");
 
         mpvpaperProcesses.forEach(proc => {
             if (proc) {
@@ -147,7 +147,7 @@ PanelWindow {
 
             onRunningChanged: {
                 if (!running) {
-                    console.log("[mpvpaper:" + monitorName + "] Process stopped");
+                    Log.info("windows/wallpaper/Wallpaper.qml", "[mpvpaper:" + monitorName + "] Process stopped");
                 }
             }
         }
