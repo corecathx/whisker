@@ -41,35 +41,6 @@ Item {
         return Math.max(0, Math.min(100, x)) / 100;
     }
 
-    Connections {
-        target: Power
-
-        function onPercentageChanged() {
-            if (!Power.onBattery)
-                return;
-
-            const p = Math.floor(pct);
-            if (p === notifiedLevel) return;
-
-            if (p <= 5 && notifiedLevel > 5) {
-                notifiedLevel = 5;
-                notify("Battery critically low", "Emergency shutdown imminent unless plugged in.");
-            } else if (p <= lowBatteryLevel && notifiedLevel > lowBatteryLevel) {
-                notifiedLevel = lowBatteryLevel;
-                notify("Battery very low", "Please plug in your charger now.");
-            } else if (p <= 20 && notifiedLevel > 20) {
-                notifiedLevel = 20;
-                notify("Low battery", "Consider plugging in your charger.");
-            }
-        }
-
-        function notify(title, body) {
-            Quickshell.execDetached({
-                command: ["notify-send", title, body]
-            });
-        }
-    }
-
     Component {
         id: batteryDisplay
 
