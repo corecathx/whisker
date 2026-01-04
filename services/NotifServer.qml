@@ -1,20 +1,31 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
-
 import Quickshell
-import Quickshell.Io
 import Quickshell.Services.Notifications
 import QtQuick
-
+import qs.modules
 Singleton {
     id: root
 
-    property list<Notif> data: []
-    property list<Notif> popups: data.filter(n => n.popup && !n.tracked)
+    property var _notifications: []
+    property int _updateCounter: 0
+
+    property ScriptModel data: ScriptModel {
+        values: root._notifications
+    }
+
+    property ScriptModel popups: ScriptModel {
+        values: {
+            root._updateCounter;
+            const filtered = root._notifications.filter(n => {
+                return n.popup;
+            });
+            return filtered;
+        }
+    }
 
     NotificationServer {
         id: server
-
         keepOnReload: false
         actionsSupported: true
         bodyHyperlinksSupported: true
@@ -24,27 +35,36 @@ Singleton {
 
         onNotification: notif => {
             notif.tracked = true;
-
-            root.data.push(notifComp.createObject(root, {
+            const newNotif = notifComp.createObject(root, {
                 popup: true,
-                notification: notif,
-                shown: false
-            }));
-        }
-    }
-    function removeById(id) {
-        const i = data.findIndex(n => n.notification.id === id);
-        if (i >= 0) {
-            data.splice(i, 1);
+                notification: notif
+            });
+
+            root._notifications = [...root._notifications, newNotif];
+            root._updateCounter++;
         }
     }
 
+    function removeNotification(notifObj) {
+        root._notifications = root._notifications.filter(n => n !== notifObj);
+        root._updateCounter++;
+    }
+
+    function clearAll() {
+        root._notifications.forEach(n => {
+            if (n.notification && !n.notification.Retainable.dropped) {
+                n.notification.dismiss();
+            }
+        });
+        root._notifications = [];
+    }
 
     component Notif: QtObject {
         id: notif
 
         property bool popup
         readonly property date time: new Date()
+
         readonly property string timeStr: {
             const diff = Time.date.getTime() - time.getTime();
             const m = Math.floor(diff / 60000);
@@ -57,8 +77,8 @@ Singleton {
             return `${h}h`;
         }
 
-        property bool shown: false
         required property Notification notification
+
         readonly property string summary: notification.summary
         readonly property string body: notification.body
         readonly property string appIcon: notification.appIcon
@@ -68,38 +88,48 @@ Singleton {
         readonly property list<NotificationAction> actions: notification.actions
 
         readonly property Timer timer: Timer {
-            running: notif.actions.length >= 0
-            interval: notif.notification.expireTimeout > 0 ? notif.notification.expireTimeout : 5000
+            running: notif.popup
+            interval: {
+                if (notif.notification.urgency == NotificationUrgency.Critical || notif.actions.length > 1)
+                {
+                    return 99999;
+                }
+                const timeout = notif.notification.expireTimeout;
+                return timeout > 0 ? timeout : 5000;
+            }
             onTriggered: {
-                if (true)
-                    notif.popup = false;
+                notif.popup = false;
             }
         }
 
-        readonly property Connections conn: Connections {
+        readonly property Connections retainConn: Connections {
             target: notif.notification.Retainable
 
-            function onDropped(): void {
-                root.data.splice(root.data.indexOf(notif), 1);
+            function onDropped() {
+                root.removeNotification(notif);
             }
 
-            function onAboutToDestroy(): void {
+            function onAboutToDestroy() {
                 notif.destroy();
             }
         }
-        readonly property Connections conn2: Connections {
+
+        readonly property Connections closeConn: Connections {
             target: notif.notification
 
             function onClosed(reason) {
-                root.data.splice(root.data.indexOf(notif), 1)
+                root.removeNotification(notif);
             }
         }
 
+        function dismiss() {
+            Log.info("services/NotifServer.qml", "Dismissing a notification...");
+            notif.notification.dismiss();
+        }
     }
 
     Component {
         id: notifComp
-
         Notif {}
     }
 }

@@ -2,141 +2,281 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
-import Quickshell.Wayland
+import Quickshell.Services.Notifications
 import qs.modules
 import qs.components
 import qs.preferences
 
 Rectangle {
     id: root
-    property bool startAnim: false
 
-    property string title: "WawaApp"
-    property string body: "No content"
-    property var rawNotif: null
-    property bool tracked: false
+    property string title: "Notification"
+    property string body: ""
     property string image: ""
-    property var buttons: [
-        { label: "Okay!", onClick: () => console.log("Okay") }
-    ]
+    property var notifData: null
+    property var buttons: []
 
-    opacity: tracked ? 1 : (startAnim ? 1 : 0)
-    Behavior on opacity {
+    property bool animateEntry: false
+    property bool expanded: false
+    property var colors: {
+        return {
+            vDefault: {
+                normal: Appearance.colors.m3surface_container,
+                hovered: Appearance.colors.m3surface_container_high,
+                pressed: Appearance.colors.m3surface_container_low,
+                onsurface: Appearance.colors.m3on_surface
+            },
+            vCritical: {
+                normal: Appearance.colors.m3secondary_container,
+                hovered: Colors.lighten(Appearance.colors.m3secondary_container, 0.1),
+                pressed: Colors.darken(Appearance.colors.m3secondary_container, 0.1),
+                onsurface: Appearance.colors.m3on_secondary_container
+            }
+        }
+    }
+    property var currentColors: colors[root.notifData.urgency == NotificationUrgency.Critical ? "vCritical" : "vDefault"]
+    property color bgDefault: currentColors.normal
+    property color bgHovered: currentColors.hovered
+    property color bgPressed: currentColors.pressed
+    radius: Appearance.rounding.medium
+    implicitHeight: content.implicitHeight + 20
+    color: hovered ? (!pressed ? bgHovered : bgPressed) : bgDefault
+
+    property bool hovered: hover.hovered
+    property bool pressed: mouseHandler.pressed
+
+    x: animateEntry ? width : 0
+    Component.onCompleted: {
+        x = 0;
+    }
+
+    Behavior on x {
         NumberAnimation {
-            duration: Appearance.animation.fast
+            duration: Appearance.animation.normal
             easing.type: Appearance.animation.easing
         }
     }
 
-    Layout.fillWidth: true
-    radius: 20
-
-    property bool hovered: mouseHandler.containsMouse
-    property bool clicked: mouseHandler.containsPress
-    color: hovered ? (clicked ? Appearance.colors.m3surface_container_high : Appearance.colors.m3surface_container_low) : Appearance.colors.m3surface
     Behavior on color {
         ColorAnimation {
             duration: Appearance.animation.fast
             easing.type: Appearance.animation.easing
         }
     }
-    implicitHeight: Math.max(content.implicitHeight + 30, 80)
 
+    MouseArea {
+        id: mouseHandler
+        property int startY
+
+        anchors.fill: parent
+        cursorShape: root.buttons.length === 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+        hoverEnabled: true
+        acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+        preventStealing: true
+
+        drag.target: root
+        drag.axis: Drag.XAxis
+
+        onEntered: {
+            if (root.notifData?.timer) {
+                root.notifData.timer.stop();
+            }
+        }
+
+        onExited: {
+            if (!pressed && root.notifData?.timer) {
+                root.notifData.timer.start();
+            }
+        }
+
+        onPressed: mouse => {
+            if (root.notifData?.timer) {
+                root.notifData.timer.stop();
+            }
+            startY = mouse.y;
+
+            if (mouse.button === Qt.MiddleButton) {
+                root.notifData?.dismiss();
+            }
+        }
+
+        onReleased: mouse => {
+            if (!containsMouse && root.notifData?.timer) {
+                root.notifData.timer.start();
+            }
+
+            if (Math.abs(root.x) < root.width * 0.5) {
+                root.x = 0;
+            } else {
+                root.notifData?.dismiss();
+            }
+        }
+
+        onPositionChanged: mouse => {
+            if (pressed) {
+                const diffY = mouse.y - startY;
+                if (Math.abs(diffY) > 20) {
+                    root.expanded = diffY > 0;
+                }
+            }
+        }
+
+        onClicked: mouse => {
+            if (mouse.button !== Qt.LeftButton) {
+                return;
+            }
+
+            if (root.buttons.length === 1) {
+                root.buttons[0].onClick();
+                root.notifData?.dismiss();
+            } else if (root.buttons.length === 0) {
+                root.notifData?.dismiss();
+            }
+        }
+    }
     RowLayout {
         id: content
-        anchors.fill: parent
-        anchors.margins: 10
+        anchors {
+            fill: parent
+            margins: 10
+        }
         spacing: 10
 
-        ClippingRectangle {
-            width: 50
-            height: 50
-            radius: 20
-            clip: true
-            color: root.image === "" ? Appearance.colors.m3surface_container : "transparent"
-            Image {
+        Item {
+            Layout.preferredWidth: 50
+            Layout.preferredHeight: 50
+            Layout.alignment: Qt.AlignTop
+
+            ClippingRectangle {
                 anchors.fill: parent
-                source: root.image
-                fillMode: Image.PreserveAspectCrop
-                smooth: true
-            }
-            MaterialIcon {
-                icon: "terminal"
-                color: Appearance.colors.m3on_surface_variant
-                anchors.centerIn: parent
-                visible: root.image === ""
-                font.pixelSize: 32
+                radius: Appearance.rounding.large
+                color: root.image === "" ? currentColors.hovered: "transparent"
+
+                Image {
+                    anchors.fill: parent
+                    source: root.image
+                    fillMode: Image.PreserveAspectCrop
+                    smooth: true
+                    visible: root.image !== ""
+                }
+
+                MaterialIcon {
+                    icon: "notifications"
+                    color: currentColors.onsurface
+                    anchors.centerIn: parent
+                    visible: root.image === ""
+                    font.pixelSize: 28
+                }
             }
         }
 
         ColumnLayout {
-            StyledText {
-                text: root.title
-                font.bold: true
-                font.pixelSize: 18
-                wrapMode: Text.Wrap
-                color: Appearance.colors.m3on_surface
-                Layout.fillWidth: true
+            Layout.alignment: Qt.AlignTop
+            Layout.topMargin: 5
+            Layout.fillWidth: true
+            spacing: 4
+
+            RowLayout {
+                StyledText {
+                    text: root.title
+                    font.bold: true
+                    font.pixelSize: 16
+                    wrapMode: Text.Wrap
+                    Layout.fillWidth: true
+                    color: currentColors.onsurface
+                    maximumLineCount: root.expanded ? -1 : 1
+                    elide: root.expanded ? Text.ElideNone : Text.ElideRight
+                }
+                StyledText {
+                    Layout.alignment: Qt.AlignVCenter
+                    color: Appearance.colors.m3on_surface_variant
+                    text: root.notifData.timeStr
+                    font.pixelSize: 12
+                }
             }
 
             StyledText {
-                text: root.body.length > 123 ? root.body.substr(0, 120) + "..." : root.body
+                text: root.body
                 visible: root.body.length > 0
-                font.pixelSize: 12
+                font.pixelSize: 13
                 color: Appearance.colors.m3on_surface_variant
                 wrapMode: Text.Wrap
                 Layout.fillWidth: true
+                maximumLineCount: root.expanded ? -1 : 1
+                elide: root.expanded ? Text.ElideNone : Text.ElideRight
             }
 
             RowLayout {
-                visible: root.buttons.length > 1
-                Layout.preferredHeight: 40
+                visible: root.buttons.length > 0
                 Layout.fillWidth: true
-                spacing: 10
+                Layout.topMargin: 5
+                spacing: 8
 
                 Repeater {
-                    model: buttons
+                    model: Math.min(root.buttons.length, 3)
 
                     StyledButton {
                         Layout.fillWidth: true
-                        implicitHeight: 30
-                        implicitWidth: 0
-                        text: modelData.label
-                        base_bg: index !== 0
-                            ? Appearance.colors.m3secondary_container
-                            : Appearance.colors.m3primary
+                        Layout.preferredHeight: 32
+                        text: root.buttons[index].label
+                        topRightRadius: index === 0 ? 5 : 100
+                        bottomRightRadius: index === 0 ? 5 : 100
+                        topLeftRadius: index === root.buttons.length - 1 ? 5 : 100
+                        bottomLeftRadius: index === root.buttons.length - 1 ? 5 : 100
+                        secondary: index !== 0
 
-                        base_fg: index !== 0
-                            ? Appearance.colors.m3on_secondary_container
-                            : Appearance.colors.m3on_primary
-                        onClicked: modelData.onClick()
+                        onClicked: {
+                            root.buttons[index].onClick();
+                            root.notifData?.dismiss();
+                        }
                     }
                 }
             }
         }
-    }
-    MouseArea {
-        id: mouseHandler
-        anchors.fill: parent
-        hoverEnabled: true
-        visible: root.buttons.length === 0 || root.buttons.length === 1
-        cursorShape: Qt.PointingHandCursor
-        onClicked: {
-            if (root.buttons.length === 1 && root.buttons[0].onClick) {
-                root.buttons[0].onClick()
-                root.rawNotif?.notification.dismiss()
-            } else if (root.buttons.length === 0) {
-                console.log("[Notification] Dismissed a notification with no action.")
-                root.rawNotif.notification.tracked = false
-                root.rawNotif.popup = false
-                root.rawNotif?.notification.dismiss()
-            } else {
-                console.log("[Notification] Dismissed a notification with multiple actions.")
-                root.rawNotif?.notification.dismiss()
+
+        ColumnLayout {
+            Layout.alignment: expandButt.visible && !root.expanded ? Qt.AlignVCenter : Qt.AlignTop
+            spacing: 4
+
+            StyledButton {
+                Layout.preferredWidth: 24
+                Layout.preferredHeight: 24
+                implicitWidth: 24
+                implicitHeight: 24
+                icon: "close"
+                icon_size: 18
+                text: ""
+                base_bg: "transparent"
+                base_fg: Appearance.colors.m3on_surface_variant
+                hover_bg: Appearance.colors.m3surface_container_highest
+                pressed_bg: Appearance.colors.m3surface_container_high
+                onClicked: {
+                    root.notifData?.dismiss();
+                }
+            }
+
+            StyledButton {
+                id: expandButt
+                visible: root.body.length > 100 || root.title.length > 50
+                Layout.preferredWidth: 24
+                Layout.preferredHeight: 24
+                implicitWidth: 24
+                implicitHeight: 24
+                icon: root.expanded ? "expand_less" : "expand_more"
+                icon_size: 18
+                text: ""
+                base_bg: "transparent"
+                base_fg: Appearance.colors.m3on_surface_variant
+                hover_bg: Appearance.colors.m3surface_container_highest
+                pressed_bg: Appearance.colors.m3surface_container_high
+                onClicked: {
+                    root.expanded = !root.expanded;
+                }
             }
         }
     }
-    Component.onCompleted: {
-        startAnim = true
+
+    HoverHandler {
+        id: hover
     }
 }

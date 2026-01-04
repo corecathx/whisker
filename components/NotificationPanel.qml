@@ -54,7 +54,7 @@ Item {
             Item { Layout.fillWidth: true }
             StyledButton {
                 icon: "clear_all"
-                onClicked: NotifServer.data = []
+                onClicked: NotifServer.clearAll()
                 implicitHeight: 30
                 secondary: true
                 text: "Clear All"
@@ -62,16 +62,17 @@ Item {
         }
 
         BaseCard {
-            cardMargin: 10
-            cardSpacing: 10
-            verticalPadding: 20
+            color: Appearance.colors.m3surface
+            cardMargin: 0
+            cardSpacing: 0
+            verticalPadding: 0
 
             ColumnLayout {
                 anchors.left: parent.left
                 anchors.right: parent.right
 
                 StyledText {
-                    visible: NotifServer.data.length === 0
+                    visible: NotifServer.data.values.length === 0
                     text: "You're all caught up!"
                     font.pixelSize: 14
                     color: Appearance.colors.m3secondary
@@ -79,7 +80,7 @@ Item {
                 }
 
                 ScrollView {
-                    visible: NotifServer.data.length !== 0
+                    visible: NotifServer.data.values.length !== 0
                     Layout.fillWidth: true
                     Layout.preferredHeight: 500
                     clip: true
@@ -100,8 +101,7 @@ Item {
                                 title: modelData.summary
                                 body: modelData.body
                                 image: modelData.image || modelData.appIcon
-                                rawNotif: modelData
-                                tracked: true
+                                notifData: modelData
                                 buttons: modelData.actions.map(action => ({
                                             label: action.text,
                                             onClick: () => {

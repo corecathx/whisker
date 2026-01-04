@@ -26,13 +26,15 @@ Item {
             color: Appearance.colors.m3on_background
         }
         Rectangle {
-            visible: NotifServer.data.length > 0
+            visible: NotifServer.data.values.length > 0
             implicitHeight: 14
             radius: 10
-            width: this.implicitHeight
+            Layout.preferredWidth: width
+            width: counter.width + 8
             color: Appearance.colors.m3primary
             StyledText {
-                text: NotifServer.data.length
+                id: counter
+                text: NotifServer.data.values.length
                 anchors.centerIn: parent
                 font.pixelSize: parent.height-2
                 color: Appearance.colors.m3on_primary
