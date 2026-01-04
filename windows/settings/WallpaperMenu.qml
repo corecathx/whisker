@@ -133,6 +133,7 @@ BaseMenu {
 
                     Grid {
                         id: gridContent
+                        anchors.centerIn: parent
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.leftMargin: 10
