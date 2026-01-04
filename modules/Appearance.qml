@@ -38,8 +38,11 @@ Singleton {
     property string whiskerIcon: "file://"+Utils.getPath("logo.png")
 
     property real barSize: 44
+
+    property M3Rounding rounding: M3Rounding {}
     property M3Palette colors: M3Palette {}
     property AnimationStruct animation: AnimationStruct {}
+
     property string lastData: ''
 
     function getScheme(scheme: string) {
@@ -98,6 +101,16 @@ Singleton {
         onFileChanged: reload()
         onLoaded: root.reloadScheme(text())
     }
+    component M3Rounding: QtObject {
+        property real scale: 1.0
+
+        property real extraSmall: 4 * scale
+        property real small: 8 * scale
+        property real medium: 12 * scale
+        property real large: 16 * scale
+        property real extraLarge: 28 * scale
+    }
+
     component AnimationStruct: QtObject {
         property real multiplier: 1
 
