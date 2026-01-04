@@ -38,7 +38,7 @@ Item {
                     return Math.max(1, value * root.multiplier);
                 }
 
-                color: Colors.opacify(Appearance.colors.m3on_background, 0.3)
+                color: Colors.opacify(Appearance.colors.m3primary, 0.3)
             }
         }
     }
