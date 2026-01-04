@@ -31,6 +31,7 @@ Scope {
         active: Globals.visible_settingsMenu
         Window {
             id: root
+            property string currentMenuTitle: "Network" // lol...
             property real borderWidth: 10
             property int selectedIndex: 0
             property bool sidebarCollapsed: false
@@ -82,16 +83,46 @@ Scope {
                     anchors.margins: 20
                     anchors.bottomMargin: 0
                     anchors.topMargin: 0
-
                     RowLayout {
                         id: titleContent
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+                        StyledButton {
+                            Layout.preferredWidth: 32
+                            Layout.preferredHeight: 32
+                            icon: 'close'
+                            base_fg: Appearance.colors.m3on_surface
+                            base_bg: Appearance.colors.m3surface
+                            onClicked: { root.close() }
+                        }
                     }
-                    StyledText {
-                        text: root.title
-                        font.family: "Outfit SemiBold"
-                        font.pixelSize: 20
+                    RowLayout {
                         anchors.centerIn: parent
+                        StyledText {
+                            text: root.title.replace("Whisker ", "")
+                            font.family: "Outfit SemiBold"
+                            font.pixelSize: 20
+                        }
+                        StyledText {
+                            visible: root.currentMenuTitle !== ""
+                            text: "•"
+                            font.family: "Outfit SemiBold"
+                            font.pixelSize: 20
+                            color: Appearance.colors.m3on_surface_variant
+                        }
+                        StyledText {
+                            text: root.currentMenuTitle
+                            font.pixelSize: 16
+                            color: Appearance.colors.m3on_surface_variant
+                        }
                     }
+
                 }
 
                 Rectangle {
@@ -115,7 +146,7 @@ Scope {
                         RowLayout {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignHCenter
-                            spacing: 8
+                            spacing: 5
                             StyledButton {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 42
@@ -130,16 +161,6 @@ Scope {
                                         command: ['xdg-open', Quickshell.env("HOME") + '/.config/whisker/preferences.json']
                                     })
                                 }
-                            }
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: "Settings"
-                                color: Appearance.colors.m3on_surface
-                                font.family: "Outfit ExtraBold"
-                                font.pixelSize: 24
-                                visible: false//!root.sidebarCollapsed
-                                opacity: root.sidebarCollapsed ? 0 : 1
-                                Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast } }
                             }
                             StyledButton {
                                 Layout.fillWidth: root.sidebarCollapsed
@@ -245,7 +266,7 @@ Scope {
                                         }
                                     }
                                 }
-                                MouseArea { id: mouseArea2; anchors.fill: parent; hoverEnabled: true; enabled: modelData.page !== -1; onClicked: { if (modelData.page !== -1) root.selectedIndex = modelData.page; } }
+                                MouseArea { id: mouseArea2; anchors.fill: parent; hoverEnabled: true; enabled: modelData.page !== -1; onClicked: { if (modelData.page !== -1) root.selectedIndex = modelData.page; root.currentMenuTitle = modelData.label} }
                             }
                         }
 
