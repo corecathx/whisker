@@ -17,7 +17,7 @@ RowLayout {
      ColumnLayout {
          spacing: 2
          StyledText { text: switchOpt.title; font.pixelSize: 15; color: Appearance.colors.m3on_surface }
-         StyledText { text: switchOpt.description; font.pixelSize: 12; color: Colors.opacify(Appearance.colors.m3on_surface, 0.6) }
+         StyledText { text: switchOpt.description; font.pixelSize: 12; color: Colors.opacify(Appearance.colors.m3on_surface, 0.6); wrapMode: Text.Wrap; Layout.fillWidth: true}
      }
      Item { Layout.fillWidth: true }
      StyledSwitch {
