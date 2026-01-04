@@ -30,8 +30,8 @@ Item {
             spacing: 10
 
             Item {
-                implicitWidth: 30
-                implicitHeight: 30
+                implicitWidth: 24
+                implicitHeight: 24
                 CircularProgress {
                     anchors.fill: parent
                     progress: root.cpuValue
@@ -41,8 +41,8 @@ Item {
             }
 
             Item {
-                implicitWidth: 30
-                implicitHeight: 30
+                implicitWidth: 24
+                implicitHeight: 24
                 CircularProgress {
                     anchors.fill: parent
                     progress: root.memoryValue

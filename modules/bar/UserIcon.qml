@@ -10,14 +10,14 @@ Rectangle {
     property bool hovered: false
     property bool verticalMode: false
 
-    implicitWidth: verticalMode ? 30 : (hovered || Globals.visible_quickPanel ? userName.width + avatarClip.width + 30 : 30)
-    implicitHeight: verticalMode ? (hovered || Globals.visible_quickPanel ? userName.width + avatarClip.height + 30 : 30) : 30
+    implicitWidth: verticalMode ? 26 : (hovered || Globals.visible_quickPanel ? userName.width + avatarClip.width + 26 : 26)
+    implicitHeight: verticalMode ? (hovered || Globals.visible_quickPanel ? userName.width + avatarClip.height + 26 : 26) : 26
 
     color: Colors.opacify(Appearance.colors.m3surface, 0.7)
     radius: 20
 
     border {
-        width: hovered || Globals.visible_quickPanel ? 2 : 0
+        width: hovered || Globals.visible_quickPanel ? 1 : 0
         color: Appearance.colors.m3on_surface
         Behavior on width { NumberAnimation { duration: 250; easing.type: Appearance.animation.easing } }
     }
@@ -45,15 +45,15 @@ Rectangle {
                 angle: verticalMode ? -90 : 0
             }
 
-            x: verticalMode ? -12 : 40
+            x: verticalMode ? -12 : 34
             y: verticalMode ? parent.height - userName.width - 5 : parent.height / 2 - userName.height / 2
         }
     }
 
     ProfileIcon {
         id: avatarClip
-        implicitWidth: 30
-        radius: 30
+        implicitWidth: 26
+        radius: 26
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true

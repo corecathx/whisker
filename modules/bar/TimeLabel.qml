@@ -49,7 +49,7 @@ Item {
 
         StyledText {
             text: verticalMode ? Qt.formatDateTime(Time.date, "dd/MM") : Qt.formatDateTime(Time.date, "ddd, dd/MM")
-            color: Appearance.colors.m3on_surface
+            color: Appearance.colors.m3on_surface_variant
             font.pixelSize: 12
             lineHeight: 0.1
             anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
