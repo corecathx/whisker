@@ -25,6 +25,7 @@ LazyLoader {
 
     property bool requiresHover: true
     property bool _manualControl: false
+    property int hoverDelay: 0
 
     property bool targetHovered: hoverTarget && hoverTarget.hovered
     property bool containerHovered: interactable && root.item && root.item.containerHovered
@@ -39,6 +40,16 @@ LazyLoader {
     }
 
     property bool hoverActive: selfHovered || childrenHovered
+
+    property Timer showDelayTimer: Timer {
+        interval: root.hoverDelay
+        repeat: false
+        onTriggered: {
+            root.keepAlive = true;
+            root.isVisible = true;
+            root.startAnim = true;
+        }
+    }
 
     property Timer hangTimer: Timer {
         interval: 200
@@ -68,10 +79,15 @@ LazyLoader {
         if (hoverActive) {
             hangTimer.stop();
             cleanupTimer.stop();
-            root.keepAlive = true;
-            root.isVisible = true;
-            root.startAnim = true;
+            if (hoverDelay > 0) {
+                showDelayTimer.restart();
+            } else {
+                root.keepAlive = true;
+                root.isVisible = true;
+                root.startAnim = true;
+            }
         } else {
+            showDelayTimer.stop();
             hangTimer.restart();
         }
     }
@@ -79,6 +95,7 @@ LazyLoader {
     function show() {
         hangTimer.stop();
         cleanupTimer.stop();
+        showDelayTimer.stop();
         _manualControl = true;
         keepAlive = true;
         isVisible = true;
@@ -87,6 +104,7 @@ LazyLoader {
 
     function hide() {
         _manualControl = true;
+        showDelayTimer.stop();
         startAnim = false;
         hangTimer.stop();
         cleanupTimer.restart();
@@ -228,7 +246,7 @@ LazyLoader {
                 }
             }
             Behavior on scale {
-                enabled: root.interactable
+                enabled: !root.interactable
                 NumberAnimation {
                     duration: Appearance.animation.fast
                     easing.type: Appearance.animation.easing

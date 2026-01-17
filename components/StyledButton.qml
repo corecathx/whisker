@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import qs.modules
 
+import Quickshell
 Control {
   id: root
   property alias text: label.text
@@ -16,6 +17,7 @@ Control {
   property bool checkable: false
   property bool checked: true
   property bool secondary: false
+  property string tooltipText: ""
   signal clicked
   signal toggled(bool checked)
 
@@ -104,5 +106,22 @@ Control {
       }
       root.clicked()
     }
+  }
+
+  HoverHandler {
+      id: hover
+      enabled: root.tooltipText !== ""
+  }
+  LazyLoader {
+      active: root.tooltipText !== ""
+      StyledPopout {
+          hoverTarget: hover
+          hoverDelay: 500
+          Component {
+              StyledText {
+                  text: root.tooltipText
+              }
+          }
+      }
   }
 }
