@@ -17,6 +17,8 @@ Scope {
     property string lastReported: ""
     property real captureStartTime: 0
     property bool freezeImageReady: false
+    property bool captureError: false
+    property string captureErrorMessage: ""
 
     function debugLog(message) {
         return;
@@ -39,6 +41,8 @@ Scope {
             root.captureStartTime = Date.now();
             root.lastReported = "";
             root.freezeImageReady = false;
+            root.captureError = false;
+            root.captureErrorMessage = "";
             freezeProcess.running = true;
         }
     }
@@ -46,6 +50,7 @@ Scope {
     Process {
         id: freezeProcess
         command: ["whisker", "screen", "freeze"]
+
         stdout: StdioCollector {
             onStreamFinished: {
                 const freezeDuration = ((Date.now() - root.captureStartTime) / 1000).toFixed(1);
@@ -55,6 +60,8 @@ Scope {
 
                 if (root.frozenImagePath === "") {
                     root.debugLog("ERROR: Empty frozen image path!");
+                    root.captureError = true;
+                    root.captureErrorMessage = "failed to freeze screen";
                     return;
                 }
 
@@ -69,6 +76,14 @@ Scope {
                 }
             }
         }
+
+        onExited: (code, status) => {
+            if (code !== 0) {
+                root.debugLog("Freeze process exited with code " + code);
+                root.captureError = true;
+                root.captureErrorMessage = "screen freeze failed";
+            }
+        }
     }
 
     Timer {
@@ -80,6 +95,8 @@ Scope {
             if (freezeProcess.running) {
                 root.debugLog("ERROR: Freeze process timed out after 10s");
                 freezeProcess.running = false;
+                root.captureError = true;
+                root.captureErrorMessage = "freeze timed out";
                 root.active = false;
             }
         }
@@ -93,6 +110,8 @@ Scope {
             property bool isRegionMode: true
             property bool uiReady: false
             property real uiReadyTime: 0
+            property bool isProcessing: false
+            property bool windowMode: false
 
             color: Appearance.colors.m3surface
             anchors {
@@ -120,6 +139,24 @@ Scope {
                 zoomInAnim.start();
             }
 
+            function captureFullscreen() {
+                root.debugLog("Capturing fullscreen");
+                captureWindow.isProcessing = true;
+                whiskerCapture.command = ["whisker", "screen", "capture", "--source=" + root.frozenImagePath, "--copy"];
+                whiskerCapture.running = true;
+            }
+
+            function captureWindow(windowRect) {
+                root.debugLog("Capturing window: " + windowRect.x + "," + windowRect.y + " " + windowRect.width + "x" + windowRect.height);
+                captureWindow.isProcessing = true;
+                const regionX = Math.floor(windowRect.x);
+                const regionY = Math.floor(windowRect.y);
+                const regionW = Math.floor(windowRect.width);
+                const regionH = Math.floor(windowRect.height);
+                whiskerCapture.command = ["whisker", "screen", "capture", "--source=" + root.frozenImagePath, "--region=" + regionX + "," + regionY + "_" + regionW + "x" + regionH, "--copy"];
+                whiskerCapture.running = true;
+            }
+
             function captureRegion() {
                 if (!root.freezeImageReady) {
                     root.debugLog("ERROR: Attempted capture before image ready!");
@@ -139,11 +176,11 @@ Scope {
 
                     root.debugLog("Capturing region: " + regionX + "," + regionY + " " + regionW + "x" + regionH);
 
+                    captureWindow.isProcessing = true;
                     whiskerCapture.command = ["whisker", "screen", "capture", "--source=" + root.frozenImagePath, "--region=" + regionX + "," + regionY + "_" + regionW + "x" + regionH, "--copy"];
 
                     root.debugLog("Executing: " + whiskerCapture.command.join(" "));
                     whiskerCapture.running = true;
-                    closeWithAnimation();
                 } else {
                     root.debugLog("No valid selection to capture");
                 }
@@ -151,6 +188,7 @@ Scope {
 
             Process {
                 id: whiskerCapture
+
                 stdout: StdioCollector {
                     onStreamFinished: {
                         root.lastReported = text.trim();
@@ -169,6 +207,21 @@ Scope {
                         }
                     }
                 }
+
+                onExited: (code, status) => {
+                    root.debugLog("Capture process exited with code " + code);
+                    if (code !== 0) {
+                        root.captureError = true;
+                        if (root.captureErrorMessage === "") {
+                            root.captureErrorMessage = "capture failed";
+                        }
+                        errorMessage.visible = true;
+                        errorCloseTimer.start();
+                    } else {
+                        root.debugLog("Capture successful, starting close animation");
+                        captureWindow.closeWithAnimation();
+                    }
+                }
             }
 
             Item {
@@ -181,6 +234,43 @@ Scope {
                     });
                     captureWindow.closeWithAnimation();
                 }
+                Keys.onPressed: event => {
+                    if (event.key === Qt.Key_F) {
+                        captureWindow.captureFullscreen();
+                        event.accepted = true;
+                    } else if (event.key === Qt.Key_W) {
+                        captureWindow.windowMode = !captureWindow.windowMode;
+                        event.accepted = true;
+                    }
+                }
+
+                Rectangle {
+                    id: errorMessage
+                    visible: root.captureError
+                    anchors.centerIn: parent
+                    width: errorText.width + 40
+                    height: errorText.height + 30
+                    color: Appearance.colors.m3error
+                    radius: 12
+
+                    StyledText {
+                        id: errorText
+                        anchors.centerIn: parent
+                        font.pixelSize: 16
+                        color: Appearance.colors.m3on_error
+                        text: "an error occurred while trying to capture\n" + root.captureErrorMessage + "\n\npress escape to close"
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+
+                    Timer {
+                        id: errorCloseTimer
+                        interval: 5000
+                        repeat: false
+                        onTriggered: {
+                            captureWindow.closeWithAnimation();
+                        }
+                    }
+                }
 
                 Image {
                     id: wallpaper
@@ -191,6 +281,7 @@ Scope {
                     cache: true
                     opacity: 0
                     scale: 1
+                    visible: !root.captureError
 
                     layer.enabled: true
                     layer.effect: MultiEffect {
@@ -222,6 +313,7 @@ Scope {
 
                 Item {
                     id: screenContainer
+                    visible: !root.captureError
                     layer.enabled: true
                     layer.effect: MultiEffect {
                         shadowEnabled: true
@@ -254,7 +346,10 @@ Scope {
                                 uiReadyTimer.start();
                             } else if (status === Image.Error) {
                                 root.debugLog("ERROR: Failed to load frozen screen image!");
-                                captureWindow.closeWithAnimation();
+                                root.captureError = true;
+                                root.captureErrorMessage = "failed to load screen image";
+                                errorMessage.visible = true;
+                                errorCloseTimer.start();
                             }
                         }
                     }
@@ -308,6 +403,28 @@ Scope {
                             color: "black"
                             opacity: 0.5
                         }
+
+                        Rectangle {
+                            x: selectionArea.selectionX
+                            y: selectionArea.selectionY
+                            width: selectionArea.selectionWidth
+                            height: selectionArea.selectionHeight
+                            color: "black"
+                            opacity: captureWindow.isProcessing ? 0.6 : 0
+                            visible: captureWindow.isProcessing
+
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: 200
+                                    easing.type: Easing.InOutQuad
+                                }
+                            }
+
+                            LoadingIcon {
+                                anchors.centerIn: parent
+                                visible: captureWindow.isProcessing
+                            }
+                        }
                     }
 
                     Rectangle {
@@ -345,7 +462,7 @@ Scope {
                     MouseArea {
                         id: selectionArea
                         anchors.fill: parent
-                        enabled: captureWindow.isRegionMode && captureWindow.uiReady
+                        enabled: captureWindow.isRegionMode && captureWindow.uiReady && !captureWindow.windowMode
 
                         property real startX: 0
                         property real startY: 0
@@ -420,6 +537,68 @@ Scope {
                                         command: []
                                     });
                                     captureWindow.closeWithAnimation();
+                                }
+                            }
+                        }
+                    }
+
+                    // window mode overlays
+                    Repeater {
+                        model: {
+                            if (!captureWindow.windowMode || !captureWindow.uiReady)
+                                return [];
+
+                            var workspace = Hyprland.focusedMonitor?.activeWorkspace;
+                            if (!workspace?.toplevels)
+                                return [];
+
+                            return workspace.toplevels.values;
+                        }
+
+                        delegate: Item {
+                            required property var modelData
+                            property var win: modelData?.lastIpcObject
+                            visible: win?.at && win?.size
+
+                            property real barOffsetX: Preferences.verticalBar() ? Appearance.barSize : 0
+                            property real barOffsetY: Preferences.horizontalBar() ? Appearance.barSize : 0
+                            property real scaleX: screenContainer.width / (captureWindow.screen.width - barOffsetX)
+                            property real scaleY: screenContainer.height / (captureWindow.screen.height - barOffsetY)
+
+                            x: visible ? (win.at[0] - barOffsetX) * scaleX : 0
+                            y: visible ? (win.at[1] - barOffsetY) * scaleY : 0
+                            width: visible ? win.size[0] * scaleX : 0
+                            height: visible ? win.size[1] * scaleY : 0
+                            z: win?.floating ? (hoverArea.containsMouse ? 1000 : 100) : (hoverArea.containsMouse ? 50 : 0)
+
+                            Rectangle {
+                                anchors.fill: parent
+                                color: "transparent"
+                                border.color: Appearance.colors.m3primary
+                                border.width: hoverArea.containsMouse ? 3 : 0
+                                radius: 8
+                                Behavior on border.width {
+                                    NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+                                }
+                            }
+
+                            Rectangle {
+                                anchors.fill: parent
+                                color: Appearance.colors.m3primary
+                                opacity: hoverArea.containsMouse ? 0.15 : 0
+                                radius: 8
+                                Behavior on opacity {
+                                    NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+                                }
+                            }
+
+                            MouseArea {
+                                id: hoverArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    captureWindow.captureWindow(Qt.rect(win.at[0], win.at[1], win.size[0], win.size[1]));
                                 }
                             }
                         }
@@ -511,11 +690,55 @@ Scope {
                         onFinished: {
                             root.debugLog("Close animation completed");
                             root.active = false;
+                            root.captureError = false;
                             if (root.lastReported !== "") {
                                 Quickshell.execDetached({
                                     command: ["whisker", "notify", "Screenshot taken", "Saved to " + root.lastReported]
                                 });
                             }
+                        }
+                    }
+                }
+
+                Item {
+                    id: actionContainer
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                        bottom: parent.bottom
+                        bottomMargin: 30
+                    }
+                    width: actionRow.width + 20
+                    height: actionRow.height + 20
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Appearance.colors.m3surface
+                        radius: Appearance.rounding.large
+                    }
+                    RowLayout {
+                        id: actionRow
+                        anchors.centerIn: parent
+                        StyledButton {
+                            icon: "fullscreen"
+                            text: "Full screen"
+                            tooltipText: "Capture the whole screen [F]"
+                            onClicked: captureWindow.captureFullscreen()
+                        }
+                        Rectangle { Layout.fillHeight: true; width: 2; color: Appearance.colors.m3on_surface_variant; opacity: 0.2 }
+                        StyledButton {
+                            icon: "window"
+                            checkable: true
+                            checked: captureWindow.windowMode
+                            text: "Window"
+                            tooltipText: "Hover and click a window to capture it [W]"
+                            onClicked: {
+                                captureWindow.windowMode = !captureWindow.windowMode;
+                            }
+                        }
+                        StyledButton {
+                            secondary: true
+                            icon: "close"
+                            tooltipText: "Exit [Escape]"
+                            onClicked: captureWindow.closeWithAnimation()
                         }
                     }
                 }
