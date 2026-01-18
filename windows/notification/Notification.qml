@@ -28,7 +28,7 @@ Scope {
 
         mask: Region {
             width: window.width
-            height: Math.min(listView.contentHeight + 20, 500)
+            height: (listView.contentHeight > 0 ? Math.min(listView.contentHeight + 20, 500) : 0)
         }
 
         Item {
