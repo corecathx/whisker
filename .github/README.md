@@ -48,11 +48,11 @@ Once installed, run `whisker shell` to start.
   <tbody>
     <tr>
       <td align="center">
-        <img src="./images/previews/preview-topbar.png" alt="Top bar preview" width="300"/><br>
+        <img src="./images/previews/preview-topbar.png" alt="Top bar preview"/><br>
         <b>Default Layout (Top Bar)</b>
       </td>
       <td align="center">
-        <img src="./images/previews/preview-bottombar.png" alt="Bottom bar preview" width="300"/><br>
+        <img src="./images/previews/preview-bottombar.png" alt="Bottom bar preview"/><br>
         <b>Alternative Layout (Bottom Bar)</b>
       </td>
     </tr>
@@ -65,11 +65,11 @@ Once installed, run `whisker shell` to start.
     </tr>
     <tr>
       <td align="center">
-        <img src="./images/previews/preview-leftbar.png" alt="Left bar preview" width="300"/><br>
+        <img src="./images/previews/preview-leftbar.png" alt="Left bar preview"/><br>
         <b>Left Bar Layout (Experimental)</b>
       </td>
       <td align="center">
-        <img src="./images/previews/preview-rightbar.png" alt="Right bar preview" width="300"/><br>
+        <img src="./images/previews/preview-rightbar.png" alt="Right bar preview"/><br>
         <b>Right Bar Layout (Experimental)</b>
       </td>
     </tr>
