@@ -25,7 +25,7 @@ LazyLoader {
 
     property bool requiresHover: true
     property bool _manualControl: false
-    property int hoverDelay: 0
+    property int hoverDelay: 250
 
     property bool targetHovered: hoverTarget && hoverTarget.hovered
     property bool containerHovered: interactable && root.item && root.item.containerHovered
