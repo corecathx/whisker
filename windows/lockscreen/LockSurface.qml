@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Widgets
 import Quickshell.Wayland
 import qs.modules
 import qs.modules.bar
@@ -346,7 +347,9 @@ WlSessionLockSurface {
                 anchors.topMargin: 20
                 spacing: 20
 
-                Item {
+                ClippingRectangle {
+                    radius: 100
+                    color: Appearance.colors.m3surface_container
                     implicitWidth: 55
                     implicitHeight: this.implicitWidth
                     ProfileIcon {
@@ -359,6 +362,12 @@ WlSessionLockSurface {
                                 easing.type: Appearance.animation.easing
                             }
                         }
+                    }
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Appearance.colors.m3surface
+                        opacity: 0.5
+                        visible: root.context.unlockInProgress && !root.context.accountLocked
                     }
                     LoadingIcon {
                         visible: root.context.unlockInProgress && !root.context.accountLocked
