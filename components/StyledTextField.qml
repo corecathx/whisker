@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
 import qs.modules
+import Quickshell.Widgets
 TextField {
     id: control
     property string icon: ""
@@ -41,8 +42,13 @@ TextField {
             NumberAnimation { from: 0; to: 1; duration: Appearance.animation.slow*2 }
         }
     }
-    background: Item {
-
+    background: ClippingRectangle {
+        color: "transparent"
+        radius: bg.radius
+        topLeftRadius: bg.topLeftRadius
+        topRightRadius: bg.topRightRadius
+        bottomLeftRadius: bg.bottomLeftRadius
+        bottomRightRadius: bg.bottomRightRadius
         Rectangle {
             id: bg
             anchors.fill: parent
