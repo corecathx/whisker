@@ -14,6 +14,8 @@ import qs.modules.bar
 ShellRoot {
     id: root
 
+    property string curState: "userSelection" // userSelection, enterPassword
+    property string curUsername: ""
     property var detectedUsers: []
     property var detectedDEs: []
     property var detectedDECommands: []
@@ -80,6 +82,35 @@ ShellRoot {
             }
         }
 
+        Image {
+            id: bgImage
+            anchors.fill: parent
+            sourceSize: Qt.size(bgWindow.width, bgWindow.height)
+            source: root.curUsername !== "" ? "file:///var/lib/whisker/wallpapers/" + root.curUsername : ""
+            fillMode: Image.PreserveAspectCrop
+            smooth: true
+            cache: true
+            opacity: root.curState === "enterPassword" ? 1 : 0
+            scale: root.curState === "enterPassword" ? 1.02 : 1
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                blurEnabled: true
+                blur: 1
+                blurMax: 32
+                brightness: -0.1
+                contrast: 0.1
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    autoPaddingEnabled: false
+                    blurEnabled: true
+                    blur: 1
+                    blurMax: 32
+                }
+            }
+            Behavior on opacity { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
+            Behavior on scale { NumberAnimation { duration: Appearance.animation.slow; easing.type: Appearance.animation.easing } }
+        }
+
         Rectangle {
             anchors.left: parent.left
             anchors.top: parent.top
@@ -144,22 +175,46 @@ ShellRoot {
             text: "exit"
             onClicked: Qt.quit()
             visible: !Greetd.available
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.margins: 20
         }
         Item {
-            width: things.width
-            height: things.height
+            width: things.width + 10
+            height: things.height + 10
             anchors {
                 right: parent.right
                 top: parent.top
                 margins: 20
             }
+            Rectangle {
+                color: Appearance.colors.m3surface
+                anchors.fill: parent
+                radius: Appearance.rounding.extraLarge
+            }
             RowLayout {
                 id: things
-                spacing: 10
+                anchors.centerIn: parent
+                spacing: 5
 
-                AudioTray {}
-                NetworkTray {}
-                BluetoothTray {}
+                Item {
+                    width: things2.width + 10
+                    height: things2.height + 3
+                    Rectangle {
+                        color: Appearance.colors.m3surface_container
+                        anchors.fill: parent
+                        radius: Appearance.rounding.extraLarge
+                    }
+                    RowLayout {
+                        id: things2
+                        anchors.centerIn: parent
+                        spacing: 10
+
+                        AudioTray {}
+                        NetworkTray {}
+                        BluetoothTray {}
+                    }
+                }
                 Battery {}
             }
         }
@@ -169,14 +224,18 @@ ShellRoot {
             anchors.verticalCenterOffset: 40
             width: 440
             height: loginBox.height
+            clip: true
 
             Rectangle {
                 id: loginBox
                 anchors.centerIn: parent
                 width: parent.width
                 height: content.height + 60
-                radius: 20
-                color: Appearance.colors.m3surface_container_low
+                radius: Appearance.rounding.extraLarge
+                color: Appearance.colors.m3surface_container
+
+                Behavior on width { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
+                Behavior on height { NumberAnimation { duration: Appearance.animation.medium; easing.type: Appearance.animation.easing } }
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
@@ -196,192 +255,163 @@ ShellRoot {
                     }
                     anchors.margins: 30
                     spacing: 20
-                    ColumnLayout {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                        }
-                        spacing: 20
-                    }
-                    ColumnLayout {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                        }
-                        spacing: 20
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 10
-                            visible: !root.showUserInput
-
-                            StyledText {
-                                text: "User"
-                                font.pixelSize: 14
-                                font.family: "Outfit Medium"
-                                color: Appearance.colors.m3on_surface_variant
-                            }
-
-                            StyledDropDown {
-                                Layout.fillWidth: true
-                                model: root.detectedUsers
-
-                                onSelectedIndexChanged: (index) => {
-                                    usernameInput.text = root.detectedUsers[index]
-                                    root.showUserInput = false
-                                    passwordInput.forceActiveFocus()
-                                }
-                            }
-
-                            StyledButton {
-                                Layout.fillWidth: true
-                                text: "Other user"
-                                secondary: true
+                    GridLayout {
+                        columns: 3
+                        rowSpacing: 20
+                        columnSpacing: 20
+                        visible: root.curState === "userSelection"
+                        opacity: visible ? 1 : 0
+                        Behavior on opacity { NumberAnimation { duration: Appearance.animation.slow; easing.type: Appearance.animation.easing } }
+                        Layout.alignment: Qt.AlignHCenter
+                        Repeater {
+                            model: root.detectedUsers
+                            delegate: UserEntry {
+                                required property string modelData
+                                username: modelData
                                 onClicked: {
-                                    root.showUserInput = true
-                                    usernameInput.forceActiveFocus()
+                                    root.prepareLogin(modelData);
                                 }
                             }
                         }
+                    }
+                    Item {
+                        id: loginPart
+                        visible: root.curState === "enterPassword"
+                        opacity: visible ? 1 : 0
+                        Behavior on opacity { NumberAnimation { duration: Appearance.animation.slow; easing.type: Appearance.animation.easing } }
+                        implicitHeight: loginLayout.height
+                        implicitWidth: parent.width
+                        Layout.alignment: Qt.AlignHCenter
 
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 10
-                            visible: root.showUserInput
-
-                            StyledText {
-                                text: "Username"
-                                font.pixelSize: 14
-                                font.family: "Outfit Medium"
-                                color: Appearance.colors.m3on_surface_variant
+                        StyledButton {
+                            icon: "chevron_left"
+                            secondary: true
+                            anchors {
+                                left: parent.left
+                                top: parent.top
                             }
-
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 10
-
-                                StyledButton {
-                                    icon: "arrow_back"
-                                    Layout.preferredWidth: 40
-                                    Layout.preferredHeight: 40
-                                    secondary: true
-                                    onClicked: root.showUserInput = false
-                                }
-
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 10
-                                    StyledTextField {
-                                        id: usernameInput
-                                        Layout.fillWidth: true
-                                        placeholder: "Enter username"
-                                        fieldPadding: 15
-                                        icon: "person"
-                                        filled: false
-                                    }
-                                }
-                            }
+                            onClicked: root.curState = 'userSelection'
                         }
-
                         ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 10
-                            visible: usernameInput.text.length > 0
+                            id: loginLayout
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            spacing: 12
 
+                            ProfileIcon {
+                                implicitWidth: 140
+                                implicitHeight: 140
+                                Layout.alignment: Qt.AlignHCenter
+                                username: root.curUsername
+                                color: Appearance.colors.m3surface_container_high
+                            }
                             StyledText {
-                                text: "Password"
-                                font.pixelSize: 14
-                                font.family: "Outfit Medium"
-                                color: Appearance.colors.m3on_surface_variant
+                                text: root.curUsername
+                                font.pixelSize: 32
+                                font.family: "Outfit SemiBold"
+                                Layout.alignment: Qt.AlignHCenter
                             }
 
                             StyledTextField {
                                 id: passwordInput
-                                Layout.fillWidth: true
-                                placeholder: "Enter password"
+                                placeholder: "Password"
                                 icon: "lock"
                                 echoMode: TextField.Password
                                 fieldPadding: 15
-                                filled: false
+                                // filled: false
+                                Layout.fillWidth: true
 
                                 Keys.onReturnPressed: submitLogin()
                             }
-                        }
 
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 12
-                            visible: usernameInput.text.length > 0
-
-                            StyledText {
-                                text: "Session"
-                                font.pixelSize: 13
-                                font.weight: Font.Medium
-                                color: Appearance.colors.m3on_surface_variant
-                            }
-
-                            StyledDropDown {
+                            ColumnLayout {
                                 Layout.fillWidth: true
-                                model: root.detectedDEs
-                                currentIndex: root.selectedDE
+                                spacing: 12
 
-                                onSelectedIndexChanged: (index) => {
-                                    root.selectedDE = index
+                                StyledText {
+                                    text: "Session"
+                                    font.pixelSize: 13
+                                    font.weight: Font.Medium
+                                    color: Appearance.colors.m3on_surface_variant
+                                }
+
+                                StyledDropDown {
+                                    Layout.fillWidth: true
+                                    model: root.detectedDEs
+                                    currentIndex: root.selectedDE
+
+                                    onSelectedIndexChanged: (index) => {
+                                        root.selectedDE = index
+                                    }
                                 }
                             }
-                        }
 
-                        StyledText {
-                            id: statusText
-                            Layout.fillWidth: true
-                            font.pixelSize: 13
-                            color: statusText.text.includes("Failed") || statusText.text.includes("Error")
-                                ? Appearance.colors.m3error
-                                : Appearance.colors.m3primary
-                            wrapMode: Text.WordWrap
-                            visible: text !== ""
-                            horizontalAlignment: Text.AlignHCenter
-                        }
+                            StyledText {
+                                id: statusText
+                                Layout.fillWidth: true
+                                font.pixelSize: 13
+                                color: statusText.text.includes("Failed") || statusText.text.includes("Error")
+                                    ? Appearance.colors.m3error
+                                    : Appearance.colors.m3primary
+                                wrapMode: Text.WordWrap
+                                visible: text !== ""
+                                horizontalAlignment: Text.AlignHCenter
+                            }
 
-                        StyledButton {
-                            id: loginButton
-                            Layout.fillWidth: true
-                            text: statusText.text === "" ? "Sign in" : statusText.text
-                            icon: statusText.text === "" ? "login" : ""
-                            visible: usernameInput.text.length > 0
+                            StyledButton {
+                                id: loginButton
+                                Layout.fillWidth: true
+                                text: statusText.text === "" ? "Sign in" : statusText.text
+                                icon: statusText.text === "" ? "login" : ""
 
-                            onClicked: submitLogin()
-                            enabled: statusText.text === "" || statusText.text.includes("Failed")
+                                onClicked: submitLogin()
+                                enabled: statusText.text === "" || statusText.text.includes("Failed")
+                            }
                         }
                     }
                 }
             }
         }
 
-        RowLayout {
+        Item {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: 20
-            spacing: 12
-
-            StyledButton {
-                icon: "power_settings_new"
-                secondary: true
-                onClicked: {
-                    Quickshell.execDetached({ command: ["systemctl", "poweroff" ]})
-                }
+            width: controls.width + 10
+            height: controls.height + 10
+            Rectangle {
+                anchors.fill: parent
+                color: Appearance.colors.m3surface
+                radius: Appearance.rounding.extraLarge
             }
+            RowLayout {
+                id: controls
+                anchors.centerIn: parent
+                spacing: 5
+                StyledButton {
+                    icon: "power_settings_new"
+                    secondary: true
+                    implicitHeight: 32
+                    onClicked: {
+                        Quickshell.execDetached({ command: ["systemctl", "poweroff" ]})
+                    }
+                }
 
-            StyledButton {
-                icon: "restart_alt"
-                secondary: true
-                onClicked: {
-                    Quickshell.execDetached({ command: ["systemctl", "reboot" ]})
+                StyledButton {
+                    icon: "restart_alt"
+                    implicitHeight: 32
+                    secondary: true
+                    onClicked: {
+                        Quickshell.execDetached({ command: ["systemctl", "reboot" ]})
+                    }
                 }
             }
         }
+    }
+
+    function prepareLogin(username) {
+        root.curUsername = username
+        root.curState = "enterPassword"
     }
 
     function submitLogin() {
@@ -426,6 +456,45 @@ ShellRoot {
         function onError(error) {
             statusText.text = "Error: " + error
             loginButton.enabled = true
+        }
+    }
+
+    component UserEntry: Item {
+        id: entry
+        required property string username;
+        signal clicked();
+        Layout.minimumWidth: entryLayout.height + 20
+        width: entryLayout.width + 20
+        height: entryLayout.height + 20
+        Layout.alignment: Qt.AlignHCenter
+        Rectangle {
+            anchors.fill: parent
+            color: mouse.containsMouse ? Appearance.colors.m3surface_container_highest : Appearance.colors.m3surface_container_high
+            Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+            radius: Appearance.rounding.large
+        }
+        ColumnLayout {
+            id: entryLayout
+            anchors.centerIn: parent
+            ProfileIcon {
+                implicitWidth: 60
+                implicitHeight: 60
+                Layout.alignment: Qt.AlignHCenter
+                username: entry.username
+            }
+            StyledText {
+                text: entry.username
+                font.pixelSize: 18
+
+                font.family: "Outfit SemiBold"
+                Layout.alignment: Qt.AlignHCenter
+            }
+        }
+        MouseArea {
+            id: mouse
+            anchors.fill: parent
+            hoverEnabled: true
+            onClicked: entry.clicked()
         }
     }
 }

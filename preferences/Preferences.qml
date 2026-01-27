@@ -39,6 +39,7 @@ Singleton {
         property bool showStatsOverlay: false
         property bool activateLinuxOverlay: false
         property int clickerCount: 0
+        property bool applyWallpaperToGreeter: false
     }
 
     property QtObject widgets: QtObject {

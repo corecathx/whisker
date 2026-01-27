@@ -17,51 +17,82 @@ BaseMenu {
     description: "Choose and set wallpapers for your desktop."
 
     BaseCard {
-        ClippingRectangle {
-            id: wpContainer
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 600
-            height: width * root.screen.height / root.screen.width
-            radius: 10
-            color: Appearance.colors.m3surface_container
+        RowLayout {
+            ClippingRectangle {
+                id: wpContainer
+                Layout.fillWidth: true
+                Layout.preferredWidth: 580
+                Layout.preferredHeight: width * root.screen.height / root.screen.width
+                radius: 10
+                color: Appearance.colors.m3surface_container
 
-            MaterialIcon {
-                anchors.centerIn: parent
-                icon: "wallpaper"
-                font.pixelSize: 64
-                color: Appearance.colors.m3on_surface_variant
-                visible: !wpImage.visible && !wpVideoPreview.visible
-            }
-
-            Image {
-                id: wpImage
-                anchors.fill: parent
-                fillMode: Image.PreserveAspectCrop
-                source: {
-                    var wp = Preferences.theme.wallpaper
-                    if (!wp || Utils.isVideo(wp)) return ""
-                    return wp
+                MaterialIcon {
+                    anchors.centerIn: parent
+                    icon: "wallpaper"
+                    font.pixelSize: 64
+                    color: Appearance.colors.m3on_surface_variant
+                    visible: !wpImage.visible && !wpVideoPreview.visible
                 }
-                smooth: true
-                visible: source !== ""
-            }
 
-            Video {
-                id: wpVideoPreview
-                anchors.fill: parent
-                source: {
-                    var wp = Preferences.theme.wallpaper
-                    if (!wp || !Utils.isVideo(wp)) return ""
-                    return wp.startsWith("file://") ? wp : "file://" + wp
+                Image {
+                    id: wpImage
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectCrop
+                    source: {
+                        var wp = Preferences.theme.wallpaper
+                        if (!wp || Utils.isVideo(wp)) return ""
+                        return wp
+                    }
+                    smooth: true
+                    visible: source !== ""
                 }
-                autoPlay: true
-                loops: MediaPlayer.Infinite
-                muted: true
-                visible: source !== ""
-            }
 
+                Video {
+                    id: wpVideoPreview
+                    anchors.fill: parent
+                    source: {
+                        var wp = Preferences.theme.wallpaper
+                        if (!wp || !Utils.isVideo(wp)) return ""
+                        return wp.startsWith("file://") ? wp : "file://" + wp
+                    }
+                    autoPlay: true
+                    loops: MediaPlayer.Infinite
+                    muted: true
+                    visible: source !== ""
+                }
+            }
+            ColumnLayout {
+                Layout.margins: 14
+                StyledText {
+                    text: "Additional Config"
+                    font.pixelSize: 20
+                    font.family: "Outfit SemiBold"
+                }
+                RowLayout {
+                    ColumnLayout {
+                        spacing: 0
+                        StyledText {
+                            text: "Apply to greeter"
+                            font.pixelSize: 16
+                            font.family: "Outfit Medium"
+                        }
+                        StyledText {
+                            text: "Requires root privileges every wallpaper change."
+                            font.pixelSize: 10
+                        }
+                    }
+                    Item { Layout.fillWidth: true }
+                    StyledSwitch {
+                        checked: Preferences.misc.applyWallpaperToGreeter
+                        onToggled: {
+                            Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', 'misc.applyWallpaperToGreeter', checked] })
+                        }
+                    }
+                }
+                Item { Layout.fillHeight: true }
+            }
         }
-
+        Item {  }
         BaseRowCard {
             cardMargin: 0
             verticalPadding: 8
@@ -159,7 +190,7 @@ BaseMenu {
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
                                         if (selected) return
-                                        wpSetProc.command = ['whisker', 'wallpaper', modelData]
+                                        wpSetProc.command = ['whisker', 'wallpaper', modelData, Preferences.misc.applyWallpaperToGreeter ? "--apply-greeter" : ""]
                                         wpSetProc.running = true
                                     }
                                 }
@@ -309,6 +340,7 @@ BaseMenu {
                     onStreamFinished: {
                         var lines = this.text.trim().split("\n").filter(function(s) { return s.length > 0 })
                         wpSelectorCard.wallpapers = lines
+
                     }
                 }
             }
@@ -319,7 +351,8 @@ BaseMenu {
                 running: false
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        wpSetProc.running = false
+                        if (Preferences.misc.applyWallpaperToGreeter)
+                            Quickshell.execDetached({ command: ['whisker', 'notify', 'Whisker', 'Desktop and Greeter wallpaper changed!'] })
                     }
                 }
             }
