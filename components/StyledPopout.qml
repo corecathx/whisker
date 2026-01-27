@@ -217,15 +217,31 @@ LazyLoader {
                     if (!targetItem)
                         yValue = 0;
                     else {
-                        let yPos = targetItem.mapToGlobal(Qt.point(0, 0)).y;
+                        let baseY = targetItem.mapToGlobal(Qt.point(0, 0)).y;
                         if (parentPopoutWindow)
-                            yPos += parentPopoutWindow.y;
-                        yValue = yPos + (Preferences.horizontalBar() ? targetItem.height : 0);
+                            baseY += parentPopoutWindow.y;
+
+                        let targetHeight = targetItem.height;
+                        let popupHeight = container.implicitHeight;
+
+                        let yPos = baseY + (Preferences.horizontalBar() ? targetHeight : 0);
+
+                        if (yPos > screen.height / 2)
+                            yPos = baseY - popupHeight;
+
+                        if (yPos + popupHeight > screen.height)
+                            yPos = screen.height - popupHeight - 10;
+                        if (yPos < 10)
+                            yPos = 10;
+
+                        yValue = yPos;
                     }
                 }
 
                 return root.cleanupTimer.running ? yValue : Math.round(yValue);
             }
+
+
 
             opacity: root.startAnim ? 1 : 0
             scale: root.interactable ? 1 : root.startAnim ? 1 : 0.9

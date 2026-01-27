@@ -210,7 +210,7 @@ ShellRoot {
                         anchors.centerIn: parent
                         spacing: 10
 
-                        AudioTray {}
+                        AudioTray { noMixer: true }
                         NetworkTray {}
                         BluetoothTray {}
                     }
@@ -318,32 +318,14 @@ ShellRoot {
                                 icon: "lock"
                                 echoMode: TextField.Password
                                 fieldPadding: 15
-                                // filled: false
+                                filled: false
                                 Layout.fillWidth: true
+                                onTextChanged: {
+                                    loginButton.enabled = true
+                                    statusText.text = ""
+                                }
 
                                 Keys.onReturnPressed: submitLogin()
-                            }
-
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                spacing: 12
-
-                                StyledText {
-                                    text: "Session"
-                                    font.pixelSize: 13
-                                    font.weight: Font.Medium
-                                    color: Appearance.colors.m3on_surface_variant
-                                }
-
-                                StyledDropDown {
-                                    Layout.fillWidth: true
-                                    model: root.detectedDEs
-                                    currentIndex: root.selectedDE
-
-                                    onSelectedIndexChanged: (index) => {
-                                        root.selectedDE = index
-                                    }
-                                }
                             }
 
                             StyledText {
@@ -361,8 +343,8 @@ ShellRoot {
                             StyledButton {
                                 id: loginButton
                                 Layout.fillWidth: true
-                                text: statusText.text === "" ? "Sign in" : statusText.text
-                                icon: statusText.text === "" ? "login" : ""
+                                text: "Login"
+                                icon: "login"
 
                                 onClicked: submitLogin()
                                 enabled: statusText.text === "" || statusText.text.includes("Failed")
@@ -388,6 +370,22 @@ ShellRoot {
                 id: controls
                 anchors.centerIn: parent
                 spacing: 5
+                StyledDropDown {
+                    visible: root.curUsername !== "" && root.curState === "enterPassword"
+                    model: root.detectedDEs
+                    opacity: visible ? 1 : 0
+                    scale: visible ? 1 : 0.9
+                    Behavior on opacity { NumberAnimation { duration: Appearance.animation.slow; easing.type: Appearance.animation.easing } }
+                    Behavior on scale { NumberAnimation { duration: Appearance.animation.slow; easing.type: Appearance.animation.easing } }
+                    currentIndex: root.selectedDE
+                    height: 30
+                    radius: 20
+                    compact: true
+                    onSelectedIndexChanged: (index) => {
+                        root.selectedDE = index
+                    }
+                    tooltipText: "Session for " + root.curUsername
+                }
                 StyledButton {
                     icon: "power_settings_new"
                     secondary: true
@@ -395,6 +393,7 @@ ShellRoot {
                     onClicked: {
                         Quickshell.execDetached({ command: ["systemctl", "poweroff" ]})
                     }
+                    tooltipText: "Power off"
                 }
 
                 StyledButton {
@@ -404,6 +403,7 @@ ShellRoot {
                     onClicked: {
                         Quickshell.execDetached({ command: ["systemctl", "reboot" ]})
                     }
+                    tooltipText: "Reboot"
                 }
             }
         }
@@ -415,10 +415,14 @@ ShellRoot {
     }
 
     function submitLogin() {
-        if (usernameInput.text.length > 0 && passwordInput.text.length > 0) {
+        if (passwordInput.text.length == 0) {
+            statusText.text = "Password is empty."
+            return;
+        }
+        if (curUsername.length > 0) {
             loginButton.enabled = false
             statusText.text = "Authenticating..."
-            Greetd.createSession(usernameInput.text)
+            Greetd.createSession(curUsername)
         }
     }
 

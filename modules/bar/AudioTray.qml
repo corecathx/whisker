@@ -11,6 +11,7 @@ import qs.services
 
 Item {
     id: root
+    property bool noMixer: false
     property real volume: Audio.defaultSink?.audio?.muted ? 0 : (Audio.defaultSink?.audio?.volume ?? 0) * 100
     property string icon: volume > 50 ? "volume_up" : volume > 0 ? "volume_down" : 'volume_off'
 
@@ -145,84 +146,87 @@ Item {
                     iconName: root.icon
                     useMaterialIcon: true
                 }
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.topMargin: 8
-                    Layout.bottomMargin: 8
-                    height: 1
-                    color: Appearance.colors.m3on_surface_variant
-                    opacity: 0.2
-                }
-                Repeater {
-                    model: Audio.outputAppNodes.filter(node => {
-                        let name = (node.properties?.["node.name"] || "").toLowerCase()
-                        return true
-                    })
-                    delegate: AudioSlider {
-                        required property var modelData
-                        Layout.topMargin: 2
+                LazyLoader {
+                    active: !root.noMixer
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.topMargin: 8
+                        Layout.bottomMargin: 8
+                        height: 1
+                        color: Appearance.colors.m3on_surface_variant
+                        opacity: 0.2
+                    }
+                    Repeater {
+                        model: Audio.outputAppNodes.filter(node => {
+                            let name = (node.properties?.["node.name"] || "").toLowerCase()
+                            return true
+                        })
+                        delegate: AudioSlider {
+                            required property var modelData
+                            Layout.topMargin: 2
+                            Layout.bottomMargin: 4
+                            node: modelData
+                            label: {
+                                return Audio.appNodeDisplayName(modelData)
+                            }
+                            iconName: {
+                                let p = modelData.properties
+                                if (!p) return ""
+
+                                let appIcon = Audio.appNodeDisplayName(modelData)
+                                if (appIcon) {
+                                    let resolved = Utils.getAppIcon(appIcon, "")
+                                    if (resolved && !resolved.includes("image-missing"))
+                                        return resolved
+                                }
+
+                                let nodeName = p["node.name"] || ""
+                                if (nodeName) {
+                                    let resolved = Utils.getAppIcon(nodeName, "")
+                                    if (resolved && !resolved.includes("image-missing"))
+                                        return resolved
+                                }
+
+                                return ""
+                            }
+                            useMaterialIcon: false
+                        }
+                    }
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.topMargin: 8
                         Layout.bottomMargin: 4
-                        node: modelData
-                        label: {
-                            return Audio.appNodeDisplayName(modelData)
-                        }
-                        iconName: {
-                            let p = modelData.properties
-                            if (!p) return ""
-
-                            let appIcon = Audio.appNodeDisplayName(modelData)
-                            if (appIcon) {
-                                let resolved = Utils.getAppIcon(appIcon, "")
-                                if (resolved && !resolved.includes("image-missing"))
-                                    return resolved
-                            }
-
-                            let nodeName = p["node.name"] || ""
-                            if (nodeName) {
-                                let resolved = Utils.getAppIcon(nodeName, "")
-                                if (resolved && !resolved.includes("image-missing"))
-                                    return resolved
-                            }
-
-                            return ""
-                        }
-                        useMaterialIcon: false
+                        height: 1
+                        color: Appearance.colors.m3on_surface_variant
+                        opacity: 0.2
                     }
-                }
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.topMargin: 8
-                    Layout.bottomMargin: 4
-                    height: 1
-                    color: Appearance.colors.m3on_surface_variant
-                    opacity: 0.2
-                }
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledButton {
-                        Layout.fillHeight: true
-                        implicitWidth: 30
-                        implicitHeight: 30
-                        icon: !Audio.defaultSink?.audio.muted ? "volume_up" : "volume_off"
-                        checkable: true
-                        onToggled: {
-                            if (!Audio.defaultSink) return;
-                            Audio.defaultSink.audio.muted = !checked
+                    RowLayout {
+                        Layout.fillWidth: true
+                        StyledButton {
+                            Layout.fillHeight: true
+                            implicitWidth: 30
+                            implicitHeight: 30
+                            icon: !Audio.defaultSink?.audio.muted ? "volume_up" : "volume_off"
+                            checkable: true
+                            onToggled: {
+                                if (!Audio.defaultSink) return;
+                                Audio.defaultSink.audio.muted = !checked
+                            }
+                            Layout.fillWidth: true
+                            topRightRadius: 10
+                            bottomRightRadius: 10
+                            tooltipText: !Audio.defaultSink?.audio.muted ? "Mute audio" : "Unmute audio"
                         }
-                        Layout.fillWidth: true
-                        topRightRadius: 10
-                        bottomRightRadius: 10
-                        tooltipText: !Audio.defaultSink?.audio.muted ? "Mute audio" : "Unmute audio"
-                    }
-                    StyledButton {
-                        text: "Sounds Settings"
-                        Layout.fillWidth: true
-                        secondary: true
-                        topLeftRadius: 10
-                        bottomLeftRadius: 10
-                        onClicked: {
-                            mA.onClicked(null)
-                            popout.hide()
+                        StyledButton {
+                            text: "Sounds Settings"
+                            Layout.fillWidth: true
+                            secondary: true
+                            topLeftRadius: 10
+                            bottomLeftRadius: 10
+                            onClicked: {
+                                mA.onClicked(null)
+                                popout.hide()
+                            }
                         }
                     }
                 }

@@ -205,6 +205,9 @@ BaseMenu {
                                         radius: 10
                                         color: Appearance.colors.m3surface_container_high
 
+                                        LoadingIcon {
+                                            anchors.centerIn: parent
+                                        }
                                         Image {
                                             anchors.fill: parent
                                             source: !itemIsVideo ? modelData : ""
