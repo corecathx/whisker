@@ -133,9 +133,9 @@ Rectangle {
 
                 StyledSlider {
                     useAnim: false
-                    trackHeightDiff: sliderHeight * 0.2
+                    trackHeightDiff: sliderHeight * 0.4
                     handleGap: 5
-                    handle.width: 2
+                    handle.width: 5
                     id: barSlider
                     implicitHeight: sliderHeight
                     icon: ""
