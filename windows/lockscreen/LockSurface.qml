@@ -495,8 +495,6 @@ WlSessionLockSurface {
         }
     }
 
-    FPSOverlay {}
-
     Connections {
         target: context
         function onUnlocked() {
