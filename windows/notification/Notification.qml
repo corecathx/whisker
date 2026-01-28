@@ -18,7 +18,8 @@ Scope {
         anchors {
             top: true
             bottom: true
-            right: true
+            left: Preferences.bar.position === 'right'
+            right: Preferences.bar.position !== 'right'
         }
         margins.right: -10
         color: "transparent"

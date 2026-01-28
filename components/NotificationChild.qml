@@ -45,7 +45,7 @@ Rectangle {
     property bool hovered: hover.hovered
     property bool pressed: mouseHandler.pressed
 
-    x: animateEntry ? width : 0
+    x: animateEntry ? Preferences.bar.position === "right" ? -width : width : 0
     Component.onCompleted: {
         x = 0;
     }
