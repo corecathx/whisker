@@ -77,6 +77,30 @@ Once installed, run `whisker shell` to start.
 </table>
 
 <div align="center">
+  <h3>✦ System Screens ✦</h3>
+</div>
+
+<table align="center">
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="./images/previews/preview-lockscreen.png"/><br>
+        <b>Lockscreen</b>
+      </td>
+      <td align="center">
+        <img src="./images/previews/preview-greeter.png"/><br>
+        <b>Greeter</b>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <img src="./images/previews/preview-default.png"/><br>
+        <b>Default Configuration</b><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div align="center">
     <h2>✦ Related Projects ✦</h2>
 </div>
 
