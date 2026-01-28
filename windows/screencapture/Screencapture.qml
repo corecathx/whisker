@@ -15,11 +15,8 @@ Scope {
     property rect selectedRegion: Qt.rect(0, 0, 0, 0)
     property string tempScreenshot: ""
 
-                IpcHandler {
+    IpcHandler {
         target: "screen"
-        function record() {
-            Log.info("screencap", "record not implemented");
-        }
         function capture() {
             if (root.active) {
                 Log.info("screencap", "already active");

@@ -29,7 +29,8 @@ Scope {
         color: active ? Appearance.colors.m3primary : Appearance.colors.m3surface_container_high
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
             }
         }
 
@@ -138,7 +139,7 @@ Scope {
             WlrLayershell.layer: WlrLayer.Top
 
             implicitWidth: 460 + 20
-            implicitHeight: 600 + 20
+            implicitHeight: 670 + 20
             color: 'transparent'
 
             Item {
@@ -359,6 +360,22 @@ Scope {
                             subtitle: Bluetooth.defaultAdapter.enabled ? "On" : "Off"
                             active: Bluetooth.defaultAdapter.enabled
                             onClicked: Bluetooth.defaultAdapter.enabled = !Bluetooth.defaultAdapter.enabled
+                        }
+                        StyledLargeButton {
+                            Layout.fillWidth: true
+                            icon: 'screen_record'
+                            label: "Screen record"
+                            subtitle: ScreenRecorder.isRecording ? ScreenRecorder.elapsedTime : "Off"
+                            active: ScreenRecorder.isRecording
+                            onClicked: ScreenRecorder.toggle()
+                        }
+                        StyledLargeButton {
+                            Layout.fillWidth: true
+                            icon: 'do_not_disturb'
+                            label: "Do not disturb"
+                            subtitle: !Preferences.misc.notificationEnabled ? "On" : "Off"
+                            active: !Preferences.misc.notificationEnabled
+                            onClicked: Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', 'misc.notificationEnabled', !Preferences.misc.notificationEnabled] })
                         }
                     }
 
