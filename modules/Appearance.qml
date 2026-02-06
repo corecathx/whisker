@@ -29,8 +29,11 @@ Singleton {
      * URI to the user’s profile image, typically located at ~/.face.
      * @values string (file:// URI)
      */
-    property string profileImage: "file://" + "/home/" + Quickshell.env("USER") + "/.face"
-
+    property string profileImage: "file://" + "/var/lib/whisker/avatars/" + Quickshell.env("USER")
+    property int _profileImageChanges: 0
+    function refreshProfileImage() {
+        root._profileImageChanges++;
+    }
     /**
      * Path to the whisker (logo) icon.
      * @values string (file path)

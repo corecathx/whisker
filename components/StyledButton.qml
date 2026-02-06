@@ -29,8 +29,8 @@ Control {
     ? Appearance.colors.m3on_primary
     : Appearance.colors.m3on_secondary_container
 
-  property color disabled_bg: Colors.opacify(base_bg, 0.4)
-  property color disabled_fg: Colors.opacify(base_fg, 0.4)
+  property color disabled_bg: Appearance.colors.m3surface_container
+  property color disabled_fg: Appearance.colors.m3on_surface_variant
 
   property color hover_bg: Qt.lighter(base_bg, 1.1)
   property color pressed_bg: Qt.darker(base_bg, 1.2)
@@ -48,8 +48,11 @@ Control {
       : row.implicitWidth + implicitHeight
   implicitHeight: 40
 
+  opacity: root.enabled ? 1.0 : 0.5
+
   contentItem: Item {
     anchors.fill: parent
+
     Row {
       id: row
       anchors.centerIn: parent
@@ -61,8 +64,9 @@ Control {
         font.pixelSize: root.icon_size
         color: root.text_color
         anchors.verticalCenter: parent.verticalCenter
+
         Behavior on color {
-          ColorAnimation { duration: Appearance.animation.fast / 2; easing.type: Appearance.animation.easing }
+          ColorAnimation { duration: 100; easing.type: Easing.OutCubic }
         }
       }
 
@@ -72,24 +76,41 @@ Control {
         color: root.text_color
         anchors.verticalCenter: parent.verticalCenter
         elide: Text.ElideRight
+
         Behavior on color {
-          ColorAnimation { duration: Appearance.animation.fast / 2; easing.type: Appearance.animation.easing }
+          ColorAnimation { duration: 100; easing.type: Easing.OutCubic }
         }
       }
     }
   }
 
   background: Rectangle {
-      id: background
+    id: background
     radius: 20
     color: root.background_color
-    Behavior on color { ColorAnimation { duration: Appearance.animation.fast / 2; easing.type: Appearance.animation.easing } }
-    Behavior on radius { NumberAnimation { duration: Appearance.animation.fast / 2; easing.type: Appearance.animation.easing } }
-    Behavior on topLeftRadius { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-    Behavior on topRightRadius { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-    Behavior on bottomLeftRadius { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-    Behavior on bottomRightRadius { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
 
+    Behavior on color {
+      ColorAnimation { duration: 100; easing.type: Easing.OutCubic }
+    }
+    Behavior on radius {
+      NumberAnimation { duration: 100; easing.type: Easing.OutCubic }
+    }
+    Behavior on topLeftRadius {
+      NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+    }
+    Behavior on topRightRadius {
+      NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+    }
+    Behavior on bottomLeftRadius {
+      NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+    }
+    Behavior on bottomRightRadius {
+      NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+    }
+  }
+
+  Behavior on opacity {
+    NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
   }
 
   MouseArea {
@@ -97,9 +118,9 @@ Control {
     anchors.fill: parent
     hoverEnabled: root.enabled
     cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ForbiddenCursor
+
     onClicked: {
       if (!root.enabled) return
-
       if (root.checkable) {
         root.checked = !root.checked
         root.toggled(root.checked)
@@ -109,19 +130,20 @@ Control {
   }
 
   HoverHandler {
-      id: hover
-      enabled: root.tooltipText !== ""
+    id: hover
+    enabled: root.tooltipText !== ""
   }
+
   LazyLoader {
-      active: root.tooltipText !== ""
-      StyledPopout {
-          hoverTarget: hover
-          hoverDelay: 500
-          Component {
-              StyledText {
-                  text: root.tooltipText
-              }
-          }
+    active: root.tooltipText !== ""
+    StyledPopout {
+      hoverTarget: hover
+      hoverDelay: 500
+      Component {
+        StyledText {
+          text: root.tooltipText
+        }
       }
+    }
   }
 }
