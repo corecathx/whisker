@@ -24,7 +24,7 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-    color: "transparent"
+    color: Appearance.colors.m3surface
     WlrLayershell.namespace: "whisker:prompt"
 
     function closeWithAnimation() {
