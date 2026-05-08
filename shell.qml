@@ -45,7 +45,7 @@ ShellRoot {
         StatsOverlay {}
     }
 
-    // EmojiWindow {}
+    EmojiWindow {}
 
     // Whisker Apps.
     Launcher {}
