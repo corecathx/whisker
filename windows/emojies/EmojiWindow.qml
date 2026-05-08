@@ -8,6 +8,7 @@ import qs.components
 
 Scope {
     id: root
+    property bool active: false
     property var emojiModel: []
     property int margin: 20
     property int emojiSize: 50
@@ -28,12 +29,19 @@ Scope {
         }
     }
 
+    IpcHandler {
+        target: "emojies"
+        function toggle() {
+            root.active = !root.active;
+        }
+    }
+
     Window {
         id: emojiPanel
         width: 450 + root.margin * 2
         height: 300 + root.margin * 2
         flags: Qt.Tool | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
-        visible: true
+        visible: root.active
         color: "transparent"
 
         x: root.mouseX + 20
