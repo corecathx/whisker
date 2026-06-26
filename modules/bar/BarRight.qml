@@ -27,6 +27,11 @@ Item {
             MprisTray { id: mprisTray }
         }
 
+        Tray {
+            visible: !root.inLockScreen 
+            Layout.alignment: Qt.AlignVCenter
+        }
+
         Item {
             implicitWidth: trays.implicitWidth + 20
             implicitHeight: 25

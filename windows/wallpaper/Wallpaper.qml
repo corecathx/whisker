@@ -304,13 +304,31 @@ PanelWindow {
 
         spacing: -10
 
-        StyledText {
-            text: Qt.formatDateTime(Time.date, "HH:mm")
-            font.family: "Outfit ExtraBold"
-            color: Appearance.colors.m3primary
-            font.pixelSize: 72
+        RowLayout {
             visible: Preferences.widgets.desktop.clock
+            StyledText {
+                Layout.alignment: Qt.AlignCenter
+                text: Qt.formatDateTime(Time.date, "HH")
+                font.family: "Outfit Black"
+                color: Appearance.colors.m3primary
+                font.pixelSize: 96
+            }
+            StyledText {
+                Layout.alignment: Qt.AlignCenter
+                text: ":"
+                font.family: "Outfit Black"
+                color: Appearance.colors.m3error
+                font.pixelSize: 96
+            }
+            StyledText {
+                Layout.alignment: Qt.AlignCenter
+                text: Qt.formatDateTime(Time.date, "mm")
+                font.family: "Outfit Black"
+                color: Appearance.colors.m3secondary
+                font.pixelSize: 96
+            }
         }
+
 
         StyledText {
             text: Qt.formatDateTime(Time.date, "dddd, dd/MM")

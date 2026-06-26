@@ -42,10 +42,5 @@ Item {
         ActiveWindow {
             Layout.alignment: Qt.AlignVCenter
         }
-        Tray {
-            visible: !root.inLockScreen 
-            Layout.alignment: Qt.AlignVCenter
-        }
-
     }
 }

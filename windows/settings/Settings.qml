@@ -1,12 +1,14 @@
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
+import Quickshell.Hyprland as Hypr
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Window
 import qs.modules
 import qs.modules.corners
+import qs.components.misc
 import qs.components
 import qs.services
 
@@ -24,6 +26,16 @@ Scope {
                     }
                 }
             }
+        }
+    }
+
+
+    CustomShortcut {
+        name: "settings"
+        description: "Open Whisker settings."
+
+        onReleased: () => {
+            Globals.visible_settingsMenu = !Globals.visible_settingsMenu;
         }
     }
 

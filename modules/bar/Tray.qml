@@ -14,12 +14,28 @@ Item {
     anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
 
     clip: true
-    visible: width > 0 && height > 0
-    implicitWidth: layout.width
-    implicitHeight: layout.height
+    visible: implicitWidth > 0 && implicitHeight > 0
+    implicitWidth: bg.width
+    implicitHeight: bg.height
+
+    Rectangle {
+        id: bg
+        implicitWidth: layout.implicitWidth + 10
+        implicitHeight: 25
+        radius: 20
+        color: Appearance.colors.m3surface_container
+
+        Behavior on implicitWidth {
+            NumberAnimation {
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
+            }
+        }
+    }
 
     GridLayout {
         id: layout
+        anchors.centerIn: parent
         rows: root.verticalMode ? 1 : 4
         columns: root.verticalMode ? 1 : 4
         rowSpacing: 10
@@ -32,8 +48,8 @@ Item {
             delegate: Item {
                 id: trayItemRoot
                 required property SystemTrayItem modelData
-                implicitWidth: 20
-                implicitHeight: 20
+                implicitWidth: 16
+                implicitHeight: 16
 
                 IconImage {
                     source: {

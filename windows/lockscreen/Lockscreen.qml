@@ -3,6 +3,7 @@ import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
 import qs.services
+import qs.components.misc
 import qs.modules
 ShellRoot {
 	id: root
@@ -15,6 +16,16 @@ ShellRoot {
             lock.locked = true
         }
     }
+
+	CustomShortcut {
+		name: "lock"
+		description: "Lock session."
+		onPressed: () => {
+			if (lock.locked) 
+				return;
+            lock.locked = true
+		}
+	}
 
 	LockContext {
 		id: lockContext

@@ -8,6 +8,7 @@ import QtQuick.Effects
 import Quickshell.Wayland
 import qs.modules
 import qs.components
+import qs.components.misc
 
 Scope {
     id: root
@@ -18,6 +19,19 @@ Scope {
     IpcHandler {
         target: "screen"
         function capture() {
+            if (root.active) {
+                Log.info("screencap", "already active");
+                return;
+            }
+            Log.info("screencap", "starting capture");
+            root.active = true;
+        }
+    }
+    CustomShortcut {
+        name: "screenshot"
+        description: "Toggle Whisker's launcher."
+
+        onReleased: () => {
             if (root.active) {
                 Log.info("screencap", "already active");
                 return;

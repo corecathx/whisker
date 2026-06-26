@@ -65,7 +65,7 @@ Item {
                     if (!Hyprland.currentWorkspace.hasWindow) {
                         return "Workspace " + Hyprland.activeWsId;
                     }
-                    return Utils.truncateText(root.actualTitle, 35);
+                    return Utils.truncateText(root.actualTitle, 50);
                 }
                 font.pixelSize: 12
                 font.family: "Outfit Medium"

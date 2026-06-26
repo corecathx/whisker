@@ -18,6 +18,7 @@ ClippingRectangle {
     }
     Image {
         id: logo
+        asynchronous: true
         source: {
             const basePath = root.username !== ""
                 ? "file:///var/lib/whisker/avatars/" + root.username
@@ -25,8 +26,8 @@ ClippingRectangle {
             return basePath + "?" + Appearance._profileImageChanges;
         }
         anchors.fill: parent
+        sourceSize: Qt.size(parent.implicitWidth, parent.implicitHeight)
         fillMode: Image.PreserveAspectCrop
         smooth: true
-        cache: false
     }
 }
