@@ -134,7 +134,23 @@ Singleton {
                   }
               },
           ]
-      }
+      },
+      {
+          trigger: "/logout",
+          name: "Logout",
+          icon: "logout",
+          comment: "Log out from your current session",
+          mode: "direct",
+          exec: function(input) {
+
+              Quickshell.execDetached({
+                  command: [
+                      "hyprctl","dispatch", "hl.dsp.exit()"
+                  ]
+              });
+              return null;
+          }
+      },
   ];
 
   function getMatchedCommand(query) {

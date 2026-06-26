@@ -117,11 +117,11 @@ Singleton {
     component AnimationStruct: QtObject {
         property real multiplier: 1
 
-        property real fast: 250 * multiplier
+        property real fast: 300 * multiplier
         property real medium: 500 * multiplier
         property real slow: 1000 * multiplier
 
-        property var easing: Easing.OutExpo
+        property var easing: Easing.OutCubic
     }
     component M3Palette: QtObject {
         property color m3background: "#111318"

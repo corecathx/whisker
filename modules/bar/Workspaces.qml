@@ -60,7 +60,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: if (Hyprland.activeWsId !== id) Hyprland.dispatch(`workspace ${id}`)
+                    onClicked: if (Hyprland.activeWsId !== id) Hyprland.dispatch(`hl.dsp.focus({ workspace = ${id} })`)
                 }
             }
         }
@@ -82,10 +82,11 @@ Item {
             if (Math.abs(accumulatedDelta) >= threshold) {
                 if (accumulatedDelta > 0) {
                     if (current > 1)
-                        Hyprland.dispatch("workspace -1")
+                        Hyprland.dispatch("hl.dsp.focus({ workspace = \"-1\" })")
                 } else {
                     if (current < total)
-                        Hyprland.dispatch("workspace +1")
+                        Hyprland.dispatch("hl.dsp.focus({ workspace = \"1\" })")
+
                 }
 
                 accumulatedDelta = 0
