@@ -8,6 +8,7 @@ import Quickshell.Io
 import qs.services
 import qs.modules
 import qs.components
+import qs.components.misc
 import qs.components.effects
 
 Scope {
@@ -21,17 +22,21 @@ Scope {
         }
     }
 
+	CustomShortcut {
+		name: "clipboard"
+		description: "Toggle clipboard."
+		onPressed: () => {
+            root.active = !root.active;
+		}
+	}
+
     LazyLoader {
         active: root.active
 
         PanelWindow {
             id: window
-            implicitWidth: 400
+            implicitWidth: screen.width * 0.6
             implicitHeight: 560
-            anchors {
-                right: true
-                bottom: true
-            }
             color: "transparent"
             WlrLayershell.layer: WlrLayer.Overlay
 
@@ -332,13 +337,24 @@ Scope {
                                     spacing: 5
 
                                     StyledText {
+                                        visible: modelData.isBinary
+                                        Layout.fillWidth: true
+                                        text: modelData.content
+                                        wrapMode: Text.Wrap
+                                        maximumLineCount: 3
+                                        elide: Text.ElideRight
+                                        font.pixelSize: 16
+                                        color: Appearance.colors.m3on_surface
+                                    }
+
+                                    StyledText {
                                         visible: !modelData.isBinary
                                         Layout.fillWidth: true
                                         text: modelData.content
                                         wrapMode: Text.Wrap
                                         maximumLineCount: 3
                                         elide: Text.ElideRight
-                                        font.pixelSize: 13
+                                        font.pixelSize: 16
                                         color: Appearance.colors.m3on_surface
                                     }
 

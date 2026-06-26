@@ -9,6 +9,7 @@ import qs.modules
 import qs.services
 import qs.components
 import qs.components.effects
+import qs.components.misc
 import qs.preferences
 import qs.modules.bar
 import Quickshell.Hyprland
@@ -118,6 +119,15 @@ Scope {
     IpcHandler {
         target: "quickpanel"
         function toggle() {
+            root.opened = !root.opened;
+        }
+    }
+
+    CustomShortcut {
+        name: "quickpanel"
+        description: "Toggle Whisker's Quickpanel."
+
+        onReleased: () => {
             root.opened = !root.opened;
         }
     }

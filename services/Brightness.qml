@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.components.misc
 
 Singleton {
     id: root
@@ -96,5 +97,20 @@ Singleton {
 
     Process {
         id: setBnProc
+    }
+
+    CustomShortcut {
+        name: "brightnessUp"
+        description: "Increase brightness."
+        onPressed: () => {
+            root.set(value + 0.05);
+        }
+    }
+    CustomShortcut {
+        name: "brightnessDown"
+        description: "Decrease brightness."
+        onPressed: () => {
+            root.set(value - 0.05);
+        }
     }
 }

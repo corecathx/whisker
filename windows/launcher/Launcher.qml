@@ -11,6 +11,7 @@ import qs.modules.corners
 import qs.components
 import qs.preferences
 import qs.services
+import qs.components.misc
 
 Scope {
     id: root
@@ -104,6 +105,16 @@ Scope {
     IpcHandler {
         target: "launcher"
         function toggle() {
+            root.opened = !root.opened;
+        }
+    }
+
+    CustomShortcut {
+        name: "launcher"
+        appid: "whisker"
+        description: "Toggle Whisker's launcher."
+
+        onReleased: () => {
             root.opened = !root.opened;
         }
     }
