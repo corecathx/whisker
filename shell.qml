@@ -29,9 +29,14 @@ import qs.windows.keybinds
 import qs.preferences
 
 ShellRoot {
+    id: root
+    readonly property bool debug: Quickshell.env("QSG_VISUALIZE") !== ""
     // Shell-specific windows.
     Wallpaper {}
-    ScreenCorners {}
+    LazyLoader {
+        active: !root.debug;
+        ScreenCorners {}
+    }
     OsdPanel {}
     Bar {}
     QuickPanel {}
@@ -41,7 +46,6 @@ ShellRoot {
 
     LazyLoader {
         active: Preferences.misc.showStatsOverlay
-
         StatsOverlay {}
     }
 

@@ -195,7 +195,13 @@ Scope {
                                     source: Quickshell.iconPath(System.logo)
                                 }
                                 StyledText {
-                                    text: 'Uptime ' + Utils.formatSeconds(System.uptime) + " • " + Power.chargingInfo
+                                    text: {
+                                        let txt = 'Uptime ' + Utils.formatSeconds(System.uptime);
+                                        if (Power.laptop) {
+                                            txt += " • " + Power.chargingInfo
+                                        }
+                                        return txt;
+                                    }
                                     color: Appearance.colors.m3on_surface_variant
                                     font.pixelSize: 12
                                 }

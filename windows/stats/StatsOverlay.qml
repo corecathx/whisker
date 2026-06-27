@@ -10,7 +10,7 @@ import qs.components
 
 PanelWindow {
     id: win
-    visible: true
+    visible: Preferences.misc.showStatsOverlay
     implicitWidth: 500
     implicitHeight: screen.height
     color: "transparent"

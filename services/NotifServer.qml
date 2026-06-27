@@ -99,6 +99,7 @@ Singleton {
             }
             onTriggered: {
                 notif.popup = false;
+                root._updateCounter++;
             }
         }
 

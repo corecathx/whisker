@@ -130,6 +130,7 @@ Scope {
             implicitHeight: (screen.height * 0.6) + 20
 
             anchors.bottom: true
+            WlrLayershell.namespace: 'whisker:launcher'
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusionMode: ExclusionMode.Normal
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive

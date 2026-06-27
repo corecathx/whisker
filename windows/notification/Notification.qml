@@ -14,7 +14,25 @@ Scope {
     PanelWindow {
         id: window
         implicitWidth: 440
-        visible: true
+
+        property bool hasPopups: NotifServer.popups.rowCount() > 0
+        visible: hasPopups
+
+        Connections {
+            target: NotifServer.popups
+
+            function onRowsInserted() {
+                window.hasPopups = NotifServer.popups.rowCount() > 0
+            }
+
+            function onRowsRemoved() {
+                window.hasPopups = NotifServer.popups.rowCount() > 0
+            }
+
+            function onModelReset() {
+                window.hasPopups = NotifServer.popups.rowCount() > 0
+            }
+        }
         anchors {
             top: true
             bottom: true

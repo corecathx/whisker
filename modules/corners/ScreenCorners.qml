@@ -21,6 +21,7 @@ PanelWindow {
 
     mask: Region {}
     WlrLayershell.layer: WlrLayer.Top
+    WlrLayershell.namespace: 'whisker:corners'
     exclusionMode: Preferences.bar.small || Preferences.bar.floating ? ExclusionMode.Ignore : ExclusionMode.Auto
 
     property int shadowSize: 20

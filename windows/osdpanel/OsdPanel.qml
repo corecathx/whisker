@@ -10,9 +10,12 @@ import Quickshell.Wayland
 
 Scope {
     id: root
+    
     PanelWindow {
         id: window
         // implicitWidth: 240
+        property bool osdVisible: volumeOsd.active || brightnessOsd.active
+        visible: osdVisible
 
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.namespace: "whisker:osdpanel"
@@ -94,8 +97,8 @@ Scope {
                         return count
                     }
 
-                    VolumeOsd { Layout.alignment: contentWrapper.visibleCount === 1 ? Qt.AlignTop : Qt.AlignRight | Qt.AlignTop }
-                    BrightnessOsd { Layout.alignment: contentWrapper.visibleCount === 1 ? Qt.AlignTop : Qt.AlignLeft | Qt.AlignTop }
+                    VolumeOsd { id: volumeOsd; Layout.alignment: contentWrapper.visibleCount === 1 ? Qt.AlignTop : Qt.AlignRight | Qt.AlignTop }
+                    BrightnessOsd { id: brightnessOsd; Layout.alignment: contentWrapper.visibleCount === 1 ? Qt.AlignTop : Qt.AlignLeft | Qt.AlignTop }
                 }
             }
         }

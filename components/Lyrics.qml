@@ -27,6 +27,7 @@ Item {
 
         StyledText {
             id: mainLyric
+            
             visible: Lrclib.status === "LOADED" && text !== ""
             Layout.alignment: Qt.AlignHCenter
             font.pixelSize: 24
@@ -50,6 +51,7 @@ Item {
             updateLyrics();
         }
         function onCurrentLineIndexChanged() {
+            
             updateLyrics();
         }
     }

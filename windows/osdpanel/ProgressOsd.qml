@@ -5,6 +5,7 @@ import qs.modules
 
 Item {
     id: root
+    readonly property bool active: opacity > 0
     property bool shouldAnimateHeight: true
     property bool shouldShowOsd: false
     property string iconName: ""
