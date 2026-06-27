@@ -30,7 +30,10 @@ import qs.preferences
 
 ShellRoot {
     id: root
-    readonly property bool debug: Quickshell.env("QSG_VISUALIZE") !== ""
+    function getEnvSafe(env) {
+        return Quickshell.env(env) ?? ""
+    }
+    readonly property bool debug: getEnvSafe("QSG_VISUALIZE") !== ""
     // Shell-specific windows.
     Wallpaper {}
     LazyLoader {
@@ -55,6 +58,7 @@ ShellRoot {
     Launcher {}
 
     Component.onCompleted: {
+        console.log("isDebug: " + debug);
         Theme.init();
         Audio.init();
         Brightness.init();
