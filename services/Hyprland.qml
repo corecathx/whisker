@@ -80,6 +80,7 @@ Singleton {
                     focused: ws ? ws.focused : (root.activeWsId === i),
                     workspaceId: ws ? ws.id : -1,
                     hasWorkspace: !!ws,
+                    hasWindows: ws ? ws.toplevels.values.length > 0 : false,
                     name: ws?.name || ""
                 });
             }

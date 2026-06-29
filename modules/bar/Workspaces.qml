@@ -51,7 +51,12 @@ Item {
                 radius: 20
                 anchors.verticalCenter: parent.verticalCenter
                 opacity: focused ? 1.0 : 0.4
-                color: focused ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
+
+                color: {
+                    if (focused || hasWindows)
+                        return Appearance.colors.m3primary;
+                    return Appearance.colors.m3primary_container;
+                }
 
                 Behavior on width { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
                 Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
