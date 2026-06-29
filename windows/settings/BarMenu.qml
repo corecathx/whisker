@@ -11,15 +11,9 @@ import qs.preferences
 
 BaseMenu {
     title: "Bar"
-    description: "Adjust how the Bar panel behaves."
+    description: "Customize the appearance and behavior of the bar."
 
     BaseCard {
-        // StyledText {
-        //     text: "Bar"
-        //     font.pixelSize: 20
-        //     font.bold: true
-        //     color: Appearance.colors.m3on_background
-        // }
 
         ColumnLayout {
             StyledText {
@@ -31,17 +25,18 @@ BaseMenu {
             StyledDropDown {
                 Layout.fillWidth: true
                 label: "Bar Position"
-                model: ['Left', 'Bottom', 'Top', 'Right']
+                model: ["Left", "Bottom", "Top", "Right"]
+
                 currentIndex: {
                     const pos = Preferences.bar.position
-                    const positions = ['left', 'bottom', 'top', 'right']
+                    const positions = ["left", "bottom", "top", "right"]
                     return positions.indexOf(pos)
                 }
 
                 onSelectedIndexChanged: (index) => {
-                    const positions = ['left', 'bottom', 'top', 'right']
+                    const positions = ["left", "bottom", "top", "right"]
                     Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'bar.position', positions[index]]
+                        command: ["whisker", "prefs", "set", "bar.position", positions[index]]
                     })
                 }
             }
@@ -49,20 +44,20 @@ BaseMenu {
 
         SwitchOption {
             title: "Keep bar opaque"
-            description: "Padding for bars\nThis will only take effect if `smallBar` is `true`."
+            description: "Keep the bar fully opaque at all times. If disabled, the bar becomes transparent when appropriate, such as on the desktop."
             prefField: "bar.keepOpaque"
         }
 
         SwitchOption {
             title: "Small bar"
-            description: "Whether to keep the bar opaque or not\nIf disabled, the bar will adjust it's transparency, such as on desktop, etc."
+            description: "Use a compact bar. When enabled, you can adjust the padding between the bar and the edge of the screen."
             prefField: "bar.small"
         }
 
         SliderOption {
             visible: Preferences.bar.small && Preferences.horizontalBar()
             title: "Padding"
-            description: "Set how large / small is the gap between the bar and your screen."
+            description: "Set the space between the bar and the edge of the screen."
             prefField: "bar.padding"
             from: 0
             to: 500
@@ -71,17 +66,20 @@ BaseMenu {
 
         SwitchOption {
             title: "Auto hide bar"
-            description: "Whether to automatically hide the bar\nTo show your bar again, move your cursor to the edge of your bar's position."
+            description: "Automatically hide the bar. Move your cursor to the edge of the screen where the bar is located to reveal it."
             prefField: "bar.autoHide"
         }
+
         SwitchOption {
             title: "Floating mode"
-            description: "If enabled, the bar won't appear attached to edge of your screen."
+            description: "Display the bar detached from the edge of the screen instead of being attached to it."
             prefField: "bar.floating"
         }
 
-        SwitchOption { title: "Render Overview Windows"; description: "Render window previews in the overview"; prefField: "misc.renderOverviewWindows" }
-
+        SwitchOption {
+            title: "Render Overview Windows"
+            description: "Show live window previews in the workspace overview."
+            prefField: "misc.renderOverviewWindows"
+        }
     }
-
 }
