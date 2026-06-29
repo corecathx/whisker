@@ -9,18 +9,17 @@ import qs.preferences
 
 Item {
     id: root
-    readonly property Repeater items: items
+    readonly property Repeater items: itemsRep
     property bool verticalMode: false
     anchors.horizontalCenter: verticalMode ? parent.horizontalCenter : undefined
-
+    visible: implicitWidth > 0
     clip: true
-    visible: implicitWidth > 0 && implicitHeight > 0
     implicitWidth: bg.width
     implicitHeight: bg.height
 
     Rectangle {
         id: bg
-        implicitWidth: layout.implicitWidth + 10
+        implicitWidth: layout.implicitWidth > 0 ? layout.implicitWidth + 10 : 0
         implicitHeight: 25
         radius: 20
         color: Appearance.colors.m3surface_container
@@ -42,7 +41,7 @@ Item {
         columnSpacing: 10
 
         Repeater {
-            id: items
+            id: itemsRep
             model: SystemTray.items
 
             delegate: Item {

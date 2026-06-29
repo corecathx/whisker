@@ -28,7 +28,6 @@ Item {
         }
 
         Tray {
-            visible: !root.inLockScreen 
             Layout.alignment: Qt.AlignVCenter
         }
 
