@@ -4,8 +4,10 @@ import Quickshell
 import Quickshell.Services.Pipewire
 import qs.modules
 import qs.preferences
+import qs.components.misc
 
 Singleton {
+    id: root
     PwObjectTracker {
         objects: [
             Pipewire.defaultAudioSource,
@@ -62,6 +64,22 @@ Singleton {
 
     function setDefaultSource(source: PwNode): void {
         Pipewire.preferredDefaultAudioSource = source
+    }
+
+
+    CustomShortcut {
+        name: "volumeUp"
+        description: "Increase volume."
+        onPressed: () => {
+            root.setVolume(volume + 0.05);
+        }
+    }
+    CustomShortcut {
+        name: "volumeDown"
+        description: "Decrease volume."
+        onPressed: () => {
+            root.setVolume(volume - 0.05);
+        }
     }
 
     function init() {
