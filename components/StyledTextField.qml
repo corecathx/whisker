@@ -32,15 +32,21 @@ TextField {
     font.pixelSize: 14
     cursorVisible: control.focus
     cursorDelegate: Rectangle {
+        id: cursor
         width: 2
         color: Appearance.colors.m3primary
-        visible: control.focus
-        SequentialAnimation on opacity {
-            loops: Animation.Infinite
+        Timer {
+            interval: 500
+            repeat: true
             running: control.focus
-            NumberAnimation { from: 1; to: 0; duration: Appearance.animation.slow*2 }
-            NumberAnimation { from: 0; to: 1; duration: Appearance.animation.slow*2 }
+            onTriggered: cursor.opacity = cursor.opacity > 0.5 ? 0 : 1;
         }
+        // SequentialAnimation on opacity {
+        //     loops: Animation.Infinite
+        //     running: control.focus
+        //     NumberAnimation { from: 1; to: 0; duration: Appearance.animation.slow*2 }
+        //     NumberAnimation { from: 0; to: 1; duration: Appearance.animation.slow*2 }
+        // }
     }
     background: ClippingRectangle {
         color: "transparent"
