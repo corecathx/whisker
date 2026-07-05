@@ -54,7 +54,7 @@ Item {
         id: hover
     }
 
-    Rectangle {
+    StyledRectangle {
         anchors.fill: parent
         color: Appearance.colors.m3surface
         radius: 20
@@ -120,7 +120,7 @@ Item {
                 }
             }
 
-            Rectangle {
+            StyledRectangle {
                 width: 1
                 height: 20
                 color: Appearance.colors.m3outline
@@ -435,7 +435,7 @@ Item {
             }
         }
 
-        Rectangle {
+        StyledRectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 1
             Layout.topMargin: 4

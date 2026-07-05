@@ -11,7 +11,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import QtMultimedia
 
-Rectangle {
+StyledRectangle {
     id: musicPlayer
     clip: true
     visible: !!Players.active
@@ -70,7 +70,7 @@ Rectangle {
                     }
                 }
 
-                Rectangle {
+                StyledRectangle {
                     anchors.fill: parent
                     color: Colors.opacify(Appearance.colors.m3surface, coverParent.hovered ? 0.6 : 0)
                     Behavior on color {

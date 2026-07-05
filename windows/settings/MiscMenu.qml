@@ -66,7 +66,7 @@ BaseMenu {
         }
     }
 
-    component Divider: Rectangle {
+    component Divider: StyledRectangle {
         height: 1
         Layout.fillWidth: true
         color: Appearance.colors.m3on_surface_variant

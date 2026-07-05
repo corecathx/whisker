@@ -1,4 +1,3 @@
-// BaseShadow.qml
 import QtQuick.Effects
 
 MultiEffect {

@@ -31,7 +31,7 @@ TextField {
     font.family: "Outfit"
     font.pixelSize: 14
     cursorVisible: control.focus
-    cursorDelegate: Rectangle {
+    cursorDelegate: StyledRectangle {
         id: cursor
         width: 2
         color: Appearance.colors.m3primary
@@ -55,12 +55,12 @@ TextField {
         topRightRadius: bg.topRightRadius
         bottomLeftRadius: bg.bottomLeftRadius
         bottomRightRadius: bg.bottomRightRadius
-        Rectangle {
+        StyledRectangle {
             id: bg
             anchors.fill: parent
             radius: 4
             color: control.backgroundColor
-            Rectangle {
+            StyledRectangle {
                 anchors.fill: parent
                 radius: parent.radius
                 color: {
@@ -73,7 +73,7 @@ TextField {
                 Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
             }
         }
-        Rectangle {
+        StyledRectangle {
             id: indicator
             anchors.left: parent.left
             anchors.right: parent.right
@@ -90,7 +90,7 @@ TextField {
             Behavior on height { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
             Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing; } }
         }
-        Rectangle {
+        StyledRectangle {
             id: outline
             anchors.fill: parent
             radius: bg.radius

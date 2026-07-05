@@ -58,7 +58,7 @@ Item {
         hideTimer.restart()
     }
 
-    Rectangle {
+    StyledRectangle {
         anchors.fill: parent
         radius: Appearance.rounding.medium
         color: Appearance.colors.m3surface

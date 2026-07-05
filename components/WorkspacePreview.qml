@@ -49,7 +49,7 @@ Item {
                     }
                     cursorShape: Qt.PointingHandCursor
                 }
-                Rectangle {
+                StyledRectangle {
                     anchors.fill: parent
                     radius: 10
                     color: "transparent"
@@ -63,7 +63,7 @@ Item {
                         }
                     }
                 }
-                Rectangle {
+                StyledRectangle {
                     id: workspaceCard
                     anchors.fill: parent
                     anchors.margins: focused ? 2 : 0
@@ -138,7 +138,7 @@ Item {
                             Drag.hotSpot.x: width / 2
                             Drag.hotSpot.y: height / 2
 
-                            Rectangle {
+                            StyledRectangle {
                                 id: previewContainer
                                 anchors.fill: parent
                                 color: "transparent"
@@ -160,7 +160,7 @@ Item {
                                     }
                                 }
 
-                                Rectangle {
+                                StyledRectangle {
                                     id: darker
                                     anchors.fill: parent
                                     color: Appearance.colors.m3surface
@@ -173,7 +173,7 @@ Item {
                                     }
                                 }
 
-                                Rectangle {
+                                StyledRectangle {
                                     width: windowMouseArea.containsMouse ? 60 : 50
                                     height: windowMouseArea.containsMouse ? 60 : 50
                                     color: Appearance.colors.m3surface
@@ -214,7 +214,7 @@ Item {
                                     }
                                 }
 
-                                Rectangle {
+                                StyledRectangle {
                                     anchors.fill: parent
                                     radius: 5
                                     color: "transparent"
@@ -301,7 +301,7 @@ Item {
                     }
 
                     // drop area highlight
-                    Rectangle {
+                    StyledRectangle {
                         anchors.fill: parent
                         radius: 10
                         color: Appearance.colors.m3primary

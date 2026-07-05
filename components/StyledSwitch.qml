@@ -26,7 +26,7 @@ Item {
         }
     }
 
-    Rectangle {
+    StyledRectangle {
         id: track
         anchors.fill: parent
         radius: trackRadius
@@ -40,7 +40,7 @@ Item {
         }
     }
 
-    Rectangle {
+    StyledRectangle {
         id: thumb
         width: thumbSize
         height: thumbSize

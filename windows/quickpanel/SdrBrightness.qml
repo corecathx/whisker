@@ -6,7 +6,7 @@ import Quickshell.Io
 import qs.components
 import qs.modules
 
-Rectangle {
+StyledRectangle {
     id: root
     color: "transparent"
     Layout.fillWidth: true
@@ -77,7 +77,7 @@ Rectangle {
             }
         }
 
-        Rectangle {
+        StyledRectangle {
             id: bar
             clip: true
             anchors.top: parent.top

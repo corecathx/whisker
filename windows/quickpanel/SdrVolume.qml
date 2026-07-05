@@ -6,7 +6,7 @@ import Quickshell.Io
 import qs.components
 import qs.modules
 
-Rectangle {
+StyledRectangle {
     id: root
     color: "transparent"
     Layout.fillWidth: true
@@ -52,7 +52,7 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    StyledRectangle {
         height: 10
         color: root.backgroundColor
         anchors.verticalCenter: parent.verticalCenter
@@ -62,13 +62,13 @@ Rectangle {
         anchors.leftMargin: parent.height*0.5
         anchors.rightMargin: parent.height*0.5
     }
-    Rectangle {
+    StyledRectangle {
         id: background
         anchors.fill: parent
         radius: 100
         color: "transparent"
 
-        Rectangle {
+        StyledRectangle {
             id: bar
             radius: 20
             anchors.top: parent.top

@@ -515,7 +515,7 @@ BaseMenu {
         verticalPadding: 0
         cardMargin: 0
 
-        Rectangle {
+        StyledRectangle {
             Layout.preferredWidth: 40
             Layout.preferredHeight: 40
             radius: 10

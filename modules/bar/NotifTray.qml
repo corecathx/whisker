@@ -25,7 +25,7 @@ Item {
             icon: root.icon
             color: Appearance.colors.m3on_background
         }
-        Rectangle {
+        StyledRectangle {
             visible: NotifServer.data.values.length > 0
             implicitHeight: 14
             radius: 10

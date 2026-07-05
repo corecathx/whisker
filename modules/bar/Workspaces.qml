@@ -26,7 +26,7 @@ Item {
         angle: verticalMode ? 90 : 0
     }
 
-    Rectangle {
+    StyledRectangle {
         id: bgRect
         opacity: !Preferences.bar.keepOpaque && !Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
         Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
@@ -44,7 +44,7 @@ Item {
         Repeater {
             model: Hyprland.fullWorkspaces
 
-            delegate: Rectangle {
+            delegate: StyledRectangle {
                 id: pill
                 width: focused ? 20 : 10
                 height: 10

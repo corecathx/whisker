@@ -36,7 +36,7 @@ Item {
             implicitHeight: 25
             anchors.verticalCenter: parent.verticalCenter
 
-            Rectangle {
+            StyledRectangle {
                 id: bgRect
                 anchors.fill: parent
                 radius: 20

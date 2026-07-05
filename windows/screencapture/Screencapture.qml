@@ -260,21 +260,21 @@ Scope {
                         anchors.fill: parent
                         visible: (selection.hasSelection || selection.selecting) && !win.windowMode
 
-                        Rectangle {
+                        StyledRectangle {
                             y: 0
                             width: parent.width
                             height: selection.sy
                             color: "black"
                             opacity: 0.5
                         }
-                        Rectangle {
+                        StyledRectangle {
                             y: selection.sy + selection.h
                             width: parent.width
                             height: parent.height - (selection.sy + selection.h)
                             color: "black"
                             opacity: 0.5
                         }
-                        Rectangle {
+                        StyledRectangle {
                             x: 0
                             y: selection.sy
                             width: selection.sx
@@ -282,7 +282,7 @@ Scope {
                             color: "black"
                             opacity: 0.5
                         }
-                        Rectangle {
+                        StyledRectangle {
                             x: selection.sx + selection.w
                             y: selection.sy
                             width: parent.width - (selection.sx + selection.w)
@@ -291,7 +291,7 @@ Scope {
                             opacity: 0.5
                         }
 
-                        Rectangle {
+                        StyledRectangle {
                             x: selection.sx
                             y: selection.sy
                             width: selection.w
@@ -310,7 +310,7 @@ Scope {
                         }
                     }
 
-                    Rectangle {
+                    StyledRectangle {
                         id: outline
                         x: selection.sx
                         y: selection.sy
@@ -322,7 +322,7 @@ Scope {
                         visible: (selection.selecting || selection.hasSelection) && !win.windowMode
                     }
 
-                    Rectangle {
+                    StyledRectangle {
                         visible: selection.selecting
                         anchors.top: outline.bottom
                         anchors.topMargin: 10
@@ -438,7 +438,7 @@ Scope {
                             height: visible ? w.size[1] * sy : 0
                             z: w?.floating ? (hover.containsMouse ? 1000 : 100) : (hover.containsMouse ? 50 : 0)
 
-                            Rectangle {
+                            StyledRectangle {
                                 anchors.fill: parent
                                 color: "transparent"
                                 border.color: Appearance.colors.m3primary
@@ -449,7 +449,7 @@ Scope {
                                 }
                             }
 
-                            Rectangle {
+                            StyledRectangle {
                                 anchors.fill: parent
                                 color: Appearance.colors.m3primary
                                 opacity: hover.containsMouse ? 0.15 : 0
@@ -558,7 +558,7 @@ Scope {
                     width: row.width + 20
                     height: row.height + 20
 
-                    Rectangle {
+                    StyledRectangle {
                         anchors.fill: parent
                         color: Appearance.colors.m3surface
                         radius: Appearance.rounding.large
@@ -574,7 +574,7 @@ Scope {
                             tooltipText: "Capture the whole screen [F]"
                             onClicked: win.captureFullscreen()
                         }
-                        Rectangle {
+                        StyledRectangle {
                             Layout.fillHeight: true
                             width: 2
                             color: Appearance.colors.m3on_surface_variant

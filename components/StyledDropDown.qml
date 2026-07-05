@@ -56,7 +56,7 @@ Item {
         font.weight: Font.Normal
     }
 
-    Rectangle {
+    StyledRectangle {
         id: container
         anchors.fill: parent
         color: "transparent"
@@ -92,7 +92,7 @@ Item {
                     : dropdown.popup.open()
             }
 
-            Rectangle {
+            StyledRectangle {
                 anchors.fill: parent
                 radius: parent.parent.radius
                 color: Appearance.colors.m3primary
@@ -162,7 +162,7 @@ Item {
             width: root.width
             padding: 0
 
-            background: Rectangle {
+            background: StyledRectangle {
                 color: Appearance.colors.m3surface_container
                 radius: 4
                 border.color: Appearance.colors.m3outline
@@ -195,7 +195,7 @@ Item {
                     width: listView.width
                     height: 48
 
-                    background: Rectangle {
+                    background: StyledRectangle {
                         color: {
                             if (itemMouse.pressed)
                                 return Colors.opacify(

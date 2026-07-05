@@ -8,7 +8,7 @@ Item {
 
     anchors.fill: parent
 
-    Rectangle {
+    StyledRectangle {
         anchors.fill: parent
         color: Appearance.panel_color
 
@@ -29,7 +29,7 @@ Item {
         layer.enabled: true
         visible: false
 
-        Rectangle {
+        StyledRectangle {
             anchors.fill: parent
             anchors.margins: 10
             anchors.topMargin: 0

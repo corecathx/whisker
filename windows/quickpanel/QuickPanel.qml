@@ -18,7 +18,7 @@ Scope {
     id: root
     property bool opened: false
 
-    component StyledLargeButton: Rectangle {
+    component StyledLargeButton: StyledRectangle {
         id: toggle
         property string icon: ""
         property string label: ""
@@ -156,7 +156,7 @@ Scope {
                 anchors.fill: parent
                 BaseShadow {}
 
-                Rectangle {
+                StyledRectangle {
                     id: bg
                     anchors.fill: parent
                     color: Appearance.panel_color
@@ -214,7 +214,7 @@ Scope {
                         RowLayout {
                             spacing: 5
 
-                            Rectangle {
+                            StyledRectangle {
                                 width: 40
                                 height: 40
                                 radius: 10
@@ -245,7 +245,7 @@ Scope {
                                     }
                                 }
                             }
-                            Rectangle {
+                            StyledRectangle {
                                 width: 40
                                 height: 40
                                 radius: 10
@@ -305,7 +305,7 @@ Scope {
                                                 width: 150
                                                 height: 30
 
-                                                Rectangle {
+                                                StyledRectangle {
                                                     anchors.fill: parent
                                                     radius: 5
                                                     color: mArea.containsMouse ? Appearance.colors.m3surface_container : Appearance.colors.m3surface
@@ -360,12 +360,41 @@ Scope {
 
                         StyledLargeButton {
                             Layout.fillWidth: true
-                            icon: Network.icon
-                            label: Network.wifiLabel
-                            subtitle: Network.wifiStatus
+                            icon: {
+                                if (!Network.wifiEnabled)
+                                    return "signal_wifi_off";
+
+                                if (!Network.wifiDevice.connected)
+                                    return "signal_wifi_bad";
+
+                                const level = Math.min(4, Math.floor(Network.wifiNetwork.signalStrength * 5));
+
+                                return [
+                                    "signal_wifi_0_bar",
+                                    "network_wifi_1_bar",
+                                    "network_wifi_2_bar",
+                                    "network_wifi_3_bar",
+                                    "signal_wifi_4_bar"
+                                ][level];
+                            }
+                            label: {
+                                if (!Network.wifiEnabled || !Network.wifiDevice.connected)
+                                    return "Wi-Fi";
+
+                                return Network.wifiNetwork.name
+                            }
+                            subtitle: {
+                                if (!Network.wifiEnabled)
+                                    return "Off";
+
+                                if (!Network.wifiDevice.connected)
+                                    return "On"
+
+                                return "Connected"
+                            }
                             active: Network.wifiEnabled
                             onClicked: {
-                                Network.toggleWifi();
+                                Network.enableWifi(!Network.wifiEnabled);
                             }
                         }
 
@@ -397,7 +426,7 @@ Scope {
 
                     ExpPowerProfile {}
 
-                    Rectangle {
+                    StyledRectangle {
                         Layout.fillWidth: true
                         height: 1
                         color: Appearance.colors.m3outline_variant
@@ -431,7 +460,7 @@ Scope {
                         }
                     }
 
-                    Rectangle {
+                    StyledRectangle {
                         Layout.fillWidth: true
                         height: 1
                         color: Appearance.colors.m3outline_variant

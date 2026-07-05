@@ -1,13 +1,19 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Networking as QsNet
 import qs.preferences
 import qs.components
 import qs.modules
 import qs.services
 
 BaseMenu {
+    id: root
     title: "Network"
     description: "Manage network connections."
+
+    property bool error: false
+    property string errorNetworkName: ""
+    property string errorMessage: ""
 
     BaseCard {
         BaseRowCard {
@@ -25,7 +31,7 @@ BaseMenu {
                 id: powerSwitch
                 checked: Network.wifiEnabled
                 onToggled: Network.enableWifi(checked)
-            }
+            }//
         }
 
         BaseRowCard {
@@ -48,25 +54,25 @@ BaseMenu {
             }
             Item { Layout.fillWidth: true }
             StyledSwitch {
-                checked: Network.scanning
+                checked: Network.wifiDevice.scannerEnabled
                 onToggled: {
-                    if (checked) Network.rescan()
+                    Network.wifiDevice.scannerEnabled = checked
                 }
             }
         }
     }
 
     InfoCard {
-        visible: Network.message !== "" && Network.message !== "ok"
+        visible: root.error
         icon: "error"
         backgroundColor: Appearance.colors.m3error
         contentColor: Appearance.colors.m3on_error
         title: "Failed to connect to " + Network.lastNetworkAttempt
-        description: Network.message
+        description: root.errorMessage
     }
 
     BaseCard {
-        visible: Network.active !== null
+        visible: !!Network.wifiNetwork
         StyledText {
             text: "Active Connection"
             font.pixelSize: 18
@@ -75,11 +81,13 @@ BaseMenu {
         }
 
         NetworkCard {
-            connection: Network.active
+            connection: Network.wifiNetwork
+            menu: root
             isActive: true
-            showDisconnect: Network.active?.type === "wifi"
+            showDisconnect: true
         }
     }
+
 
     BaseCard {
         visible: Network.connections.filter(c => c.type === "ethernet").length > 0
@@ -94,6 +102,7 @@ BaseMenu {
             model: Network.connections.filter(c => c.type === "ethernet" && !c.active)
             delegate: NetworkCard {
                 connection: modelData
+                menu: root
                 showConnect: true
             }
         }
@@ -108,22 +117,26 @@ BaseMenu {
             color: Appearance.colors.m3on_background
         }
 
-        Item {
-            visible: Network.connections.filter(c => c.type === "wifi").length === 0 && !Network.scanning
-            width: parent.width
-            height: 40
-            StyledText {
-                anchors.centerIn: parent
-                text: "No networks found"
-                font.pixelSize: 14
-                color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
-            }
+        StyledText {
+            Layout.fillWidth: true
+
+            visible: Network.wifiEnabled &&
+                    Network.wifiDevice &&
+                    Network.wifiDevice.networks.values.filter(n => n && !n.connected).length === 0 &&
+                    !Network.wifiDevice.scanning
+
+            horizontalAlignment: Text.AlignHCenter
+            text: "No networks found"
+            font.pixelSize: 14
+            color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
         }
 
         Repeater {
-            model: Network.connections.filter(c => c.type === "wifi" && !c.active)
+            model: Network.wifiDevice.networks.values.filter(c => c && !c.connected)
             delegate: NetworkCard {
+                required property var modelData
                 connection: modelData
+                menu: root
                 showConnect: true
             }
         }
@@ -151,9 +164,10 @@ BaseMenu {
         }
 
         Repeater {
-            model: Network.connections.filter(c => c.type === "wifi" && c.saved && !c.active)
+            model: Network.wifiDevice.networks.values.filter(c => c.connected)
             delegate: NetworkCard {
                 connection: modelData
+                menu: root
                 showConnect: false
                 showDisconnect: false
             }

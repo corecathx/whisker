@@ -25,7 +25,7 @@ Item {
         Repeater {
             model: root.barCount
 
-            Rectangle {
+            StyledRectangle {
                 required property int index
 
                 x: index * (root.barWidth + root.spacing)

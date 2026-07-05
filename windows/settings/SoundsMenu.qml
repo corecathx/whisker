@@ -25,7 +25,7 @@ BaseMenu {
                 Layout.fillWidth: true
                 spacing: 16
 
-                Rectangle {
+                StyledRectangle {
                     Layout.preferredWidth: 40
                     Layout.preferredHeight: 40
                     radius: 20
@@ -57,7 +57,7 @@ BaseMenu {
                 }
             }
 
-            Rectangle {
+            StyledRectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 1
                 color: Appearance.colors.m3outline_variant
@@ -142,7 +142,7 @@ BaseMenu {
                 }
             }
 
-            Rectangle {
+            StyledRectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 56
                 radius: 12
@@ -187,7 +187,7 @@ BaseMenu {
                 Layout.fillWidth: true
                 spacing: 16
 
-                Rectangle {
+                StyledRectangle {
                     Layout.preferredWidth: 40
                     Layout.preferredHeight: 40
                     radius: 20
@@ -221,7 +221,7 @@ BaseMenu {
                 }
             }
 
-            Rectangle {
+            StyledRectangle {
                 visible: Audio.sources.length === 0
                 Layout.fillWidth: true
                 Layout.preferredHeight: 120
@@ -249,7 +249,7 @@ BaseMenu {
                 }
             }
 
-            Rectangle {
+            StyledRectangle {
                 visible: Audio.sources.length > 0
                 Layout.fillWidth: true
                 Layout.preferredHeight: 1
@@ -337,7 +337,7 @@ BaseMenu {
                 }
             }
 
-            Rectangle {
+            StyledRectangle {
                 visible: Audio.sources.length > 0
                 Layout.fillWidth: true
                 Layout.preferredHeight: 56

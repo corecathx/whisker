@@ -17,7 +17,7 @@ Item {
     }
     RotationAnimator on rotation {
         target: mIcon
-        running: root.visible && root.window?.visible
+        running: root.visible
         loops: Animation.Infinite
         from: 0
         to: 360

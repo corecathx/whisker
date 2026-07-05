@@ -146,7 +146,7 @@ Item {
                     iconName: root.icon
                     useMaterialIcon: true
                 }
-                Rectangle {
+                StyledRectangle {
                     visible: !root.noMixer
                     Layout.fillWidth: true
                     Layout.topMargin: 8
@@ -192,7 +192,7 @@ Item {
                         useMaterialIcon: false
                     }
                 }
-                Rectangle {
+                StyledRectangle {
                     visible: !root.noMixer
                     Layout.fillWidth: true
                     Layout.topMargin: 8

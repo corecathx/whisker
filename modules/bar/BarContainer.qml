@@ -41,7 +41,7 @@ Item {
         }
         anchors.horizontalCenter: parent.horizontalCenter
 
-        Rectangle {
+        StyledRectangle {
             id: panelBackground
             radius: Preferences.bar.floating ? 20 : 0
             anchors.fill: parent

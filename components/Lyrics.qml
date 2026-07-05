@@ -10,7 +10,7 @@ Item {
     visible: Lrclib.status === "FETCHING" || Lrclib.status === "LOADED"
     // Behavior on width { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
     // Behavior on height { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-    Rectangle {
+    StyledRectangle {
         anchors.fill: parent
         color: Appearance.colors.m3surface
         radius: 20

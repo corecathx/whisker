@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import qs.modules
+import qs.components
 
 Slider {
     id: root
@@ -31,7 +32,7 @@ Slider {
     //     }
     // }
 
-    component TrackDot: Rectangle {
+    component TrackDot: StyledRectangle {
         required property int index
         property real stepValue: root.from + (index * root.stepSize)
         property real normalizedValue: (stepValue - root.from) / (root.to - root.from)
@@ -62,7 +63,7 @@ Slider {
         width: parent.width
         height: parent.height
 
-        Rectangle {
+        StyledRectangle {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
@@ -83,7 +84,7 @@ Slider {
             }
         }
 
-        Rectangle {
+        StyledRectangle {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
@@ -112,7 +113,7 @@ Slider {
         }
     }
 
-    handle: Rectangle {
+    handle: StyledRectangle {
         width: 5
         height: root.height
         x: root.handleGap + (root.visualPosition * (root.width - root.handleGap * 2)) - width / 2

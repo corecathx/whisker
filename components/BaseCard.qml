@@ -14,7 +14,7 @@ Item {
     property int cardSpacing: 8
     property int verticalPadding: 32
     property bool useAnims: false
-    Rectangle {
+    StyledRectangle {
         id: wpBG
         anchors.left: parent.left
         anchors.right: parent.right

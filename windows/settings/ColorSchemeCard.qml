@@ -26,7 +26,7 @@ Item {
         }
     }
 
-    Rectangle {
+    StyledRectangle {
         anchors.fill: parent
         radius: 10
         color: Preferences.theme.scheme === schemeName
@@ -50,12 +50,12 @@ Item {
                 color: schemeColor.on_surface || "#000000"
             }
             ColumnLayout {
-                Rectangle { width: 30; height: 8; radius: 4; color: schemeColor.on_surface || "#000000" }
-                Rectangle { width: 70; height: 8; radius: 4; color: schemeColor.on_surface || "#000000" }
+                StyledRectangle { width: 30; height: 8; radius: 4; color: schemeColor.on_surface || "#000000" }
+                StyledRectangle { width: 70; height: 8; radius: 4; color: schemeColor.on_surface || "#000000" }
             }
         }
 
-        Rectangle { anchors.right: parent.right; anchors.bottom: parent.bottom; width: 15; height: 15; radius: 5; color: schemeColor.secondary || "#000000"; anchors.margins: 10 }
-        Rectangle { anchors.right: parent.right; anchors.bottom: parent.bottom; width: 15; height: 15; radius: 5; color: schemeColor.primary || "#000000"; anchors.rightMargin: 30; anchors.bottomMargin: 10 }
+        StyledRectangle { anchors.right: parent.right; anchors.bottom: parent.bottom; width: 15; height: 15; radius: 5; color: schemeColor.secondary || "#000000"; anchors.margins: 10 }
+        StyledRectangle { anchors.right: parent.right; anchors.bottom: parent.bottom; width: 15; height: 15; radius: 5; color: schemeColor.primary || "#000000"; anchors.rightMargin: 30; anchors.bottomMargin: 10 }
     }
 }

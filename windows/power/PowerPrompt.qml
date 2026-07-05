@@ -55,7 +55,7 @@ Scope {
                 height: promptBg.height
                 BaseShadow {}
 
-                Rectangle {
+                StyledRectangle {
                     id: promptBg
                     width: promptLayout.width + 40
                     height: promptLayout.height + 40
@@ -127,7 +127,7 @@ Scope {
                             color: Appearance.colors.m3on_surface_variant
                         }
 
-                        Rectangle {
+                        StyledRectangle {
                             Layout.fillWidth: true
                             Layout.preferredWidth: promptLayout.width - 40
                             Layout.preferredHeight: Math.min(appListContainer.childrenRect.height, 200)

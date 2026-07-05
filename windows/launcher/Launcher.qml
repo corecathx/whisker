@@ -233,7 +233,7 @@ Scope {
                     }
                 }
 
-                Rectangle {
+                StyledRectangle {
                     id: bgRectangle
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left

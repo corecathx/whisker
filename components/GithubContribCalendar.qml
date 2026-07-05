@@ -80,7 +80,7 @@ Item {
 
                         Repeater {
                             model: 7
-                            delegate: Rectangle {
+                            delegate: StyledRectangle {
                                 width: 7
                                 height: 7
                                 radius: 2

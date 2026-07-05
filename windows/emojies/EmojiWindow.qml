@@ -42,7 +42,7 @@ Scope {
         property int columns: Math.max(1, Math.floor((width - root.margin * 2 + spacing) / (emojiSize + spacing)))
         property real cellWidth: (width - root.margin * 2 - (columns - 1) * spacing) / columns
 
-        Rectangle {
+        StyledRectangle {
             anchors.fill: parent
             color: Appearance.colors.m3surface
             radius: 20
@@ -94,7 +94,7 @@ Scope {
                             })
                             .slice(0, root.visibleCount)
 
-                        delegate: Rectangle {
+                        delegate: StyledRectangle {
                             width: emojiPanel.cellWidth
                             height: emojiPanel.cellWidth
                             radius: 20

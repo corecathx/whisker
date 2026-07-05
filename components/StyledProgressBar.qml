@@ -13,7 +13,7 @@ Item {
         anchors.fill: parent
         // color: Colors.opacify(Appearance.colors.m3on_background, 0.1)
         // radius: 100
-        Rectangle {
+        StyledRectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
@@ -30,7 +30,7 @@ Item {
                 ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
             }
         }
-        Rectangle {
+        StyledRectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right

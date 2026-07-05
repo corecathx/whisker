@@ -133,7 +133,7 @@ BaseCard {
 
             Repeater {
                 model: root.generateMonthGrid(root.year, root.month)
-                Rectangle {
+                StyledRectangle {
                     width: Math.floor(dayGrid.width / 7)
                     height: width
                     radius: 20

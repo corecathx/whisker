@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import qs.modules
 import qs.components
 
-Rectangle {
+StyledRectangle {
     id: root
 
     z: 200
@@ -35,7 +35,7 @@ Rectangle {
         onClicked: {}
     }
 
-    Rectangle {
+    StyledRectangle {
         anchors.centerIn: parent
         width: Math.min(parent.width * 0.85, 400)
         height: dialogContent.height + 60

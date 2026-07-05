@@ -64,7 +64,7 @@ ShellRoot {
         Brightness.init();
         Lrclib.fetchLyrics();
     }
-    // DevWindow {}
+    DevWindow {}
     //
     Screencapture {}
     PolkitPrompt {}

@@ -62,7 +62,7 @@ Scope {
             }
             height: Math.min(bgRectangle.height, 500)
 
-            Rectangle {
+            StyledRectangle {
                 id: bgRectangle
                 anchors {
                     top: parent.top
@@ -174,7 +174,7 @@ Scope {
                     }))
                 }
             }
-            Rectangle {
+            StyledRectangle {
                 id: newNotifIndicator
                 visible: listView.hasNewItems
                 opacity: visible ? 1 : 0

@@ -53,7 +53,7 @@ SetupMenu {
             applyProcess.running = true
         }
     }
-    Rectangle {
+    StyledRectangle {
         visible: applyProcess.running
         anchors.fill: parent
         color: Colors.opacify(Appearance.colors.m3surface, 0.2)

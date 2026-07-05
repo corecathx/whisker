@@ -84,7 +84,7 @@ Control {
     }
   }
 
-  background: Rectangle {
+  background: StyledRectangle {
     id: background
     radius: 20
     color: root.background_color

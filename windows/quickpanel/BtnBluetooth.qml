@@ -5,7 +5,7 @@ import qs.modules
 import qs.components
 import qs.services
 
-Rectangle {
+StyledRectangle {
     Layout.fillWidth: true
     Layout.fillHeight: true
     radius: 20

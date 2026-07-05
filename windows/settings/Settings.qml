@@ -137,7 +137,7 @@ Scope {
 
                 }
 
-                Rectangle {
+                StyledRectangle {
                     id: sidebarBG
                     anchors.left: parent.left
                     anchors.top: titleBar.bottom
@@ -250,7 +250,7 @@ Scope {
                                     visible: modelData.header ?? false
                                     StyledText { y: (parent.height - height) * 0.5; x: 8; text: modelData.label; font.pixelSize: 13; font.bold: true; color: Colors.opacify(Appearance.colors.m3on_surface, 0.6) }
                                 }
-                                Rectangle {
+                                StyledRectangle {
                                     id: sidebarItemBG
                                     anchors.fill: parent
                                     visible: !modelData.header
@@ -300,7 +300,7 @@ Scope {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
 
-                    Rectangle {
+                    StyledRectangle {
                         anchors.fill: parent
                         color: Appearance.colors.m3surface_container_low
                     }
@@ -316,7 +316,7 @@ Scope {
                             left: sidebarBG.right
                         }
                     }
-                    Rectangle {
+                    StyledRectangle {
                         id: rightBorder
                         anchors {
                             top: parent.top
@@ -336,7 +336,7 @@ Scope {
                             right: rightBorder.left
                         }
                     }
-                    Rectangle {
+                    StyledRectangle {
                         id: bottomBorder
                         anchors {
                             right: parent.right

@@ -8,7 +8,7 @@ import qs.modules
 import qs.services
 import qs.components
 
-Rectangle {
+StyledRectangle {
     id: root
     visible: !!Players.active
     implicitHeight: mainContent.implicitHeight + 40

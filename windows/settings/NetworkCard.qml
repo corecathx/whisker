@@ -1,42 +1,59 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Networking as QsNet
 import qs.components
 import qs.modules
 import qs.services
 
 BaseCard {
-    id: networkRow
-    property var connection
+    id: root
+    required property var connection
+    property var menu: null
+
+    Connections {
+        target: connection
+        function onConnectionFailed(reason) {
+            if (!connection.known) connection.forget();
+            menu.error = true
+            menu.errorNetworkName = connection.name
+            menu.errorMessage = QsNet.ConnectionFailReason.toString(reason)
+            console.log("Connection failed:", reason)
+        }
+    }
+
     property bool isActive: false
     property bool showConnect: false
     property bool showDisconnect: false
     property bool showPasswordField: false
     property string password: ""
 
+    onConnectionChanged: {
+        console.log("NETWORKCARD.connection =", connection)
+    }
     cardMargin: 0
     cardSpacing: 10
     verticalPadding: 0
 
-    function signalIcon(strength, secure) {
-        if (connection.type === "ethernet") return "settings_ethernet";
+    function signalIcon(strength) {
+        const level = Math.min(4, Math.floor(strength * 5));
 
-        let icon = "";
-        if (strength >= 75) icon = "network_wifi";
-        else if (strength >= 50) icon = "network_wifi_3_bar";
-        else if (strength >= 25) icon = "network_wifi_2_bar";
-        else if (strength > 0)   icon = "network_wifi_1_bar";
-        else                     icon = "network_wifi_1_bar";
-        return icon;
+        return [
+            "signal_wifi_0_bar",
+            "network_wifi_1_bar",
+            "network_wifi_2_bar",
+            "network_wifi_3_bar",
+            "signal_wifi_4_bar"
+        ][level];
     }
 
     RowLayout {
         MaterialIcon {
-            icon: signalIcon(connection.strength, connection.isSecure)
+            icon: root.signalIcon(root.connection.signalStrength)
             color: Appearance.colors.m3on_background
             font.pixelSize: 32
             MaterialIcon {
                 icon: 'lock'
-                visible: connection.type === "wifi" && connection.isSecure
+                 visible: connection.security !== QsNet.WifiSecurityType.Open
                 color: Appearance.colors.m3on_background
                 font.pixelSize: 12
                 anchors.right: parent.right
@@ -54,9 +71,10 @@ BaseCard {
             }
             StyledText {
                 text: {
-                    if (isActive) return "Connected";
-                    if (connection.type === "ethernet") return connection.device || "Ethernet";
-                    return connection.isSecure ? "Secured" : "Open";
+                    if (isActive)
+                        return "Connected";
+
+                    return QsNet.WifiSecurityType.toString(connection.security) + (connection.known ? " (Known)" : "");
                 }
                 font.pixelSize: 12
                 color: isActive ? Appearance.colors.m3primary : Colors.opacify(Appearance.colors.m3on_background, 0.6)
@@ -66,24 +84,27 @@ BaseCard {
         StyledButton {
             visible: showConnect && !showPasswordField
             icon: "link"
+
             onClicked: {
-                if (connection.type === "ethernet") {
-                    Network.connect(connection, "");
-                } else if (connection.isSecure) {
-                    showPasswordField = true;
+                menu.error = false
+                if (connection.security === QsNet.WifiSecurityType.Open || connection.known) {
+                    connection.connect();
                 } else {
-                    Network.connect(connection, "");
+                    showPasswordField = true;
                 }
             }
         }
         StyledButton {
             visible: showDisconnect && !showPasswordField
             icon: "link_off"
-            onClicked: Network.disconnect()
+            onClicked: {
+                menu.error = false
+                connection.disconnect()
+            }
         }
     }
     RowLayout {
-        visible: showPasswordField && connection.type === "wifi"
+        visible: showPasswordField
         property bool showPassword: false
         anchors.left: parent.left
         anchors.right: parent.right
@@ -94,10 +115,11 @@ BaseCard {
             Layout.fillWidth: true
             placeholder: "Enter password"
             echoMode: parent.showPassword ? TextInput.Normal : TextInput.Password
-            onTextChanged: networkRow.password = text
+            onTextChanged: root.password = text
             onAccepted: {
-                Network.connect(connection, networkRow.password)
-                showPasswordField = false
+                menu.error = false
+                root.connection.connectWithPsk(root.password);
+                showPasswordField = false;
             }
         }
         StyledButton {
@@ -107,7 +129,9 @@ BaseCard {
         StyledButton {
             icon: "link"
             onClicked: {
-                Network.connect(connection, networkRow.password)
+                menu.error = false
+                root.connection.connectWithPsk(root.password);
+
                 showPasswordField = false
             }
         }

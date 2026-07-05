@@ -248,7 +248,7 @@ BaseMenu {
                                             }
                                         }
 
-                                        Rectangle {
+                                        StyledRectangle {
                                             anchors.right: parent.right
                                             anchors.top: parent.top
                                             anchors.margins: 5
@@ -266,7 +266,7 @@ BaseMenu {
                                             }
                                         }
 
-                                        Rectangle {
+                                        StyledRectangle {
                                             anchors.fill: parent
                                             radius: 10
                                             color: "transparent"
@@ -303,7 +303,7 @@ BaseMenu {
                 }
             }
 
-            Rectangle {
+            StyledRectangle {
                 anchors.fill: parent
                 color: Colors.opacify(Appearance.colors.m3surface, 0.4)
                 visible: wpSetProc.running

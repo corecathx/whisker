@@ -117,7 +117,7 @@ Item {
         }
     }
 
-    Rectangle {
+    StyledRectangle {
         color: Appearance.colors.m3secondary
         anchors.bottom: parent.bottom;
         anchors.right: parent.right;

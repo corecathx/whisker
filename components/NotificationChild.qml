@@ -7,7 +7,7 @@ import qs.modules
 import qs.components
 import qs.preferences
 
-Rectangle {
+StyledRectangle {
     id: root
 
     property string title: "Notification"

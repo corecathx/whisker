@@ -15,7 +15,7 @@ Item {
     width: parent.width
     height: 60
 
-    Rectangle {
+    StyledRectangle {
         id: appItem
         anchors.fill: parent
         radius: 20

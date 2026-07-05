@@ -103,7 +103,7 @@ Scope {
                 onClicked: root.active = false
             }
 
-            Rectangle {
+            StyledRectangle {
                 id: container
                 anchors.centerIn: parent
                 width: Math.min(win.width - 80, 800)
@@ -149,7 +149,7 @@ Scope {
                         }
                     }
 
-                    Rectangle {
+                    StyledRectangle {
                         Layout.fillWidth: true
                         height: 1
                         color: Colors.opacify(Appearance.colors.m3on_surface, 0.12)
@@ -195,7 +195,7 @@ Scope {
                                                 delegate: RowLayout {
                                                     spacing: 6
 
-                                                    Rectangle {
+                                                    StyledRectangle {
                                                         Layout.preferredHeight: 32
                                                         Layout.preferredWidth: Math.max(keyContent.width + 16, 32)
                                                         radius: 6
@@ -205,7 +205,7 @@ Scope {
                                                         border.width: 2
                                                         border.color: Appearance.colors.m3primary
 
-                                                        Rectangle {
+                                                        StyledRectangle {
                                                             anchors.left: parent.left
                                                             anchors.right: parent.right
                                                             anchors.bottom: parent.bottom

@@ -17,7 +17,7 @@ Item {
     implicitWidth: bg.width
     implicitHeight: bg.height
 
-    Rectangle {
+    StyledRectangle {
         id: bg
         implicitWidth: layout.implicitWidth > 0 ? layout.implicitWidth + 10 : 0
         implicitHeight: 25
@@ -133,7 +133,7 @@ Item {
             }
         }
 
-        Rectangle {
+        StyledRectangle {
             id: itemBg
             anchors.fill: parent
             opacity: itemRoot.modelData.isSeparator ? 0.5 : 1

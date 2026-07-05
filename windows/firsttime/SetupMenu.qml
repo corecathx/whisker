@@ -39,7 +39,7 @@ SetupPage {
             }
         }
 
-        Rectangle {
+        StyledRectangle {
             Layout.fillWidth: true
             height: 1
             color: Colors.opacify(Appearance.colors.m3on_surface, 0.4)

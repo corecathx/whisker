@@ -81,7 +81,7 @@ Item {
             property color labelColor: root.batteryColor
         }
 
-        Rectangle {
+        StyledRectangle {
             id: bar
             clip: true
 

@@ -4,7 +4,7 @@ import qs.services
 import qs.components
 import QtQuick
 import QtQuick.Layouts
-Rectangle {
+StyledRectangle {
     implicitWidth: layout.width + 10
     implicitHeight: layout.height + 10
     visible: Privacy.hasAnyActiveAccess
@@ -44,7 +44,7 @@ Rectangle {
                 }
             ]
 
-            delegate: Rectangle {
+            delegate: StyledRectangle {
                 implicitWidth: 22
                 implicitHeight: 22
                 visible: modelData.isActive

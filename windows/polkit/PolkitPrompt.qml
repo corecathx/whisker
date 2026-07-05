@@ -48,7 +48,7 @@ Scope {
 
                 BaseShadow {}
 
-                Rectangle {
+                StyledRectangle {
                     id: promptBg
                     width: promptLayout.width + 40
                     height: promptLayout.height + 40

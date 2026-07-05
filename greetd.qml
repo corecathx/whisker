@@ -74,7 +74,7 @@ ShellRoot {
         color: Appearance.colors.m3surface_dim
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
-        Rectangle {
+        StyledRectangle {
             anchors.fill: parent
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Appearance.colors.m3surface_dim }
@@ -111,7 +111,7 @@ ShellRoot {
             Behavior on scale { NumberAnimation { duration: Appearance.animation.slow; easing.type: Appearance.animation.easing } }
         }
 
-        Rectangle {
+        StyledRectangle {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.margins: 20
@@ -187,7 +187,7 @@ ShellRoot {
                 top: parent.top
                 margins: 20
             }
-            Rectangle {
+            StyledRectangle {
                 color: Appearance.colors.m3surface
                 anchors.fill: parent
                 radius: Appearance.rounding.extraLarge
@@ -200,7 +200,7 @@ ShellRoot {
                 Item {
                     width: things2.width + 10
                     height: things2.height + 3
-                    Rectangle {
+                    StyledRectangle {
                         color: Appearance.colors.m3surface_container
                         anchors.fill: parent
                         radius: Appearance.rounding.extraLarge
@@ -226,7 +226,7 @@ ShellRoot {
             height: loginBox.height
             clip: true
 
-            Rectangle {
+            StyledRectangle {
                 id: loginBox
                 anchors.centerIn: parent
                 width: parent.width
@@ -361,7 +361,7 @@ ShellRoot {
             anchors.margins: 20
             width: controls.width + 10
             height: controls.height + 10
-            Rectangle {
+            StyledRectangle {
                 anchors.fill: parent
                 color: Appearance.colors.m3surface
                 radius: Appearance.rounding.extraLarge
@@ -471,7 +471,7 @@ ShellRoot {
         width: entryLayout.width + 20
         height: entryLayout.height + 20
         Layout.alignment: Qt.AlignHCenter
-        Rectangle {
+        StyledRectangle {
             anchors.fill: parent
             color: mouse.containsMouse ? Appearance.colors.m3surface_container_highest : Appearance.colors.m3surface_container_high
             Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }

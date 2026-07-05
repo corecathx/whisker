@@ -7,6 +7,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import qs.modules
 import qs.preferences
+import qs.components
 import qs.modules.bar.vertical
 import QtQuick.Effects
 import qs.services
@@ -186,7 +187,7 @@ Scope {
                 VBarContainer {}
             }
 
-            Rectangle {
+            StyledRectangle {
                 id: hoverZone
                 color: "transparent"
 

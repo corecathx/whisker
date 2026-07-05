@@ -138,7 +138,7 @@ Scope {
                     }
                 }
 
-                Rectangle {
+                StyledRectangle {
                     id: bg
                     anchors.fill: parent
                     color: Appearance.colors.m3surface
@@ -285,7 +285,7 @@ Scope {
                             }
                         }
 
-                        delegate: Rectangle {
+                        delegate: StyledRectangle {
                             required property var modelData
                             required property int index
 
@@ -358,7 +358,7 @@ Scope {
                                         color: Appearance.colors.m3on_surface
                                     }
 
-                                    Rectangle {
+                                    StyledRectangle {
                                         visible: modelData.isBinary && modelData.previewSource !== ""
                                         Layout.fillWidth: true
                                         Layout.preferredHeight: 150

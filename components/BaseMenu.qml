@@ -57,7 +57,7 @@ Item {
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
                 }
             }
-            Rectangle {
+            StyledRectangle {
                 id: hr
                 anchors.left: parent.left
                 anchors.right: parent.right

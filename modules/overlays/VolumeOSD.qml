@@ -57,7 +57,7 @@ Scope {
 
 			mask: Region {}
 
-			Rectangle {
+			StyledRectangle {
 				anchors.fill: parent
 				radius: 20
 				color: Appearance.panel_color

@@ -94,7 +94,7 @@ SetupMenu {
                             }
                         }
 
-                        Rectangle {
+                        StyledRectangle {
                             anchors.fill: parent
                             radius: 8
                             color: "transparent"

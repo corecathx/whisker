@@ -89,7 +89,7 @@ WlSessionLockSurface {
                 easing.type: easingType
             }
         }
-        Rectangle {
+        StyledRectangle {
             id: overlayRect
             anchors.fill: parent
             color: Appearance.colors.m3surface
@@ -332,7 +332,7 @@ WlSessionLockSurface {
                     easing.type: Appearance.animation.easing
                 }
             }
-            Rectangle {
+            StyledRectangle {
                 id: loginBG
                 color: Appearance.panel_color
                 anchors.fill: parent
@@ -363,7 +363,7 @@ WlSessionLockSurface {
                             }
                         }
                     }
-                    Rectangle {
+                    StyledRectangle {
                         anchors.fill: parent
                         color: Appearance.colors.m3surface
                         opacity: 0.5
@@ -437,7 +437,7 @@ WlSessionLockSurface {
             implicitWidth: rightContainer.width + 40
             implicitHeight: rightContainer.height + 40
 
-            Rectangle {
+            StyledRectangle {
                 id: loginBG2
                 color: Appearance.panel_color
                 anchors.fill: parent
@@ -450,7 +450,7 @@ WlSessionLockSurface {
                 anchors.leftMargin: 20
                 anchors.topMargin: 20
                 spacing: 20
-                Rectangle {
+                StyledRectangle {
                     implicitWidth: innerContainer.width + 40
                     implicitHeight: 55
                     color: Appearance.colors.m3surface_container
@@ -479,7 +479,7 @@ WlSessionLockSurface {
                         }
                     }
                 }
-                Rectangle {
+                StyledRectangle {
                     implicitWidth: 55
                     implicitHeight: this.implicitWidth
                     color: Appearance.colors.m3surface_container

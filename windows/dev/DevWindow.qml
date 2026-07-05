@@ -2,7 +2,9 @@ import Quickshell
 import Quickshell.Services.Pipewire
 import Quickshell.Io
 import Quickshell.Widgets
+import Quickshell.Wayland
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Window
@@ -11,32 +13,58 @@ import qs.services
 import qs.components
 
 Scope {
-    Window {
+    AbsolutePanelWindow {
         id: win
+
         width: 600
         height: 400
-        visible: true
-        title: "Whisker Settings"
-        color: Appearance.panel_color
+        visible: false
+        color: "transparent"
 
-        property int counter: 0
+        ScreencopyView {
+            id: background
 
+            captureSource: Quickshell.screens[0]
+            live: true
 
-        ColumnLayout {
-            Repeater {
-                model: Pipewire.links
-                delegate: StyledText {
-                    text: modelData.source.description +" >> "+ modelData.target.name + (!modelData.source.isStream && !modelData.source.isSink && modelData.target.isStream ? " ?? IS AN APP!!!!!" : "")
-                    font.family: ""
-                }
-            }
+            width: Quickshell.screens[0].width
+            height: Quickshell.screens[0].height
+            x: -win.position.x
+            y: -win.position.y
         }
 
-        StyledText {
-            anchors.bottom: parent.bottom
-            text: JSON.stringify(Privacy.microphoneApps)
-            width: parent.width
-            wrapMode: Text.WordWrap
+        // MultiEffect {
+
+        //     source: background
+        //     width: Quickshell.screens[0].width
+        //     height: Quickshell.screens[0].height
+        //     x: -win.position.x
+        //     y: -win.position.y
+        //     blurEnabled: true
+        //     blur: 1
+        //     blurMax: 16
+        //     blurMultiplier: 1
+        // }
+
+        DragHandler {
+            target: null
+
+            property point startPos
+
+            onActiveChanged: {
+                if (active)
+                    startPos = win.position
+            }
+
+            onTranslationChanged: {
+                if (!active)
+                    return
+
+                win.position = Qt.point(
+                    startPos.x + translation.x,
+                    startPos.y + translation.y
+                )
+            }
         }
     }
 }

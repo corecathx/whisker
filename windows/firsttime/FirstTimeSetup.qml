@@ -40,7 +40,7 @@ FloatingWindow {
             shadowBlur: 1.0
         }
 
-        Rectangle {
+        StyledRectangle {
             id: bgRectangle
             color: Appearance.colors.m3surface
             anchors.fill: parent
@@ -109,7 +109,7 @@ FloatingWindow {
             Repeater {
                 model: setupContainer.pageCount
 
-                delegate: Rectangle {
+                delegate: StyledRectangle {
                     required property int index
 
                     width: index === setupContainer.currentIndex ? 16 : 8

@@ -180,7 +180,7 @@ FloatingWindow {
             Layout.fillHeight: true
             spacing: 32
 
-            Rectangle {
+            StyledRectangle {
                 Layout.preferredWidth: 250
                 Layout.fillHeight: true
                 color: Appearance.colors.m3surface
@@ -202,7 +202,7 @@ FloatingWindow {
                             { icon: "movie", label: "Videos", path: Quickshell.env("HOME") + "/Videos" }
                         ]
 
-                        Rectangle {
+                        StyledRectangle {
                             required property var modelData
                             Layout.fillWidth: true
                             Layout.preferredHeight: 40
@@ -263,7 +263,7 @@ FloatingWindow {
                 Layout.fillHeight: true
                 spacing: 12
 
-                Rectangle {
+                StyledRectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 60
                     radius: Appearance.rounding.large
@@ -294,7 +294,7 @@ FloatingWindow {
                             onClicked: refreshDirectory()
                         }
 
-                        Rectangle {
+                        StyledRectangle {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             color: Appearance.colors.m3surface_container_high
@@ -355,7 +355,7 @@ FloatingWindow {
                     }
                 }
 
-                Rectangle {
+                StyledRectangle {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     color: Appearance.colors.m3surface_container
@@ -393,7 +393,7 @@ FloatingWindow {
                         }
                     }
 
-                    Rectangle {
+                    StyledRectangle {
                         visible: !gridMode
                         anchors {
                             left: parent.left
@@ -460,7 +460,7 @@ FloatingWindow {
                     }
                 }
 
-                Rectangle {
+                StyledRectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 52
                     color: Appearance.colors.m3surface
@@ -514,7 +514,7 @@ FloatingWindow {
         spacing: 2
         height: parent.height
 
-        Rectangle {
+        StyledRectangle {
             height: 28
             width: crumbText.width + 16
             anchors.verticalCenter: parent.verticalCenter
@@ -556,7 +556,7 @@ FloatingWindow {
         }
     }
 
-    component FileEntry: Rectangle {
+    component FileEntry: StyledRectangle {
         width: folderView.width
         height: 44
         opacity: modelData.isHidden && showHidden ? 0.6 : 1.0
@@ -640,7 +640,7 @@ FloatingWindow {
         }
     }
 
-    component GridEntry: Rectangle {
+    component GridEntry: StyledRectangle {
         width: gridSize
         height: gridSize + 50
         radius: Appearance.rounding.large
@@ -660,7 +660,7 @@ FloatingWindow {
             anchors.margins: 10
             spacing: 8
 
-            Rectangle {
+            StyledRectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredHeight: gridSize - 50
@@ -670,7 +670,7 @@ FloatingWindow {
 
                 property bool isImageFile: !modelData.isDir && ["png","jpg","jpeg","webp","gif","bmp","svg"].includes(modelData.ext)
 
-                Rectangle {
+                StyledRectangle {
                     anchors.fill: parent
                     anchors.margins: modelData.isDir ? 0 : 4
                     radius: Appearance.rounding.medium
@@ -708,7 +708,7 @@ FloatingWindow {
                     color: modelData.isDir ? Appearance.colors.m3on_tertiary_container : Appearance.colors.m3on_surface_variant
                 }
 
-                Rectangle {
+                StyledRectangle {
                     visible: modelData.isDir
                     anchors.bottom: parent.bottom
                     anchors.right: parent.right

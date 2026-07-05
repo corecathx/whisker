@@ -8,6 +8,7 @@ import Quickshell.Services.UPower
 import qs.modules
 import qs.services as Serv
 import qs.preferences
+import qs.components
 import qs.modules.bar
 
 Item {
@@ -25,7 +26,7 @@ Item {
             height: trays.implicitHeight + 10
             anchors.horizontalCenter: parent.horizontalCenter
 
-            Rectangle {
+            StyledRectangle {
                 id: bgRect
                 anchors.fill: parent
                 radius: 20

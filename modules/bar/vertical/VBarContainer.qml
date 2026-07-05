@@ -23,7 +23,7 @@ Item {
         anchors.fill: parent
         clip: true
 
-        Rectangle {
+        StyledRectangle {
             anchors.fill: parent
             radius: Preferences.bar.floating ? 20 : 0
 

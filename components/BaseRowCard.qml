@@ -14,7 +14,7 @@ Item {
     property int radius: 18
     property int verticalPadding: 32
 
-    Rectangle {
+    StyledRectangle {
         id: wpBG
         anchors.left: parent.left
         anchors.right: parent.right

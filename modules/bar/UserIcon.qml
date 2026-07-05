@@ -4,7 +4,7 @@ import Quickshell
 import qs.modules
 import qs.components
 
-Rectangle {
+StyledRectangle {
     id: root
     clip: true
     property bool hovered: false
