@@ -81,7 +81,7 @@ Scope {
                     shadowOpacity: 1
                     shadowColor: Appearance.colors.m3shadow
                     shadowBlur: 1
-                    shadowScale: 1
+                    shadowScale: 0.8
                 }
 
                 Behavior on height {
