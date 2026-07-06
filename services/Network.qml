@@ -6,20 +6,36 @@ import Quickshell.Networking
 
 Singleton {
     id: root
+    // General
     readonly property var devices: Networking.devices.values ?? []
+    property bool debugConnectivity: true
 
+    readonly property var connectivity: Networking.connectivity
+
+    // Wi-Fi
     readonly property bool wifiEnabled: Networking.wifiEnabled
-    readonly property WifiDevice wifiDevice: devices.find(d => d.type === DeviceType.Wifi) ?? null
-    readonly property WifiNetwork wifiNetwork: wifiDevice.networks.values.find(n => n.connected) ?? null
+    readonly property list<WifiDevice> wifiDevices: devices.filter(d => d.type === DeviceType.Wifi)
+    readonly property WifiDevice wifiDevice: {
+        wifiDevices.find(d => d.connected) 
+        ?? wifiDevices[0] 
+        ?? null
+    }
+    readonly property WifiNetwork wifiNetwork: wifiDevice?.networks?.values?.find(n => n.connected) ?? null
 
     function enableWifi(enabled: bool): void {
         Networking.wifiEnabled = enabled;
     }
 
+    // Wired
+    readonly property list<WiredDevice> wiredDevices: devices.filter(d => d.type === DeviceType.Wired)
+    readonly property WiredDevice wiredDevice: {
+        wiredDevices.find(d => d.connected)
+        ?? wiredDevices[0]
+        ?? null
+    }
+    readonly property Network wiredNetwork: wiredDevice?.network ?? null
 
-    readonly property WiredDevice wiredDevice: devices.find(d => d.type === DeviceType.Wired) ?? null
-    readonly property Network wiredNetwork: wiredDevice.network
-    Component.onCompleted: {
+    Component.onCompleted: {//
         console.log("[Network] devices:", devices.length)
         for (const d of devices) {
             console.log(d.name, d.type)
