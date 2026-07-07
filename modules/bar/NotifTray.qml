@@ -72,7 +72,6 @@ Item {
     }
     StyledPopout {
         hoverTarget: detect
-        interactable: true
         hCenterOnItem: true
 
         Component {

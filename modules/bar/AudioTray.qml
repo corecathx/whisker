@@ -133,7 +133,6 @@ Item {
     HoverHandler { id: hover }
     StyledPopout {
         hoverTarget: hover
-        interactable: true
         hCenterOnItem: true
 
         Component {
