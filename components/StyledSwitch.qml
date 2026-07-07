@@ -1,4 +1,4 @@
-import QtQuick
+ import QtQuick
 import QtQuick.Controls
 import qs.modules
 import qs.components
@@ -17,8 +17,11 @@ Item {
     property color thumbColorOff: Appearance.colors.m3on_surface_variant
     property color iconColor: Appearance.colors.m3primary
 
+    property int thumbOnMargin: 6
+    property int thumbOffMargin: 9
+
     property int trackRadius: height / 2
-    property int thumbSize: height - (checked ? 12 : 18)
+    property int thumbSize: height - (checked ? thumbOnMargin : thumbOffMargin) * 2
     Behavior on thumbSize {
         NumberAnimation {
             duration: Appearance.animation.fast
@@ -46,7 +49,7 @@ Item {
         height: thumbSize
         radius: thumbSize / 2
         anchors.verticalCenter: parent.verticalCenter
-        x: root.checked ? parent.width - width - 6 : 9
+        x: root.checked ? parent.width - width - root.thumbOnMargin : root.thumbOffMargin
         color: root.checked ? thumbColorOn : thumbColorOff
 
         Behavior on x {
