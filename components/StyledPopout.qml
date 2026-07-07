@@ -120,6 +120,7 @@ LazyLoader {
 
         WlrLayershell.namespace: "whisker:popout"
         WlrLayershell.layer: WlrLayer.Overlay
+        WlrLayershell.keyboardFocus: root.interactable ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         exclusionMode: ExclusionMode.Ignore
         exclusiveZone: 0
 
