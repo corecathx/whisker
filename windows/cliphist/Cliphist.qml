@@ -403,7 +403,7 @@ Scope {
 
                                 StyledButton {
                                     icon: "close"
-                                    icon_size: 16
+                                    iconSize: 16
                                     secondary: true
                                     implicitWidth: 25
                                     implicitHeight: 25

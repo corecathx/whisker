@@ -34,26 +34,14 @@ BaseCard {
     cardSpacing: 10
     verticalPadding: 0
 
-    function signalIcon(strength) {
-        const level = Math.min(4, Math.floor(strength * 5));
-
-        return [
-            "signal_wifi_0_bar",
-            "network_wifi_1_bar",
-            "network_wifi_2_bar",
-            "network_wifi_3_bar",
-            "signal_wifi_4_bar"
-        ][level];
-    }
-
     RowLayout {
         MaterialIcon {
-            icon: root.signalIcon(root.connection.signalStrength)
+            icon: Network.getIconFromStrength(root.connection.signalStrength)
             color: Appearance.colors.m3on_background
             font.pixelSize: 32
             MaterialIcon {
                 icon: 'lock'
-                 visible: connection.security !== QsNet.WifiSecurityType.Open
+                visible: Network.isSafe(connection)
                 color: Appearance.colors.m3on_background
                 font.pixelSize: 12
                 anchors.right: parent.right
@@ -87,7 +75,7 @@ BaseCard {
 
             onClicked: {
                 menu.error = false
-                if (connection.security === QsNet.WifiSecurityType.Open || connection.known) {
+                if (!Network.isSafe(connection) || connection.known) {
                     connection.connect();
                 } else {
                     showPasswordField = true;

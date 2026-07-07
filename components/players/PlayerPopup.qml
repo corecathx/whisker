@@ -189,7 +189,7 @@ StyledRectangle {
                 implicitHeight: 40
                 radius: 20
                 icon: "shuffle"
-                icon_size: 18
+                iconSize: 18
                 checkable: true
                 checked: Players.active?.shuffle ?? false
                 visible: Players.active?.canControl ?? false
@@ -208,7 +208,7 @@ StyledRectangle {
                 implicitHeight: 48
                 radius: 24
                 icon: "skip_previous"
-                icon_size: 24
+                iconSize: 24
                 secondary: true
                 checkable: false
                 visible: Players.active?.canGoPrevious ?? false
@@ -225,7 +225,7 @@ StyledRectangle {
                 implicitHeight: 64
                 radius: 32
                 icon: (Players.active?.playbackState === MprisPlaybackState.Playing) ? "pause" : "play_arrow"
-                icon_size: 32
+                iconSize: 32
                 checkable: false
                 onClicked: {
                     if (!Players.active) return
@@ -242,7 +242,7 @@ StyledRectangle {
                 implicitHeight: 48
                 radius: 24
                 icon: "skip_next"
-                icon_size: 24
+                iconSize: 24
                 secondary: true
                 checkable: false
                 visible: Players.active?.canGoNext ?? false
@@ -263,7 +263,7 @@ StyledRectangle {
                     if (state === MprisLoopState.Track) return "repeat_one"
                     return "repeat"
                 }
-                icon_size: 18
+                iconSize: 18
                 checkable: true
                 checked: (Players.active?.loopState ?? MprisLoopState.None) !== MprisLoopState.None
                 visible: Players.active?.canControl ?? false

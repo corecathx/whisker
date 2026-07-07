@@ -8,7 +8,20 @@ Singleton {
     id: root
     // General
     readonly property var devices: Networking.devices.values ?? []
-    property bool debugConnectivity: true
+    function isSafe(network) {
+        return network.security !== WifiSecurityType.Open
+    }
+    function getIconFromStrength(strength) {
+        const level = Math.min(4, Math.floor(strength * 5));
+
+        return [
+            "signal_wifi_0_bar",
+            "network_wifi_1_bar",
+            "network_wifi_2_bar",
+            "network_wifi_3_bar",
+            "signal_wifi_4_bar"
+        ][level];
+    }
 
     readonly property var connectivity: Networking.connectivity
 

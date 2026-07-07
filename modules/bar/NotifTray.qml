@@ -42,17 +42,46 @@ Item {
         }
     }
 
-    HoverHandler {
-        id: detect
+    MouseArea {
+        id: mArea
+        anchors.fill: parent
+        hoverEnabled: true
+
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            if (popout.isVisible)
+                popout.hide()
+            else
+                popout.show()
+        }
     }
 
     StyledPopout {
+        id: popout
         hoverTarget: !root.inLockScreen ? detect : null
+        interactable: true
+        hCenterOnItem: true
+        requiresHover: false
+        Component {
+            NotificationPanel {
+            }
+        }
+    }
+    HoverHandler {
+        id: detect
+    }
+    StyledPopout {
+        hoverTarget: detect
         interactable: true
         hCenterOnItem: true
 
         Component {
-            NotificationPanel {
+            StyledText {
+                text: {
+                    if (NotifServer.data.values.length === 0 || !Preferences.misc.notificationEnabled) return "No notification"
+                    
+                    return NotifServer.data.values.length + " notification" + (NotifServer.data.values.length > 1 ? "s" : "");
+                }
             }
         }
     }
