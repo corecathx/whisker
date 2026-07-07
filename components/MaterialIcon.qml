@@ -5,7 +5,9 @@ StyledText {
   property real fill: 0
   property int grad: 0
   required property string icon
+  property int size: 24
 
+  font.pixelSize: root.size
   font.family: "Material Symbols Rounded"
   font.hintingPreference: Font.PreferFullHinting
   antialiasing: true
