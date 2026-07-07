@@ -7,8 +7,14 @@ import Quickshell
 Control {
   id: root
   property alias text: label.text
+  property alias label: label
   property string icon: ""
-  property int icon_size: 20
+  property int iconSize: 20
+  property int iconGap: 5
+
+  property int vPadding: 0
+  property int hPadding: 0
+
   property alias radius: background.radius
   property alias topLeftRadius: background.topLeftRadius
   property alias topRightRadius: background.topRightRadius
@@ -45,8 +51,8 @@ Control {
 
   implicitWidth: (label.text === "" && icon !== "")
       ? implicitHeight
-      : row.implicitWidth + implicitHeight
-  implicitHeight: 40
+      : row.implicitWidth + implicitHeight + hPadding * 2
+  implicitHeight: 40 + vPadding * 2
 
   opacity: root.enabled ? 1.0 : 0.5
 
@@ -56,12 +62,12 @@ Control {
     Row {
       id: row
       anchors.centerIn: parent
-      spacing: root.icon !== "" && label.text !== "" ? 5 : 0
+      spacing: root.icon !== "" && label.text !== "" ? root.iconGap : 0
 
       MaterialIcon {
         visible: root.icon !== ""
         icon: root.icon
-        font.pixelSize: root.icon_size
+        font.pixelSize: root.iconSize
         color: root.text_color
         anchors.verticalCenter: parent.verticalCenter
 

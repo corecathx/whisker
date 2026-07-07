@@ -244,7 +244,7 @@ StyledRectangle {
                 implicitWidth: 24
                 implicitHeight: 24
                 icon: "close"
-                icon_size: 18
+                iconSize: 18
                 text: ""
                 base_bg: "transparent"
                 base_fg: Appearance.colors.m3on_surface_variant
@@ -263,7 +263,7 @@ StyledRectangle {
                 implicitWidth: 24
                 implicitHeight: 24
                 icon: root.expanded ? "expand_less" : "expand_more"
-                icon_size: 18
+                iconSize: 18
                 text: ""
                 base_bg: "transparent"
                 base_fg: Appearance.colors.m3on_surface_variant

@@ -126,7 +126,7 @@ BaseMenu {
                     StyledButton {
                         id: imageFilterBtn
                         icon: "image"
-                        icon_size: 20
+                        iconSize: 20
                         checkable: true
                         checked: true
                         onToggled: function(checked) {
@@ -141,7 +141,7 @@ BaseMenu {
                     StyledButton {
                         id: videoFilterBtn
                         icon: "videocam"
-                        icon_size: 20
+                        iconSize: 20
                         checkable: true
                         checked: true
                         onToggled: function(checked) {
