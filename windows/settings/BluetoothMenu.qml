@@ -13,7 +13,7 @@ BaseMenu {
     BaseCard {
         BaseRowCard {
             cardSpacing: 0
-            verticalPadding: Bluetooth.defaultAdapter.enabled ? 10 : 0
+            verticalPadding: Bluetooth.enabled ? 10 : 0
             cardMargin: 0
             StyledText {
                 text: powerSwitch.checked ? "Power: On" : "Power: Off"
@@ -26,12 +26,12 @@ BaseMenu {
             }
             StyledSwitch {
                 id: powerSwitch
-                checked: Bluetooth.defaultAdapter?.enabled
-                onToggled: Bluetooth.defaultAdapter.enabled = checked
+                checked: Bluetooth.enabled
+                onToggled: Bluetooth.setEnabled(checked)
             }
         }
         BaseRowCard {
-            visible: Bluetooth.defaultAdapter.enabled
+            visible: Bluetooth.enabled
             cardSpacing: 0
             verticalPadding: 10
             cardMargin: 0
@@ -43,7 +43,7 @@ BaseMenu {
                     color: Appearance.colors.m3on_background
                 }
                 StyledText {
-                    text: "Allow other devices to find this computer."
+                    text: "Allow other devices to find this device."
                     font.pixelSize: 12
                     color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
                 }
@@ -52,12 +52,12 @@ BaseMenu {
                 Layout.fillWidth: true
             }
             StyledSwitch {
-                checked: Bluetooth.defaultAdapter?.discoverable
-                onToggled: Bluetooth.defaultAdapter.discoverable = checked
+                checked: Bluetooth.discoverable
+                onToggled: Bluetooth.setDiscoverable(checked)
             }
         }
         BaseRowCard {
-            visible: Bluetooth.defaultAdapter.enabled
+            visible: Bluetooth.enabled
             cardSpacing: 0
             verticalPadding: 0
             cardMargin: 0
@@ -78,14 +78,14 @@ BaseMenu {
                 Layout.fillWidth: true
             }
             StyledSwitch {
-                checked: Bluetooth.defaultAdapter?.discovering
-                onToggled: Bluetooth.defaultAdapter.discovering = checked
+                checked: Bluetooth.scanning
+                onToggled: Bluetooth.setScanning(checked)
             }
         }
     }
 
     BaseCard {
-        visible: connectedDevices.count > 0
+        visible: Bluetooth.devices.filter(d => d.connected).length > 0
         StyledText {
             text: "Connected Devices"
             font.pixelSize: 18
@@ -107,7 +107,7 @@ BaseMenu {
     }
 
     BaseCard {
-        visible: Bluetooth.defaultAdapter?.enabled
+        visible: Bluetooth.enabled
         StyledText {
             text: "Paired Devices"
             font.pixelSize: 18
@@ -115,16 +115,31 @@ BaseMenu {
             color: Appearance.colors.m3on_background
         }
 
-        Item {
+
+        RowLayout {
+            opacity: 0.4
+            spacing: 10
+            anchors.horizontalCenter: parent.horizontalCenter
+
             visible: pairedDevices.count === 0
-            width: parent.width
-            height: 40
-            StyledText {
-                anchors.centerIn: parent
-                text: "No paired devices"
-                font.pixelSize: 14
-                color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
+
+            MaterialIcon {
+                icon: "bluetooth_disabled"
+                size: 64
+                verticalAlignment: Text.AlignVCenter
+                Layout.fillHeight: true
+                color: Appearance.colors.m3on_surface_variant
             }
+            StyledText {
+                Layout.fillHeight: true
+
+                verticalAlignment: Text.AlignVCenter
+                text: "No devices found"
+                font.bold: true
+                font.pixelSize: 18
+                color: Appearance.colors.m3on_surface_variant
+            }
+
         }
 
         Repeater {

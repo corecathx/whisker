@@ -194,7 +194,7 @@ Item {
                     StyledText {
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignHCenter
-                        text: popoutParent.targetNetwork.name
+                        text: popoutParent.targetNetwork?.name ?? ""
                         font.bold: true
                         font.pixelSize: 18
                     }

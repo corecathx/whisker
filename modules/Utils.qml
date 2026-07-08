@@ -53,4 +53,20 @@ QtObject {
         var ext = path.split(".").pop().toLowerCase()
         return videoExts.indexOf(ext) !== -1
     }
+    function dbusIconToMaterial(dbusIcon) {
+        const iconMap = {
+            "audio-headset": "headset",
+            "audio-headphones": "headphones",
+            "input-keyboard": "keyboard",
+            "input-mouse": "mouse",
+            "input-gaming": "sports_esports",
+            "phone": "phone_android",
+            "computer": "computer",
+            "printer": "print",
+            "camera": "photo_camera",
+            "unknown": "bluetooth"
+        }
+        return iconMap[dbusIcon] || "bluetooth";
+    }
+
 }

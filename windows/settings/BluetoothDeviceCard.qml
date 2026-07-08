@@ -17,28 +17,13 @@ BaseRowCard {
     cardMargin: 0
     cardSpacing: 10
     verticalPadding: 0
-    opacity: device.state === QsBluetooth.BluetoothDeviceState.Connecting ||
-             device.state === QsBluetooth.BluetoothDeviceState.Disconnecting ? 0.6 : 1
-
-    function mapBluetoothIcon(dbusIcon, name) {
-        Log.info("windows/settings/BluetoothDeviceCard.qml", dbusIcon + ' / ' + name)
-        const iconMap = {
-            "audio-headset": "headset",
-            "audio-headphones": "headphones",
-            "input-keyboard": "keyboard",
-            "input-mouse": "mouse",
-            "input-gaming": "sports_esports",
-            "phone": "phone_android",
-            "computer": "computer",
-            "printer": "print",
-            "camera": "photo_camera",
-            "unknown": "bluetooth"
-        }
-        return iconMap[dbusIcon] || "bluetooth";
-    }
+    opacity: ((device.state === QsBluetooth.BluetoothDeviceState.Connecting ||
+             device.state === QsBluetooth.BluetoothDeviceState.Disconnecting)
+             || device.pairing ? 0.6 : 1)
+             
 
     MaterialIcon {
-        icon: mapBluetoothIcon(device.icon, device.name)
+        icon: Utils.dbusIconToMaterial(device.icon)
         color: Appearance.colors.m3on_background
         font.pixelSize: 32
     }
@@ -74,7 +59,7 @@ BaseRowCard {
     }
 
     StyledButton {
-        visible: showPair
+        visible: false // for now
         icon: "add"
         onClicked: device.pair()
     }
@@ -82,6 +67,6 @@ BaseRowCard {
     StyledButton {
         visible: showRemove
         icon: "delete"
-        onClicked: Bluetooth.removeDevice(device)
+        onClicked: device.forget()
     }
 }
