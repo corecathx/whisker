@@ -164,11 +164,7 @@ Item {
                                     if (modelData.connected) {
                                         modelData.disconnect()
                                     } else {
-                                        if (modelData.paired) { // wip
-                                            modelData.connect();
-                                        } else {
-                                            modelData.pair();
-                                        }
+                                        modelData.connect();
                                     }
 
                                 }

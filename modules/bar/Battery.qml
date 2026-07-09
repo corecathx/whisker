@@ -107,21 +107,49 @@ Item {
     }
 
     MouseArea {
+        id: mArea
         anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
+        hoverEnabled: true
 
-        onClicked: Quickshell.execDetached({
-            command: ["whisker", "ipc", "settings", "open", "power"]
-        })
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            if (popout.isVisible)
+                popout.hide()
+            else
+                popout.show()
+        }
     }
 
-    HoverHandler { id: hover }
+    HoverHandler {
+        id: hover
+    }
 
     StyledPopout {
         hoverTarget: hover
         hCenterOnItem: true
-        interactable: true
+        Component {
+            StyledText {
+                text: {
+                    let txt = Math.floor(Power.percentage * 100) + "%";
+                    if (!Power.onBattery)
+                        txt = "Charging " + txt;
+                    else
+                        txt = "Discharging " + txt;
+                    return txt;
+                }
+                color: Appearance.colors.m3on_surface
+                font.pixelSize: 14
+            }
+        }
+    }
 
+
+    StyledPopout {
+        id: popout
+        hoverTarget: hover
+        interactable: true
+        hCenterOnItem: true
+        requiresHover: false
         Component {
             Item {
                 implicitWidth: 250
