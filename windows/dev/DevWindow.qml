@@ -16,9 +16,8 @@ Scope {
     AbsolutePanelWindow {
         id: win
 
-        width: 600
-        height: 400
-        visible: false
+        implicitWidth: 600
+        implicitHeight: 400
         color: "transparent"
 
         ScreencopyView {
