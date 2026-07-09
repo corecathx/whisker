@@ -8,9 +8,9 @@ import qs.preferences
 Singleton {
     id: root
     readonly property BluetoothAdapter defaultAdapter: Bluetooth.defaultAdapter
-    readonly property bool enabled: root.defaultAdapter.enabled
-    readonly property bool scanning: root.defaultAdapter.discovering
-    readonly property bool discoverable: root.defaultAdapter.discoverable
+    readonly property bool enabled: root.defaultAdapter?.enabled ?? false
+    readonly property bool scanning: root.defaultAdapter?.discovering ?? false
+    readonly property bool discoverable: root.defaultAdapter?.discoverable ?? false
 
     function setEnabled(enable) {
         root.defaultAdapter.enabled = enable
@@ -28,9 +28,7 @@ Singleton {
         return (device.state !== BluetoothDeviceState.Connected
             && device.state !== BluetoothDeviceState.Disconnected)
             || device.pairing
-            
     }
-
 
     readonly property list<BluetoothDevice> devices: defaultAdapter?.devices?.values ?? []
     readonly property BluetoothDevice activeDevice: devices.find(d => d.connected) ?? null

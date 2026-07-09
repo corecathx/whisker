@@ -238,37 +238,6 @@ BaseMenu {
             }
         }
 
-        BaseCard {
-            visible: Network.savedNetworks.length > 0
-            StyledText {
-                text: "Remembered Networks"
-                font.pixelSize: 18
-                font.bold: true
-                color: Appearance.colors.m3on_background
-            }
-
-            Item {
-                visible: Network.savedNetworks.length === 0
-                width: parent.width
-                height: 40
-                StyledText {
-                    anchors.centerIn: parent
-                    text: "No remembered networks"
-                    font.pixelSize: 14
-                    color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
-                }
-            }
-
-            Repeater {
-                model: Network.wifiDevice.networks.values.filter(c => c.connected)
-                delegate: NetworkCard {
-                    connection: modelData
-                    menu: root
-                    showConnect: false
-                    showDisconnect: false
-                }
-            }
-        }
     }
     ColumnLayout {
         id: ethernetMenu

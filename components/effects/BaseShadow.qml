@@ -1,4 +1,5 @@
 import QtQuick.Effects
+import qs.modules
 
 MultiEffect {
     shadowEnabled: true

@@ -154,7 +154,8 @@ Scope {
 
             Item {
                 anchors.fill: parent
-                BaseShadow {}
+                layer.enabled: true
+                layer.effect: BaseShadow {}
 
                 StyledRectangle {
                     id: bg

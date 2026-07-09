@@ -139,11 +139,11 @@ StyledRectangle {
                     id: barSlider
                     implicitHeight: sliderHeight
                     icon: ""
-                    value: (Players.active?.position / Players.active.length) * 100
+                    value: (Players.active?.position / Players.active?.length) * 100
                     Connections {
                         target: Players.active
                         function onPositionChanged() {
-                            barSlider.value = (Players.active?.position / Players.active.length) * 100
+                            barSlider.value = (Players.active?.position / Players.active?.length) * 100
                         }
                         function onPostTrackChanged() {
                             barSlider.value = 0

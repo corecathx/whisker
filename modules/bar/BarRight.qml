@@ -14,7 +14,6 @@ Item {
     property bool inLockScreen: false
     implicitHeight: childContent.height
     implicitWidth: childContent.width
-    anchors.verticalCenter: parent.verticalCenter
 
     RowLayout {
         id: childContent
@@ -23,7 +22,7 @@ Item {
             visible: !inLockScreen
             implicitWidth: mprisTray.width
             implicitHeight: mprisTray.height
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
             MprisTray { id: mprisTray }
         }
 
@@ -34,7 +33,7 @@ Item {
         Item {
             implicitWidth: trays.implicitWidth + 20
             implicitHeight: 25
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
 
             StyledRectangle {
                 id: bgRect
@@ -55,7 +54,6 @@ Item {
                 id: trays
                 anchors.centerIn: bgRect
                 spacing: 10
-                anchors.verticalCenter: parent.verticalCenter
 
                 NotifTray {}
                 AudioTray {}
@@ -65,11 +63,11 @@ Item {
         }
 
         Battery {
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         PrivacyIndicator {
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
             visible: Preferences.bar.position === "top" && Serv.Privacy.hasAnyActiveAccess
         }
     }

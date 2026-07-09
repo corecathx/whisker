@@ -32,7 +32,7 @@ QtObject {
         return Quickshell.iconPath(icon);
     }
 
-    function formatSeconds(s: int) {
+    function formatSeconds(s) {
         const day = Math.floor(s / 86400);
         const hr = Math.floor(s / 3600) % 60;
         const min = Math.floor(s / 60) % 60;

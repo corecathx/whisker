@@ -312,8 +312,8 @@ Scope {
                         corner: 1
                         cornerHeight: Appearance.rounding.large
                         anchors {
-                            top: titleBar.bottom
-                            left: sidebarBG.right
+                            top: parent.top
+                            left: parent.left
                         }
                     }
                     StyledRectangle {
@@ -332,7 +332,7 @@ Scope {
                         corner: 0
                         cornerHeight: Appearance.rounding.large
                         anchors {
-                            top: titleBar.bottom
+                            top: parent.top
                             right: rightBorder.left
                         }
                     }
@@ -363,7 +363,7 @@ Scope {
                         cornerHeight: Appearance.rounding.large
                         anchors {
                             bottom: bottomBorder.top
-                            left: sidebarBG.right
+                            left: parent.left
                         }
                     }
 

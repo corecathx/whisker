@@ -9,7 +9,7 @@ ProgressOsd {
 
     label: "Volume"
     valueText: Pipewire.defaultAudioSink?.audio.muted ? 'Muted' : Math.floor(volume)
-    fillValue: Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio.volume
+    fillValue: (Pipewire.defaultAudioSink?.audio.muted ? 0 : Pipewire.defaultAudioSink?.audio?.volume) ?? 0
     iconName: volume > 50 ? "volume_up" : volume > 0 ? "volume_down" : "volume_off"
 
     PwObjectTracker {
