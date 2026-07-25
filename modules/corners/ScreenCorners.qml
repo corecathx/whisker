@@ -8,6 +8,7 @@ import Quickshell.Wayland
 import qs.modules
 import qs.modules.overlays
 import qs.preferences
+import qs.services as Serv
 
 PanelWindow {
     anchors {
@@ -79,5 +80,16 @@ PanelWindow {
         cornerHeight: 20
         color: Preferences.bar.small || Preferences.bar.floating ? "black" : Appearance.colors.m3surface
         corners: [0,1,2,3]
+        opacity: !Preferences.bar.keepOpaque && !Serv.Hyprland.currentWorkspace.hasTilingWindow() ? 0 : 1
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Appearance.animation.fast
+                easing.type: Appearance.animation.easing
+                // onRunningChanged: {
+                //     window.isAnimating = running;
+                // }
+            }
+        }
     }
 }
