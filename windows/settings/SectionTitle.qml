@@ -10,5 +10,5 @@ RowLayout {
     Layout.fillWidth: true
     spacing: 10
     MaterialIcon { icon: section.icon; color: Appearance.colors.m3primary; font.pixelSize: 22 }
-    StyledText { text: section.text; font.pixelSize: 17; font.family: "Outfit SemiBold"; color: Appearance.colors.m3on_surface }
+    StyledText { text: section.text; font.pixelSize: 18; font.family: "Outfit SemiBold"; color: Appearance.colors.m3on_surface }
 }
