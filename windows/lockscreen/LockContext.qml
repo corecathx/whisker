@@ -4,6 +4,7 @@ import Quickshell.Services.Pam
 
 Scope {
     id: root
+
     signal unlocked()
     signal animate()
     signal failed()
@@ -14,18 +15,52 @@ Scope {
     property string lastMessage: ""
     property bool accountLocked: false
 
-    // Only clear failure text when typing; keep lastMessage/accountLocked
-    onCurrentTextChanged: showFailure = false;
+    property bool authenticated: false
 
-    function tryUnlock() {
-        if (currentText === "") return;
+    onCurrentTextChanged: showFailure = false
 
-        root.unlockInProgress = true;
-        pam.start();
+    function startAuthentication() {
+        authenticated = false;
+        currentText = "";
+        showFailure = false;
+
+        if (passwordPam.active)
+            passwordPam.abort();
+
+        if (fingerprintPam.active)
+            fingerprintPam.abort();
+
+        passwordPam.start();
+        fingerprintPam.start();
     }
 
+    function tryUnlock() {
+        if (!passwordPam.active || !passwordPam.responseRequired)
+            return;
+
+        passwordPam.respond(currentText);
+    }
+
+    function unlockSuccess() {
+        if (authenticated)
+            return;
+
+        authenticated = true;
+
+        unlockInProgress = false;
+        lastMessage = "";
+        accountLocked = false;
+
+        passwordPam.abort();
+        fingerprintPam.abort();
+
+        unlocked();
+        animate();
+    }
+
+    // passwd
     PamContext {
-        id: pam
+        id: passwordPam
 
         configDirectory: "pam"
         config: "passwd.conf"
@@ -34,34 +69,54 @@ Scope {
             if (message.startsWith("The account is locked")) {
                 root.lastMessage = message;
                 root.accountLocked = true;
-            } else if (root.lastMessage && message.endsWith(" left to unlock)")) {
+            } else if (
+                root.lastMessage &&
+                message.endsWith(" left to unlock)")
+            ) {
                 root.lastMessage += "\n" + message;
                 root.accountLocked = true;
-            } else if (message.toLowerCase().startsWith("password:") && !root.accountLocked) {
+            } else if (
+                message.toLowerCase().startsWith("password:")
+                && !root.accountLocked
+            ) {
                 root.accountLocked = false;
-            }
-        }
-
-        onPamMessage: {
-            if (this.responseRequired) {
-                this.respond(root.currentText);
             }
         }
 
         onCompleted: result => {
-            if (result == PamResult.Success) {
-                // Clear lock and message only on successful login
-                root.lastMessage = "";
-                root.accountLocked = false;
+            switch (result) {
+                case PamResult.Success:
+                    root.unlockSuccess();
+                    break;
 
-                root.unlocked();
-                root.animate();
-            } else {
-                root.currentText = "";
-                root.showFailure = true;
+                default:
+                    if (!root.authenticated) {
+                        root.currentText = "";
+                        root.showFailure = true;
+                        start();
+                    }
             }
+        }
+    }
 
-            root.unlockInProgress = false;
+    // fprintd
+    PamContext {
+        id: fingerprintPam
+
+        configDirectory: "pam"
+        config: "fprintd.conf"
+
+        onCompleted: result => {
+            switch (result) {
+                case PamResult.Success:
+                    root.unlockSuccess();
+                    break;
+
+                default:
+                    if (!root.authenticated) {
+                        start();
+                    }
+            }
         }
     }
 }

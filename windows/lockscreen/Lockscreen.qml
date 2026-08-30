@@ -14,6 +14,7 @@ ShellRoot {
 			if (lock.locked) 
 				return;
             lock.locked = true
+			lockContext.startAuthentication();
         }
     }
 
@@ -24,6 +25,7 @@ ShellRoot {
 			if (lock.locked) 
 				return;
             lock.locked = true
+			lockContext.startAuthentication();
 		}
 	}
 
