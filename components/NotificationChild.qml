@@ -207,7 +207,7 @@ StyledRectangle {
             }
 
             RowLayout {
-                visible: root.buttons.length > 0
+                visible: root.buttons.length > 1
                 Layout.fillWidth: true
                 Layout.topMargin: 5
                 spacing: 8
