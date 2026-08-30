@@ -29,7 +29,7 @@ Scope {
     }
     CustomShortcut {
         name: "screenshot"
-        description: "Toggle Whisker's launcher."
+        description: "Take a screenshot (region)."
 
         onReleased: () => {
             if (root.active) {
@@ -38,6 +38,27 @@ Scope {
             }
             Log.info("screencap", "starting capture");
             root.active = true;
+        }
+    }
+
+    CustomShortcut {
+        name: "screenshotFull"
+        description: "Take a screenshot (full)."
+
+        onPressed: {
+            fullScreenProc.running = true
+        }
+    }
+
+    Process {
+        id: fullScreenProc
+        command: ['whisker', 'screen', '--copy']
+        stdout: StdioCollector {
+            onStreamFinished: {
+                Quickshell.execDetached({
+                    command: ["whisker", "notify", "Screenshot saved", this.text.trim()]
+                });
+            }
         }
     }
 
@@ -52,10 +73,17 @@ Scope {
             property string savedPath: ""
             property bool savedSuccess: false
 
-            color: Appearance.colors.m3surface
+            color: win.visible ? Appearance.colors.m3surface : 'transparent'
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.animation.slow
+                    easing.type: Appearance.animation.easing
+                }
+            }
             anchors { top: true; left: true; right: true; bottom: true }
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
             WlrLayershell.namespace: "whisker:screencapture"
 
             Component.onCompleted: {
@@ -168,6 +196,7 @@ Scope {
                 captureSource: win.screen
                 z: -999
                 live: false
+                visible: false
 
                 onHasContentChanged: {
                     Log.info("screencap", "hasContent: " + hasContent);
@@ -192,6 +221,7 @@ Scope {
             }
 
             Item {
+                visible: frozen.status === Image.Ready
                 anchors.fill: parent
                 focus: true
 
@@ -229,7 +259,7 @@ Scope {
                     NumberAnimation on opacity {
                         id: fadeIn
                         to: 1
-                        duration: Appearance.animation.medium
+                        duration: 1
                         easing.type: Appearance.animation.easing
                     }
                 }
@@ -253,6 +283,7 @@ Scope {
                         fillMode: Image.PreserveAspectFit
                         smooth: true
                         cache: false
+                        asynchronous: false
                     }
 
                     Item {
