@@ -132,6 +132,7 @@ Singleton {
         property real slow: 1000 * multiplier
 
         property var easing: Easing.OutCubic
+        property var easingExpressive: Easing.OutBack
     }
     component M3Palette: QtObject {
         property color m3background: "#111318"

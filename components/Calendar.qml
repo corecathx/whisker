@@ -114,7 +114,7 @@ BaseCard {
             Repeater {
                 model: ["Mo","Tu","We","Th","Fr","Sa","Su"]
                 Label {
-                    width: (parent.width-10)/2
+                    Layout.preferredWidth: 0
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -139,7 +139,7 @@ BaseCard {
                     radius: 20
                     color: modelData.isToday ? Appearance.colors.m3primary_container
                            : modelData.isCurrentMonth && modelData.day === root.selectedDay ? Appearance.colors.m3secondary_container
-                           : Appearance.colors.m3background
+                           : 'transparent'
                     Behavior on color {
                         ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
                     }
@@ -148,8 +148,8 @@ BaseCard {
                         text: modelData.day
                         font.pixelSize: modelData.isCurrentMonth ? 12 : 11
                         font.bold: modelData.isToday
-                        color: modelData.isCurrentMonth
-                               ? (modelData.isWeekend ? Appearance.colors.m3error : Appearance.colors.m3on_background)
+                        color: modelData.isToday ? Appearance.colors.m3primary
+                               : modelData.isCurrentMonth ? (modelData.isWeekend ? Appearance.colors.m3error : Appearance.colors.m3on_background)
                                : Colors.opacify(Appearance.colors.m3on_background, 0.48)
                     }
 
