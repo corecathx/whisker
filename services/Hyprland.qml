@@ -17,7 +17,7 @@ Singleton {
     readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
     readonly property int activeWsId: focusedWorkspace?.id ?? 1
     readonly property int shownWorkspaces: 4
-    readonly property ListModel fullWorkspaces: ListModel {}
+    property ListModel fullWorkspaces: ListModel {}
 
     readonly property QtObject currentWorkspace: QtObject {
         property bool hasWindow: {

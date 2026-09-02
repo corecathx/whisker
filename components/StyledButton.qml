@@ -23,6 +23,7 @@ Control {
   property bool checkable: false
   property bool checked: true
   property bool secondary: false
+  property bool pressed: mouse_area.pressed
   property string tooltipText: ""
   signal clicked
   signal toggled(bool checked)

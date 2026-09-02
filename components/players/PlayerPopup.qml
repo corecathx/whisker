@@ -12,7 +12,7 @@ StyledRectangle {
     id: root
     visible: !!Players.active
     implicitHeight: mainContent.implicitHeight + 40
-    implicitWidth: 320
+    implicitWidth: 300
     radius: 20
     color: Appearance.colors.m3surface
 
@@ -20,17 +20,18 @@ StyledRectangle {
         id: mainContent
         anchors.fill: parent
         anchors.margins: 10
-        spacing: 5
+        spacing: 2
 
         ColumnLayout {
             spacing: 15
             Layout.fillWidth: true
 
             Item {
-                Layout.preferredWidth: 200
-                Layout.preferredHeight: Layout.preferredWidth
+                Layout.fillWidth: true
+                Layout.preferredHeight: width
                 Layout.alignment: Qt.AlignHCenter
                 Image {
+                    visible: false
                     anchors.fill: parent
                     source: Players.active?.trackArtUrl ?? ""
                     fillMode: Image.PreserveAspectCrop
@@ -69,68 +70,123 @@ StyledRectangle {
                 }
             }
 
-            ColumnLayout {
+            RowLayout {
                 Layout.fillWidth: true
-                Layout.leftMargin: 20
-                Layout.rightMargin: 20
-                spacing: 5
+                // Layout.leftMargin: 4
+                // Layout.rightMargin: 4
+                ColumnLayout {
+                    spacing: 2
 
-                StyledText {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignHCenter
-                    text: Players.active?.trackTitle || "Nothing playing"
-                    font.pixelSize: 16
-                    font.family: "Outfit SemiBold"
-                    color: Appearance.colors.m3on_surface
-                    elide: Text.ElideRight
-                    horizontalAlignment: Text.AlignHCenter
+                    StyledText {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+                        text: Players.active?.trackTitle || "Nothing playing"
+                        font.pixelSize: 18
+                        font.family: "Outfit SemiBold"
+                        color: Appearance.colors.m3on_surface
+                        elide: Text.ElideRight
+                    }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+                        text: Players.active?.trackArtist || "Unknown artist"
+                        font.pixelSize: 12
+                        color: Appearance.colors.m3on_surface_variant
+                        elide: Text.ElideRight
+                    }
+
+                    // StyledText {
+                    //     Layout.fillWidth: true
+                    //     Layout.alignment: Qt.AlignHCenter
+                    //     text: Players.active?.trackAlbum || ""
+                    //     font.pixelSize: 10
+                    //     color: Appearance.colors.m3on_surface_variant
+                    //     opacity: 0.7
+                    //     elide: Text.ElideRight
+                    //     visible: text !== ""
+                    //     horizontalAlignment: Text.AlignHCenter
+                    // }
                 }
 
-                StyledText {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignHCenter
-                    text: Players.active?.trackArtist || "Unknown artist"
-                    font.pixelSize: 12
-                    color: Appearance.colors.m3on_surface_variant
-                    elide: Text.ElideRight
-                    horizontalAlignment: Text.AlignHCenter
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignHCenter
-                    text: Players.active?.trackAlbum || ""
-                    font.pixelSize: 10
-                    color: Appearance.colors.m3on_surface_variant
-                    opacity: 0.7
-                    elide: Text.ElideRight
-                    visible: text !== ""
-                    horizontalAlignment: Text.AlignHCenter
+                RowLayout {
+                    StyledButton {
+                        implicitWidth: 40
+                        implicitHeight: 40
+                        radius: 20
+                        icon: "shuffle"
+                        iconSize: 18
+                        checkable: true
+                        checked: Players.active?.shuffle ?? false
+                        visible: Players.active?.canControl ?? false
+                        enabled: Players.active?.shuffleSupported ?? false
+                        opacity: (Players.active?.shuffleSupported ?? false) ? 1.0 : 0.35
+                        onClicked: {
+                            if (Players.active && Players.active.canControl && Players.active.shuffleSupported) {
+                                Players.active.shuffle = !Players.active.shuffle
+                                checked = Players.active.shuffle
+                            }
+                        }
+                        topRightRadius: 5
+                        bottomRightRadius: 5
+                    }
+                    StyledButton {
+                        implicitWidth: 40
+                        implicitHeight: 40
+                        radius: 20
+                        icon: {
+                            const state = Players.active?.loopState ?? MprisLoopState.None
+                            if (state === MprisLoopState.Track) return "repeat_one"
+                            return "repeat"
+                        }
+                        iconSize: 18
+                        checkable: true
+                        checked: (Players.active?.loopState ?? MprisLoopState.None) !== MprisLoopState.None
+                        visible: Players.active?.canControl ?? false
+                        enabled: Players.active?.loopSupported ?? false
+                        opacity: (Players.active?.loopSupported ?? false) ? 1.0 : 0.35
+                        onClicked: {
+                            if (!Players.active || !Players.active.canControl || !Players.active.loopSupported) return
+                            const current = Players.active.loopState
+                            checked = true;
+                            if (current === MprisLoopState.None) {
+                                Players.active.loopState = MprisLoopState.Playlist
+                            } else if (current === MprisLoopState.Playlist) {
+                                Players.active.loopState = MprisLoopState.Track
+                            } else {
+                                Players.active.loopState = MprisLoopState.None
+                                checked = false;
+                            }
+                        }
+                        topLeftRadius: 5
+                        bottomLeftRadius: 5
+                    }
                 }
             }
+
         }
 
         ColumnLayout {
             Layout.fillWidth: true
-            spacing: 5
+            spacing: 2
 
             StyledSlider {
                 id: progressSlider
                 Layout.fillWidth: true
-                implicitHeight: 40
+                implicitHeight: 36
                 useAnim: false
-                trackHeightDiff: 28
+                trackHeightDiff: 22
                 trackNearHandleRadius:2
                 handleGap: 8
-                handle.width: 8
+                handle.width: 4
+
+                to: Players.active?.length ?? 0
 
                 property bool isSeeking: false
 
                 value: {
                     if (isSeeking) return value
-                    const pos = Players.active?.position ?? 0
-                    const len = Players.active?.length ?? 1
-                    return len > 0 ? (pos / len) * 100 : 0
+                    return Players.active?.position ?? 0
                 }
 
                 onPressedChanged: {
@@ -180,33 +236,23 @@ StyledRectangle {
             }
         }
 
+        Item{}
+
+
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
             spacing: 8
 
             StyledButton {
-                implicitWidth: 40
-                implicitHeight: 40
-                radius: 20
-                icon: "shuffle"
-                iconSize: 18
-                checkable: true
-                checked: Players.active?.shuffle ?? false
-                visible: Players.active?.canControl ?? false
-                enabled: Players.active?.shuffleSupported ?? false
-                opacity: (Players.active?.shuffleSupported ?? false) ? 1.0 : 0.35
-                onClicked: {
-                    if (Players.active && Players.active.canControl && Players.active.shuffleSupported) {
-                        Players.active.shuffle = !Players.active.shuffle
-                        checked = Players.active.shuffle
-                    }
+                Layout.preferredWidth: playButton.pressed ? 40 : 56
+                Behavior on Layout.preferredWidth { 
+                    NumberAnimation { 
+                        duration: Appearance.animation.fast; 
+                        easing.type: Appearance.animation.easingExpressive 
+                    } 
                 }
-            }
-
-            StyledButton {
-                implicitWidth: 48
-                implicitHeight: 48
-                radius: 24
+                implicitHeight: 56
+                radius: implicitHeight
                 icon: "skip_previous"
                 iconSize: 24
                 secondary: true
@@ -221,10 +267,12 @@ StyledRectangle {
             }
 
             StyledButton {
-                implicitWidth: 64
-                implicitHeight: 64
-                radius: 32
+                id: playButton
+                Layout.fillWidth: true
+                implicitHeight: 56
+                radius: implicitHeight
                 icon: (Players.active?.playbackState === MprisPlaybackState.Playing) ? "pause" : "play_arrow"
+                text: (Players.active?.playbackState === MprisPlaybackState.Playing) ? "Pause" : "Play"
                 iconSize: 32
                 checkable: false
                 onClicked: {
@@ -238,9 +286,15 @@ StyledRectangle {
             }
 
             StyledButton {
-                implicitWidth: 48
-                implicitHeight: 48
-                radius: 24
+                Layout.preferredWidth: playButton.pressed ? 40 : 56
+                Behavior on Layout.preferredWidth { 
+                    NumberAnimation { 
+                        duration: Appearance.animation.fast; 
+                        easing.type: Appearance.animation.easingExpressive 
+                    } 
+                }
+                implicitHeight: 56
+                radius: implicitHeight
                 icon: "skip_next"
                 iconSize: 24
                 secondary: true
@@ -253,38 +307,9 @@ StyledRectangle {
                     }
                 }
             }
-
-            StyledButton {
-                implicitWidth: 40
-                implicitHeight: 40
-                radius: 20
-                icon: {
-                    const state = Players.active?.loopState ?? MprisLoopState.None
-                    if (state === MprisLoopState.Track) return "repeat_one"
-                    return "repeat"
-                }
-                iconSize: 18
-                checkable: true
-                checked: (Players.active?.loopState ?? MprisLoopState.None) !== MprisLoopState.None
-                visible: Players.active?.canControl ?? false
-                enabled: Players.active?.loopSupported ?? false
-                opacity: (Players.active?.loopSupported ?? false) ? 1.0 : 0.35
-                onClicked: {
-                    if (!Players.active || !Players.active.canControl || !Players.active.loopSupported) return
-                    const current = Players.active.loopState
-                    checked = true;
-                    if (current === MprisLoopState.None) {
-                        Players.active.loopState = MprisLoopState.Playlist
-                    } else if (current === MprisLoopState.Playlist) {
-                        Players.active.loopState = MprisLoopState.Track
-                    } else {
-                        Players.active.loopState = MprisLoopState.None
-                        checked = false;
-                    }
-                }
-            }
         }
-        Item {}
+        Item { height: 2 }
+
         RowLayout {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
