@@ -18,6 +18,7 @@ Item {
         id: mouseHover
         anchors.fill: parent
         hoverEnabled: true
+        enabled: !Preferences.theme.smart
         onClicked: {
             if (Preferences.theme.scheme === schemeName) return
             Quickshell.execDetached({
@@ -29,6 +30,7 @@ Item {
     StyledRectangle {
         anchors.fill: parent
         radius: 10
+        opacity: Preferences.theme.smart ? 0.5 : 1.0
         color: Preferences.theme.scheme === schemeName
             ? !hovered ? schemeColor.surface_container_high : schemeColor.surface_container_highest
             : !hovered ? schemeColor.surface_container : schemeColor.surface_container_high

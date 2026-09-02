@@ -54,18 +54,22 @@ Singleton {
 
         let schemeData = JSON.parse(root.lastData);
         const selectedScheme = schemeData[scheme];
-        const mode = Preferences.theme.dark ? "dark" : "light";
-        const colors = selectedScheme[mode];
+
+        if (!selectedScheme)
+            return null;
+
+        const mode = getMode(schemeData)
 
         var outputColors = {};
+
         for (const [name, colorModes] of Object.entries(selectedScheme)) {
-            if (colorModes[mode]) {
+            if (colorModes[mode])
                 outputColors[name] = colorModes[mode];
-            }
         }
 
-        return outputColors
+        return outputColors;
     }
+
     function reloadScheme(data: string): void {
         if (data !== '' && root.lastData !== data)
             root.lastData = data;
@@ -84,7 +88,7 @@ Singleton {
             return;
         }
 
-        const mode = Preferences.theme.dark ? "dark" : "light";
+        const mode = getMode(schemeData)
 
         for (const [name, colorModes] of Object.entries(selectedScheme)) {
             const propName = `m3${name}`;
@@ -96,6 +100,12 @@ Singleton {
         }
     }
 
+    function getMode(schemeData) {
+        if (Preferences.theme.smart)
+            return schemeData.mode || "dark";
+
+        return Preferences.theme.dark ? "dark" : "light";
+    }
 
     FileView {
         id: schemesWatcher

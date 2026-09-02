@@ -39,11 +39,21 @@ BaseMenu {
 
     BaseCard {
         SectionTitle { icon: "build"; text: "Configuration" }
+
+        SwitchOption {
+            id: smartSwitch
+            title: "Smart theme"
+            description: "Automatically choose light or dark colors from the wallpaper."
+            prefField: "theme.smart"
+        }
+
         SwitchOption {
             title: "Dark mode"
             description: "Whether to use dark color schemes."
             prefField: "theme.dark"
+            visible: !smartSwitch.checked
         }
+
         SliderOption {
             title: "Contrast"
             description: "Set how contrast is the colors.\n(Colors need to be applied manually)"
@@ -51,6 +61,7 @@ BaseMenu {
             from: -1
             to: 1
             stepSize: 0.2
+            visible: !smartSwitch.checked
         }
     }
 }

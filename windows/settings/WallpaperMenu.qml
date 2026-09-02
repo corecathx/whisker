@@ -62,6 +62,7 @@ BaseMenu {
                 }
             }
             ColumnLayout {
+                visible: false
                 Layout.margins: 14
                 StyledText {
                     text: "Additional Config"
@@ -189,8 +190,15 @@ BaseMenu {
                                     enabled: !wpSetProc.running
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        if (selected) return
-                                        wpSetProc.command = ['whisker', 'wallpaper', modelData, Preferences.misc.applyWallpaperToGreeter ? "--apply-greeter" : ""]
+                                        if (selected)
+                                            return
+
+                                        wpSetProc.command = [
+                                            "whisker",
+                                            "wallpaper",
+                                            modelData
+                                        ]
+
                                         wpSetProc.running = true
                                     }
                                 }
@@ -354,8 +362,14 @@ BaseMenu {
                 running: false
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        if (Preferences.misc.applyWallpaperToGreeter)
-                            Quickshell.execDetached({ command: ['whisker', 'notify', 'Whisker', 'Desktop and Greeter wallpaper changed!'] })
+                        Quickshell.execDetached({
+                            command: [
+                                "whisker",
+                                "notify",
+                                "Whisker",
+                                "Wallpaper changed!"
+                            ]
+                        })
                     }
                 }
             }

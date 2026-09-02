@@ -23,6 +23,7 @@ Singleton {
     property QtObject theme: QtObject {
         property bool dark: true
         property string scheme: "tonal-spot"
+        property bool smart: false
         property bool useWallpaper: true
         property string wallpaper: ""
         property real contrast: 0.0
