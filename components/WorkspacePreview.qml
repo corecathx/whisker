@@ -257,25 +257,57 @@ Item {
 
                                 onReleased: function (mouse) {
                                     if (!dragging) {
-                                        Hyprland.dispatch('workspace ' + workspaceCard.workspace.id);
+                                        Hyprland.dispatch(
+                                            'hl.dsp.focus({ workspace = "' + workspaceCard.workspace.id + '" })'
+                                        );
                                     } else {
                                         var targetWorkspace = root.dragTargetWorkspace;
+                                        console.log(targetWorkspace, "vs", root.dragSourceWorkspace) /// IDK HOW TO FIX THIS FOR NOW OK :']
 
-                                        if (targetWorkspace !== -1 && targetWorkspace !== root.dragSourceWorkspace) {
-                                            Hyprland.dispatch('movetoworkspacesilent ' + targetWorkspace + ',address:' + windowPreview.win.address);
+                                        if (targetWorkspace === -1) {
+                                            Hyprland.fullWorkspaces = Hyprland.fullWorkspaces
+                                        } else if (targetWorkspace !== -1 && targetWorkspace !== root.dragSourceWorkspace) {
+                                            Hyprland.dispatch(
+                                                'hl.dsp.window.move({' +
+                                                ' workspace = "' + targetWorkspace +
+                                                '", follow = false' +
+                                                ', window = "address:' + windowPreview.win.address +
+                                                '" })'
+                                            );
                                         } else if (targetWorkspace === root.dragSourceWorkspace) {
                                             if (windowPreview.isFloating) {
                                                 var centerX = windowPreview.x + windowPreview.width / 2;
                                                 var centerY = windowPreview.y + windowPreview.height / 2;
 
-                                                var dropX = (centerX / workspaceCard.scaleX) - (windowPreview.win.size[0] / 2) + windowPreview.offsetX;
-                                                var dropY = (centerY / workspaceCard.scaleY) - (windowPreview.win.size[1] / 2) + windowPreview.offsetY;
+                                                var dropX =
+                                                    (centerX / workspaceCard.scaleX) -
+                                                    (windowPreview.win.size[0] / 2) +
+                                                    windowPreview.offsetX;
 
-                                                Hyprland.dispatch('movewindowpixel exact ' + Math.round(dropX) + ' ' + Math.round(dropY) + ',address:' + windowPreview.win.address);
+                                                var dropY =
+                                                    (centerY / workspaceCard.scaleY) -
+                                                    (windowPreview.win.size[1] / 2) +
+                                                    windowPreview.offsetY;
+
+                                                Hyprland.dispatch(
+                                                    'hl.dsp.window.move({' +
+                                                    ' x = ' + Math.round(dropX) +
+                                                    ', y = ' + Math.round(dropY) +
+                                                    ', window = "address:' +
+                                                    windowPreview.win.address +
+                                                    '" })'
+                                                );
                                             } else {
-                                                var relX = (windowPreview.x + windowPreview.width / 2) / workspaceCard.width;
-                                                var relY = (windowPreview.y + windowPreview.height / 2) / workspaceCard.height;
+                                                var relX =
+                                                    (windowPreview.x + windowPreview.width / 2) /
+                                                    workspaceCard.width;
+
+                                                var relY =
+                                                    (windowPreview.y + windowPreview.height / 2) /
+                                                    workspaceCard.height;
+
                                                 var direction = "";
+
                                                 if (relX < 0.25)
                                                     direction = "l";
                                                 else if (relX > 0.75)
@@ -285,13 +317,24 @@ Item {
                                                 else if (relY > 0.75)
                                                     direction = "d";
 
-                                                if (direction && (Math.abs(windowPreview.x - windowPreview.initX) > 10 || Math.abs(windowPreview.y - windowPreview.initY) > 10))
-                                                    Hyprland.dispatch('movewindow ' + direction + ',address:' + windowPreview.win.address);
+                                                if (
+                                                    direction &&
+                                                    (
+                                                        Math.abs(windowPreview.x - windowPreview.initX) > 10 ||
+                                                        Math.abs(windowPreview.y - windowPreview.initY) > 10
+                                                    )
+                                                ) {
+                                                    Hyprland.dispatch(
+                                                        'hl.dsp.window.move({' +
+                                                        ' direction = "' + direction +
+                                                        '", window = "address:' +
+                                                        windowPreview.win.address +
+                                                        '" })'
+                                                    );
+                                                }
                                             }
                                         }
 
-                                        // windowPreview.x = windowPreview.initX;
-                                        // windowPreview.y = windowPreview.initY;
                                         root.dragSourceWorkspace = -1;
                                         root.dragTargetWorkspace = -1;
                                     }
