@@ -15,9 +15,8 @@ hl.bind("SUPER + L", hl.dsp.global("whisker:lock"))
 -- Screenshot (region)
 hl.bind("SUPER + SHIFT + S", hl.dsp.global("whisker:screenshot"), { release = true })
 
--- Screenshot (region)
+-- Screenshot (full)
 hl.bind("SUPER + PRINT", hl.dsp.global("whisker:screenshotFull"), { locked = true })
-
 
 -- Clipboard
 hl.bind("SUPER + V", hl.dsp.global("whisker:clipboard"))
