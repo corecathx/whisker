@@ -106,7 +106,12 @@ Item {
                         color: Appearance.colors.m3on_surface_variant
                     }
                     Repeater {
-                        model: Network.wifiDevice.networks
+                        model: Network.wifiDevice.networks.values.slice().sort((a, b) => {
+                            if (a.connected !== b.connected)
+                                return b.connected - a.connected;
+
+                            return b.signalStrength - a.signalStrength;
+                        })
                         delegate: RowLayout {
                             id: rl
                             required property var modelData
