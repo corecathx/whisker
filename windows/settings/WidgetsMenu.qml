@@ -63,6 +63,16 @@ BaseMenu {
             width: parent.width
             spacing: 16
 
+            SectionTitle { icon: "horizontal_rule"; text: "Bar" }
+            SwitchOption { title: "Battery Charging Animation"; description: "Show an animation when charging"; prefField: "widgets.animatedBattery" }
+        }
+    }
+
+    BaseCard {
+        ColumnLayout {
+            width: parent.width
+            spacing: 16
+
             SectionTitle { icon: "code"; text: "GitHub Widget" }
             TextFieldOption { title: "GitHub Username"; description: "Your GitHub username for the contribution calendar"; prefField: "misc.githubUsername"; placeholder: "octocat" }
 

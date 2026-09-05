@@ -44,6 +44,7 @@ Singleton {
     }
 
     property QtObject widgets: QtObject {
+        property bool animatedBattery: true
         property bool showLyrics: true
         property bool lyricsAsOverlay: false
 

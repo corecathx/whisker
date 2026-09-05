@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
 import qs.components
+import qs.components.misc
 import qs.modules
 import qs.preferences
 import qs.services
@@ -79,6 +80,24 @@ Item {
             sourceComponent: batteryDisplay
             property color iconColor: root.batteryColor
             property color labelColor: root.batteryColor
+        }
+
+        AnimatedWave {
+            visible: Preferences.widgets.animatedBattery
+            running: visible
+            anchors {
+                left: bar.right
+                top: bar.top
+                bottom: bar.bottom
+            }
+            waveHeight: Power.onBattery ? 0 : 1.3
+            color: bar.color
+            Behavior on waveHeight {
+                NumberAnimation {
+                    duration: Appearance.animation.fast
+                    easing.type: Appearance.animation.easing
+                }
+            }
         }
 
         StyledRectangle {
