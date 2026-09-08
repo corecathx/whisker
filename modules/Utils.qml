@@ -47,6 +47,23 @@ QtObject {
 
         return comps.join(" ");
     }
+
+    function formatSize(bytes) {
+        if (bytes < 1024)
+            return bytes.toFixed(0) + "B"
+
+        var units = ["KB", "MB", "GB", "TB", "PB"]
+        var size = bytes
+        var unit = -1
+
+        while (size >= 1024 && unit < units.length - 1) {
+            size /= 1024
+            unit++
+        }
+
+        return size.toFixed(size >= 10 ? 0 : 1) + units[unit]
+    }
+
     function isVideo(path) {
         if (!path) return false
         var videoExts = ["mp4", "mkv", "webm", "avi", "mov", "flv", "wmv", "m4v"]
