@@ -239,6 +239,8 @@ LazyLoader {
                     }
                 }
 
+                if (Preferences.bar.position === 'bottom')
+                    yValue = popoutWindow.height - yValue - implicitHeight - 26
                 return root.cleanupTimer.running ? yValue : Math.round(yValue);
             }
 
