@@ -34,6 +34,10 @@ Item {
         PwObjectTracker {
             objects: [slider.node]
         }
+        PwNodePeakMonitor {
+            id: peakMon
+            node: slider.node
+        }
 
         RowLayout {
             id: layout
@@ -42,6 +46,7 @@ Item {
             spacing: 8
 
             MaterialIcon {
+                Layout.alignment: Qt.AlignTop
                 visible: slider.useMaterialIcon
                 icon: slider.iconName
                 font.pixelSize: 30
@@ -49,6 +54,7 @@ Item {
             }
 
             IconImage {
+                Layout.alignment: Qt.AlignTop
                 visible: !slider.useMaterialIcon
                 source: slider.iconName
                 implicitWidth: 30
@@ -93,6 +99,38 @@ Item {
                         }
                     }
                 }
+                Item {height: 5}
+
+                StyledRectangle {
+                    id: vuBg
+                    Layout.fillWidth: true
+                    height: 5
+                    radius: Appearance.rounding.medium
+                    color: Appearance.colors.m3primary_container
+                    StyledRectangle {
+                        id: vuActual
+                        width: parent.width * (peakMon.peak)
+                        color: Appearance.colors.m3primary
+                        height: parent.height
+                        radius: parent.radius
+                        opacity: 0.2
+
+                        Behavior on width {
+                            NumberAnimation {
+                                duration: 80
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                    }
+                    StyledRectangle {
+                        id: vuScaled
+                        width: vuActual.width * slider.node.audio.volume
+                        color: Appearance.colors.m3primary
+                        height: parent.height
+                        radius: parent.radius
+                    }
+                }
+                Item {height: 5}
 
                 StyledText {
                     visible: text !== ""
@@ -245,14 +283,16 @@ Item {
                             tooltipText: !Audio.defaultSink?.audio.muted ? "Mute audio" : "Unmute audio"
                         }
                         StyledButton {
-                            text: "Sounds Settings"
                             Layout.fillWidth: true
                             secondary: true
+                            icon: "settings"
+                            text: "Open settings"
+                            iconSize: 16
                             implicitHeight: 28
                             topLeftRadius: 5
                             bottomLeftRadius: 5
                             onClicked: {
-                                mA.onClicked(null)
+                                Quickshell.execDetached({command:['whisker', 'ipc', 'settings', 'open', 'sounds']})
                                 popout.hide()
                             }
                         }
