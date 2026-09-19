@@ -43,7 +43,7 @@ ShellRoot {
     OsdPanel {}
     Bar {}
     QuickPanel {}
-    Notification {}
+    NotificationWindow {}
     Settings {}
     Lockscreen {}
 
@@ -63,6 +63,9 @@ ShellRoot {
         Audio.init();
         Brightness.init();
         Lrclib.fetchLyrics();
+
+        // Whisker.init()
+        // Plugins.init()
     }
     // DevWindow {}
     //

@@ -144,6 +144,7 @@ Control {
   LazyLoader {
     active: root.tooltipText !== ""
     StyledPopout {
+      allowYFlipping: false
       hoverTarget: hover
       hoverDelay: 500
       Component {

@@ -23,6 +23,8 @@ LazyLoader {
     property bool followMouse: false
     property list<StyledPopout> childPopouts: []
 
+    property bool allowYFlipping: true
+
     property bool requiresHover: true
     property bool _manualControl: false
     property int hoverDelay: 250
@@ -239,7 +241,7 @@ LazyLoader {
                     }
                 }
 
-                if (Preferences.bar.position === 'bottom')
+                if (Preferences.bar.position === 'bottom' && root.allowYFlipping)
                     yValue = popoutWindow.height - yValue - implicitHeight - 26
                 return root.cleanupTimer.running ? yValue : Math.round(yValue);
             }
