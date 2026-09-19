@@ -15,22 +15,22 @@ Scope {
         id: window
         implicitWidth: 440
 
-        property bool hasPopups: NotifServer.popups.rowCount() > 0
+        property bool hasPopups: Notification.popups.rowCount() > 0
         visible: hasPopups
-
+        focusable: true
         Connections {
-            target: NotifServer.popups
+            target: Notification.popups
 
             function onRowsInserted() {
-                window.hasPopups = NotifServer.popups.rowCount() > 0
+                window.hasPopups = Notification.popups.rowCount() > 0
             }
 
             function onRowsRemoved() {
-                window.hasPopups = NotifServer.popups.rowCount() > 0
+                window.hasPopups = Notification.popups.rowCount() > 0
             }
 
             function onModelReset() {
-                window.hasPopups = NotifServer.popups.rowCount() > 0
+                window.hasPopups = Notification.popups.rowCount() > 0
             }
         }
         anchors {
@@ -106,7 +106,7 @@ Scope {
                 clip: true
                 interactive: contentHeight > 480
 
-                model: Preferences.misc.notificationEnabled ? NotifServer.popups : null
+                model: Preferences.misc.notificationEnabled ? Notification.popups : null
 
                 property bool stickToBottom: true
                 property bool hasNewItems: false
@@ -163,12 +163,15 @@ Scope {
                 delegate: NotificationChild {
                     animateEntry: true
                     width: listView.width
-                    title: modelData.summary
-                    body: modelData.body
-                    image: modelData.image || modelData.appIcon
+
+                    title: modelData.raw.summary
+                    body: modelData.raw.body
+                    image: modelData.raw.image || modelData.raw.appIcon
                     notifData: modelData
+
                     radius: Appearance.rounding.medium
-                    buttons: modelData.actions.map(action => ({
+
+                    buttons: modelData.raw.actions.map(action => ({
                         label: action.text,
                         onClick: () => action.invoke()
                     }))
