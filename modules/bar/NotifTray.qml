@@ -26,7 +26,7 @@ Item {
             color: Appearance.colors.m3on_background
         }
         StyledRectangle {
-            visible: NotifServer.data.values.length > 0
+            visible: Notification.list.values.length > 0
             implicitHeight: 14
             radius: 10
             Layout.preferredWidth: width
@@ -34,7 +34,7 @@ Item {
             color: Appearance.colors.m3primary
             StyledText {
                 id: counter
-                text: NotifServer.data.values.length
+                text: Notification.list.values.length
                 anchors.centerIn: parent
                 font.pixelSize: parent.height-2
                 color: Appearance.colors.m3on_primary
@@ -77,9 +77,9 @@ Item {
         Component {
             StyledText {
                 text: {
-                    if (NotifServer.data.values.length === 0 || !Preferences.misc.notificationEnabled) return "No notification"
+                    if (Notification.list.values.length === 0 || !Preferences.misc.notificationEnabled) return "No notification"
                     
-                    return NotifServer.data.values.length + " notification" + (NotifServer.data.values.length > 1 ? "s" : "");
+                    return Notification.list.values.length + " notification" + (Notification.list.values.length > 1 ? "s" : "");
                 }
             }
         }

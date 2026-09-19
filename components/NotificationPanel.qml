@@ -54,7 +54,7 @@ Item {
             Item { Layout.fillWidth: true }
             StyledButton {
                 icon: "clear_all"
-                onClicked: NotifServer.clearAll()
+                onClicked: Notification.clear()
                 implicitHeight: 30
                 secondary: true
                 text: "Clear All"
@@ -72,7 +72,7 @@ Item {
                 anchors.right: parent.right
 
                 StyledText {
-                    visible: NotifServer.data.values.length === 0
+                    visible: Notification.list.values.length === 0
                     text: "You're all caught up!"
                     font.pixelSize: 14
                     color: Appearance.colors.m3secondary
@@ -80,7 +80,7 @@ Item {
                 }
 
                 ScrollView {
-                    visible: NotifServer.data.values.length !== 0
+                    visible: Notification.list.values.length !== 0
                     Layout.fillWidth: true
                     Layout.preferredHeight: 500
                     clip: true
@@ -94,15 +94,16 @@ Item {
 
                         Repeater {
                             id: rep
-                            model: NotifServer.data
+                            model: Notification.list
+
                             delegate: NotificationChild {
-                                id: child
                                 Layout.fillWidth: true
-                                title: modelData.summary
-                                body: modelData.body
-                                image: modelData.image || modelData.appIcon
+
+                                title: modelData.raw.summary
+                                body: modelData.raw.body
+                                image: modelData.raw.image || modelData.raw.appIcon
                                 notifData: modelData
-                                buttons: modelData.actions.map(action => ({
+                                buttons: modelData.raw.actions.map(action => ({
                                             label: action.text,
                                             onClick: () => {
                                                 action.invoke();

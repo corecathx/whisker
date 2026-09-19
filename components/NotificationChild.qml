@@ -52,7 +52,7 @@ StyledRectangle {
 
     Behavior on x {
         NumberAnimation {
-            duration: Appearance.animation.normal
+            duration: Appearance.animation.medium
             easing.type: Appearance.animation.easing
         }
     }
@@ -207,6 +207,27 @@ StyledRectangle {
             }
 
             RowLayout {
+                visible: root.notifData.raw.hasInlineReply && root.expanded
+                RowLayout {
+                    spacing: 10
+                    StyledTextField {
+                        id: inlineReplyField
+                        padding: 10
+                        Layout.fillWidth: true
+                        placeholder: root.notifData.raw.inlineReplyPlaceholder
+                        onAccepted: {
+                            inlineReplySend.clicked()
+                        }
+                    }
+                    StyledButton {
+                        id: inlineReplySend
+                        icon: "send"
+                        onClicked: root.notifData.raw.sendInlineReply(inlineReplyField.text)
+                    }
+                }
+            }
+
+            RowLayout {
                 visible: root.buttons.length > 1
                 Layout.fillWidth: true
                 Layout.topMargin: 5
@@ -257,7 +278,7 @@ StyledRectangle {
 
             StyledButton {
                 id: expandButt
-                visible: root.body.length > 100 || root.title.length > 50
+                visible: root.body.length > 100 || root.title.length > 50 || root.notifData.raw.hasInlineReply
                 Layout.preferredWidth: 24
                 Layout.preferredHeight: 24
                 implicitWidth: 24

@@ -39,7 +39,13 @@ Singleton {
         }
     }
 
-    function removeNotification(notif): void {
+    function clear(): void {
+        while (server.trackedNotifications.values.length > 0)
+            for (const notification of server.trackedNotifications.values)
+                notification.dismiss()
+    }
+
+    function remove(notif): void {
         root.notifications = root.notifications.filter(n => n !== notif)
         notif.destroy()
     }
@@ -87,7 +93,7 @@ Singleton {
             target: notif.raw
 
             function onClosed(reason) {
-                root.removeNotification(notif)
+                root.remove(notif)
             }
         }
 
