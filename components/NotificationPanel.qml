@@ -82,7 +82,7 @@ Item {
                 ScrollView {
                     visible: Notification.list.values.length !== 0
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 500
+                    Layout.maximumHeight: 500
                     clip: true
 
                     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
