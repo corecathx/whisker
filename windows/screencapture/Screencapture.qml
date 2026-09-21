@@ -55,9 +55,7 @@ Scope {
         command: ['whisker', 'screen', '--copy']
         stdout: StdioCollector {
             onStreamFinished: {
-                Quickshell.execDetached({
-                    command: ["whisker", "notify", "Screenshot saved", this.text.trim()]
-                });
+                Whisker.notify("Screenshot saved", this.text.trim());
             }
         }
     }
@@ -73,7 +71,7 @@ Scope {
             property string savedPath: ""
             property bool savedSuccess: false
 
-            color: win.visible ? Appearance.colors.m3surface : 'transparent'
+            color: win.visible && win.ready ? Appearance.colors.m3surface : 'transparent'
             Behavior on color {
                 ColorAnimation {
                     duration: Appearance.animation.slow
@@ -193,7 +191,10 @@ Scope {
             ScreencopyView {
                 id: screencopy
                 anchors.fill: parent
-                captureSource: win.screen
+                captureSource: {
+                    console.log(win.screen)
+                    return win.screen
+                }
                 z: -999
                 live: false
                 visible: false
@@ -570,13 +571,9 @@ Scope {
                         onFinished: {
                             root.active = false;
                             if (win.savedSuccess) {
-                                Quickshell.execDetached({
-                                    command: ["whisker", "notify", "Screenshot saved", win.savedPath.split("/").pop() + " (copied)"]
-                                });
+                                Whisker.notify("Screenshot saved", win.savedPath.split("/").pop() + " (copied)");
                             } else if (win.savedPath !== "") {
-                                Quickshell.execDetached({
-                                    command: ["whisker", "notify", "Screenshot failed", "Could not save"]
-                                });
+                                Whisker.notify("Screenshot failed", "Could not save");
                             }
                         }
                     }

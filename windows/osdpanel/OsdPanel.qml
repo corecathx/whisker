@@ -96,9 +96,9 @@ Scope {
                             if (children[i].visible) count++
                         return count
                     }
-
-                    VolumeOsd { id: volumeOsd; Layout.alignment: contentWrapper.visibleCount === 1 ? Qt.AlignTop : Qt.AlignRight | Qt.AlignTop }
+                    
                     BrightnessOsd { id: brightnessOsd; Layout.alignment: contentWrapper.visibleCount === 1 ? Qt.AlignTop : Qt.AlignLeft | Qt.AlignTop }
+                    VolumeOsd { id: volumeOsd; Layout.alignment: contentWrapper.visibleCount === 1 ? Qt.AlignTop : Qt.AlignRight | Qt.AlignTop }
                 }
             }
         }

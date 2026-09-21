@@ -180,7 +180,8 @@ LazyLoader {
                     if (!targetItem)
                         xValue = 0;
                     else {
-                        let baseX = targetItem.mapToGlobal(Qt.point(0, 0)).x;
+                        let globalPos = targetItem.mapToGlobal(Qt.point(0, 0));
+                        let baseX = globalPos.x - screen.x;
                         if (parentPopoutWindow)
                             baseX += parentPopoutWindow.x;
 
@@ -207,6 +208,8 @@ LazyLoader {
                     }
                 }
 
+                console.log("POPOUT.X:",xValue)
+
                 return root.cleanupTimer.running ? xValue : Math.round(xValue);
             }
 
@@ -220,7 +223,8 @@ LazyLoader {
                     if (!targetItem)
                         yValue = 0;
                     else {
-                        let baseY = targetItem.mapToGlobal(Qt.point(0, 0)).y;
+                        let globalPos = targetItem.mapToGlobal(Qt.point(0, 0));
+                        let baseY = globalPos.y - screen.y;
                         if (parentPopoutWindow)
                             baseY += parentPopoutWindow.y;
 

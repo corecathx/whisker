@@ -1,6 +1,7 @@
 pragma Singleton
 import Quickshell
 import qs.modules
+import qs.services
 Singleton {
   property var commands: [
       {
@@ -46,14 +47,7 @@ Singleton {
           comment: "Say hello!",
           mode: "direct",
           exec: function(input) {
-              Quickshell.execDetached({
-                  command: [
-                      "whisker",
-                      "notify",
-                      "Whisker",
-                      "Hello, " + Quickshell.env("USER") + "!"
-                  ]
-              });
+              Whisker.notify("Whisker", "Hello, " + Quickshell.env("USER") + "!")
               return null;
           }
       },
@@ -77,9 +71,7 @@ Singleton {
                               Quickshell.execDetached({
                                   command: ["whisker", "prefs", "set", "theme.dark", false]
                               });
-                              Quickshell.execDetached({
-                                  command: ["whisker", "notify", "Whisker", "Light mode enabled!"]
-                              });
+                              Whisker.notify("Whisker", "Light mode enabled!");
                           }
                       },
                       {
@@ -90,9 +82,7 @@ Singleton {
                               Quickshell.execDetached({
                                   command: ["whisker", "prefs", "set", "theme.dark", true]
                               });
-                              Quickshell.execDetached({
-                                  command: ["whisker", "notify", "Whisker", "Dark mode enabled!"]
-                              });
+                              Whisker.notify("Whisker", "Dark mode enabled!");
                           }
                       }
                   ]

@@ -33,16 +33,7 @@ Item {
                 HoverHandler {
                     id: hoverDnd
                 }
-                StyledPopout {
-                    hoverTarget: hoverDnd
-                    Component {
-                        StyledText {
-                            text: "If disabled, you won't get notification popups.\nYou can still see past notifications here."
-                            font.pixelSize: 14
-                            color: Appearance.colors.m3on_surface
-                        }
-                    }
-                }
+                tooltipText: "If disabled, you won't get notification popups.\nYou can still see past notifications here."
             }
             StyledText {
                 text: "Notifications"

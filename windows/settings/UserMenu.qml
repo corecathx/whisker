@@ -50,11 +50,11 @@ BaseMenu {
                 id: setPfpProc
                 onExited: {
                     if (exitCode !== 0) {
-                        Quickshell.execDetached(["whisker", "notify", "Whisker", "Failed to set profile picture"]);
+                        Whisker.notify("Whisker", "Failed to set profile picture");
                         return;
                     }
                     Appearance.refreshProfileImage();
-                    Quickshell.execDetached(["whisker", "notify", "Whisker", "Profile picture updated!"]);
+                    Whisker.notify("Whisker", "Profile picture updated!");
                 }
             }
         }

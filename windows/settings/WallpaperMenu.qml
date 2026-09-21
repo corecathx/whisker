@@ -362,14 +362,7 @@ BaseMenu {
                 running: false
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        Quickshell.execDetached({
-                            command: [
-                                "whisker",
-                                "notify",
-                                "Whisker",
-                                "Wallpaper changed!"
-                            ]
-                        })
+                        Whisker.notify("Whisker", "Wallpaper changed!")
                     }
                 }
             }

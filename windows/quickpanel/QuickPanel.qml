@@ -413,7 +413,7 @@ Scope {
                             label: "Screen record"
                             subtitle: ScreenRecorder.isRecording ? ScreenRecorder.elapsedTime : "Off"
                             active: ScreenRecorder.isRecording
-                            onClicked: ScreenRecorder.toggle()
+                            onClicked: ScreenRecorder.toggle(window.screen)
                         }
                         StyledLargeButton {
                             Layout.fillWidth: true
