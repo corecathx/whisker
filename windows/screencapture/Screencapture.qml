@@ -7,6 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell.Wayland
 import qs.modules
+import qs.services
 import qs.components
 import qs.components.misc
 
