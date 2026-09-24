@@ -9,6 +9,7 @@ import qs.modules
 import qs.components
 import qs.preferences
 
+import qs.windows.settings.components
 
 BaseMenu {
     title: "Color Scheme"

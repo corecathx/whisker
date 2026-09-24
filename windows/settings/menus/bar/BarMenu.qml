@@ -9,6 +9,8 @@ import qs.modules
 import qs.components
 import qs.preferences
 
+import qs.windows.settings.components
+
 BaseMenu {
     title: "Bar"
     description: "Customize the appearance and behavior of the bar."

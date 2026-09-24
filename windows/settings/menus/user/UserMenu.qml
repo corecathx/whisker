@@ -8,6 +8,8 @@ import qs.components.filepicker
 import qs.modules
 import qs.services
 
+import qs.windows.settings.components
+
 BaseMenu {
     title: "User"
     description: "Current user's profile."

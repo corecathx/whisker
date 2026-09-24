@@ -12,6 +12,21 @@ import qs.components.misc
 import qs.components
 import qs.services
 
+// menus
+import qs.windows.settings.menus.about
+import qs.windows.settings.menus.bar
+import qs.windows.settings.menus.bluetooth
+import qs.windows.settings.menus.colors
+import qs.windows.settings.menus.misc
+import qs.windows.settings.menus.network
+import qs.windows.settings.menus.power
+import qs.windows.settings.menus.sounds
+import qs.windows.settings.menus.system
+import qs.windows.settings.menus.user
+import qs.windows.settings.menus.vpn
+import qs.windows.settings.menus.wallpaper
+import qs.windows.settings.menus.widgets
+
 Scope {
     IpcHandler {
         target: "settings"

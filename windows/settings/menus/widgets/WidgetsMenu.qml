@@ -7,6 +7,8 @@ import qs.components
 import qs.preferences
 import qs.services
 
+import qs.windows.settings.components
+
 BaseMenu {
     title: "Widgets"
     description: "Configure widgets and overlays displayed on your desktop."
