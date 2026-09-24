@@ -100,14 +100,23 @@ Item {
 
                 MouseArea {
                     anchors.fill: parent
-                    acceptedButtons: Qt.RightButton
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
 
-                    onClicked: {
-                        if (popout.isVisible)
-                            popout.hide()
-                        else
-                            popout.show()
+                    onClicked: function(mouse) {
+                        if (mouse.button === Qt.LeftButton) {
+                            trayItemRoot.modelData.activate()
+                        } else if (mouse.button === Qt.MiddleButton) {
+                            trayItemRoot.modelData.secondaryActivate()
+                        } else if (mouse.button === Qt.RightButton) {
+                            if (trayItemRoot.modelData.hasMenu) {
+                                if (popout.isVisible)
+                                    popout.hide()
+                                else
+                                    popout.show()
+                            }
+                        }
                     }
                 }
             }

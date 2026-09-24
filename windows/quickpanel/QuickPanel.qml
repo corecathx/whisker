@@ -215,70 +215,38 @@ Scope {
                         RowLayout {
                             spacing: 5
 
-                            StyledRectangle {
-                                width: 40
-                                height: 40
+                            StyledButton {
+                                icon: "settings"
                                 radius: 10
-                                color: settingsArea.pressed ? Appearance.colors.m3surface_container : Appearance.colors.m3surface_container_high
-
-                                Behavior on color {
-                                    ColorAnimation {
-                                        duration: Appearance.animation.fast
-                                    }
-                                }
-
-                                MaterialIcon {
-                                    icon: "settings"
-                                    font.pixelSize: 20
-                                    color: Appearance.colors.m3on_surface
-                                    anchors.centerIn: parent
-                                }
-
-                                MouseArea {
-                                    id: settingsArea
-                                    anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        Quickshell.execDetached({
-                                            command: ['whisker', 'ipc', 'settings', 'open', '""']
-                                        });
-                                        root.opened = false;
-                                    }
+                                base_bg: Appearance.colors.m3surface_container_high
+                                base_fg: Appearance.colors.m3on_surface_variant
+                                hover_bg: Appearance.colors.m3surface_container_highest
+                                pressed_bg: Appearance.colors.m3surface_container_high
+                                onClicked: {
+                                    Quickshell.execDetached({
+                                        command: ['whisker', 'ipc', 'settings', 'open', '""']
+                                    });
+                                    root.opened = false;
                                 }
                             }
-                            StyledRectangle {
-                                width: 40
-                                height: 40
+                            StyledButton {
+                                icon: "power_settings_new"
                                 radius: 10
-                                color: powerArea.pressed ? Appearance.colors.m3surface_container : Appearance.colors.m3surface_container_high
-
-                                Behavior on color {
-                                    ColorAnimation {
-                                        duration: Appearance.animation.fast
-                                    }
-                                }
-
-                                MaterialIcon {
-                                    icon: "power_settings_new"
-                                    font.pixelSize: 20
-                                    color: Appearance.colors.m3on_surface
-                                    anchors.centerIn: parent
-                                }
-
-                                MouseArea {
-                                    id: powerArea
-                                    anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        popout.show();
-                                    }
+                                base_bg: Appearance.colors.m3surface_container_high
+                                base_fg: Appearance.colors.m3on_surface_variant
+                                hover_bg: Appearance.colors.m3surface_container_highest
+                                pressed_bg: Appearance.colors.m3surface_container_high
+                                onClicked: {
+                                    popout.show();
                                 }
                                 HoverHandler {
                                     id: hover
                                 }
                                 StyledPopout {
                                     id: popout
+                                    allowYFlipping: false
                                     hoverTarget: hover
+                                    hoverDelay: 500
                                     requiresHover: false
                                     interactable: true
                                     Component {
