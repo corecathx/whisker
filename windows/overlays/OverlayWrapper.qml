@@ -54,6 +54,14 @@ Scope {
                     shadowColor: Appearance.colors.m3shadow
                     shadowBlur: 1
                 }
+
+                opacity: Globals.dockState != 1
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Appearance.animation.fast
+                        easing.type: Appearance.animation.easing
+                    }
+                }
             }
 
             PrivacyIndicator {

@@ -52,6 +52,9 @@ Scope {
         property real targetLauncherWidth: screen.width * 0.4
         property real targetLauncherHeight: screen.height * 0.6
         property int state: 0 // 0 = dock, 1 = launcher
+        onStateChanged: {
+            Globals.dockState = win.state
+        }
         property real activeMaxTimer: 1000
         property bool dockVisible: false
         property bool shouldKeepDockVisible: {
