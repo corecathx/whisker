@@ -582,7 +582,7 @@ BaseMenu {
         cardMargin: 0
 
         MaterialIcon {
-            icon: parent.icon
+            icon: parent.icon ?? ""
             color: Appearance.colors.m3primary
             font.pixelSize: 20
         }

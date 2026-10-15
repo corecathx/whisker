@@ -18,8 +18,7 @@ BaseMenu {
         ColorSchemePreview {}
         Flickable {
             id: schemeFlick
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Layout.fillWidth: true
             height: 150
             clip: true
             boundsBehavior: Flickable.StopAtBounds

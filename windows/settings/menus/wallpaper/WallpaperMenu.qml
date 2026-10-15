@@ -113,7 +113,8 @@ BaseMenu {
             onSelectedTabChanged: updateFiltered()
 
             ColumnLayout {
-                anchors.fill: parent
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 spacing: 10
 
                 Item {
@@ -253,7 +254,8 @@ BaseMenu {
             }
 
             StyledRectangle {
-                anchors.fill: parent
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 color: Colors.opacify(Appearance.colors.m3surface, 0.4)
                 visible: wpSetProc.running
                 z: 999

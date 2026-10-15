@@ -23,8 +23,7 @@ BaseMenu {
     property int state: NetworkMenu.Wifi
 
     Item {
-        anchors.left: parent.left
-        anchors.right: parent.right
+        Layout.fillWidth: true
         height: bg.height
 
         StyledRectangle {
@@ -91,11 +90,9 @@ BaseMenu {
                 easing.type: Appearance.animation.easing
             }
         }
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-        
+
+        Layout.fillWidth: true
+
         BaseCard {
             BaseRowCard {
                 cardSpacing: 0
@@ -170,24 +167,24 @@ BaseMenu {
         }
 
 
-        BaseCard {
-            visible: Network.connections.filter(c => c.type === "ethernet").length > 0
-            StyledText {
-                text: "Ethernet"
-                font.pixelSize: 18
-                font.bold: true
-                color: Appearance.colors.m3on_background
-            }
+        // BaseCard {
+        //     visible: Network.connections.filter(c => c.type === "ethernet").length > 0
+        //     StyledText {
+        //         text: "Ethernet"
+        //         font.pixelSize: 18
+        //         font.bold: true
+        //         color: Appearance.colors.m3on_background
+        //     }
 
-            Repeater {
-                model: Network.connections.filter(c => c.type === "ethernet" && !c.active)
-                delegate: NetworkCard {
-                    connection: modelData
-                    menu: root
-                    showConnect: true
-                }
-            }
-        }
+        //     Repeater {
+        //         model: Network.connections.filter(c => c.type === "ethernet" && !c.active)
+        //         delegate: NetworkCard {
+        //             connection: modelData
+        //             menu: root
+        //             showConnect: true
+        //         }
+        //     }
+        // }
 
         BaseCard {
             visible: Network.wifiEnabled
@@ -201,7 +198,8 @@ BaseMenu {
             RowLayout {
                 opacity: 0.4
                 spacing: 10
-                anchors.horizontalCenter: parent.horizontalCenter
+                Layout.alignment: Qt.AlignHCenter
+                // anchors.horizontalCenter: parent.horizontalCenter
 
                 visible: Network.wifiEnabled &&
                         Network.wifiDevice &&
@@ -256,16 +254,16 @@ BaseMenu {
                 easing.type: Appearance.animation.easing
             }
         }
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
-        
+
+        Layout.fillWidth: true
+
         BaseCard {
             RowLayout {
                 opacity: 0.4
                 spacing: 10
-                anchors.horizontalCenter: parent.horizontalCenter
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter
+                // anchors.horizontalCenter: parent.horizontalCenter
 
                 MaterialIcon {
                     icon: "construction"

@@ -18,13 +18,13 @@ BaseCard {
     default property alias content: contentLayout.data
 
     ColumnLayout {
-        anchors.fill: parent
+        Layout.fillWidth: true
+        Layout.fillHeight: true
         spacing: 10
 
         RowLayout {
             spacing: 10
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Layout.fillWidth: true
 
             MaterialIcon {
                 id: iconLabel
@@ -61,8 +61,7 @@ BaseCard {
 
         ColumnLayout {
             id: contentLayout
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Layout.fillWidth: true
             opacity: root.expanded ? 1 : 0
             visible: opacity > 0.1
             Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }

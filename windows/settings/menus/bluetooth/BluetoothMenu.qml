@@ -119,7 +119,8 @@ BaseMenu {
         RowLayout {
             opacity: 0.4
             spacing: 10
-            anchors.horizontalCenter: parent.horizontalCenter
+            
+            Layout.alignment: Qt.AlignHCenter
 
             visible: pairedDevices.count === 0
 

@@ -4,8 +4,9 @@ import qs.modules
 
 Item {
     id: baseCard
-    anchors.left: parent.left
-    anchors.right: parent.right
+    Layout.fillWidth: true
+    // anchors.left: parent.left
+    // anchors.right: parent.right
     implicitHeight: wpBG.implicitHeight
     default property alias content: contentArea.data
     property alias color: wpBG.color

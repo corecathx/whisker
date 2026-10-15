@@ -30,18 +30,14 @@ Scope {
     }
 
     function reloadWallpaper() {
-        var newWallpaper = Appearance.wallpaper !== ""
-            ? Appearance.wallpaper
-            : root.fallbackWallpaper;
-
-        if (newWallpaper === root.currentWallpaper) {
+        if (Appearance.wallpaper === root.currentWallpaper) {
             if (root.isVideo)
                 root.startMpvpaper();
 
             return;
         }
 
-        root.currentWallpaper = newWallpaper;
+        root.currentWallpaper = Appearance.wallpaper;
     }
 
     function startMpvpaper() {
@@ -148,7 +144,6 @@ Scope {
             property var modelData
             screen: modelData
 
-            property string fallbackWallpaper: root.fallbackWallpaper
             property string currentWallpaper: root.currentWallpaper
             property bool isVideo: root.isVideo
 

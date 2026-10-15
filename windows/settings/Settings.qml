@@ -28,10 +28,13 @@ import qs.windows.settings.menus.wallpaper
 import qs.windows.settings.menus.widgets
 
 Scope {
+    id: scope
+
+    property bool opened: false
     IpcHandler {
         target: "settings"
         function open(menu: string) {
-            Globals.visible_settingsMenu = true;
+            scope.opened = true;
             if (menu !== "" && settingsWindow !== null) {
                 for (var i = 0; i < settingsWindow.menuModel.length; i++) {
                     var item = settingsWindow.menuModel[i];
@@ -50,12 +53,12 @@ Scope {
         description: "Open Whisker settings."
 
         onReleased: () => {
-            Globals.visible_settingsMenu = !Globals.visible_settingsMenu;
+            scope.opened = !scope.opened;
         }
     }
 
     LazyLoader {
-        active: Globals.visible_settingsMenu
+        active: scope.opened
         Window {
             id: root
             property string currentMenuTitle: "Network" // lol...
@@ -67,14 +70,14 @@ Scope {
             visible: true
             title: "Whisker Settings"
             color: Appearance.colors.m3background
-            onClosing: Globals.visible_settingsMenu = false
+            onClosing: scope.opened = false
 
             property var menuModel: {
                 var raw = [
                     { header: true, label: "Connections" },
                     { icon: "language", label: "Network", component: "NetworkMenu" },
                     { icon: "bluetooth", label: "Bluetooth", component: "BluetoothMenu" },
-                    { icon: "vpn_key", label: "VPN", component: "VPNMenu" },
+                    // { icon: "vpn_key", label: "VPN", component: "VPNMenu" },
                     { header: true, label: "System" },
                     { icon: "volume_up", label: "Sounds", component: "SoundsMenu" },
                     { icon: "power", label: "Power", component: "PowerMenu" },
@@ -200,48 +203,6 @@ Scope {
                                 secondary: true
                                 onClicked: root.sidebarCollapsed = !root.sidebarCollapsed
                             }
-                        }
-
-                        BaseCard {
-                            id: userCard
-                            Layout.fillWidth: true
-                            cardMargin: 8
-                            useAnims: false
-                            cardSpacing: 0
-                            verticalPadding: 16
-                            property bool opened: false
-                            visible: false//!root.sidebarCollapsed
-                            opacity: root.sidebarCollapsed ? 0 : 1
-                            Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast } }
-                            property bool hovered: mouseArea.containsMouse
-                            color: hovered ? Appearance.colors.m3surface_container_high : Appearance.colors.m3surface_container
-
-                            RowLayout {
-                                width: parent.width
-                                spacing: 8
-                                ProfileIcon {
-                                    Layout.preferredWidth: userCard.opened ? 50 : 36
-                                    Layout.preferredHeight: userCard.opened ? 50 : 36
-                                    Behavior on Layout.preferredWidth { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-                                    Behavior on Layout.preferredHeight { NumberAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-                                }
-
-                                ColumnLayout {
-                                    spacing: 2
-                                    StyledText {
-                                        text: Quickshell.env("USER")
-                                        color: Appearance.colors.m3on_surface
-                                        font.pixelSize: 19
-                                        font.family: "Outfit SemiBold"
-                                    }
-                                    RowLayout {
-                                        visible: userCard.opened
-                                        Image { sourceSize: Qt.size(18, 18); source: Quickshell.iconPath(System.logo) }
-                                        StyledText { text: System.prettyName; color: Colors.opacify(Appearance.colors.m3on_surface, 0.7); font.pixelSize: 11 }
-                                    }
-                                }
-                            }
-                            MouseArea { id: mouseArea; anchors.fill: parent; hoverEnabled: true; onClicked: userCard.opened = !userCard.opened }
                         }
 
                         ListView {
@@ -394,7 +355,7 @@ Scope {
                             anchors.fill: parent
                             sourceComponent: {
                                 var components = {
-                                    NetworkMenu: networkComponent, BluetoothMenu: bluetoothComponent, VPNMenu: vpnComponent,
+                                    NetworkMenu: networkComponent, BluetoothMenu: bluetoothComponent,
                                     SoundsMenu: soundsComponent, PowerMenu: powerComponent, WallpaperMenu: wallpaperComponent,
                                     ColorsMenu: colorsComponent, BarMenu: barComponent, WidgetsMenu: widgetsComponent,
                                     MiscMenu: miscComponent, SystemMenu: systemComponent, AboutMenu: aboutComponent,
@@ -418,7 +379,7 @@ Scope {
             // networks
             Component { id: networkComponent; NetworkMenu {} }
             Component { id: bluetoothComponent; BluetoothMenu {} }
-            Component { id: vpnComponent; VPNMenu {} }
+            // Component { id: vpnComponent; VPNMenu {} }
             // system
             Component { id: soundsComponent; SoundsMenu {} }
             Component { id: powerComponent; PowerMenu {} }

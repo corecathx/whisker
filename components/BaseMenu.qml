@@ -59,8 +59,7 @@ Item {
             }
             StyledRectangle {
                 id: hr
-                anchors.left: parent.left
-                anchors.right: parent.right
+                Layout.fillWidth: true
                 implicitHeight: 1
                 color: Colors.opacify(Appearance.colors.m3on_background, 0.6)
             }
@@ -86,7 +85,7 @@ Item {
             id: mainContent
             width: mainScroll.width
             height: mainContent.childrenRect.height
-            Column {
+            ColumnLayout {
                 id: stackedSections
                 width: Math.min(mainScroll.width, 1000)
                 x: (mainContent.width - width) / 2

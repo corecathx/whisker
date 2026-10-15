@@ -94,8 +94,7 @@ BaseCard {
     RowLayout {
         visible: showPasswordField
         property bool showPassword: false
-        anchors.left: parent.left
-        anchors.right: parent.right
+        Layout.fillWidth: true
         spacing: 10
         StyledTextField {
             padding: 10

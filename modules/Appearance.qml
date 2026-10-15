@@ -48,7 +48,7 @@ Singleton {
 
     property string lastData: ''
 
-    function getScheme(scheme: string) {
+    function getScheme(scheme: string): var {
         if (root.lastData === '')
             return null;
 

@@ -29,7 +29,7 @@ Item {
     property int horizontalPadding: 24 + dropdownIcon.implicitWidth
     property int closedWidth: labelText.width + dropdownIcon.implicitWidth
     property int popupMaxWidth: calculatePopupMaxWidth() + 12 + dropdownIcon.implicitWidth
-
+    
     property alias radius: container.radius
     property string label: "Select option"
     property var model: ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5"]
@@ -41,15 +41,13 @@ Item {
     signal selectedIndexChanged(int index)
 
     function calculatePopupMaxWidth() {
-        var max = 0
-        for (let i = 0; i < model.length; i++) {
-            metrics.text = model[i]
-            max = Math.max(max, metrics.width)
-        }
+        let max = 0
+        for (let i = 0; i < model.length; i++)
+            max = Math.max(max, metrics.advanceWidth(model[i]))
         return max
     }
 
-    TextMetrics {
+    FontMetrics {
         id: metrics
         font.pixelSize: 16
         font.family: "Outfit"
