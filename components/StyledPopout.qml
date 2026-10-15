@@ -208,7 +208,7 @@ LazyLoader {
                     }
                 }
 
-                console.log("POPOUT.X:",xValue)
+                // console.log("POPOUT.X:",xValue)
 
                 return root.cleanupTimer.running ? xValue : Math.round(xValue);
             }
