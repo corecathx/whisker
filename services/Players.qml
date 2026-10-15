@@ -8,7 +8,9 @@ import Quickshell.Services.Mpris
 Singleton {
     id: root
     readonly property list<MprisPlayer> players: Mpris.players.values
-    readonly property MprisPlayer active: players[0] ?? null
+    readonly property MprisPlayer active: players.find(player =>
+        player.playbackState == MprisPlaybackState.Playing
+    ) ?? players[0] ?? null
     readonly property bool isPlaying: Players.active?.playbackState == MprisPlaybackState.Playing
 
     property Timer posTimer: Timer {
