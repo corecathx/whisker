@@ -12,7 +12,7 @@ Singleton {
     property bool spawnedWelcome: false
 
     property QtObject bar: QtObject {
-        property bool floating: truewl
+        property bool floating: true
         property string position: "top"
         property bool small: true
         property int padding: 300
