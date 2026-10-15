@@ -17,8 +17,7 @@ import QtQuick.Effects
 Scope {
     id: root
 
-    property string fallbackWallpaper: Utils.getPath("images/fallback-wallpaper.png")
-    property string currentWallpaper: Appearance.wallpaper !== "" ? Appearance.wallpaper : fallbackWallpaper
+    property string currentWallpaper: Appearance.wallpaper
     property bool isVideo: Utils.isVideo(currentWallpaper)
     property var mpvpaperProcesses: []
 

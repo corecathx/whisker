@@ -1,3 +1,4 @@
+
 import Quickshell.Widgets
 import Quickshell
 import Quickshell.Io
@@ -10,6 +11,8 @@ import qs.modules
 import qs.components
 import qs.preferences
 import qs.services
+
+import qs.windows.settings.menus.wallpaper.components
 
 BaseMenu {
     id: root
@@ -94,19 +97,72 @@ BaseMenu {
                 Item { Layout.fillHeight: true }
             }
         }
-        Item {  }
+        Item {}
         BaseRowCard {
+            id: wpSelectorCard
             cardMargin: 0
             verticalPadding: 8
-            id: wpSelectorCard
-            property var wallpapers: []
+
+            property var userWallpapers: []
+            property var whiskerWallpapers: []
+            property var wallpapers: selectedTab === 0 ? userWallpapers : whiskerWallpapers
             property var filteredWallpapers: []
+            property int selectedTab: 0
 
             onWallpapersChanged: updateFiltered()
+            onSelectedTabChanged: updateFiltered()
 
             ColumnLayout {
                 anchors.fill: parent
                 spacing: 10
+
+                Item {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: 10
+                    Layout.rightMargin: 10
+                    height: bg.height
+
+                    StyledRectangle {
+                        id: bg
+                        anchors.fill: tabContainer
+                        radius: 200
+                        color: Appearance.colors.m3surface_container_high
+                    }
+
+                    RowLayout {
+                        id: tabContainer
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        StyledButton {
+                            icon: "person"
+                            text: "User"
+                            iconSize: 28
+                            iconGap: 10
+                            radius: 200
+                            vPadding: 0
+                            implicitWidth: 200
+                            checked: wpSelectorCard.selectedTab === 0
+                            base_bg: checked ? Appearance.colors.m3secondary_container : "transparent"
+                            base_fg: checked ? Appearance.colors.m3secondary : Appearance.colors.m3on_surface_variant
+                            onClicked: wpSelectorCard.selectedTab = 0
+                            label.font.pixelSize: 16
+                        }
+                        StyledButton {
+                            icon: "pets"
+                            text: "Whisker"
+                            iconSize: 28
+                            iconGap: 10
+                            radius: 200
+                            vPadding: 0
+                            implicitWidth: 200
+                            checked: wpSelectorCard.selectedTab === 1
+                            base_bg: checked ? Appearance.colors.m3secondary_container : "transparent"
+                            base_fg: checked ? Appearance.colors.m3secondary : Appearance.colors.m3on_surface_variant
+                            onClicked: wpSelectorCard.selectedTab = 1
+                            label.font.pixelSize: 16
+                        }
+                    }
+                }
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -131,11 +187,12 @@ BaseMenu {
                         iconSize: 20
                         checkable: true
                         checked: true
+
                         onToggled: function(checked) {
                             if (!checked && !videoFilterBtn.checked) {
-                                checked = true
                                 imageFilterBtn.checked = true
                             }
+
                             wpSelectorCard.updateFiltered()
                         }
                     }
@@ -146,11 +203,12 @@ BaseMenu {
                         iconSize: 20
                         checkable: true
                         checked: true
+
                         onToggled: function(checked) {
                             if (!checked && !imageFilterBtn.checked) {
-                                checked = true
                                 videoFilterBtn.checked = true
                             }
+
                             wpSelectorCard.updateFiltered()
                         }
                     }
@@ -161,7 +219,7 @@ BaseMenu {
                     Layout.preferredHeight: 400
                     clip: true
                     contentWidth: width
-                    contentHeight: gridContent.childrenRect.height
+                    contentHeight: gridContent.height
                     boundsBehavior: Flickable.StopAtBounds
 
                     Grid {
@@ -177,125 +235,7 @@ BaseMenu {
                         Repeater {
                             model: wpSelectorCard.filteredWallpapers
 
-                            delegate: Item {
-                                width: 150
-                                height: width * root.screen.height / root.screen.width + 35
-                                property bool hovered: mouseArea.containsMouse
-                                property bool selected: Preferences.theme.wallpaper === modelData
-                                property bool itemIsVideo: Utils.isVideo(modelData)
-
-                                MouseArea {
-                                    id: mouseArea
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    enabled: !wpSetProc.running
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        if (selected)
-                                            return
-
-                                        wpSetProc.command = [
-                                            "whisker",
-                                            "wallpaper",
-                                            modelData
-                                        ]
-
-                                        wpSetProc.running = true
-                                    }
-                                }
-
-                                ColumnLayout {
-                                    anchors.fill: parent
-                                    spacing: 5
-
-                                    ClippingRectangle {
-                                        Layout.fillWidth: true
-                                        Layout.preferredHeight: parent.width * root.screen.height / root.screen.width
-                                        radius: 10
-                                        color: Appearance.colors.m3surface_container_high
-
-                                        LoadingIcon {
-                                            anchors.centerIn: parent
-                                        }
-                                        Image {
-                                            anchors.fill: parent
-                                            source: !itemIsVideo ? modelData : ""
-                                            fillMode: Image.PreserveAspectCrop
-                                            asynchronous: true
-                                            cache: true
-                                            sourceSize.width: width
-                                            sourceSize.height: height
-                                            visible: !itemIsVideo
-                                        }
-
-                                        Video {
-                                            id: thumbVideo
-                                            anchors.fill: parent
-                                            source: {
-                                                if (!itemIsVideo) return ""
-                                                return modelData.startsWith("file://") ? modelData : "file://" + modelData
-                                            }
-                                            autoPlay: true
-                                            muted: true
-                                            visible: itemIsVideo
-                                            position: 100
-                                            Component.onCompleted: {
-                                                thumbVideo.pause()
-                                            }
-                                            Connections {
-                                                target: mouseArea
-                                                function onContainsMouseChanged() {
-                                                    if (itemIsVideo) {
-                                                        if (mouseArea.containsMouse)
-                                                            thumbVideo.play()
-                                                        else {
-                                                            thumbVideo.pause()
-                                                            thumbVideo.position = 100
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        StyledRectangle {
-                                            anchors.right: parent.right
-                                            anchors.top: parent.top
-                                            anchors.margins: 5
-                                            width: 24
-                                            height: 24
-                                            radius: 12
-                                            color: Colors.opacify(Appearance.colors.m3primary, 0.9)
-                                            visible: itemIsVideo
-
-                                            MaterialIcon {
-                                                anchors.centerIn: parent
-                                                icon: "play_circle"
-                                                font.pixelSize: 16
-                                                color: Appearance.colors.m3on_primary
-                                            }
-                                        }
-
-                                        StyledRectangle {
-                                            anchors.fill: parent
-                                            radius: 10
-                                            color: "transparent"
-                                            border.width: selected ? 3 : (hovered ? 2 : 1)
-                                            border.color: selected
-                                                ? Appearance.colors.m3primary
-                                                : Colors.opacify(Appearance.colors.m3on_background, hovered ? 0.6 : 0.3)
-                                        }
-                                    }
-
-                                    StyledText {
-                                        Layout.fillWidth: true
-                                        text: modelData.split('/').pop()
-                                        color: Appearance.colors.m3on_surface
-                                        font.pixelSize: 11
-                                        elide: Text.ElideMiddle
-                                        horizontalAlignment: Text.AlignHCenter
-                                    }
-                                }
-                            }
+                            delegate: WallpaperItem {}
                         }
                     }
                 }
@@ -326,7 +266,7 @@ BaseMenu {
 
             function updateFiltered() {
                 var result = []
-                var searchTerm = searchInput.text.toLowerCase()
+                var searchTerm = searchInput.text.trim().toLowerCase()
 
                 for (var i = 0; i < wallpapers.length; i++) {
                     var wp = wallpapers[i]
@@ -336,9 +276,8 @@ BaseMenu {
                     var matchesFilter = (imageFilterBtn.checked && !wpIsVideo) ||
                                         (videoFilterBtn.checked && wpIsVideo)
 
-                    if (matchesSearch && matchesFilter) {
+                    if (matchesSearch && matchesFilter)
                         result.push(wp)
-                    }
                 }
 
                 filteredWallpapers = result
@@ -348,11 +287,29 @@ BaseMenu {
                 id: wpFetchProc
                 command: ["whisker", "list", "wallpapers"]
                 running: true
+
                 stdout: StdioCollector {
                     onStreamFinished: {
-                        var lines = this.text.trim().split("\n").filter(function(s) { return s.length > 0 })
-                        wpSelectorCard.wallpapers = lines
+                        wpSelectorCard.userWallpapers = this.text.trim()
+                            .split("\n")
+                            .filter(function(s) { return s.trim().length > 0 })
+                    }
+                }
+            }
 
+            Process {
+                id: whiskerWpFetchProc
+                command: ["sh", "-c", "ls -1 " + JSON.stringify(Utils.getPath("images/wallpapers"))]
+                running: true
+
+                stdout: StdioCollector {
+                    onStreamFinished: {
+                        var basePath = Utils.getPath("images/wallpapers")
+
+                        wpSelectorCard.whiskerWallpapers = this.text.trim()
+                            .split("\n")
+                            .filter(function(s) { return s.trim().length > 0 })
+                            .map(function(file) { return basePath + "/" + file })
                     }
                 }
             }
@@ -361,6 +318,7 @@ BaseMenu {
                 id: wpSetProc
                 command: []
                 running: false
+
                 stdout: StdioCollector {
                     onStreamFinished: {
                         Whisker.notify("Whisker", "Wallpaper changed!")

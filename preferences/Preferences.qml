@@ -25,7 +25,7 @@ Singleton {
         property string scheme: "tonal-spot"
         property bool smart: false
         property bool useWallpaper: true
-        property string wallpaper: ""
+        property string wallpaper: Utils.getPath('images/wallpapers/whiskerv2.png')
         property real contrast: 0.0
     }
 
