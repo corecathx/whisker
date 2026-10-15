@@ -2,30 +2,12 @@ pragma Singleton
 import QtQuick
 import Quickshell
 
-
 // think of this like a shared properties across qmls
 Singleton {
     property bool isBarHovered: false
 
-    property bool visible_quickPanel: false
-    property bool visible_settingsMenu: false
-    property bool visible_volumeOSD: false
+    property bool isQuickpanelVisible: false
 
-    signal _toggleQuickPanel()
-    signal _toggleSettingsMenu()
-
-
-    function toggle_quickPanel() {
-        visible_quickPanel = !visible_quickPanel
-        _toggleQuickPanel()
-    }
-
-    function toggle_settingsPanel() {
-        visible_settingsMenu = !visible_settingsMenu
-        _toggleSettingsMenu()
-    }
-    function toggle_volumeOsd() {
-        visible_volumeOSD = !visible_volumeOSD
-        _toggleSettingsMenu()
-    }
+    property real dockBottomMargin: 0
+    property real dockHeight: 0
 }

@@ -10,14 +10,14 @@ StyledRectangle {
     property bool hovered: false
     property bool verticalMode: false
 
-    implicitWidth: verticalMode ? 26 : (hovered || Globals.visible_quickPanel ? userName.width + avatarClip.width + 26 : 26)
-    implicitHeight: verticalMode ? (hovered || Globals.visible_quickPanel ? userName.width + avatarClip.height + 26 : 26) : 26
+    implicitWidth: verticalMode ? 26 : (hovered || Globals.isQuickpanelVisible ? userName.width + avatarClip.width + 26 : 26)
+    implicitHeight: verticalMode ? (hovered || Globals.isQuickpanelVisible ? userName.width + avatarClip.height + 26 : 26) : 26
 
     color: Colors.opacify(Appearance.colors.m3surface, 0.7)
     radius: 20
 
     border {
-        width: hovered || Globals.visible_quickPanel ? 1 : 0
+        width: hovered || Globals.isQuickpanelVisible ? 1 : 0
         color: Appearance.colors.m3on_surface
         Behavior on width { NumberAnimation { duration: 250; easing.type: Appearance.animation.easing } }
     }
@@ -36,7 +36,7 @@ StyledRectangle {
             text: Quickshell.env('USER')
             color: Appearance.colors.m3on_background
             font.bold: true
-            visible: hovered || Globals.visible_quickPanel
+            visible: hovered || Globals.isQuickpanelVisible
 
             transform: Rotation {
                 id: rot
