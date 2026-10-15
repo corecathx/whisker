@@ -18,7 +18,7 @@
 https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 
 <p align="center">
-  A simple shell for <b><a href="https://hyprland.org"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Hyprland_Logo_Icon.svg/500px-Hyprland_Logo_Icon.svg.png" height='14'> Hyprland</a></b>, focusing on usability and customization (and cats).<br>
+  A Desktop Shell for <b><a href="https://hyprland.org"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Hyprland_Logo_Icon.svg/500px-Hyprland_Logo_Icon.svg.png" height='14'> Hyprland</a></b>, prioritizing usability (and cats).<br>
   Built on top of <b><a href="https://quickshell.org"><img src="https://quickshell.org/favicon.svg" height='14'> Quickshell</a></b>.
 </p>
 
