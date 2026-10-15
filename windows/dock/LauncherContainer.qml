@@ -163,7 +163,7 @@ Item {
                     fieldPadding: 10
                     filled: false
                     icon: "search"
-                    placeholder: "Search or type /"
+                    placeholder: "Search"
 
                     Keys.onPressed: event => {
                         const apps = appContainer.filteredApps
