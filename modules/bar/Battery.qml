@@ -32,7 +32,15 @@ Item {
         return Appearance.colors.m3primary;
     }
 
-    property string icon: !Power.onBattery ? "bolt" : ""
+    property string icon: {
+        if (!Power.onBattery)
+            return 'bolt';
+
+        if (Power.powerProfileIndex == 0) 
+            return 'eco';
+            
+        return ''
+    }
 
     function isLowBattery() {
         return pct < lowBatteryLevel;
