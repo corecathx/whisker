@@ -20,3 +20,6 @@ hl.bind("SUPER + PRINT", hl.dsp.global("whisker:screenshotFull"), { locked = tru
 
 -- Clipboard
 hl.bind("SUPER + V", hl.dsp.global("whisker:clipboard"))
+
+-- Emojies
+hl.bind("SUPER + PERIOD", hl.dsp.global("whisker:emoji"))
