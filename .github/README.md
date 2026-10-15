@@ -14,31 +14,74 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/corecathx/whisker?style=for-the-badge&logo=files&logoColor=%23adc6ff&labelColor=%231e1f25&color=%23adc6ff)
 
 </div>
+
+https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
+
 <p align="center">
-  A simple shell for <b><a href="https://hyprland.org"><img src="https://code.hyprland.org/assets/img/logo.svg" height='14'> Hyprland</a></b>, focusing on usability and customization (and cats).<br>
+  A simple shell for <b><a href="https://hyprland.org"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Hyprland_Logo_Icon.svg/500px-Hyprland_Logo_Icon.svg.png" height='14'> Hyprland</a></b>, focusing on usability and customization (and cats).<br>
   Built on top of <b><a href="https://quickshell.org"><img src="https://quickshell.org/favicon.svg" height='14'> Quickshell</a></b>.
 </p>
 
 <div align="center">
-    <h2>✦ Information ✦</h2>
+  <h2>✦ Features ✦</h2>
 </div>
 
-**Whisker** is already usable now, but everything is still subject to change over time.
+- Customizable desktop bar (top, bottom, left, and right).
+- Dock and application launcher.
+- Quick panel for common system controls.
+- Wallpaper and color scheme customization.
+- Audio controls and media player integration.
+- Notifications and on-screen displays.
+- Clipboard history and emoji picker.
+- Lock screen and authentication prompts.
+- Screenshot utility.
+
 
 <div align="center">
-    <h2>✦ Installation ✦</h2>
+  <h2>✦ Installation ✦</h2>
 </div>
 
-**Whisker** is available on Arch Linux's User Repository (AUR)!
-Install it with
-```bash
-yay -S whisker-shell-git
-```
-... or with any other AUR helpers to get your hands on this shell :]
+<details>
+  <summary><b>Arch Linux (AUR)</b></summary>
 
-Once installed, run `whisker shell` to start.
+  <br>
 
-> Also I'm still a Quickshell newbie, so most code in here might look messy / unorganized :')
+  Whisker is available on the AUR. Install it using your preferred AUR helper.
+
+  ```bash
+  paru -S whisker-shell-git
+  ```
+
+  Once installed, run the shell with:
+
+  ```bash
+  whisker shell
+  ```
+
+</details>
+
+<details>
+  <summary><b>Manual Installation</b></summary>
+
+  <br>
+
+  Clone the repository:
+
+  ```bash
+  git clone https://github.com/corecathx/whisker
+  cd whisker
+  ```
+
+  Then launch Whisker directly using Quickshell:
+
+  ```bash
+  qs -p .
+  ```
+
+> [!NOTE]
+> Whisker may not work properly without [whisker-cli](https://github.com/corecathx/whisker-cli), which provides additional functionality used by the shell.
+</details>
+
 
 <div align="center">
   <h2>✦ Previews ✦</h2>
