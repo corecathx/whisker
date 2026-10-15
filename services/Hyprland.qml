@@ -13,32 +13,22 @@ Singleton {
     readonly property var workspaces: Hyprland.workspaces
     readonly property var monitors: Hyprland.monitors
     readonly property HyprlandToplevel activeToplevel: Hyprland.activeToplevel
-    readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
+    readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace ?? undefined
     readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
     readonly property int activeWsId: focusedWorkspace?.id ?? 1
     readonly property int shownWorkspaces: 4
     property ListModel fullWorkspaces: ListModel {}
 
     readonly property QtObject currentWorkspace: QtObject {
-        property bool hasWindow: {
-            try {
-                return root.focusedWorkspace?.toplevels?.values.length !== 0;
-            } catch (e) {
-                return false;
-            }
-        }
+        property bool hasWindow: (root.focusedWorkspace?.toplevels?.values?.length ?? 0) > 0
 
-        function hasTilingWindow() {
+        function hasTilingWindow(): bool {
             try {
-                if (!root.focusedWorkspace?.toplevels)
-                    return false;
+                const toplevels = root.focusedWorkspace?.toplevels?.values ?? [];
 
-                for (let toplevel of root.focusedWorkspace.toplevels.values) {
-                    if (toplevel && !toplevel.lastIpcObject?.floating) {
-                        return true;
-                    }
-                }
-                return false;
+                return toplevels.some(toplevel =>
+                    toplevel?.lastIpcObject && !toplevel.lastIpcObject.floating
+                );
             } catch (e) {
                 return false;
             }
@@ -57,7 +47,34 @@ Singleton {
             return null;
         }
     }
+    function getToplevelFromClass(className: string): HyprlandToplevel {
+        for (const toplevel of root.toplevels?.values ?? [])
+            if (toplevel?.lastIpcObject?.class === className)
+                return toplevel;
 
+        return null;
+    }
+
+    function classIsRunning(className: string): bool {
+        return root.getToplevelFromClass(className) !== null;
+    }
+
+    function focusToClass(className: string): bool {
+        for (const toplevel of root.toplevels?.values ?? []) {
+            if (toplevel?.lastIpcObject?.class !== className)
+                continue;
+
+            const workspace = root.getWorkspace(toplevel.lastIpcObject.workspace?.id);
+            if (!workspace)
+                return false;
+
+            workspace.activate();
+            return true;
+        }
+
+        return false;
+    }
+        
     function dispatch(request: string): void {
         Hyprland.dispatch(request);
     }
@@ -108,31 +125,22 @@ Singleton {
         function onRawEvent(event: HyprlandEvent): void {
             try {
                 const n = event.name;
-                if (!n || !n.endsWith("v2"))
+                if (!n)
                     return;
+
                 root.rawEvent(event);
 
-                let needsRefresh = false;
-
-                if (["workspace", "moveworkspace", "activespecial", "focusedmon"].includes(n)) {
+                if (["workspace", "workspacev2", "moveworkspace", "moveworkspacev2", "activespecial", "focusedmon", "focusedmonv2"].includes(n)) {
                     Hyprland.refreshWorkspaces();
                     Hyprland.refreshMonitors();
-                    needsRefresh = true;
-                } else if (["openwindow", "closewindow", "movewindow"].includes(n)) {
-                    Hyprland.refreshToplevels();
-                    Hyprland.refreshWorkspaces();
-                    needsRefresh = true;
-                } else if (n.includes("mon")) {
-                    Hyprland.refreshMonitors();
-                } else if (n.includes("workspace")) {
-                    Hyprland.refreshWorkspaces();
-                    needsRefresh = true;
-                } else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n)) {
-                    Hyprland.refreshToplevels();
-                    Hyprland.refreshWorkspaces();
-                    root.refreshWorkspaces();
                 }
-                if (needsRefresh) {
+
+                if (["openwindow", "closewindow", "movewindow", "activewindow", "activewindowv2", "changefloatingmode", "fullscreen", "pin", "minimize", "windowtitle", "windowtitlev2"].includes(n)) {
+                    Hyprland.refreshToplevels();
+                    Hyprland.refreshWorkspaces();
+                }
+
+                if (n.includes("workspace") || n.includes("window") || ["changefloatingmode", "fullscreen", "pin", "minimize"].includes(n)) {
                     root.refreshWorkspaces();
                     root.workspaceUpdated();
                 }

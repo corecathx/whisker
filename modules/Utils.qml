@@ -25,13 +25,37 @@ QtObject {
         return text.slice(0, maxLength - 3) + "...";
     }
 
-    function getAppIcon(name: string, fallback: string): string {
-        const icon = DesktopEntries.heuristicLookup(name)?.icon;
-        if (fallback !== "undefined")
-            return Quickshell.iconPath(icon, fallback);
-        return Quickshell.iconPath(icon);
+    function fuzzyMatch(text, query) {
+        text = text.toLowerCase()
+        query = query.toLowerCase()
+
+        let i = 0
+
+        for (const char of text) {
+            if (char === query[i]) i++
+            if (i === query.length) return true
+        }
+
+        return query.length === 0
     }
 
+    function getAppIcon(name: string, fallback: string): string {
+        const icon = getDesktopEntry(name)?.icon ?? "";
+
+        if (icon === "")
+            return fallback !== "undefined" ? Quickshell.iconPath(fallback, true) : "";
+
+        const path = Quickshell.iconPath(icon, true);
+
+        if (path !== "")
+            return path;
+
+        return fallback !== "undefined" ? Quickshell.iconPath(fallback, true) : "";
+    }
+
+    function getDesktopEntry(name: string): DesktopEntry {
+        return DesktopEntries.heuristicLookup(name);
+    }
     function formatSeconds(s) {
         const day = Math.floor(s / 86400);
         const hr = Math.floor(s / 3600) % 60;

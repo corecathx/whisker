@@ -102,22 +102,22 @@ Scope {
         return haystack.toLowerCase().includes(needle.toLowerCase());
     }
 
-    IpcHandler {
-        target: "launcher"
-        function toggle() {
-            root.opened = !root.opened;
-        }
-    }
+    // IpcHandler {
+    //     target: "launcher"
+    //     function toggle() {
+    //         root.opened = !root.opened;
+    //     }
+    // }
 
-    CustomShortcut {
-        name: "launcher"
-        appid: "whisker"
-        description: "Toggle Whisker's launcher."
+    // CustomShortcut {
+    //     name: "launcher"
+    //     appid: "whisker"
+    //     description: "Toggle Whisker's launcher."
 
-        onReleased: () => {
-            root.opened = !root.opened;
-        }
-    }
+    //     onReleased: () => {
+    //         root.opened = !root.opened;
+    //     }
+    // }
 
     LazyLoader {
         active: root.opened

@@ -127,6 +127,7 @@ Singleton {
     component AnimationStruct: QtObject {
         property real multiplier: 1
 
+        property real fastest: 150 * multiplier
         property real fast: 300 * multiplier
         property real medium: 500 * multiplier
         property real slow: 1000 * multiplier

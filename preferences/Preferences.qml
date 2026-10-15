@@ -52,6 +52,15 @@ Singleton {
             property bool clock: true
             property bool player: false
         }
+
+        property QtObject dock: QtObject {
+            property bool enabled: true
+            property var items: [ ]
+            property QtObject launcher: QtObject {
+                property bool gridView: false
+                property bool showSidebar: true
+            }
+        }
     }
 
     onReloaded: {
