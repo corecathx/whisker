@@ -156,6 +156,7 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 <div align="center">
   <h2>✦ Related Projects ✦</h2>
 </div>
+
 ### ✦ whisker-cli
 
 `whisker-cli` is a small helper program for my Hyprland Shell, **Whisker**.
@@ -177,13 +178,3 @@ Big thanks to the **Quickshell** community with all the help they provided when 
 **Whisker** is licensed under the [GNU General Public License v3.0](../LICENSE).
 
 * **Copying:** The license allows you to, just make sure to keep it open source and credit if used ;)
-
-<div align="center">
-    <h2>✦ Motivational Cat ✦</h2>
-</div>
-
-<div align='center'>
-
-![Cat vibing](https://corecathx.github.io/images/catvibe.gif)
-
-</div>
