@@ -43,7 +43,7 @@ Scope {
                 visible: Preferences.widgets.showLyrics && Preferences.widgets.lyricsAsOverlay
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 40
+                anchors.bottomMargin: (Globals.dockBottomMargin + 60) + 40
             }
 
             PrivacyIndicator {

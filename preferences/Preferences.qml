@@ -41,6 +41,8 @@ Singleton {
         property bool activateLinuxOverlay: false
         property int clickerCount: 0
         property bool applyWallpaperToGreeter: false
+
+        property var recentEmojies: []
     }
 
     property QtObject widgets: QtObject {

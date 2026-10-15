@@ -174,6 +174,10 @@ Scope {
                 horizontalCenter: parent.horizontalCenter
                 bottom: parent.bottom
                 bottomMargin: win.dockVisible ? 20 : -(container.height - 5)
+
+                onBottomMarginChanged: {
+                    Globals.dockBottomMargin = anchors.bottomMargin
+                }
             }
             Behavior on anchors.bottomMargin {
                 NumberAnimation {
@@ -184,6 +188,7 @@ Scope {
             width: containerLayout.width + 30
             height: containerLayout.height + 20
             StyledRectangle {
+                id: background
                 anchors.fill: parent
                 layer.enabled: true
                 layer.effect: MultiEffect {
