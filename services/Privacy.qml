@@ -14,16 +14,16 @@ Singleton {
         Pipewire.linkGroups.values
         .some(pwlg => pwlg.source.type === PwNodeType.AudioSource &&
                       pwlg.target.type === PwNodeType.AudioInStream)
-    )
+    ) ?? null
 
     readonly property list<PwNode> screenCaptureApps: (
         Pipewire.linkGroups.values
         .filter(pwlg => pwlg.source.type === PwNodeType.VideoSource)
         .map(pwlg => pwlg.target)
-    )
+    ) ?? null
 
     readonly property bool hasScreenCaptureAccess:
-        screenCaptureApps.length > 0
+        (screenCaptureApps?.length ?? 0) > 0
 
     property var cameraApps: []
     readonly property bool hasCameraAccess: cameraApps.length > 0

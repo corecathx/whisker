@@ -1,7 +1,10 @@
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
+
 import Quickshell
 import Quickshell.Wayland
+
 import qs.preferences
 import qs.components
 import qs.services
@@ -44,6 +47,13 @@ Scope {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: (Globals.dockBottomMargin + 60) + 40
+                
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: true
+                    shadowColor: Appearance.colors.m3shadow
+                    shadowBlur: 1
+                }
             }
 
             PrivacyIndicator {

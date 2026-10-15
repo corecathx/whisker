@@ -75,13 +75,9 @@ Singleton {
         })
     }
 
-    Connections {
-        target: root
-
-        function onBatteryChanged() {
-            if (!root.onBattery)
-                root.notifiedLevel = 101
-        }
+    onOnBatteryChanged: {
+        if (!root.onBattery)
+            root.notifiedLevel = 101
     }
 
     function setPowerProfileIndex(index) {

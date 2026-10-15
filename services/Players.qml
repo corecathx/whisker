@@ -16,7 +16,7 @@ Singleton {
     property Timer posTimer: Timer {
         interval: 250
         repeat: true
-        running: !!root.active && root.isPlaying
+        running: root.active && root.isPlaying
         onTriggered: {
             if (Players.active) {
                 Players.active.positionChanged()
