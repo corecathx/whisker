@@ -3,59 +3,94 @@
 //@ pragma DefaultEnv QS_DROP_EXPENSIVE_FONTS=1
 //@ pragma DefaultEnv QSG_RENDER_LOOP=threaded
 //@ pragma Env QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000
+
 import QtQuick
 import Quickshell
-import qs.modules.overlays
+
+import qs.preferences
+import qs.services
+
 import qs.modules.bar
 import qs.modules.corners
+import qs.modules.overlays
+
 import qs.windows.wallpaper
+import qs.windows.overlays
+import qs.windows.dock
 import qs.windows.quickpanel
-import qs.windows.settings
+import qs.windows.quickpanel.right
 import qs.windows.notification
+import qs.windows.osdpanel
+
 import qs.windows.launcher
+import qs.windows.settings
 import qs.windows.lockscreen
 import qs.windows.emojies
 import qs.windows.screencapture
+import qs.windows.cliphist
+import qs.windows.keybinds
+import qs.windows.stats
 import qs.windows.dev
-import qs.windows.osdpanel
+
 import qs.windows.firsttime
 import qs.windows.polkit
 import qs.windows.power
-import qs.windows.cliphist
-import qs.services
-import qs.windows.stats
-import qs.windows.overlays
-import qs.windows.keybinds
-import qs.preferences
 
 ShellRoot {
     id: root
+
     function getEnvSafe(env) {
         return Quickshell.env(env) ?? ""
     }
+
     readonly property bool debug: getEnvSafe("QSG_VISUALIZE") !== ""
-    // Shell-specific windows.
+
     Wallpaper {}
+
     LazyLoader {
         active: !root.debug;
         ScreenCorners {}
     }
-    OsdPanel {}
+
     Bar {}
+    Dock {}
+
     QuickPanel {}
+    RightPanel {}
+
     NotificationWindow {}
-    Settings {}
-    Lockscreen {}
+    OsdPanel {}
 
     LazyLoader {
         active: Preferences.misc.showStatsOverlay
         StatsOverlay {}
     }
 
-    // EmojiWindow {}
-
     // Whisker Apps.
     Launcher {}
+    Settings {}
+    Lockscreen {}
+
+    EmojiWindow {}
+
+    Screencapture {}
+    Cliphist {}
+
+    OverlayWrapper {}
+
+    KeybindsListWindow {}
+
+    PolkitPrompt {}
+    PowerPrompt {}
+
+    // DevWindow {}
+
+    // PersistentProperties {
+        // id: persist
+        // reloadableId: "persistedStates"
+
+        // property bool reloaded: false
+    // }
 
     Component.onCompleted: {
         console.log("isDebug: " + debug);
@@ -64,17 +99,13 @@ ShellRoot {
         Brightness.init();
         Lrclib.fetchLyrics();
 
+        // if (!persist.reloaded) {
+            // persist.reloaded = true;
+            // Quickshell.reload(false);
+        // }
+        // else
+            // Log.info('Whisker', 'reloaded!!!!');
         // Whisker.init()
         // Plugins.init()
     }
-    // DevWindow {}
-    //
-    Screencapture {}
-    PolkitPrompt {}
-    PowerPrompt {}
-    Cliphist {}
-
-    OverlayWrapper {}
-
-    KeybindsListWindow {}
 }
