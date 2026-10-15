@@ -6,7 +6,8 @@ import Quickshell.Widgets
 import qs.modules
 import qs.components
 import qs.preferences
-import qs.windows.settings
+import qs.services
+import qs.windows.settings.menus.colors
 SetupMenu {
     title: "Colors"
     description: "Choose your preferred color variant, and mode"
@@ -51,9 +52,7 @@ SetupMenu {
         StyledSwitch {
             checked: Preferences.theme.dark
             onToggled: {
-                Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', 'theme.dark', checked]
-                })
+                Whisker.setPrefs('theme.dark', checked)
             }
         }
     }

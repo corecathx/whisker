@@ -9,6 +9,7 @@ import QtMultimedia
 import qs.modules
 import qs.components
 import qs.preferences
+import qs.services
 
 BaseMenu {
     id: root
@@ -86,7 +87,7 @@ BaseMenu {
                     StyledSwitch {
                         checked: Preferences.misc.applyWallpaperToGreeter
                         onToggled: {
-                            Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', 'misc.applyWallpaperToGreeter', checked] })
+                            Whisker.setPrefs('misc.applyWallpaperToGreeter', checked)
                         }
                     }
                 }

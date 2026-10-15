@@ -8,6 +8,8 @@ import QtQuick.Layouts
 import qs.modules
 import qs.components
 import qs.preferences
+import qs.services
+
 
 import qs.windows.settings.components
 
@@ -37,9 +39,7 @@ BaseMenu {
 
                 onSelectedIndexChanged: (index) => {
                     const positions = ["left", "bottom", "top", "right"]
-                    Quickshell.execDetached({
-                        command: ["whisker", "prefs", "set", "bar.position", positions[index]]
-                    })
+                    Whisker.setPrefs('bar.position', positions[index])
                 }
             }
         }

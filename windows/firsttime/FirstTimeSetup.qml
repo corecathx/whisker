@@ -5,6 +5,7 @@ import QtQuick.Effects
 import Quickshell
 import Quickshell.Wayland
 import qs.modules
+import qs.services
 import qs.preferences
 import qs.components
 
@@ -22,12 +23,8 @@ FloatingWindow {
     height: 600 + margin * 2
 
     onClosed: {
-        Quickshell.execDetached({
-            command: ['whisker', 'prefs', 'set', 'misc.finishedSetup', 'true']
-        });
-        Quickshell.execDetached({
-            command: ['whisker', 'notify', 'Whisker', 'Setup skipped! You can tweak settings anytime with SUPER + I']
-        });
+        Whisker.setPrefs('misc.finishedSetup', 'true')
+        Whisker.notify('Whisker', "Setup skipped! You can tweak settings anytime with SUPER + I")
         Qt.exit(0)
     }
 
@@ -55,12 +52,8 @@ FloatingWindow {
             WelcomePage {
                 onNextRequested: setupContainer.nextPage()
                 onQuitRequested: {
-                    Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'misc.finishedSetup', 'true']
-                    });
-                    Quickshell.execDetached({
-                        command: ['whisker', 'notify', 'Whisker', 'Setup skipped! You can tweak settings anytime with SUPER + I', 'true']
-                    });
+                    Whisker.setPrefs('misc.finishedSetup', 'true')
+                    Whisker.notify('Whisker', "Setup skipped! You can tweak settings anytime with SUPER + I")
                     Qt.exit(0)
                 }
             }
@@ -87,12 +80,8 @@ FloatingWindow {
 
             FinishPage {
                 onCloseRequested: {
-                    Quickshell.execDetached({
-                        command: ['whisker', 'prefs', 'set', 'misc.finishedSetup', 'true']
-                    });
-                    Quickshell.execDetached({
-                        command: ['whisker', 'notify', 'Whisker', 'Awesome! Hope you enjoy this shell :]']
-                    });
+                    Whisker.setPrefs('misc.finishedSetup', 'true')
+                    Whisker.notify('Whisker', 'Awesome! Hope you enjoy this shell :]')
                     Qt.exit(0)
                 }
             }

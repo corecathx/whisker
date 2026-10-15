@@ -7,6 +7,7 @@ import qs.modules
 import qs.components
 import qs.preferences
 import qs.windows.settings
+import qs.services
 SetupMenu {
     title: "Bar"
     description: "Adjust the bar's behavior."
@@ -26,9 +27,7 @@ SetupMenu {
                     implicitWidth: 0
                     checked: Preferences.bar.position === modelData.toLowerCase()
                     onClicked: {
-                        Quickshell.execDetached({
-                            command: ['whisker', 'prefs', 'set', 'bar.position', modelData.toLowerCase()]
-                        })
+                        Whisker.setPrefs('bar.position', modelData.toLowerCase())
                     }
                 }
             }
@@ -53,9 +52,7 @@ SetupMenu {
         StyledSwitch {
             checked: Preferences.bar.keepOpaque
             onToggled: {
-                Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', 'bar.keepOpaque', checked]
-                })
+                Whisker.setPrefs('bar.keepOpaque', checked)
             }
         }
     }
@@ -78,9 +75,7 @@ SetupMenu {
         StyledSwitch {
             checked: Preferences.bar.small
             onToggled: {
-                Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', 'bar.small', checked]
-                })
+                Whisker.setPrefs('bar.small', checked)
             }
         }
     }
@@ -110,9 +105,7 @@ SetupMenu {
             onTextChanged: {
                 let num = Math.max(0, Math.min(parseInt(this.text.replace(/[^0-9.]/g, "")) || 0, Screen.width));
 
-                Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', 'bar.padding', num.toString()]
-                });
+                Whisker.setPrefs('bar.padding', num.toString())
             }
         }
     }

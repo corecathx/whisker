@@ -4,6 +4,7 @@ import qs.modules
 import QtQuick.Layouts
 import qs.components
 import qs.preferences
+import qs.services
 
 RowLayout {
     id: textOpt
@@ -28,6 +29,6 @@ RowLayout {
         text: Preferences[textOpt.prefField.split('.')[0]][textOpt.prefField.split('.')[1]]
         placeholderText: textOpt.placeholder
         fieldPadding: 10
-        onTextChanged: { Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', textOpt.prefField, text.toString()] }) }
+        onTextChanged: { Whisker.setPrefs(textOpt.prefField, text.toString()) }
     }
 }

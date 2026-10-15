@@ -1,6 +1,8 @@
 import qs.modules
 import qs.components
 import qs.preferences
+import qs.services
+
 
 import QtQuick
 import QtQuick.Layouts
@@ -99,9 +101,7 @@ BaseMenu {
         StyledSwitch {
             checked: Preferences[main.prefField.split('.')[0]][main.prefField.split('.')[1]]
             onToggled: {
-                Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', prefField, checked]
-                });
+                Whisker.setPrefs(prefField, checked)
             }
         }
     }
@@ -135,9 +135,7 @@ BaseMenu {
             leftPadding: undefined
             implicitWidth: 200
             onTextChanged: {
-                Quickshell.execDetached({
-                    command: ['whisker', 'prefs', 'set', main.prefField, text.toString()]
-                });
+                Whisker.setPrefs(main.prefField, text.toString())
             }
         }
     }

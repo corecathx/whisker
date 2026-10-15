@@ -389,7 +389,7 @@ Scope {
                             label: "Do not disturb"
                             subtitle: !Preferences.misc.notificationEnabled ? "On" : "Off"
                             active: !Preferences.misc.notificationEnabled
-                            onClicked: Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', 'misc.notificationEnabled', !Preferences.misc.notificationEnabled] })
+                            onClicked: Whisker.setPrefs('misc.notificationEnabled', !Preferences.misc.notificationEnabled)
                         }
                     }
 

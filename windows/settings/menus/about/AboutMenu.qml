@@ -7,6 +7,7 @@ import Quickshell.Widgets
 import qs.modules
 import qs.components
 import qs.preferences
+import qs.services
 
 Item {
     anchors.fill: parent
@@ -65,7 +66,7 @@ Item {
                     onClicked: {
                         let index = Math.floor(Math.random() * meowSounds.length)
                         meowSounds[index].play()
-                        Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', 'misc.clickerCount', Preferences.misc.clickerCount + 1] });
+                        Whisker.setPrefs('misc.clickerCount', Preferences.misc.clickerCount + 1)
                     }
                 }
             }

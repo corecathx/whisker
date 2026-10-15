@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.preferences
 import qs.modules
+import qs.services
 import qs.components
 import Quickshell
 
@@ -21,9 +22,7 @@ Item {
         enabled: !Preferences.theme.smart
         onClicked: {
             if (Preferences.theme.scheme === schemeName) return
-            Quickshell.execDetached({
-                command: ['whisker', 'prefs', 'set', 'theme.scheme', schemeName]
-            })
+            Whisker.setPrefs('theme.scheme', schemeName)
         }
     }
 

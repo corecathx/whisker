@@ -4,6 +4,7 @@ import qs.modules
 import qs.preferences
 import QtQuick.Layouts
 import qs.components
+import qs.services
 
 RowLayout {
     id: switchOpt
@@ -25,6 +26,6 @@ RowLayout {
         id: sw
         Layout.alignment: Qt.AlignVCenter
         checked: Preferences[switchOpt.prefField.split('.')[0]][switchOpt.prefField.split('.')[1]]
-        onToggled: { Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', switchOpt.prefField, checked] }) }
+        onToggled: { Whisker.setPrefs(switchOpt.prefField, checked) }
     }
  }

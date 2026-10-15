@@ -4,6 +4,7 @@ import qs.modules
 import qs.preferences
 import QtQuick.Layouts
 import qs.components
+import qs.services
 
 RowLayout {
     id: sliderOpt
@@ -36,7 +37,7 @@ RowLayout {
             Layout.fillWidth: false
             value: Preferences[sliderOpt.prefField.split('.')[0]][sliderOpt.prefField.split('.')[1]]
             onMoved: {
-                Quickshell.execDetached({ command: ['whisker', 'prefs', 'set', sliderOpt.prefField, value] })
+                Whisker.setPrefs(sliderOpt.prefField, value)
             }
         }
 

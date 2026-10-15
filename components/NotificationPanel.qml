@@ -27,7 +27,7 @@ Item {
                 checked: Preferences.misc.notificationEnabled
                 checkable: true
                 onToggled: {
-                    Quickshell.execDetached({ command: [ 'whisker', 'prefs', 'set', 'misc.notificationEnabled', checked ] })
+                    Whisker.setPrefs('misc.notificationEnabled', checked)
                 }
                 implicitHeight: 30
                 HoverHandler {
