@@ -2,7 +2,8 @@ import QtQuick
 
 StyledText {
   id: root
-  property real fill: 0
+  property bool filled: false
+  property real fill: filled ? 1 : 0
   property int grad: 0
   required property string icon
   property int size: 24
@@ -17,7 +18,7 @@ StyledText {
     "GRAD": root.grad,
     "wght": root.fontInfo.weight
   }
-  renderType: Text.QtRendering
+  renderType: fill != 0 ? Text.NativeRendering : Text.QtRendering
 
   text: root.icon
 }
