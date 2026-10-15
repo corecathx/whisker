@@ -168,7 +168,7 @@ Scope {
 
             color: "transparent"
 
-            WlrLayershell.layer: WlrLayer.Background
+            WlrLayershell.layer: isVideo ? WlrLayer.Bottom : WlrLayer.Background
             WlrLayershell.namespace: "whisker:wallpaper"
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
