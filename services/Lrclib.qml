@@ -67,6 +67,22 @@ Singleton {
         }
     }
 
+    Connections {
+        target: Cache
+
+        function onLoaded() {
+            if (root.currentArtist && root.currentTrack)
+                root.fetchLyrics();
+        }
+    }
+
+    function getCachedLyrics(artist, track) {
+        return Cache.entries.lyrics.find(entry =>
+            entry.artist.toLowerCase() === artist.toLowerCase() &&
+            entry.track.toLowerCase() === track.toLowerCase()
+        );
+    }
+
     function parseLRC(lrcText) {
         var lines = lrcText.split('\n');
         var parsed = [];
@@ -91,9 +107,8 @@ Singleton {
 
         parsed.sort(function(a, b) { return a.time - b.time; });
 
-        if (enableTranslation && parsed.length > 0) {
+        if (enableTranslation && parsed.length > 0)
             translateBatch(parsed);
-        }
 
         return parsed;
     }
@@ -106,20 +121,68 @@ Singleton {
             return;
         }
 
+        if (!Cache.ready) {
+            status = "FETCHING";
+            return;
+        }
+
+        var artist = currentArtist;
+        var track = currentTrack;
+        var cached = getCachedLyrics(artist, track);
+
+        if (cached) {
+            console.log("[Lyrics] Cache hit:", track);
+            lyricsData = parseLRC(cached.syncedLyrics);
+            currentLineIndex = -1;
+            updateCurrentLine();
+            root.ready();
+            status = "LOADED";
+            return;
+        }
+
+        console.log("[Lyrics] Cache miss:", track);
         status = "FETCHING";
         lyricsData = [];
         currentLineIndex = -1;
 
-        var url = "https://lrclib.net/api/get?artist_name=" + encodeURIComponent(currentArtist) + "&track_name=" + encodeURIComponent(currentTrack);
+        var url = "https://lrclib.net/api/get?artist_name=" + encodeURIComponent(artist) + "&track_name=" + encodeURIComponent(track);
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
         xhr.onreadystatechange = function() {
             if (xhr.readyState !== XMLHttpRequest.DONE) return;
 
+            if (artist !== root.currentArtist || track !== root.currentTrack)
+                return;
+
+            console.log("[Lyrics] HTTP:", xhr.status);
+
             if (xhr.status === 200) {
                 var resp = JSON.parse(xhr.responseText);
+
                 if (resp.syncedLyrics) {
+                    var entries = Cache.entries.lyrics.slice();
+                    var index = entries.findIndex(entry =>
+                        entry.artist.toLowerCase() === artist.toLowerCase() &&
+                        entry.track.toLowerCase() === track.toLowerCase()
+                    );
+
+                    var entry = {
+                        artist: artist,
+                        track: track,
+                        syncedLyrics: resp.syncedLyrics
+                    };
+
+                    if (index >= 0)
+                        entries[index] = entry;
+                    else
+                        entries.push(entry);
+
+                    Cache.entries.lyrics = entries;
+                    Cache.flush("lyrics");
+
                     lyricsData = parseLRC(resp.syncedLyrics);
+                    currentLineIndex = -1;
+                    updateCurrentLine();
                     root.ready();
                     status = "LOADED";
                 } else {
@@ -162,7 +225,7 @@ Singleton {
             }
 
             var combined = lines.join('\n');
-            var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" + targetLanguage + "&dt=t&q=" + encodeURIComponent(combined);
+            var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" + encodeURIComponent(targetLanguage) + "&dt=t&q=" + encodeURIComponent(combined);
 
             (function(batchStart, totalBatches) {
                 var xhr = new XMLHttpRequest();
@@ -200,9 +263,9 @@ Singleton {
                         }
 
                         completedBatches++;
-                        // Only signal once when all batches complete
+                        
                         if (completedBatches === totalBatches) {
-                            lyricsDataChanged();
+                            root.lyricsDataChanged();
                         }
                     } catch (e) {
                         completedBatches++;
@@ -214,6 +277,7 @@ Singleton {
     }
 
     Component.onCompleted: {
-        if (currentArtist && currentTrack) fetchLyrics();
+        if (Cache.ready && currentArtist && currentTrack)
+            fetchLyrics();
     }
 }
