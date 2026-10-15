@@ -12,10 +12,10 @@ Singleton {
     property bool spawnedWelcome: false
 
     property QtObject bar: QtObject {
-        property bool floating: false
+        property bool floating: truewl
         property string position: "top"
-        property bool small: false
-        property int padding: 200
+        property bool small: true
+        property int padding: 300
         property bool autoHide: false
         property bool keepOpaque: true
     }

@@ -10,4 +10,5 @@ Singleton {
 
     property real dockBottomMargin: 0
     property real dockHeight: 0
+    property real dockState: 0
 }
