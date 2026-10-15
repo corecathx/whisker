@@ -42,7 +42,7 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 </div>
 
 <details>
-  <summary><b>Arch Linux (AUR)</b></summary>
+  <summary><b>Arch Linux</b></summary>
 
   <br>
 
@@ -90,6 +90,21 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 <table align="center">
   <tbody>
     <tr>
+      <td colspan="2" align="center">
+        <img src="./images/previews/preview-default.png" alt="Default configuration preview"/><br>
+        <b>Default Configuration</b>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div align="center">
+  <h2>✦ Bar Layouts ✦</h2>
+</div>
+
+<table align="center">
+  <tbody>
+    <tr>
       <td align="center">
         <img src="./images/previews/preview-topbar.png" alt="Top bar preview"/><br>
         <b>Default Layout (Top Bar)</b>
@@ -120,33 +135,27 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 </table>
 
 <div align="center">
-  <h3>✦ System Screens ✦</h3>
+  <h2>✦ System Screens ✦</h2>
 </div>
 
 <table align="center">
   <tbody>
     <tr>
       <td align="center">
-        <img src="./images/previews/preview-lockscreen.png"/><br>
+        <img src="./images/previews/preview-lockscreen.png" alt="Lockscreen preview"/><br>
         <b>Lockscreen</b>
       </td>
       <td align="center">
-        <img src="./images/previews/preview-greeter.png"/><br>
+        <img src="./images/previews/preview-greeter.png" alt="Greeter preview"/><br>
         <b>Greeter</b>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2" align="center">
-        <img src="./images/previews/preview-default.png"/><br>
-        <b>Default Configuration</b><br>
       </td>
     </tr>
   </tbody>
 </table>
-<div align="center">
-    <h2>✦ Related Projects ✦</h2>
-</div>
 
+<div align="center">
+  <h2>✦ Related Projects ✦</h2>
+</div>
 ### ✦ whisker-cli
 
 `whisker-cli` is a small helper program for my Hyprland Shell, **Whisker**.
