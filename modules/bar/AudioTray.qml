@@ -12,6 +12,7 @@ import qs.services
 Item {
     id: root
     property bool noMixer: false
+    property bool disableSettings: false
     property real volume: Audio.defaultSink?.audio?.muted ? 0 : (Audio.defaultSink?.audio?.volume ?? 0) * 100
     property string icon: volume > 50 ? "volume_up" : volume > 0 ? "volume_down" : 'volume_off'
 
@@ -278,11 +279,12 @@ Item {
                                 Audio.defaultSink.audio.muted = !checked
                             }
                             Layout.fillWidth: true
-                            topRightRadius: 5
-                            bottomRightRadius: 5
+                            topRightRadius: !root.disableSettings ? 5 : undefined
+                            bottomRightRadius: !root.disableSettings ? 5 : undefined
                             tooltipText: !Audio.defaultSink?.audio.muted ? "Mute audio" : "Unmute audio"
                         }
                         StyledButton {
+                            visible: !root.disableSettings
                             Layout.fillWidth: true
                             secondary: true
                             icon: "settings"

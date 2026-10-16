@@ -34,16 +34,14 @@ Item {
         radius: Appearance.rounding.large
     }
 
-    Column {
+    ColumnLayout {
         id: container
         spacing: verticalMode ? -2 : -5
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.centerIn: parent
 
-        Column {
+        ColumnLayout {
             spacing: -2
-            anchors.horizontalCenter: verticalMode
-                ? parent.horizontalCenter
-                : undefined
+            // Layout.alignment: Qt.AlignHCenter
 
             StyledText {
                 text: verticalMode
@@ -54,10 +52,6 @@ Item {
                 font.pixelSize: 18
                 font.family: "Outfit ExtraBold"
                 lineHeight: 0.1
-
-                anchors.horizontalCenter: verticalMode
-                    ? parent.horizontalCenter
-                    : undefined
             }
 
             StyledText {

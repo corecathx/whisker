@@ -7,6 +7,8 @@ import Quickshell
 Item {
     id: root
     property string icon: Bluetooth.icon
+    property bool disableSettings: false
+
     implicitWidth: container.implicitWidth
     implicitHeight: container.implicitHeight
 
@@ -171,8 +173,9 @@ Item {
                             }
                         }
                     }
-                    Item {height: 4}
                     StyledButton {
+                        visible: !root.disableSettings
+                        Layout.topMargin: 4
                         Layout.fillWidth: true
                         secondary: true
                         implicitHeight: 28

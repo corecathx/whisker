@@ -9,6 +9,9 @@ import qs.services
 
 Item {
     id: root
+
+    property bool disableSettings: false
+
     implicitWidth: container.implicitWidth
     implicitHeight: container.implicitHeight
     visible: !!Network.wifiDevice || !!Network.wiredDevice
@@ -171,8 +174,9 @@ Item {
                             }
                         }
                     }
-                    Item {height: 4}
                     StyledButton {
+                        visible: !root.disableSettings
+                        Layout.topMargin: 4
                         Layout.fillWidth: true
                         secondary: true
                         implicitHeight: 28

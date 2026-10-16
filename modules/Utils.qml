@@ -19,6 +19,10 @@ QtObject {
         return Quickshell.env("HOME") + "/.local/share/whisker/" + key
     }
 
+    function getGreeterWallpaperUserPath(key) {
+        return "file:///var/lib/whisker/wallpapers/" + key
+    }
+
     function truncateText(text: string, maxLength: int): string {
         if (text.length <= maxLength)
             return text;
