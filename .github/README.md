@@ -34,8 +34,8 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 - Notifications and on-screen displays.
 - Clipboard history and emoji picker.
 - Lock screen and authentication prompts.
-- Screenshot utility.
-
+- Screenshot and Screen record utility.
+- Custom greeter for login and session startup.
 
 <div align="center">
   <h2>✦ Installation ✦</h2>
@@ -82,6 +82,33 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 > Whisker may not work properly without [whisker-cli](https://github.com/corecathx/whisker-cli), which provides additional functionality used by the shell.
 </details>
 
+<hr>
+
+<details>
+  <summary><b>Greeter</b></summary>
+
+  <br>
+
+  To use Whisker's greeter, edit `/etc/greetd/config.toml` and set the `command` under `[default_session]` to launch Whisker's Hyprland configuration.
+
+  Your configuration should look roughly like this:
+
+  ```toml
+  [terminal]
+  vt = 1
+
+  [default_session]
+  command = "start-hyprland -- -c /usr/share/whisker/greetd/hyprland.lua"
+  user = "greeter"
+  ```
+
+  Enable greetd to start it on boot:
+
+  ```bash
+  sudo systemctl enable greetd
+  ```
+
+</details>
 
 <div align="center">
   <h2>✦ Previews ✦</h2>
@@ -141,13 +168,19 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 <table align="center">
   <tbody>
     <tr>
-      <td align="center">
+      <td colspan="2" align="center">
         <img src="./images/previews/preview-lockscreen.png" alt="Lockscreen preview"/><br>
         <b>Lockscreen</b>
       </td>
+    </tr>
+    <tr>
       <td align="center">
-        <img src="./images/previews/preview-greeter.png" alt="Greeter preview"/><br>
-        <b>Greeter</b>
+        <img src="./images/previews/preview-greeter-user.png" alt="Greeter user list"/><br>
+        <b>Greeter (User List)</b>
+      </td>
+      <td align="center">
+        <img src="./images/previews/preview-greeter-login.png" alt="Greeter login"/><br>
+        <b>Greeter (Login)</b>
       </td>
     </tr>
   </tbody>
