@@ -34,7 +34,7 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 - Notifications and on-screen displays.
 - Clipboard history and emoji picker.
 - Lock screen and authentication prompts.
-- Screenshot and Screen record utility.
+- Screenshot and Screen record utilities.
 - Custom greeter for login and session startup.
 
 <div align="center">
