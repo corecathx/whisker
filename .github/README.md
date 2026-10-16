@@ -78,8 +78,7 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
   qs -p .
   ```
 
-> [!NOTE]
-> Whisker may not work properly without [whisker-cli](https://github.com/corecathx/whisker-cli), which provides additional functionality used by the shell.
+> **Note**: Whisker may not work properly without [whisker-cli](https://github.com/corecathx/whisker-cli), which provides additional functionality used by the shell.
 
 </details>
 
@@ -90,8 +89,7 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 
   <br>
 
-  > [!NOTE]
-  > This section requires Greetd to be installed on your system.
+  > **Note**: This section requires Greetd to be installed on your system.
 
   To use Whisker's greeter, edit `/etc/greetd/config.toml` and set the `command` under `[default_session]` to launch Whisker's Hyprland configuration.
 
