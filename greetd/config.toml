@@ -1,0 +1,6 @@
+[terminal]
+vt = 1
+
+[default_session]
+command = "start-hyprland -- -c /usr/share/whisker/greetd/hyprland.lua"
+user = "greeter"
