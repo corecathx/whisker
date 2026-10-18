@@ -54,6 +54,16 @@ BaseMenu {
             width: parent.width
             spacing: 16
 
+            SectionTitle { icon: "dock_to_bottom"; text: "Dock" }
+            SwitchOption { title: "Enabled"; description: "Whether to use Dock (does not disable launcher)"; prefField: "widgets.dock.enabled" }
+        }
+    }
+
+    BaseCard {
+        ColumnLayout {
+            width: parent.width
+            spacing: 16
+
             SectionTitle { icon: "schedule"; text: "Desktop" }
             SwitchOption { title: "Desktop Clock"; description: "Display time and date on your desktop"; prefField: "widgets.desktop.clock" }
             SwitchOption { title: "Desktop Player"; description: "Show a music player widget on your desktop"; prefField: "widgets.desktop.player" }

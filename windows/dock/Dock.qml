@@ -16,6 +16,8 @@ import qs.services
 import qs.windows.dock.components
 
 Scope {
+    id: root
+    property bool dockEnabled: Preferences.widgets.dock.enabled
     IpcHandler {
         target: "launcher"
 
@@ -58,7 +60,10 @@ Scope {
         property real activeMaxTimer: 1000
         property bool dockVisible: false
         property bool shouldKeepDockVisible: {
-            return !Hyprland.currentWorkspace.hasWindow || !Hyprland.currentWorkspace.hasTilingWindow()
+            if (root.dockEnabled) 
+                return !Hyprland.currentWorkspace.hasWindow || !Hyprland.currentWorkspace.hasTilingWindow()
+            
+            return false
         }
         anchors {
             left: true
@@ -120,7 +125,7 @@ Scope {
 
         Timer {
             id: activeTimer
-            interval: win.activeMaxTimer
+            interval: root.dockEnabled ? win.activeMaxTimer : 0
             onTriggered: {
                 if (hoverTriggerMa.containsMouse 
                     || dockMouseArea.hovered 
@@ -159,6 +164,7 @@ Scope {
             // }
             MouseArea {
                 id: hoverTriggerMa
+                enabled: root.dockEnabled
                 anchors.fill: parent
                 hoverEnabled: true
 
@@ -176,8 +182,15 @@ Scope {
             anchors {
                 horizontalCenter: parent.horizontalCenter
                 bottom: parent.bottom
-                bottomMargin: win.dockVisible ? 20 : -(container.height - 5)
+                bottomMargin: {
+                    if (win.dockVisible)
+                        return 20
 
+                    if (root.dockEnabled)
+                        return -(container.height - 5)
+                    
+                    return -container.height
+                }
                 onBottomMarginChanged: {
                     Globals.dockBottomMargin = anchors.bottomMargin
                 }
@@ -209,6 +222,9 @@ Scope {
                 spacing: 10
                 LauncherContainer {
                     id: appList
+                    Layout.fillWidth: true
+                    Layout.topMargin: 5
+                    targetWidth: win.targetLauncherWidth 
                     targetHeight: win.targetLauncherHeight
                     window: win
 
@@ -227,6 +243,7 @@ Scope {
                 }
                 Row {
                     id: dockLayout
+                    visible: root.dockEnabled
                     spacing: 10
                     RowLayout {
                         id: dockItemLayout

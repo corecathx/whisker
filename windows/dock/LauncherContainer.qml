@@ -17,6 +17,7 @@ Item {
 
     required property var window
     property real targetHeight: 600
+    property real targetWidth: 0
 
     property var categories: ({
         "AudioVideo": { icon: "play_circle", label: "Multimedia" },
@@ -41,10 +42,14 @@ Item {
     signal launcherItemClicked(var item);
 
     clip: true
-    Layout.fillWidth: true
-    Layout.topMargin: 5
+
     implicitHeight: win.state == 1 ? targetHeight : 0
-    visible: implicitHeight > 0
+    implicitWidth: !Preferences.widgets.dock.enabled ? targetWidth : 0
+    visible: {
+        if (Preferences.widgets.dock.enabled)
+            return implicitHeight > 0
+        return implicitHeight > 0 && implicitWidth > 0
+    }//
     Behavior on implicitHeight {
         NumberAnimation {
             duration: Appearance.animation.fast
