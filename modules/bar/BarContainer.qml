@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell
 import qs.modules
@@ -53,6 +54,55 @@ Item {
                 }
             }
         }
+
+        RowLayout {
+            anchors.fill: panelBackground
+            ScrollControl {
+                onPressed: {
+                    Quickshell.execDetached({command: ['whisker', 'ipc', 'quickpanel', 'toggle']})
+                }
+                onScrolled: function(delta) {
+                    const direction = delta > 0 ? 1 : -1
+                    Brightness.set(Brightness.value + (0.05 * direction))
+                }
+            }
+            ScrollControl {
+                onPressed: {
+                    Quickshell.execDetached({command: ['whisker', 'ipc', 'rightpanel', 'toggle']})
+                    console.log('to be implemented')
+                }
+
+                onScrolled: function(delta) {
+                    const direction = delta > 0 ? 1 : -1
+                    Audio.setVolume(Audio.volume + (0.05 * direction))
+                }
+            }
+        }
+
+        component ScrollControl: Item {
+            id: scrollCtrl
+
+            signal pressed()
+            signal scrolled(real delta)
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+
+                onPressed: function(mouse) {
+                    scrollCtrl.pressed()
+                }
+
+                onWheel: function(wheel) {
+                    scrollCtrl.scrolled(wheel.angleDelta.y)
+                }
+            }
+        }
+
+
 
         Item {
             anchors.fill: parent
