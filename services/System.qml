@@ -4,6 +4,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
+import qs.modules
+
 Singleton {
     id: system
 
@@ -57,9 +59,9 @@ Singleton {
             onStreamFinished: {
                 system.qsVersion = this.text
                     .trim()
-                    .split(",")[0]
+                    .split(" ")[1]
                     .trim()
-                    .replace("quickshell ", "")
+                Log.info('services/System.qml','qsversion: ' + system.qsVersion)
             }
         }
     }
