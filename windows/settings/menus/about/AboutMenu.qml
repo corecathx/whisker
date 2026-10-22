@@ -141,8 +141,8 @@ BaseMenu {
             StyledRectangle {
                 Layout.fillWidth: true
                 implicitHeight: projectInfo.implicitHeight + 32
-                color: Appearance.colors.m3surface_container
-                radius: Appearance.rounding.medium
+                color: Appearance.colors.m3surface_container_high
+                radius: Appearance.rounding.extraLarge
 
                 RowLayout {
                     id: projectInfo
