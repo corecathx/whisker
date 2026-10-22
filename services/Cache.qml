@@ -13,7 +13,11 @@ Singleton {
     property bool ready: false
     property var entries: ({
         lyrics: [],
-        wallpapers: []
+        wallpapers: [],
+        githubCompare: ({
+            fetchedAt: 0,
+            updates: []
+        })
     })
     property var files: ({})
     property var loadedFiles: ({})

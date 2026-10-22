@@ -98,6 +98,7 @@ ShellRoot {
         Audio.init();
         Brightness.init();
         Lrclib.fetchLyrics();
+        Whisker.init();
 
         // if (!persist.reloaded) {
             // persist.reloaded = true;
