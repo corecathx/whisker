@@ -19,6 +19,10 @@ Singleton {
     property string id: ""
     property string qsVersion: ""
 
+    // hardware
+    property string cpuModel: ""
+    property string gpuModel: ""
+
     // uptime
     property real uptime: 0
 
@@ -50,6 +54,36 @@ Singleton {
     property real networkUpload: 0
     property real networkDownloadSpeed: 0
     property real networkUploadSpeed: 0
+
+    Process {
+        id: cpuModelProcess
+        command: [
+            "sh", "-c",
+            "awk -F ': ' '/model name/ {print $2; exit}' /proc/cpuinfo"
+        ]
+        running: true
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                system.cpuModel = this.text.trim()
+            }
+        }
+    }
+
+    Process {
+        id: gpuModelProcess
+        command: [
+            "sh", "-c",
+            "lspci | grep -m1 -E 'VGA compatible controller|3D controller|Display controller' | cut -d ':' -f3- | sed 's/^ //' "
+        ]
+        running: true
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                system.gpuModel = this.text.trim()
+            }
+        }
+    }
 
     Process {
         id: versionProcess
