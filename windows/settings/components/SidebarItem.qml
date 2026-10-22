@@ -95,7 +95,7 @@ Item {
                                 font.pixelSize: 16
                                 font.bold: true
                                 elide: Text.ElideRight
-                                color: selected ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
+                                color: selected ? Appearance.colors.m3on_primary_container : Appearance.colors.m3on_surface
                                 Anim on color {
                                     type: Anim.Color
                                     duration: Appearance.animation.fast
@@ -103,7 +103,7 @@ Item {
                             }
                             StyledText {
                                 Layout.fillWidth: true
-                                color: selected ? Colors.opacify(Appearance.colors.m3primary, 0.8) : Appearance.colors.m3on_surface_variant
+                                color: selected ? Colors.opacify(Appearance.colors.m3on_primary_container, 0.8) : Appearance.colors.m3on_surface_variant
                                 text: modelData.description
                                 elide: Text.ElideRight
                                 font.pixelSize: 13
