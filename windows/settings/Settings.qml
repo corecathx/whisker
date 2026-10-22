@@ -1,11 +1,13 @@
-import Quickshell
-import Quickshell.Io
-import Quickshell.Widgets
-import Quickshell.Hyprland as Hypr
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Window
+
+import Quickshell
+import Quickshell.Io
+import Quickshell.Widgets
+import Quickshell.Hyprland as Hypr
+
 import qs.modules
 import qs.modules.corners
 import qs.components.misc
@@ -27,377 +29,254 @@ import qs.windows.settings.menus.vpn
 import qs.windows.settings.menus.wallpaper
 import qs.windows.settings.menus.widgets
 
+import qs.windows.settings.components
+
 Scope {
-    id: scope
+    id: root
+
+    property var screen: null
+
+    SettingsData {
+        id: settingsData
+        screen: root.screen
+    }
+
+    property string selectedMenu: "network"
+    readonly property var selectedItem: {
+        for (const menu of settingsData.menus) {
+            for (const item of menu.items) {
+                if (item.id === root.selectedMenu)
+                    return item
+            }
+        }
+        return null
+    }
+
+    property int sidebarWidth: 360
 
     property bool opened: false
+
     IpcHandler {
         target: "settings"
+
         function open(menu: string) {
-            scope.opened = true;
-            if (menu !== "" && settingsWindow !== null) {
-                for (var i = 0; i < settingsWindow.menuModel.length; i++) {
-                    var item = settingsWindow.menuModel[i];
-                    if (!item.header && item.label.toLowerCase() === menu.toLowerCase()) {
-                        settingsWindow.selectedIndex = item.page;
-                        break;
+            root.opened = true
+
+            const target = (menu ?? "").trim().toLowerCase()
+            if (target === "") return
+
+            for (const section of settingsData.menus) {
+                for (const item of section.items) {
+                    if (
+                        String(item.id ?? "").toLowerCase() === target
+                        || String(item.label ?? "").toLowerCase() === target
+                    ) {
+                        root.selectedMenu = item.id
+                        return
                     }
                 }
             }
         }
     }
-
-
+    
     CustomShortcut {
         name: "settings"
         description: "Open Whisker settings."
 
         onReleased: () => {
-            scope.opened = !scope.opened;
+            root.opened = !root.opened;
         }
     }
 
     LazyLoader {
-        active: scope.opened
+        active: root.opened
         Window {
-            id: root
-            property string currentMenuTitle: "Network" // lol...
-            property real borderWidth: 10
-            property int selectedIndex: 0
-            property bool sidebarCollapsed: false
+            id: win
+
             width: 1280
             height: 720
             visible: true
             title: "Whisker Settings"
             color: Appearance.colors.m3background
-            onClosing: scope.opened = false
+            onClosing: root.opened = false
 
-            property var menuModel: {
-                var raw = [
-                    { header: true, label: "Connections" },
-                    { icon: "language", label: "Network", component: "NetworkMenu" },
-                    { icon: "bluetooth", label: "Bluetooth", component: "BluetoothMenu" },
-                    // { icon: "vpn_key", label: "VPN", component: "VPNMenu" },
-                    { header: true, label: "System" },
-                    { icon: "volume_up", label: "Sounds", component: "SoundsMenu" },
-                    { icon: "power", label: "Power", component: "PowerMenu" },
-                    { header: true, label: "Customization" },
-                    { icon: "wallpaper", label: "Wallpaper", component: "WallpaperMenu" },
-                    { icon: "palette", label: "Colors", component: "ColorsMenu" },
-                    { icon: "horizontal_rule", label: "Bar", component: "BarMenu" },
-                    { icon: "widgets", label: "Widgets", component: "WidgetsMenu" },
-                    // { icon: "tune", label: "Misc", component: "MiscMenu" },
-                    { header: true, label: "User" },
-                    { icon: "account_circle", label: "Profile", component: "UserMenu" },
-                    { header: true, label: "About" },
-                    { icon: "info", label: "System", component: "SystemMenu" },
-                    { icon: "help", label: "About", component: "AboutMenu" }
-                ];
-                var pageCounter = 0;
-                return raw.map(function (item) {
-                    item.page = item.header ? -1 : pageCounter++;
-                    return item;
-                });
+            Component.onCompleted: {
+                Log.info('windows/settings/Settings.qml', 'setting root.screen to ' + win.screen)
+                root.screen = win.screen
             }
 
-            Component.onCompleted: { settingsWindow = root; }
-
+            /// visual objects ///
             Item {
+                id: container
                 anchors.fill: parent
-                Item {
-                    id: titleBar
-                    height: 46
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.margins: 20
-                    anchors.bottomMargin: 0
-                    anchors.topMargin: 0
-                    RowLayout {
-                        id: titleContent
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.top: parent.top
-                        anchors.verticalCenter: parent.verticalCenter
 
-                        Item {
-                            Layout.fillWidth: true
-                        }
-                        StyledButton {
-                            Layout.preferredWidth: 32
-                            Layout.preferredHeight: 32
-                            icon: 'close'
-                            base_fg: Appearance.colors.m3on_surface
-                            base_bg: Appearance.colors.m3surface
-                            onClicked: { root.close() }
-                        }
-                    }
-                    RowLayout {
-                        anchors.centerIn: parent
-                        StyledText {
-                            text: root.title.replace("Whisker ", "")
-                            font.family: "Outfit SemiBold"
-                            font.pixelSize: 20
-                        }
-                        StyledText {
-                            visible: root.currentMenuTitle !== ""
-                            text: "•"
-                            font.family: "Outfit SemiBold"
-                            font.pixelSize: 20
-                            color: Appearance.colors.m3on_surface_variant
-                        }
-                        StyledText {
-                            text: root.currentMenuTitle
-                            font.pixelSize: 16
-                            color: Appearance.colors.m3on_surface_variant
-                        }
-                    }
+                ColumnLayout {
+                    id: containerLayout
+                    anchors.fill: parent
+                    spacing: 0
 
-                }
+                    StyledRectangle {
+                        id: titleBar
 
-                StyledRectangle {
-                    id: sidebarBG
-                    anchors.left: parent.left
-                    anchors.top: titleBar.bottom
-                    anchors.bottom: parent.bottom
-                    width: root.sidebarCollapsed ? 70 : 320
-                    color: Appearance.colors.m3surface
-                    Behavior on width { NumberAnimation { duration: Appearance.animation.normal; easing.type: Appearance.animation.easing } }
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 40
+                        Layout.minimumHeight: 40
+                        Layout.maximumHeight: 40
 
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.leftMargin: root.sidebarCollapsed ? 8 : 32
-                        anchors.rightMargin: root.sidebarCollapsed ? 8 : 32
-                        anchors.bottomMargin: 32
-                        spacing: 4
-                        Behavior on anchors.leftMargin { NumberAnimation { duration: Appearance.animation.normal; easing.type: Appearance.animation.easing } }
-                        Behavior on anchors.rightMargin { NumberAnimation { duration: Appearance.animation.normal; easing.type: Appearance.animation.easing } }
+                        MaterialIcon {
+                            id: titleIcon
+                            anchors {
+                                left: parent.left
+                                leftMargin: 15
+                                verticalCenter: parent.verticalCenter
+                            }
+                            icon: root.selectedItem ? root.selectedItem.icon : "pets"
+                            size: 20
+                            color: Appearance.colors.m3secondary
+                        }
 
                         RowLayout {
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignHCenter
-                            spacing: 5
-                            StyledButton {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 42
-                                icon: "edit"
-                                text: "Config file"
-                                visible: !root.sidebarCollapsed
-                                bottomRightRadius: root.sidebarCollapsed ? 100 : 5
-                                topRightRadius: root.sidebarCollapsed ? 100 : 5
-                                secondary: true
-                                onClicked: {
-                                    Quickshell.execDetached({
-                                        command: ['xdg-open', Quickshell.env("HOME") + '/.config/whisker/preferences.json']
-                                    })
-                                }
+                            anchors.centerIn: parent
+
+                            StyledText {
+                                text: win.title.replace("Whisker ", "")
+                                font.family: "Outfit SemiBold"
+                                font.pixelSize: 20
                             }
-                            StyledButton {
-                                Layout.fillWidth: root.sidebarCollapsed
-                                bottomLeftRadius: root.sidebarCollapsed ? 100 : 5
-                                topLeftRadius: root.sidebarCollapsed ? 100 : 5
-                                Layout.preferredHeight: 42
-                                Layout.preferredWidth: 34
-                                Layout.alignment: Qt.AlignHCenter
-                                icon: root.sidebarCollapsed ? "chevron_right" : "chevron_left"
-                                secondary: true
-                                onClicked: root.sidebarCollapsed = !root.sidebarCollapsed
+
+                            StyledText {
+                                visible: (root.selectedItem.label ?? "") !== ""
+                                text: "•"
+                                font.family: "Outfit SemiBold"
+                                font.pixelSize: 20
+                                color: Appearance.colors.m3on_surface_variant
+                            }
+
+                            StyledText {
+                                text: root.selectedItem.label ?? ""
+                                font.pixelSize: 16
+                                color: Appearance.colors.m3on_surface_variant
                             }
                         }
 
-                        ListView {
-                            id: sidebarList
-                            Layout.fillWidth: true
+                        StyledButton {
+                            anchors {
+                                right: parent.right
+                                rightMargin: 10
+                                verticalCenter: parent.verticalCenter
+                            }
+                            width: 32
+                            height: 32
+                            icon: "close"
+                            base_fg: Appearance.colors.m3on_surface
+                            base_bg: Appearance.colors.m3surface
+                            onClicked: { win.close() }
+                        }
+                    }
+
+                    RowLayout {
+                        id: contentLayout
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        spacing: 0
+
+                        Item {
+                            id: sidebarArea
+
+                            Layout.preferredWidth: root.sidebarWidth
+                            Layout.maximumWidth: root.sidebarWidth
                             Layout.fillHeight: true
-                            clip: true
-                            model: root.menuModel
-                            spacing: 4
-                            boundsBehavior: Flickable.StopAtBounds
-                            delegate: Item {
-                                width: sidebarList.width
-                                height: modelData.header ? (root.sidebarCollapsed ? 0 : 26) : 36
-                                property bool hovered: mouseArea2.containsMouse
-                                property bool selected: root.selectedIndex === modelData.page && modelData.page !== -1
-                                visible: !modelData.header || !root.sidebarCollapsed
 
-                                Item {
-                                    width: parent.width
-                                    height: parent.height
-                                    visible: modelData.header ?? false
-                                    StyledText { y: (parent.height - height) * 0.5; x: 8; text: modelData.label; font.pixelSize: 13; font.bold: true; color: Colors.opacify(Appearance.colors.m3on_surface, 0.6) }
+                            ColumnLayout {
+                                id: sidebarLayout
+
+                                anchors {
+                                    top: parent.top
+                                    topMargin: 10
+                                    left: parent.left
+                                    leftMargin: 20
+                                    bottom: parent.bottom
+                                    bottomMargin: 10
                                 }
-                                StyledRectangle {
-                                    id: sidebarItemBG
-                                    anchors.fill: parent
-                                    visible: !modelData.header
-                                    color: selected ? Appearance.colors.m3on_primary : (hovered ? Appearance.colors.m3surface_container : sidebarBG.color)
-                                    radius: 18
-                                    Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-                                    RowLayout {
-                                        y: (parent.height - height) * 0.5
-                                        x: root.sidebarCollapsed ? (parent.width - width) * 0.5 : 8
-                                        spacing: 8
-                                        MaterialIcon {
-                                            icon: modelData.icon ?? ""
-                                            color: selected ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
-                                            font.pixelSize: 22
-                                            Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-                                        }
-                                        StyledText {
-                                            text: modelData.label ?? ""
-                                            font.pixelSize: 15
-                                            color: selected ? Appearance.colors.m3primary : Appearance.colors.m3on_surface
-                                            visible: !root.sidebarCollapsed
-                                            opacity: root.sidebarCollapsed ? 0 : 1
-                                            Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
-                                            Behavior on opacity { NumberAnimation { duration: Appearance.animation.fast } }
+                                width: parent.width - 40
+                                spacing: 10
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 5
+
+                                    StyledButton {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: 48
+                                        icon: "edit"
+                                        text: "Config file"
+                                        // bottomRightRadius: 5
+                                        // topRightRadius: 5
+                                        secondary: true
+
+                                        onClicked: {
+                                            Quickshell.execDetached({
+                                                command: [
+                                                    "xdg-open",
+                                                    Quickshell.env("HOME") + "/.config/whisker/preferences.json"
+                                                ]
+                                            })
                                         }
                                     }
+
+                                    // StyledButton {
+                                    //     Layout.preferredHeight: 48
+                                    //     Layout.preferredWidth: 34
+                                    //     icon: root.sidebarCollapsed ? "chevron_right" : "chevron_left"
+                                    //     bottomLeftRadius: 5
+                                    //     topLeftRadius: 5
+                                    //     secondary: true
+
+                                    //     onClicked: root.sidebarCollapsed = !root.sidebarCollapsed
+                                    // }
                                 }
-                                MouseArea { id: mouseArea2; anchors.fill: parent; hoverEnabled: true; enabled: modelData.page !== -1; onClicked: { if (modelData.page !== -1) root.selectedIndex = modelData.page; root.currentMenuTitle = modelData.label} }
+
+                                ListView {
+                                    id: sidebarList
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    spacing: 10
+                                    clip: true
+                                    model: settingsData.menus
+                                    delegate: SidebarItem {
+                                        selectedItem: root.selectedMenu
+                                        width: ListView.view.width
+
+                                        onItemSelected: itemId => root.selectedMenu = itemId
+                                    }
+                                }
                             }
                         }
 
-                        // Item {
-                        //     Layout.fillWidth: true
-                        //     Layout.preferredHeight: 18
-                        //     visible: !root.sidebarCollapsed
-                        //     StyledText { x: (parent.width - width) * 0.5; text: "! Everything here is TBA !"; color: Colors.opacify(Appearance.colors.m3on_surface_variant, 0.6); font.pixelSize: 11 }
-                        // }
-                    }
-                }
+                        StyledRectangle {
+                            id: contentMenuArea
+                            color: Appearance.colors.m3surface_container_low
+                            radius: Appearance.rounding.large
 
-                // i'm trying to do what google did on their apps (like the borders n stuff idk)
-                // ok so i did some searching it's called inset
-                Item {
-                    id: settingsBorders
-                    anchors.left: sidebarBG.right
-                    anchors.top: titleBar.bottom
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            Layout.bottomMargin: 10
+                            Layout.rightMargin: 10
 
-                    StyledRectangle {
-                        anchors.fill: parent
-                        color: Appearance.colors.m3surface_container_low
-                    }
-
-                    SingleCorner {
-                        id: leftTopCorner
-                        cornerType: 'inverted'
-                        color: sidebarBG.color
-                        corner: 1
-                        cornerHeight: Appearance.rounding.large
-                        anchors {
-                            top: parent.top
-                            left: parent.left
-                        }
-                    }
-                    StyledRectangle {
-                        id: rightBorder
-                        anchors {
-                            top: parent.top
-                            right: parent.right
-                            bottom: parent.bottom
-                        }
-                        width: root.borderWidth
-                        color: sidebarBG.color
-                    }
-                    SingleCorner {
-                        cornerType: 'inverted'
-                        color: sidebarBG.color
-                        corner: 0
-                        cornerHeight: Appearance.rounding.large
-                        anchors {
-                            top: parent.top
-                            right: rightBorder.left
-                        }
-                    }
-                    StyledRectangle {
-                        id: bottomBorder
-                        anchors {
-                            right: parent.right
-                            left: parent.left
-                            bottom: parent.bottom
-                        }
-                        height: root.borderWidth
-                        color: sidebarBG.color
-                    }
-                    SingleCorner {
-                        cornerType: 'inverted'
-                        color: sidebarBG.color
-                        corner: 3
-                        cornerHeight: Appearance.rounding.large
-                        anchors {
-                            bottom: bottomBorder.top
-                            right: rightBorder.left
-                        }
-                    }
-                    SingleCorner {
-                        cornerType: 'inverted'
-                        color: sidebarBG.color
-                        corner: 2
-                        cornerHeight: Appearance.rounding.large
-                        anchors {
-                            bottom: bottomBorder.top
-                            left: parent.left
-                        }
-                    }
-
-                    Item {
-                        id: settingsContainer
-                        anchors.left: leftTopCorner.left
-                        anchors.top: leftTopCorner.top
-                        anchors.right: rightBorder.left
-                        anchors.bottom: bottomBorder.top
-
-                        Loader {
-                            id: menuLoader
-                            anchors.fill: parent
-                            sourceComponent: {
-                                var components = {
-                                    NetworkMenu: networkComponent, BluetoothMenu: bluetoothComponent,
-                                    SoundsMenu: soundsComponent, PowerMenu: powerComponent, WallpaperMenu: wallpaperComponent,
-                                    ColorsMenu: colorsComponent, BarMenu: barComponent, WidgetsMenu: widgetsComponent,
-                                    MiscMenu: miscComponent, SystemMenu: systemComponent, AboutMenu: aboutComponent,
-                                    UserMenu: userComponent
-                                };
-                                var currentMenu = null;
-                                for (var i = 0; i < root.menuModel.length; i++) {
-                                    if (root.menuModel[i].page === root.selectedIndex) {
-                                        currentMenu = root.menuModel[i];
-                                        break;
-                                    }
-                                }
-                                var menuName = currentMenu?.component ?? "";
-                                return components[menuName] || fallbackComponent;
+                            Loader {
+                                anchors.fill: parent
+                                anchors.margins: 20
+                                sourceComponent: root.selectedItem
+                                    ? root.selectedItem.component
+                                    : settingsData.fallbackComponent
                             }
                         }
                     }
                 }
             }
 
-            // networks
-            Component { id: networkComponent; NetworkMenu {} }
-            Component { id: bluetoothComponent; BluetoothMenu {} }
-            // Component { id: vpnComponent; VPNMenu {} }
-            // system
-            Component { id: soundsComponent; SoundsMenu {} }
-            Component { id: powerComponent; PowerMenu {} }
-            // customization
-            Component { id: wallpaperComponent; WallpaperMenu { screen: root.screen } }
-            Component { id: colorsComponent; ColorsMenu {} }
-            Component { id: barComponent; BarMenu {} }
-            Component { id: widgetsComponent; WidgetsMenu {} }
-            Component { id: miscComponent; MiscMenu {} }
-            // user
-            Component { id: userComponent; UserMenu {} }
-            // about
-            Component { id: systemComponent; SystemMenu {} }
-            Component { id: aboutComponent; AboutMenu {} }
-            // fallback just in case i forgot to add a menu...
-            Component { id: fallbackComponent; FallbackMenu {} }
         }
     }
 
-    property var settingsWindow: null
 }
