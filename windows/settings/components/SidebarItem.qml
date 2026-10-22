@@ -27,7 +27,7 @@ Item {
         }
         ClippingRectangle {
             Layout.fillWidth: true
-            Layout.leftMargin: 5
+            // Layout.leftMargin: 5
             Layout.preferredHeight: itemsList.contentHeight
             radius: Appearance.rounding.large
             color: 'transparent'
