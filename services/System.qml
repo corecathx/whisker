@@ -11,7 +11,9 @@ Singleton {
 
     // os
     property string name: ""
+    property string hostname: ""
     property string version: ""
+    property string kernelVersion: ""
     property string prettyName: ""
     property string logo: ""
     property string id: ""
@@ -87,6 +89,35 @@ Singleton {
                     system.logo = parts[3]
                     system.id = parts[4]
                 }
+            }
+        }
+    }
+
+    Process {
+        id: kernelVersionProcess
+        command: ["uname", "-r"]
+        running: true
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                system.kernelVersion = this.text.trim()
+            }
+        }
+    }
+
+    Process {
+        id: hostnameProcess
+
+        running: true
+        command: [
+            "sh",
+            "-c",
+            "cat /etc/hostname"
+        ]
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                system.hostname = this.text.trim()
             }
         }
     }
