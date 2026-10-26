@@ -39,6 +39,7 @@ Scope {
             implicitHeight: 560
             color: "transparent"
             WlrLayershell.layer: WlrLayer.Overlay
+            WlrLayershell.namespace: "whisker:cliphist"
 
             Item {
                 id: rootItem
