@@ -199,6 +199,12 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 > https://github.com/corecathx/whisker-cli
 
 <div align="center">
+  <h2>✦ Development ✦</h2>
+</div>
+
+Read [STRUCTURE.md](./STRUCTURE.md) for a quick look at Whisker's source files.
+
+<div align="center">
     <h2>✦ Credits & License ✦</h2>
 </div>
 
