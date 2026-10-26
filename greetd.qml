@@ -1,6 +1,6 @@
 import Quickshell
 
-import qs.windows.greeter
+import qs.whisker.windows.greeter
 
 ShellRoot {
     id: root

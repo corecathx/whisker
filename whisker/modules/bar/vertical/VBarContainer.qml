@@ -1,0 +1,76 @@
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Effects
+import Quickshell
+import qs.whisker.modules
+import qs.whisker.modules.bar
+import qs.whisker.services
+import qs.whisker.preferences
+import qs.whisker.modules.corners
+import qs.whisker.components
+
+Item {
+    id: root
+    property bool inLockScreen: false
+
+    implicitWidth: Appearance.barSize
+    implicitHeight: parent ? parent.height : 0
+    anchors.fill: parent
+
+    Item {
+        id: barContainer
+        implicitHeight: root.implicitHeight
+        anchors.fill: parent
+        clip: true
+
+        StyledRectangle {
+            anchors.fill: parent
+            radius: Preferences.bar.floating ? 20 : 0
+
+            color: !inLockScreen && Preferences.bar.keepOpaque || !inLockScreen && Hyprland.currentWorkspace.hasTilingWindow() ? Appearance.panel_color : "transparent"
+            Behavior on color { ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing } }
+        }
+
+        Item {
+            anchors.fill: parent
+            Item {
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: {
+                    return (root.implicitWidth - wawa.width) * 0.5
+                }
+                anchors.topMargin: 40
+                BarTop {
+                    id: wawa
+                }
+            }
+            Item {
+                anchors.fill: parent
+                BarMiddle {
+                    verticalMode: Preferences.verticalBar()
+                }
+            }
+            Item {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 110
+
+                BarBottom {
+                    id: btm
+                    anchors.centerIn: parent
+                }
+            }
+        }
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            shadowOpacity: !Preferences.bar.keepOpaque && !Hyprland.currentWorkspace.hasTilingWindow()
+            shadowColor: Appearance.colors.m3shadow
+            shadowBlur: 1
+            shadowScale: 1
+        }
+    }
+}

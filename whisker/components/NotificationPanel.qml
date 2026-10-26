@@ -1,0 +1,110 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell
+import qs.whisker.services
+import qs.whisker.modules
+import qs.whisker.preferences
+
+Item {
+    id: root
+    implicitWidth: 400
+    implicitHeight: container.implicitHeight + 10
+
+    ColumnLayout {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.leftMargin: 5
+        anchors.rightMargin: 5
+        anchors.topMargin: 5
+        id: container
+        spacing: 10
+
+        RowLayout {
+            StyledButton {
+                icon: checked ? "notifications" : "notifications_off"
+                checked: Preferences.misc.notificationEnabled
+                checkable: true
+                onToggled: {
+                    Whisker.setPrefs('misc.notificationEnabled', checked)
+                }
+                implicitHeight: 30
+                HoverHandler {
+                    id: hoverDnd
+                }
+                tooltipText: "If disabled, you won't get notification popups.\nYou can still see past notifications here."
+            }
+            StyledText {
+                text: "Notifications"
+                font.pixelSize: 16
+                font.family: "Outfit Medium"
+                color: Appearance.colors.m3on_surface
+                Layout.alignment: Qt.AlignHCenter
+            }
+            Item { Layout.fillWidth: true }
+            StyledButton {
+                icon: "clear_all"
+                onClicked: Notification.clear()
+                implicitHeight: 30
+                secondary: true
+                text: "Clear All"
+            }
+        }
+
+        BaseCard {
+            color: Appearance.colors.m3surface
+            cardMargin: 0
+            cardSpacing: 0
+            verticalPadding: 0
+
+            ColumnLayout {
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                StyledText {
+                    visible: Notification.list.values.length === 0
+                    text: "You're all caught up!"
+                    font.pixelSize: 14
+                    color: Appearance.colors.m3secondary
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                ScrollView {
+                    visible: Notification.list.values.length !== 0
+                    Layout.fillWidth: true
+                    Layout.maximumHeight: 500
+                    clip: true
+
+                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+                    ColumnLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        Repeater {
+                            id: rep
+                            model: Notification.list
+
+                            delegate: NotificationChild {
+                                Layout.fillWidth: true
+
+                                title: modelData.raw.summary
+                                body: modelData.raw.body
+                                image: modelData.raw.image || modelData.raw.appIcon
+                                notifData: modelData
+                                buttons: modelData.raw.actions.map(action => ({
+                                            label: action.text,
+                                            onClick: () => {
+                                                action.invoke();
+                                            }
+                                        }))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
