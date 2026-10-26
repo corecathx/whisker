@@ -76,7 +76,7 @@ Scope {
             implicitWidth: 400 + 20
             implicitHeight: 450 + 20
             color: 'transparent'
-            WlrLayershell.namespace: 'whisker:dock'
+            WlrLayershell.namespace: 'whisker:emoji'
             WlrLayershell.layer: WlrLayer.Overlay
             exclusionMode: ExclusionMode.Normal
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
