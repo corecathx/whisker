@@ -147,6 +147,7 @@ Scope {
             anchors.right: Preferences.bar.position === 'right'
             margins.right: -10
             WlrLayershell.layer: WlrLayer.Top
+            WlrLayershell.namespace: "whisker:quickpanel"
 
             implicitWidth: 460 + 20
             implicitHeight: 670 + 20

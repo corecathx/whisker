@@ -44,6 +44,7 @@ Scope {
 
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.exclusionMode: ExclusionMode.Normal
+        WlrLayershell.namespace: "whisker:notification"
 
         mask: Region {
             width: window.width
