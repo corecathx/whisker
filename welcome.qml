@@ -2,8 +2,8 @@
 //@ pragma UseQApplication
 import QtQuick
 import Quickshell
-import qs.windows.firsttime
-import qs.services
+import qs.whisker.windows.firsttime
+import qs.whisker.services
 
 ShellRoot {
     FirstTimeSetup {}

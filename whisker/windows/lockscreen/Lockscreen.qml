@@ -1,0 +1,55 @@
+import Quickshell
+import Quickshell.Wayland
+import Quickshell.Io
+import QtQuick
+import qs.whisker.services
+import qs.whisker.components.misc
+import qs.whisker.modules
+ShellRoot {
+	id: root
+	property real animation_time: Appearance.animation.slow
+    IpcHandler {
+        target: "lockscreen"
+        function lock() {
+			if (lock.locked) 
+				return;
+            lock.locked = true
+			lockContext.startAuthentication();
+        }
+    }
+
+	CustomShortcut {
+		name: "lock"
+		description: "Lock session."
+		onPressed: () => {
+			if (lock.locked) 
+				return;
+            lock.locked = true
+			lockContext.startAuthentication();
+		}
+	}
+
+	LockContext {
+		id: lockContext
+
+		property Timer delayedUnlock: Timer {
+			interval: animation_time
+			repeat: false
+			onTriggered: lock.locked = false
+		}
+
+		onUnlocked: {
+			delayedUnlock.start();
+		}
+	}
+
+
+	WlSessionLock {
+		id: lock
+		
+		LockSurface {
+			context: lockContext
+			animation_time: root.animation_time
+		}	
+	}
+}

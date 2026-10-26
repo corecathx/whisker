@@ -1,0 +1,62 @@
+import QtQuick
+import QtQuick.Layouts
+import qs.whisker.preferences
+import qs.whisker.modules
+import qs.whisker.services
+import qs.whisker.components
+import Quickshell
+
+Item {
+    id: root
+    property string schemeName
+    width: 100
+    height: 130
+
+    property var schemeColor: Appearance.getScheme(schemeName)
+    property bool hovered: mouseHover.containsMouse
+
+    MouseArea {
+        id: mouseHover
+        anchors.fill: parent
+        hoverEnabled: true
+        enabled: !Preferences.theme.smart
+        onClicked: {
+            if (Preferences.theme.scheme === schemeName) return
+            Whisker.setPrefs('theme.scheme', schemeName)
+        }
+    }
+
+    StyledRectangle {
+        anchors.fill: parent
+        radius: 10
+        opacity: Preferences.theme.smart ? 0.5 : 1.0
+        color: Preferences.theme.scheme === schemeName
+            ? !hovered ? schemeColor.surface_container_high : schemeColor.surface_container_highest
+            : !hovered ? schemeColor.surface_container : schemeColor.surface_container_high
+        Behavior on color {
+            ColorAnimation { duration: Appearance.animation.fast; easing.type: Appearance.animation.easing }
+        }
+        border.width: Preferences.theme.scheme === schemeName ? 3 : 1
+        border.color: schemeColor.outline
+
+        ColumnLayout {
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 10
+            spacing: 10
+            StyledText {
+                text: schemeName
+                font.pixelSize: 14
+                color: schemeColor.on_surface || "#000000"
+            }
+            ColumnLayout {
+                StyledRectangle { width: 30; height: 8; radius: 4; color: schemeColor.on_surface || "#000000" }
+                StyledRectangle { width: 70; height: 8; radius: 4; color: schemeColor.on_surface || "#000000" }
+            }
+        }
+
+        StyledRectangle { anchors.right: parent.right; anchors.bottom: parent.bottom; width: 15; height: 15; radius: 5; color: schemeColor.secondary || "#000000"; anchors.margins: 10 }
+        StyledRectangle { anchors.right: parent.right; anchors.bottom: parent.bottom; width: 15; height: 15; radius: 5; color: schemeColor.primary || "#000000"; anchors.rightMargin: 30; anchors.bottomMargin: 10 }
+    }
+}

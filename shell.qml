@@ -7,34 +7,34 @@
 import QtQuick
 import Quickshell
 
-import qs.preferences
-import qs.services
+import qs.whisker.preferences
+import qs.whisker.services
 
-import qs.modules.bar
-import qs.modules.corners
-import qs.modules.overlays
+import qs.whisker.modules.bar
+import qs.whisker.modules.corners
+import qs.whisker.modules.overlays
 
-import qs.windows.wallpaper
-import qs.windows.overlays
-import qs.windows.dock
-import qs.windows.quickpanel
-import qs.windows.quickpanel.right
-import qs.windows.notification
-import qs.windows.osdpanel
+import qs.whisker.windows.wallpaper
+import qs.whisker.windows.overlays
+import qs.whisker.windows.dock
+import qs.whisker.windows.quickpanel
+import qs.whisker.windows.quickpanel.right
+import qs.whisker.windows.notification
+import qs.whisker.windows.osdpanel
 
-import qs.windows.launcher
-import qs.windows.settings
-import qs.windows.lockscreen
-import qs.windows.emojies
-import qs.windows.screencapture
-import qs.windows.cliphist
-import qs.windows.keybinds
-import qs.windows.stats
-import qs.windows.dev
+import qs.whisker.windows.launcher
+import qs.whisker.windows.settings
+import qs.whisker.windows.lockscreen
+import qs.whisker.windows.emojies
+import qs.whisker.windows.screencapture
+import qs.whisker.windows.cliphist
+import qs.whisker.windows.keybinds
+import qs.whisker.windows.stats
+import qs.whisker.windows.dev
 
-import qs.windows.firsttime
-import qs.windows.polkit
-import qs.windows.power
+import qs.whisker.windows.firsttime
+import qs.whisker.windows.polkit
+import qs.whisker.windows.power
 
 ShellRoot {
     id: root

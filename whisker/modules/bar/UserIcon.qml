@@ -1,0 +1,65 @@
+import QtQuick
+import Quickshell.Widgets
+import Quickshell
+import qs.whisker.modules
+import qs.whisker.components
+
+StyledRectangle {
+    id: root
+    clip: true
+    property bool hovered: false
+    property bool verticalMode: false
+
+    implicitWidth: verticalMode ? 26 : (hovered || Globals.isQuickpanelVisible ? userName.width + avatarClip.width + 26 : 26)
+    implicitHeight: verticalMode ? (hovered || Globals.isQuickpanelVisible ? userName.width + avatarClip.height + 26 : 26) : 26
+
+    color: Colors.opacify(Appearance.colors.m3surface, 0.7)
+    radius: 20
+
+    border {
+        width: hovered || Globals.isQuickpanelVisible ? 1 : 0
+        color: Appearance.colors.m3on_surface
+        Behavior on width { NumberAnimation { duration: 250; easing.type: Appearance.animation.easing } }
+    }
+
+    Behavior on implicitWidth { NumberAnimation { duration: 250; easing.type: Appearance.animation.easing } }
+    Behavior on implicitHeight { NumberAnimation { duration: 250; easing.type: Appearance.animation.easing } }
+
+    ClippingRectangle {
+        id: textClip
+        anchors.fill: parent
+        radius: 30
+        color: "transparent"
+
+        StyledText {
+            id: userName
+            text: Quickshell.env('USER')
+            color: Appearance.colors.m3on_background
+            font.bold: true
+            visible: hovered || Globals.isQuickpanelVisible
+
+            transform: Rotation {
+                id: rot
+                origin.x: userName.width / 2
+                origin.y: userName.height / 2
+                angle: verticalMode ? -90 : 0
+            }
+
+            x: verticalMode ? -12 : 34
+            y: verticalMode ? parent.height - userName.width - 5 : parent.height / 2 - userName.height / 2
+        }
+    }
+
+    ProfileIcon {
+        id: avatarClip
+        implicitWidth: 26
+        radius: 26
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: root.hovered = true
+            onExited: root.hovered = false
+            onClicked: Quickshell.execDetached({ command: ['whisker', 'ipc', 'quickpanel', 'toggle'] })
+        }
+    }
+}
