@@ -60,10 +60,12 @@ Scope {
         property real activeMaxTimer: 1000
         property bool dockVisible: false
         property bool shouldKeepDockVisible: {
-            if (root.dockEnabled) 
-                return !Hyprland.currentWorkspace.hasWindow || !Hyprland.currentWorkspace.hasTilingWindow()
-            
-            return false
+            if (!root.dockEnabled)
+                return false
+
+            return !Hyprland.currentWorkspace.hasFullscreenWindow()
+                && (!Hyprland.currentWorkspace.hasWindow
+                    || !Hyprland.currentWorkspace.hasTilingWindow())
         }
         anchors {
             left: true

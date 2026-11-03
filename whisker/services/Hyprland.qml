@@ -33,6 +33,14 @@ Singleton {
                 return false;
             }
         }
+        
+        function hasFullscreenWindow(): bool {
+            const toplevels = root.focusedWorkspace?.toplevels?.values ?? [];
+
+            return toplevels.some(toplevel =>
+                (toplevel?.lastIpcObject?.fullscreen ?? 0) !== 0
+            );
+        }
     }
 
     function monitorFor(screen: ShellScreen): HyprlandMonitor {
