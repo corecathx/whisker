@@ -4,6 +4,9 @@
 </div>
 
 <h2></h2>
+
+<img src="images/special/thankyou100stars.png" alt="Whisker Logo" width="100%"/>
+
 <div align="center">
 
 <br>
