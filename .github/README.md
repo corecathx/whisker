@@ -41,8 +41,12 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
   <h2>✦ Installation ✦</h2>
 </div>
 
+### ✦ Official
+
+Packages maintained and verified by me ([corecathx](https://github.com/corecathx)).
+
 <details>
-  <summary><b>Arch Linux</b></summary>
+  <summary><b>Arch Linux (AUR)</b></summary>
 
   <br>
 
@@ -60,8 +64,51 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
 
 </details>
 
+### ✦ Unofficial
+
+Community-maintained packages. Availability and maintenance may vary.
+
 <details>
-  <summary><b>Manual Installation</b></summary>
+  <summary><b>Gentoo</b></summary>
+
+  <br>
+
+  > **Maintainer: [ACoolioDude](https://codeberg.org/ACoolioDude)**
+
+  Whisker is available through the [acooliodude-overlay](https://codeberg.org/ACoolioDude/acooliodude-overlay).
+
+  1. Install `eselect-repository`:
+
+     ```bash
+     emerge --ask eselect-repository
+     ```
+
+  2. Enable the overlay:
+
+     ```bash
+     eselect repository enable acooliodude-overlay
+     ```
+
+  3. Sync the overlay:
+
+     ```bash
+     emerge --sync acooliodude-overlay
+     ```
+
+  4. Install Whisker:
+
+     ```bash
+     emerge --ask gui-apps/whisker
+     ```
+
+  Some packages may need to be unmasked before installation. Follow Gentoo's package unmasking instructions if prompted.
+
+</details>
+
+### ✦ Manual Installation
+
+<details>
+  <summary><b>From Source</b></summary>
 
   <br>
 
@@ -78,9 +125,10 @@ https://github.com/user-attachments/assets/88067bf2-e1c1-48cd-88d0-180a68f07d9d
   qs -p .
   ```
 
-> **Note**: Whisker may not work properly without [whisker-cli](https://github.com/corecathx/whisker-cli), which provides additional functionality used by the shell.
+  > **Note:** Whisker may not work properly without [whisker-cli](https://github.com/corecathx/whisker-cli), which provides additional functionality used by the shell.
 
 </details>
+
 
 <hr>
 
